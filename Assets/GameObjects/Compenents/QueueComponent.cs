@@ -6,15 +6,13 @@ using UnityEngine;
 // Temporary Card structure
 struct Card
 {
-    public string id;
     public string name;
     public string description;
     public float duration;
     private float endingTime;
 
-    public Card(string id, string name="Name", string description="Sample Description", float duration=2f)
+    public Card(string name, string description="Sample Description", float duration=2f)
     {
-        this.id = id;
         this.name = name;
         this.description = description;
         this.duration = duration;
@@ -33,50 +31,55 @@ struct Card
     {
         this.endingTime = Time.time + this.duration;
     }
+
+    public void EffectUpdate() { }
 }
 
 public class QueueComponent : MonoBehaviour
 {
 
     private Queue<Card> _queue = new Queue<Card>();
-    private Card _currentCard;
+    private Card _activeCard;
 
     void Update()
     {
         // If N is pressed, create a test card and try to add it to the queue
         if (Input.GetKeyDown(KeyCode.N))
         {
-            Card c = new("railgun", "Sword of Light", "A huge and heavy railgun made for spacial airships. As of now, only a robot has managed to weild it... And you, for some reason.", 2f);
+            Card c = new("Sword of Light", "A huge and heavy railgun made for spatial airships. As of now, only a robot has managed to weild it... And you, for some reason.", 2f);
             AddToQueue(c);
         }
 
         // Handle making a card from the queue the "active" one
         if (IsCurrentCardEmpty() && _queue.Count > 0)
         {
-            _currentCard = _queue.Dequeue();
-            _currentCard.StartTimer();
+            _activeCard = _queue.Dequeue();
+            _activeCard.StartTimer();
         }
 
-        if (!IsCurrentCardEmpty())
+        if (IsCurrentCardEmpty()) return;
+        
+        // Handle removing the active card once its time is up
+        if (_activeCard.getRemainingTime() <= 0)
         {
-            // Handle removing the active card once its time is up
-            if (_currentCard.getRemainingTime() <= 0)
-            {
-                Debug.Log("The card " + _currentCard.name + " got casted!!");
-                // It has been used so reeset the current card
-                _currentCard = default(Card);
-            }
+            Debug.Log("The card " + _activeCard.name + " got casted!!");
+            // It has been used so reset the current card
+            _activeCard = default(Card);
+        }
+        else
+        {
+            _activeCard.EffectUpdate();
         }
 
     }
 
     /// <summary>
-    /// Checks if _currentCard is equal to its default values, which is the equivalent of null for structs
+    /// Checks if _activeCard is equal to its default values, which is the equivalent of null for structs
     /// </summary>
     /// <returns></returns>
     bool IsCurrentCardEmpty()
     {
-        return _currentCard.Equals(default(Card));
+        return _activeCard.Equals(default(Card));
     }
 
     /// <summary>
@@ -100,12 +103,12 @@ public class QueueComponent : MonoBehaviour
     /// Get the total amount of seconds all the cards in the queue takes
     /// </summary>
     /// <returns></returns>
-    float TotalQueueTime()
+    public float TotalQueueTime()
     {
         float totalTime = 0;
         if (!IsCurrentCardEmpty())
         {
-            totalTime += _currentCard.getRemainingTime();
+            totalTime += _activeCard.getRemainingTime();
         }
 
         foreach (Card c in _queue)
