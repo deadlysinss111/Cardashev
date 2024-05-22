@@ -3,38 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-// Temporary Card structure
-struct Card
-{
-    public string name;
-    public string description;
-    public float duration;
-    private float endingTime;
-
-    public Card(string name, string description="Sample Description", float duration=2f)
-    {
-        this.name = name;
-        this.description = description;
-        this.duration = duration;
-        this.endingTime = float.MinValue; //temporary value to signifies the card is not active
-    }
-
-    public float getRemainingTime()
-    {
-        return endingTime - Time.time;
-    }
-
-    /// <summary>
-    /// Sets up the card's endingTime value so that its time left to act can be counted in-game
-    /// </summary>
-    public void StartTimer()
-    {
-        this.endingTime = Time.time + this.duration;
-    }
-
-    public void EffectUpdate() { }
-}
-
 public class QueueComponent : MonoBehaviour
 {
 
@@ -44,31 +12,31 @@ public class QueueComponent : MonoBehaviour
     void Update()
     {
         // If N is pressed, create a test card and try to add it to the queue
-        if (Input.GetKeyDown(KeyCode.N))
+        /*if (Input.GetKeyDown(KeyCode.N))
         {
-            Card c = new("Sword of Light", "A huge and heavy railgun made for spatial airships. As of now, only a robot has managed to weild it... And you, for some reason.", 2f);
+            //Card c = new("Sword of Light", "A huge and heavy railgun made for spatial airships. As of now, only a robot has managed to weild it... And you, for some reason.", 2f);
             AddToQueue(c);
-        }
+        }*/
 
         // Handle making a card from the queue the "active" one
         if (IsCurrentCardEmpty() && _queue.Count > 0)
         {
             _activeCard = _queue.Dequeue();
-            _activeCard.StartTimer();
+            _activeCard.Effect();
         }
 
         if (IsCurrentCardEmpty()) return;
         
         // Handle removing the active card once its time is up
-        if (_activeCard.getRemainingTime() <= 0)
+        if (_activeCard.GetRemainingTime() <= 0)
         {
-            Debug.Log("The card " + _activeCard.name + " got casted!!");
+            //Debug.Log("The card " + _activeCard.name + " got casted!!");
             // It has been used so reset the current card
-            _activeCard = default(Card);
+            _activeCard = null;
         }
         else
         {
-            _activeCard.EffectUpdate();
+            
         }
 
     }
@@ -79,7 +47,7 @@ public class QueueComponent : MonoBehaviour
     /// <returns></returns>
     bool IsCurrentCardEmpty()
     {
-        return _activeCard.Equals(default(Card));
+        return _activeCard is null;
     }
 
     /// <summary>
@@ -87,7 +55,7 @@ public class QueueComponent : MonoBehaviour
     /// </summary>
     /// <param name="c"></param>
     /// <returns></returns>
-    bool AddToQueue(Card c)
+    public bool AddToQueue(Card c)
     {
         //BetterDebug.Log(Epoch.GetCurrentTimeFloat(), card.name, queue);
         if (AllowCard(c))
@@ -108,12 +76,12 @@ public class QueueComponent : MonoBehaviour
         float totalTime = 0;
         if (!IsCurrentCardEmpty())
         {
-            totalTime += _activeCard.getRemainingTime();
+            totalTime += _activeCard.GetRemainingTime();
         }
 
         foreach (Card c in _queue)
         {
-            totalTime += c.duration;
+            totalTime += c._duration;
         }
 
         return totalTime;
@@ -135,6 +103,6 @@ public class QueueComponent : MonoBehaviour
     /// <returns></returns>
     bool AllowCard(Card c)
     {
-        return !IsQueueFull() && TotalQueueTime() + c.duration <= 10f;
+        return !IsQueueFull() && TotalQueueTime() + c._duration <= 10f;
     }
 }

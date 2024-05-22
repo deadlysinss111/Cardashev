@@ -10,7 +10,6 @@ using static UnityEngine.GraphicsBuffer;
 public class DeckManager : MonoBehaviour
 {
     private List<Card> _hand;
-    private List<Card> _sideHand;
     public List<Card> _remainsInDeck;
     private List<Card> _discardPile;
 
@@ -71,8 +70,10 @@ public class DeckManager : MonoBehaviour
 
     public void Play(Card target)
     {
-        target.Effect();
-        Discard(target);
+        if (GameObject.Find("Queue").GetComponent<QueueComponent>().AddToQueue(target) == true)
+        {
+            Discard(target);
+        }
     }
 
     private void DisplayHand()
