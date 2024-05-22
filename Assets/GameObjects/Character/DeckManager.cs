@@ -18,11 +18,6 @@ public class DeckManager : MonoBehaviour
         Init();
     }
 
-    void Update()
-    {
-        
-    }
-
     void Init()
     {
         _hand = new List<Card>();
@@ -30,36 +25,45 @@ public class DeckManager : MonoBehaviour
         //_remainsInDeck = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<ScriptManager>().GetDeck();
     }
 
+    // called when the player draws a card
     public void Draw()
     {
-        if(_discardPile.Count > 0)
-        {
-            Debug.Log(_discardPile[0]);
-        }
-
+        // if the deck is empty, we shuffle the discard pile into it
         if (_remainsInDeck.Count == 0)
         {
             _remainsInDeck = _discardPile;
             _discardPile = new List<Card>();
         }
+
+        // we draw a random card
         int rdm = Random.Range(0, _remainsInDeck.Count-1);
         
+        // we need to duplicate the card's game object so that we can display it an destroy it later easily
         GameObject clone = SpawnCard(_remainsInDeck[rdm]);
         _hand.Add(clone.GetComponent<Card>());
         Card toDiscard = _remainsInDeck[rdm];
+
+        // it's kinda dirty but we use the closure to easily keep the card in memory and add it to discard pile later
         clone.GetComponent<Card>()._onDiscard = () => { _discardPile.Add(toDiscard); Debug.Log(toDiscard); };
+
+        // since we drew it, we remove the card from the deck
         _remainsInDeck.RemoveAt(rdm);
+
         DisplayHand();
     }
 
     void Discard(Card target)
     {
         _hand.Remove(target);
+
+        // we call the closure setup in the draw in order to add the card to discard pile
         target._onDiscard();
         Destroy(target.gameObject);
+
         DisplayHand();
     }
 
+    // this function makes a card apperaing on screen
     public GameObject SpawnCard(Card target)
     {
         GameObject obj = Instantiate(target.gameObject);
@@ -76,6 +80,7 @@ public class DeckManager : MonoBehaviour
         }
     }
 
+    // handling positions in order to have a good looking displaying
     private void DisplayHand()
     {
         for(byte i =0; i< _hand.Count; i++)
