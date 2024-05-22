@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class Card : MonoBehaviour
     public float _duration;
     public int[] _stats;
     public int _goldValue;
-    public int _id;
+    public Action _onDiscard;
 
     public virtual void Effect() { }
 
