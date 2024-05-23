@@ -22,10 +22,10 @@ public class QueueComponent : MonoBehaviour
         if (IsCurrentCardEmpty() && _queue.Count > 0)
         {
             _activeCard = _queue.Dequeue();
-            _activeCard.Effect();
+            _activeCard._trigger.Invoke();
         }
 
-        if (IsCurrentCardEmpty()) return;
+        else if (IsCurrentCardEmpty()) return;
         
         // Handle removing the active card once its time is up
         if (_activeCard.GetRemainingTime() <= 0)

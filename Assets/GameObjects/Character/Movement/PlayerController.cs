@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 struct ANIMSTATES
 {
@@ -28,6 +30,8 @@ public class PlayerController : MonoBehaviour
      float _lookRotationSpeed = 8f;
      List<Vector3> _pathPoints = new List<Vector3>();
      Coroutine _waitForConfirmationCoroutine;
+
+    float _lastCalculatedWalkTime;
 
     // Initialization
      void Awake()
@@ -82,15 +86,27 @@ public class PlayerController : MonoBehaviour
      IEnumerator WaitForConfirmation(Vector3 destination)
     {
         // Wait for the confirmation input
-        while (!_input.Main.Confirm.triggered)
+        while (_input.Main.Confirm.triggered == false)
         {
             yield return null;
         }
 
         // Update agent destination only when confirmed
-        _agent.destination = destination;
+        
         ClearPath();
-        StartCoroutine(UpdatePath());
+
+        Card moveCard = new Card();
+        moveCard._trigger += () =>
+        {
+            _agent.destination = destination;
+            StartCoroutine(UpdatePath());
+        };
+        moveCard._duration = _lastCalculatedWalkTime;
+
+        if (GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(moveCard) == false)
+        {
+            Debug.Log("error in movement card generation");
+        }
     }
 
     // Draw the path using line renderer
@@ -108,7 +124,7 @@ public class PlayerController : MonoBehaviour
             Vector3 start = path.corners[i];
             Vector3 end = path.corners[i + 1];
 
-            GetWalkTime(end);
+            _lastCalculatedWalkTime = GetWalkTime(end);
 
             // Interpolate points along the segment between start and end
             int segments = Mathf.CeilToInt(Vector3.Distance(start, end) / 0.1f); // Adjust segment length as needed
@@ -223,7 +239,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
      void Update()
     {
-        FaceTarget();
+        //FaceTarget();
         SetAnimations();
     }
 

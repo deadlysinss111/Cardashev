@@ -44,7 +44,7 @@ public class DeckManager : MonoBehaviour
         Card toDiscard = _remainsInDeck[rdm];
 
         // it's kinda dirty but we use the closure to easily keep the card in memory and add it to discard pile later
-        clone.GetComponent<Card>()._onDiscard = () => { _discardPile.Add(toDiscard); Debug.Log(toDiscard); };
+        clone.GetComponent<Card>()._trigger += () => { _discardPile.Add(toDiscard); Debug.Log(toDiscard); };
 
         // since we drew it, we remove the card from the deck
         _remainsInDeck.RemoveAt(rdm);
@@ -56,8 +56,6 @@ public class DeckManager : MonoBehaviour
     {
         _hand.Remove(target);
 
-        // we call the closure setup in the draw in order to add the card to discard pile
-        target._onDiscard();
         Destroy(target.gameObject);
 
         DisplayHand();
