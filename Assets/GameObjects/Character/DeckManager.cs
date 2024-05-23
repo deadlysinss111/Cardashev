@@ -74,7 +74,7 @@ public class DeckManager : MonoBehaviour
 
     public void Play(Card target)
     {
-        if (GameObject.Find("Queue").GetComponent<QueueComponent>().AddToQueue(target) == true)
+        if (GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(target) == true)
         {
             Discard(target);
         }

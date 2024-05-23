@@ -18,7 +18,7 @@ public class QueueUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        queue = GameObject.Find("Queue").GetComponent<QueueComponent>();
+        queue = GameObject.Find("Player").GetComponent<QueueComponent>();
 
         secs_bar = transform.Find("Foreground").GetComponent<Image>();
         bar_scale = secs_bar.transform.localScale.x;

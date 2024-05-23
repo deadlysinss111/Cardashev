@@ -4,10 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+struct ANIMSTATES
+{
+    public const string IDLE = "IDLE";
+    public const string WALK = "WALK";
+}
+
 public class PlayerController : MonoBehaviour
 {
-     const string _IDLE = "IDLE";
-     const string _WALK = "Walk";
+    static ANIMSTATES AS;
 
      CustomActions _input;
 
@@ -240,11 +245,11 @@ public class PlayerController : MonoBehaviour
     {
         if (_agent.velocity == Vector3.zero)
         {
-            _animator.Play(_IDLE);
+            _animator.Play(ANIMSTATES.IDLE);
         }
         else
         {
-            _animator.Play(_WALK);
+            _animator.Play(ANIMSTATES.WALK);
         }
     }
 }
