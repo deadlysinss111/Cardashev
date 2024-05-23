@@ -24,7 +24,7 @@ public class Room : MonoBehaviour
     private ZoneType _zoneType = ZoneType.Debug;
 
     // Essential structs
-    private RoomPrefabEncyclopedia _roomEncyclopedia;
+    private static RoomPrefabEncyclopedia ROOM_ENCYCLOPEDIA;
 
 
     /*
@@ -47,10 +47,16 @@ public class Room : MonoBehaviour
     public void OnEnterRoom(string ARGprefabName)
     {
         // Go find and instantiate the room prefab for the floor
-        Object roomPrefab = Resources.Load(_roomEncyclopedia.ZoneFolderName[_zoneType] + " Zone/" + ARGprefabName);
+        GameObject roomPrefab = (GameObject)Resources.Load(ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + ARGprefabName);
 
-        GameObject newFloor = (GameObject)Instantiate(roomPrefab);
-        _TMtopology = newFloor.GetComponent<Tilemap>();
+        foreach (Transform tilePrefab in roomPrefab.transform)
+        {
+            Instantiate(Resources.Load(ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/Floor Tiles/" + tilePrefab.name),
+                        tilePrefab.transform.position,
+                        tilePrefab.transform.rotation,
+                        _TMtopology.transform);
+        }
+        //_TMtopology = newFloor.GetComponent<Tilemap>();
 
         // TODO: Places Interactible Objects
         // TODO: Places Entities (ennemies and the like)
@@ -62,7 +68,7 @@ public class Room : MonoBehaviour
         // TODO: Fades-in the screen to the Zone map
 
         // Empties all Tilemaps from the Room Anchor
-        foreach(Transform tile in _TMtopology.transform)
+        foreach (Transform tile in _TMtopology.transform)
         {
             Destroy(tile.gameObject);
         }
@@ -78,20 +84,18 @@ public class Room : MonoBehaviour
 
         Dictionary<string, RoomPrefabDesc> RoomBook = new Dictionary<string, RoomPrefabDesc>();
 
-        this._roomEncyclopedia = new RoomPrefabEncyclopedia(ZoneFolderName, RoomBook);
+        ROOM_ENCYCLOPEDIA = new RoomPrefabEncyclopedia(ZoneFolderName, RoomBook);
 
-        this._zoneType = ZoneType.Debug;
+        _zoneType = ZoneType.Debug;
     }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("E was pressed, trying to generate L Room...");
             OnEnterRoom("L Room");
         }
         if(Input.GetKeyDown(KeyCode.L))
         {
-            Debug.Log("L was pressed, trying to destroy L Room...");
             OnExitRoom();
         }
     }
