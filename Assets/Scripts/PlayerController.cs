@@ -6,26 +6,26 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-    private const string _IDLE = "IDLE";
-    private const string _WALK = "Walk";
+     const string _IDLE = "IDLE";
+     const string _WALK = "Walk";
 
-    private CustomActions _input;
+     CustomActions _input;
 
-    private NavMeshAgent _agent;
-    private Animator _animator;
-    private LineRenderer _lineRenderer;
+     NavMeshAgent _agent;
+     Animator _animator;
+     LineRenderer _lineRenderer;
 
     [Header("Movement")]
-    [SerializeField] private ParticleSystem _clickEffect;
+    [SerializeField]  ParticleSystem _clickEffect;
 
-    [SerializeField] private LayerMask _clickableLayers;
+    [SerializeField]  LayerMask _clickableLayers;
 
-    private float _lookRotationSpeed = 8f;
-    private List<Vector3> _pathPoints = new List<Vector3>();
-    private Coroutine _waitForConfirmationCoroutine;
+     float _lookRotationSpeed = 8f;
+     List<Vector3> _pathPoints = new List<Vector3>();
+     Coroutine _waitForConfirmationCoroutine;
 
     // Initialization
-    private void Awake()
+     void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
@@ -36,13 +36,13 @@ public class PlayerController : MonoBehaviour
     }
 
     // Assign input actions
-    private void AssignInputs()
+     void AssignInputs()
     {
         _input.Main.Move.performed += ctx => ClickToVisualize();// Handle click to visualize the path
     }
 
     // Handle click to visualize the path
-    private void ClickToVisualize()
+     void ClickToVisualize()
     {
         // Raycast to the clicked point
         RaycastHit hit;
@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Coroutine to wait for confirmation input
-    private IEnumerator WaitForConfirmation(Vector3 destination)
+     IEnumerator WaitForConfirmation(Vector3 destination)
     {
         // Wait for the confirmation input
         while (!_input.Main.Confirm.triggered)
@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Draw the path using line renderer
-    private void DrawPath(NavMeshPath path)
+     void DrawPath(NavMeshPath path)
     {
         _pathPoints.Clear();
 
@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Project a point onto the NavMesh surface
-    private Vector3 ProjectToNavMeshSurface(Vector3 point)
+     Vector3 ProjectToNavMeshSurface(Vector3 point)
     {
         // Project the point onto the NavMesh surface
         NavMeshHit hit;
@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Coroutine to update the path as the agent moves
-    private IEnumerator UpdatePath()
+     IEnumerator UpdatePath()
     {
         // Wait for the agent to reach the destination
         while (_agent.pathPending || _agent.remainingDistance > _agent.stoppingDistance)
@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Get the time to traverse the path
-    private float GetPathTime(NavMeshPath path)
+     float GetPathTime(NavMeshPath path)
     {
         // Calculate the time to traverse the path
         float time = 0;
@@ -198,32 +198,32 @@ public class PlayerController : MonoBehaviour
     }
 
     // Clear the path from the line renderer
-    private void ClearPath()
+     void ClearPath()
     {
         _lineRenderer.positionCount = 0;
     }
 
     // Enable input actions
-    private void OnEnable()
+     void OnEnable()
     {
         _input.Enable();
     }
 
     // Disable input actions
-    private void OnDisable()
+     void OnDisable()
     {
         _input.Disable();
     }
 
     // Update is called once per frame
-    private void Update()
+     void Update()
     {
         FaceTarget();
         SetAnimations();
     }
 
     // Rotate the player to face the target destination
-    private void FaceTarget()
+     void FaceTarget()
     {
         // Calculate the direction to the target destination
         Vector3 direction = (_agent.destination - transform.position).normalized;
@@ -236,7 +236,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Set animations based on agent velocity
-    private void SetAnimations()
+     void SetAnimations()
     {
         if (_agent.velocity == Vector3.zero)
         {
