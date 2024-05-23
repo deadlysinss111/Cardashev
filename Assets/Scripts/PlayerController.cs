@@ -6,39 +6,39 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-    private const string IDLE = "Idle";
-    private const string WALK = "Walk";
+    private const string _IDLE = "IDLE";
+    private const string _WALK = "Walk";
 
-    private CustomActions input;
+    private CustomActions _input;
 
-    private NavMeshAgent agent;
-    private Animator animator;
-    private LineRenderer lineRenderer;
+    private NavMeshAgent _agent;
+    private Animator _animator;
+    private LineRenderer _lineRenderer;
 
     [Header("Movement")]
-    [SerializeField] private ParticleSystem clickEffect;
+    [SerializeField] private ParticleSystem _clickEffect;
 
-    [SerializeField] private LayerMask clickableLayers;
+    [SerializeField] private LayerMask _clickableLayers;
 
-    private float lookRotationSpeed = 8f;
-    private List<Vector3> pathPoints = new List<Vector3>();
-    private Coroutine waitForConfirmationCoroutine;
+    private float _lookRotationSpeed = 8f;
+    private List<Vector3> _pathPoints = new List<Vector3>();
+    private Coroutine _waitForConfirmationCoroutine;
 
     // Initialization
     private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
-        lineRenderer = GetComponent<LineRenderer>();
+        _agent = GetComponent<NavMeshAgent>();
+        _animator = GetComponent<Animator>();
+        _lineRenderer = GetComponent<LineRenderer>();
 
-        input = new CustomActions();
+        _input = new CustomActions();
         AssignInputs();
     }
 
     // Assign input actions
     private void AssignInputs()
     {
-        input.Main.Move.performed += ctx => ClickToVisualize();// Handle click to visualize the path
+        _input.Main.Move.performed += ctx => ClickToVisualize();// Handle click to visualize the path
     }
 
     // Handle click to visualize the path
@@ -46,30 +46,30 @@ public class PlayerController : MonoBehaviour
     {
         // Raycast to the clicked point
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))// Check if the hit point is on the NavMesh
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))// Check if the hit point is on the NavMesh
         {
             // Cancel the previous confirmation waiting coroutine
-            if (waitForConfirmationCoroutine != null)
+            if (_waitForConfirmationCoroutine != null)
             {
-                StopCoroutine(waitForConfirmationCoroutine);
+                StopCoroutine(_waitForConfirmationCoroutine);
                 ClearPath();
             }
 
             // Calculate the path to the clicked point
             NavMeshPath path = new NavMeshPath();
-            if (agent.CalculatePath(hit.point, path))
+            if (_agent.CalculatePath(hit.point, path))
             {
                 DrawPath(path);
             }
 
             // Instantiate click effect at the clicked point
-            if (clickEffect != null)
+            if (_clickEffect != null)
             {
-                Instantiate(clickEffect, hit.point + new Vector3(0, 0.1f, 0), clickEffect.transform.rotation);
+                Instantiate(_clickEffect, hit.point + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
             }
 
             // Start waiting for confirmation
-            waitForConfirmationCoroutine = StartCoroutine(WaitForConfirmation(hit.point));
+            _waitForConfirmationCoroutine = StartCoroutine(WaitForConfirmation(hit.point));
         }
     }
 
@@ -77,13 +77,13 @@ public class PlayerController : MonoBehaviour
     private IEnumerator WaitForConfirmation(Vector3 destination)
     {
         // Wait for the confirmation input
-        while (!input.Main.Confirm.triggered)
+        while (!_input.Main.Confirm.triggered)
         {
             yield return null;
         }
 
         // Update agent destination only when confirmed
-        agent.destination = destination;
+        _agent.destination = destination;
         ClearPath();
         StartCoroutine(UpdatePath());
     }
@@ -91,10 +91,10 @@ public class PlayerController : MonoBehaviour
     // Draw the path using line renderer
     private void DrawPath(NavMeshPath path)
     {
-        pathPoints.Clear();
+        _pathPoints.Clear();
 
         // Add the first point
-        pathPoints.Add(transform.position);
+        _pathPoints.Add(transform.position);
 
         // Iterate through each segment between corners
         for (int i = 0; i < path.corners.Length - 1; i++)
@@ -116,13 +116,13 @@ public class PlayerController : MonoBehaviour
                 Vector3 point = Vector3.Lerp(start, end, t);
 
                 // Project the point onto the NavMesh surface
-                pathPoints.Add(ProjectToNavMeshSurface(point));
+                _pathPoints.Add(ProjectToNavMeshSurface(point));
             }
         }
 
         // Set positions for the line renderer
-        lineRenderer.positionCount = pathPoints.Count;
-        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
+        _lineRenderer.positionCount = _pathPoints.Count;
+        _lineRenderer.SetPositions(_pathPoints.ToArray());// Update the line renderer positions
     }
 
     // Project a point onto the NavMesh surface
@@ -147,20 +147,20 @@ public class PlayerController : MonoBehaviour
     private IEnumerator UpdatePath()
     {
         // Wait for the agent to reach the destination
-        while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+        while (_agent.pathPending || _agent.remainingDistance > _agent.stoppingDistance)
         {
             // Update the path as the agent moves
             Vector3 playerPosition = transform.position;
-            while (pathPoints.Count > 0 && Vector3.Distance(playerPosition, pathPoints[0]) < 0.1f)
+            while (_pathPoints.Count > 0 && Vector3.Distance(playerPosition, _pathPoints[0]) < 0.1f)
             {
                 // Remove the first point if the player is close enough
-                pathPoints.RemoveAt(0);
+                _pathPoints.RemoveAt(0);
 
                 // Set positions for the line renderer
-                lineRenderer.positionCount = pathPoints.Count;
+                _lineRenderer.positionCount = _pathPoints.Count;
 
                 // Update the line renderer positions
-                lineRenderer.SetPositions(pathPoints.ToArray());
+                _lineRenderer.SetPositions(_pathPoints.ToArray());
             }
             yield return null;
         }
@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
     {
         // Calculate the path to the destination
         NavMeshPath path = new NavMeshPath();
-        if (agent.CalculatePath(destination, path))
+        if (_agent.CalculatePath(destination, path))
         {
             Debug.Log("Path time: " + GetPathTime(path));
             return GetPathTime(path);
@@ -192,7 +192,7 @@ public class PlayerController : MonoBehaviour
             Vector3 end = path.corners[i + 1];
 
             // Add the time to traverse the segment
-            time += Vector3.Distance(start, end) / agent.speed;
+            time += Vector3.Distance(start, end) / _agent.speed;
         }
         return time;
     }
@@ -200,19 +200,19 @@ public class PlayerController : MonoBehaviour
     // Clear the path from the line renderer
     private void ClearPath()
     {
-        lineRenderer.positionCount = 0;
+        _lineRenderer.positionCount = 0;
     }
 
     // Enable input actions
     private void OnEnable()
     {
-        input.Enable();
+        _input.Enable();
     }
 
     // Disable input actions
     private void OnDisable()
     {
-        input.Disable();
+        _input.Disable();
     }
 
     // Update is called once per frame
@@ -226,25 +226,25 @@ public class PlayerController : MonoBehaviour
     private void FaceTarget()
     {
         // Calculate the direction to the target destination
-        Vector3 direction = (agent.destination - transform.position).normalized;
+        Vector3 direction = (_agent.destination - transform.position).normalized;
 
         // Rotate the player towards the target destination
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
 
         // Smoothly rotate the player
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _lookRotationSpeed);
     }
 
     // Set animations based on agent velocity
     private void SetAnimations()
     {
-        if (agent.velocity == Vector3.zero)
+        if (_agent.velocity == Vector3.zero)
         {
-            animator.Play(IDLE);
+            _animator.Play(_IDLE);
         }
         else
         {
-            animator.Play(WALK);
+            _animator.Play(_WALK);
         }
     }
 }

@@ -753,7 +753,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.31851768
+        value: 0.13332939
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -887,7 +887,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 18.02
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
