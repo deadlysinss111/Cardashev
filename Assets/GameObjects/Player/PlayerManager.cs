@@ -6,19 +6,12 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     [NonSerialized] public StatManager _health;
+    [NonSerialized] public Vector3 _virtualPos;
 
     private void Awake()
     {
         _health = GetComponent<StatManager>();
     }
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+    // we expect a cool state machine that enable / disable controls affectation :)
 }

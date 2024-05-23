@@ -28,11 +28,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]  LayerMask _clickableLayers;
 
      float _lookRotationSpeed = 8f;
-     List<Vector3> _pathPoints = new List<Vector3>();
+     List<Vector3> _pathPoints;
      Coroutine _waitForConfirmationCoroutine;
 
     float _lastCalculatedWalkTime;
-    Vector3 _virtualPos;
 
     // Initialization
      void Awake()
@@ -40,7 +39,8 @@ public class PlayerController : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _lineRenderer = GetComponent<LineRenderer>();
-        _virtualPos = _agent.transform.position;
+        GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _agent.transform.position;
+        _pathPoints = new List<Vector3>();
 
         _input = new CustomActions();
         AssignInputs();
@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
 
             // In the following snipet, the commented code are those that use not cropped positions
             //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
-            if (NavMesh.CalculatePath(_virtualPos, alteredPos, NavMesh.AllAreas,  path))
+            if (NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, alteredPos, NavMesh.AllAreas,  path))
             {
                 DrawPath(path);
             }
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
         
         ClearPath();
 
-        _virtualPos = destination;
+        GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = destination;
 
         Card moveCard = new Card();
         moveCard._trigger += () =>
@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
      void Update()
     {
-        FaceTarget();
+        //FaceTarget();
         SetAnimations();
     }
 

@@ -32,6 +32,11 @@ public class Card : MonoBehaviour
 
     private void OnMouseDown()
     {
+        ClickEvent();
+    }
+
+    protected virtual void ClickEvent()
+    {
         GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<DeckManager>().Play(this);
     }
 
