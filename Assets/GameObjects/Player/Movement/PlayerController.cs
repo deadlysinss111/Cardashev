@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
      Coroutine _waitForConfirmationCoroutine;
 
     float _lastCalculatedWalkTime;
+    Vector3 _virtualPos;
 
     // Initialization
      void Awake()
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _lineRenderer = GetComponent<LineRenderer>();
+        _virtualPos = _agent.transform.position;
 
         _input = new CustomActions();
         AssignInputs();
@@ -57,6 +59,10 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))// Check if the hit point is on the NavMesh
         {
+            // Crop the destination to the center of the target tile
+            Vector3 alteredPos = hit.transform.position;
+            alteredPos.y += 0.5f;
+
             // Cancel the previous confirmation waiting coroutine
             if (_waitForConfirmationCoroutine != null)
             {
@@ -66,7 +72,10 @@ public class PlayerController : MonoBehaviour
 
             // Calculate the path to the clicked point
             NavMeshPath path = new NavMeshPath();
-            if (_agent.CalculatePath(hit.point, path))
+
+            // In the following snipet, the commented code are those that use not cropped positions
+            //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
+            if (NavMesh.CalculatePath(_virtualPos, alteredPos, NavMesh.AllAreas,  path))
             {
                 DrawPath(path);
             }
@@ -74,7 +83,8 @@ public class PlayerController : MonoBehaviour
             // Instantiate click effect at the clicked point
             if (_clickEffect != null)
             {
-                Instantiate(_clickEffect, hit.point + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
+                //Instantiate(_clickEffect, hit.point + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
+                Instantiate(_clickEffect, alteredPos + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
             }
 
             // Start waiting for confirmation
@@ -94,6 +104,8 @@ public class PlayerController : MonoBehaviour
         // Update agent destination only when confirmed
         
         ClearPath();
+
+        _virtualPos = destination;
 
         Card moveCard = new Card();
         moveCard._trigger += () =>
@@ -239,7 +251,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
      void Update()
     {
-        //FaceTarget();
+        FaceTarget();
         SetAnimations();
     }
 
