@@ -30,7 +30,7 @@ public class MainMenuManager : MonoBehaviour
         {
             _menus[_menuObjects[i].name] = _menuObjects[i];
         }
-        BetterDebug.LogDict<string, GameObject>(_menus);
+        //BetterDebug.LogDict<string, GameObject>(_menus);
 
         SetMenu(_menuObjects[0].name);
         Debug.Log(this.GetMenu("Options"));
