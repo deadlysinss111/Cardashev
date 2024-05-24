@@ -14,8 +14,6 @@ struct ANIMSTATES
 
 public class PlayerController : MonoBehaviour
 {
-    static ANIMSTATES AS;
-
      CustomActions _input;
 
      NavMeshAgent _agent;
@@ -29,7 +27,6 @@ public class PlayerController : MonoBehaviour
 
      float _lookRotationSpeed = 8f;
      List<Vector3> _pathPoints;
-     Coroutine _waitForConfirmationCoroutine;
 
     float _lastCalculatedWalkTime;
 
@@ -43,13 +40,12 @@ public class PlayerController : MonoBehaviour
         _pathPoints = new List<Vector3>();
 
         _input = new CustomActions();
-        AssignInputs();
     }
 
-    // Assign input actions
-     void AssignInputs()
+    // Assign input actions to enter the movement state
+     public void SetToMovementState()
     {
-        _input.Main.Move.performed += ctx => ClickToVisualize();// Handle click to visualize the path
+        GameObject.Find("Player").GetComponent<PlayerManager>().SetLeftClickTo(() => ClickToVisualize()); // Handle click to visualize the path
     }
 
     // Handle click to visualize the path
@@ -64,9 +60,9 @@ public class PlayerController : MonoBehaviour
             alteredPos.y += 0.5f;
 
             // Cancel the previous confirmation waiting coroutine
-            if (_waitForConfirmationCoroutine != null)
+            if (GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine != null)
             {
-                StopCoroutine(_waitForConfirmationCoroutine);
+                StopCoroutine(GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine);
                 ClearPath();
             }
 
@@ -88,7 +84,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Start waiting for confirmation
-            _waitForConfirmationCoroutine = StartCoroutine(WaitForConfirmation(hit.point));
+            GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine = StartCoroutine(WaitForConfirmation(hit.point));
         }
     }
 
@@ -237,21 +233,21 @@ public class PlayerController : MonoBehaviour
     }
 
     // Enable input actions
-     void OnEnable()
+    void OnEnable()
     {
         _input.Enable();
     }
 
     // Disable input actions
-     void OnDisable()
+    void OnDisable()
     {
         _input.Disable();
     }
 
     // Update is called once per frame
-     void Update()
+    void Update()
     {
-        //FaceTarget();
+        FaceTarget();
         SetAnimations();
     }
 

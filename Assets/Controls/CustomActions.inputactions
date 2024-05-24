@@ -6,7 +6,7 @@
             "id": "4963b5e1-f748-44ab-8da8-b20d7aa48337",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "LeftClick",
                     "type": "Button",
                     "id": "cdf76f82-2e3e-44b0-80b4-05d927d8e1e6",
                     "expectedControlType": "Button",
@@ -22,15 +22,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "prev",
-                    "type": "Button",
-                    "id": "15d13b9d-c93f-47f2-ba17-1afd304865e1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -41,29 +32,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "LeftClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "34350f90-cd06-4da7-a641-906644006307",
+                    "id": "bcd99931-0c3e-4651-9aaa-aee9f4ee6f19",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Confirm",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "61f0fce3-2148-4e11-a6b6-31758e139c3c",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "prev",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

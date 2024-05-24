@@ -28,7 +28,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             ""id"": ""4963b5e1-f748-44ab-8da8-b20d7aa48337"",
             ""actions"": [
                 {
-                    ""name"": ""Move"",
+                    ""name"": ""LeftClick"",
                     ""type"": ""Button"",
                     ""id"": ""cdf76f82-2e3e-44b0-80b4-05d927d8e1e6"",
                     ""expectedControlType"": ""Button"",
@@ -44,15 +44,6 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""prev"",
-                    ""type"": ""Button"",
-                    ""id"": ""15d13b9d-c93f-47f2-ba17-1afd304865e1"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -63,29 +54,18 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""LeftClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""34350f90-cd06-4da7-a641-906644006307"",
+                    ""id"": ""bcd99931-0c3e-4651-9aaa-aee9f4ee6f19"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Confirm"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""61f0fce3-2148-4e11-a6b6-31758e139c3c"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""prev"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -96,9 +76,8 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
 }");
         // Main
         m_Main = asset.FindActionMap("Main", throwIfNotFound: true);
-        m_Main_Move = m_Main.FindAction("Move", throwIfNotFound: true);
+        m_Main_LeftClick = m_Main.FindAction("LeftClick", throwIfNotFound: true);
         m_Main_Confirm = m_Main.FindAction("Confirm", throwIfNotFound: true);
-        m_Main_prev = m_Main.FindAction("prev", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -160,16 +139,14 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     // Main
     private readonly InputActionMap m_Main;
     private List<IMainActions> m_MainActionsCallbackInterfaces = new List<IMainActions>();
-    private readonly InputAction m_Main_Move;
+    private readonly InputAction m_Main_LeftClick;
     private readonly InputAction m_Main_Confirm;
-    private readonly InputAction m_Main_prev;
     public struct MainActions
     {
         private @CustomActions m_Wrapper;
         public MainActions(@CustomActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Main_Move;
+        public InputAction @LeftClick => m_Wrapper.m_Main_LeftClick;
         public InputAction @Confirm => m_Wrapper.m_Main_Confirm;
-        public InputAction @prev => m_Wrapper.m_Main_prev;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -179,28 +156,22 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_MainActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_MainActionsCallbackInterfaces.Add(instance);
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
+            @LeftClick.started += instance.OnLeftClick;
+            @LeftClick.performed += instance.OnLeftClick;
+            @LeftClick.canceled += instance.OnLeftClick;
             @Confirm.started += instance.OnConfirm;
             @Confirm.performed += instance.OnConfirm;
             @Confirm.canceled += instance.OnConfirm;
-            @prev.started += instance.OnPrev;
-            @prev.performed += instance.OnPrev;
-            @prev.canceled += instance.OnPrev;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
         {
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
+            @LeftClick.started -= instance.OnLeftClick;
+            @LeftClick.performed -= instance.OnLeftClick;
+            @LeftClick.canceled -= instance.OnLeftClick;
             @Confirm.started -= instance.OnConfirm;
             @Confirm.performed -= instance.OnConfirm;
             @Confirm.canceled -= instance.OnConfirm;
-            @prev.started -= instance.OnPrev;
-            @prev.performed -= instance.OnPrev;
-            @prev.canceled -= instance.OnPrev;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -220,8 +191,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     public MainActions @Main => new MainActions(this);
     public interface IMainActions
     {
-        void OnMove(InputAction.CallbackContext context);
+        void OnLeftClick(InputAction.CallbackContext context);
         void OnConfirm(InputAction.CallbackContext context);
-        void OnPrev(InputAction.CallbackContext context);
     }
 }

@@ -7,7 +7,6 @@ public class LaunchGrenade : Card
 {
     CustomActions _input;
     [SerializeField] LayerMask _clickableLayers;
-    Coroutine _waitForConfirmationCoroutine;
     List<Vector3> _pathPoints;
 
     LineRenderer _lineRenderer;
@@ -17,18 +16,17 @@ public class LaunchGrenade : Card
         _input = new CustomActions();
         _lineRenderer = GetComponent<LineRenderer>();
         _pathPoints = new List<Vector3>();
-        _input.Enable();
     }
 
     public override void Effect()
     {
+        GameObject.Find("Player").GetComponent<PlayerController>().SetToMovementState();
         base.Effect();
     }
 
     protected override void ClickEvent()
     {
-        print("clicked");
-        _input.Main.prev.performed += ctx => Preview();
+        GameObject.Find("Player").GetComponent<PlayerManager>().SetLeftClickTo(() => Preview());
     }
 
     private void Preview()
@@ -41,9 +39,9 @@ public class LaunchGrenade : Card
             alteredPos.y += 0.5f;
 
             // Cancel the previous confirmation waiting coroutine
-            if (_waitForConfirmationCoroutine != null)
+            if (GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine != null)
             {
-                StopCoroutine(_waitForConfirmationCoroutine);
+                StopCoroutine(GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine);
                 ClearPath();
             }
 
@@ -58,7 +56,7 @@ public class LaunchGrenade : Card
             }
 
             // Start waiting for confirmation
-            _waitForConfirmationCoroutine = StartCoroutine(WaitForConfirmation(hit.point));
+            GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine = StartCoroutine(WaitForConfirmation(hit.point));
         }
     }
 
@@ -71,7 +69,6 @@ public class LaunchGrenade : Card
         }
 
         // Launche the grenade only when confirmed
-
         ClearPath();
 
         Object grenade = Resources.Load("Grenade");
@@ -135,5 +132,17 @@ public class LaunchGrenade : Card
             Debug.LogWarning("Failed to project point onto NavMesh surface.");
             return point;
         }
+    }
+
+    // Enable input actions
+    void OnEnable()
+    {
+        _input.Enable();
+    }
+
+    // Disable input actions
+    void OnDisable()
+    {
+        _input.Disable();
     }
 }
