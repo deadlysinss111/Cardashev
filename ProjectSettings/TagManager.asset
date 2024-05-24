@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Map Canvas
+  - Map Starting Node
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Map Node
   - Water
   - UI
   - 
