@@ -146,3 +146,28 @@ public class LaunchGrenade : Card
         _input.Disable();
     }
 }
+
+
+//void CalculatePath(Vector3 destination)
+//{
+//    float step = 0.1f;
+//    print("yes");
+//    Vector3 virtualPos = GameObject.Find("Player").transform.position;
+//    Vector3 virtualVelocity = _grenadeVelocity;
+//    while (Abs(virtualPos.x - destination.x) >= 0.1f || Abs(virtualPos.y - destination.y) >= 0.1f || Abs(virtualPos.z - destination.z) >= 0.1f)
+//    {
+//        virtualPos += virtualVelocity * step;
+//        virtualVelocity += Physics.gravity;
+//        _pathPoints.Add(virtualPos);
+//        print(virtualPos);
+//    }
+//}
+
+//float Abs(float value)
+//{
+//    if (value < 0f)
+//    {
+//        return -value;
+//    }
+//    return value;
+//}

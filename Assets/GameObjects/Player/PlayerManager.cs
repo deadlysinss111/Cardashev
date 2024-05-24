@@ -9,6 +9,8 @@ using UnityEngine.InputSystem;
 public class PlayerManager : MonoBehaviour
 {
     [NonSerialized] public StatManager _health;
+    byte _ultimateProgression;
+
     [NonSerialized] public Vector3 _virtualPos;
     CustomActions _input;
     Action<InputAction.CallbackContext> _lastLeftClickAction;
