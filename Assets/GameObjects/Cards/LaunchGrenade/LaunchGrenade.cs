@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class LaunchGrenade : Card
 {
@@ -10,6 +12,8 @@ public class LaunchGrenade : Card
     List<Vector3> _pathPoints;
 
     LineRenderer _lineRenderer;
+
+    Vector3 _grenadeInitVelocity;
 
     private void Awake()
     {
@@ -48,12 +52,7 @@ public class LaunchGrenade : Card
             // Calculate the path to the clicked point
             NavMeshPath path = new NavMeshPath();
 
-            // In the following snipet, the commented code are those that use not cropped positions
-            //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
-            if (NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, alteredPos, NavMesh.AllAreas, path))
-            {
-                DrawPath(path);
-            }
+            CalculatePath(alteredPos);
 
             // Start waiting for confirmation
             GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine = StartCoroutine(WaitForConfirmation(hit.point));
@@ -71,8 +70,11 @@ public class LaunchGrenade : Card
         // Launche the grenade only when confirmed
         ClearPath();
 
-        Object grenade = Resources.Load("Grenade");
-        Instantiate(grenade);
+        Object grenadePrefab = Resources.Load("Grenade");
+        GameObject grenade = (GameObject)Instantiate(grenadePrefab);
+        grenade.GetComponent<Rigidbody>().transform.position = GameObject.Find("Player").transform.position;
+        grenade.GetComponent<Rigidbody>().velocity = _grenadeInitVelocity;
+        
 
         // Trigger the card play event
         base.ClickEvent();
@@ -85,11 +87,10 @@ public class LaunchGrenade : Card
 
     void DrawPath(NavMeshPath path)
     {
-        print("previex");
         _pathPoints.Clear();
 
         // Add the first point
-        _pathPoints.Add(transform.position);
+        //_pathPoints.Add(transform.position);
 
         // Iterate through each segment between corners
         for (int i = 0; i < path.corners.Length - 1; i++)
@@ -145,29 +146,63 @@ public class LaunchGrenade : Card
     {
         _input.Disable();
     }
+    void CalculatePath(Vector3 destination)
+    {
+        _pathPoints.Clear();
+
+        // We initialize base values
+        float step = 0.01f;
+        Vector3 virtualPos = GameObject.Find("Player").transform.position;
+        Vector3 nextPos;
+        CalculateInitialVelocity(virtualPos, destination);
+        Vector3 virtualVelocity = _grenadeInitVelocity;
+        float overlap;
+
+        // This loop will calculate next position, check if we hit something and add point to draw in prediction each iteration 
+        for (int i = 1; i < 500; i++)
+        {
+            nextPos = virtualPos + virtualVelocity * step;
+            virtualVelocity += Physics.gravity * step;
+            _pathPoints.Add(virtualPos);
+
+            // Overlap our rays by small margin to ensure we never miss a surface
+            overlap = Vector3.Distance(virtualPos, nextPos) * 1.1f;
+
+            //When hitting a surface we want to show the surface marker and stop updating our line
+            if (Physics.Raycast(virtualPos, virtualVelocity.normalized, out RaycastHit hit, overlap))
+            {
+                break;
+            }
+
+            virtualPos = nextPos;
+        }
+        // Set positions for the line renderer
+        _lineRenderer.positionCount = _pathPoints.Count;
+        _lineRenderer.SetPositions(_pathPoints.ToArray());// Update the line renderer positions
+    }
+
+    void CalculateInitialVelocity(Vector3 startPoint, Vector3 endPoint)
+    {
+        float maxHeight = 10f;
+        float gravity = Physics.gravity.magnitude;
+
+        // Calculate distance and direction
+        Vector3 direction = endPoint - startPoint;
+        float horizontalDistance = new Vector3(direction.x, 0, direction.z).magnitude;
+
+        // Calculate the initial vertical velocity to reach the desired max height
+        float vy0 = Mathf.Sqrt(2 * gravity * maxHeight);
+
+        // Calculate the total time of flight (up and down)
+        float timeToApex = vy0 / gravity;
+        float totalTime = 2 * timeToApex;
+
+        // Calculate the required horizontal velocity
+        float vx0 = horizontalDistance / totalTime;
+
+        // Combine horizontal and vertical velocities
+        Vector3 initialVelocity = new Vector3(vx0 * direction.normalized.x, vy0, vx0 * direction.normalized.z);
+
+        _grenadeInitVelocity = initialVelocity;
+    }
 }
-
-
-//void CalculatePath(Vector3 destination)
-//{
-//    float step = 0.1f;
-//    print("yes");
-//    Vector3 virtualPos = GameObject.Find("Player").transform.position;
-//    Vector3 virtualVelocity = _grenadeVelocity;
-//    while (Abs(virtualPos.x - destination.x) >= 0.1f || Abs(virtualPos.y - destination.y) >= 0.1f || Abs(virtualPos.z - destination.z) >= 0.1f)
-//    {
-//        virtualPos += virtualVelocity * step;
-//        virtualVelocity += Physics.gravity;
-//        _pathPoints.Add(virtualPos);
-//        print(virtualPos);
-//    }
-//}
-
-//float Abs(float value)
-//{
-//    if (value < 0f)
-//    {
-//        return -value;
-//    }
-//    return value;
-//}
