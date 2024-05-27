@@ -95,15 +95,6 @@ public class MapManager : MonoBehaviour
     {
         // Destroy all children if they already exist
         Transform mapObj = GameObject.FindGameObjectsWithTag("Map Node Parent")[0].transform;
-        int childrenToRemove = mapObj.childCount;
-        print(childrenToRemove);
-        /*for (int i = 0; i < childrenToRemove; i++)
-        {
-            mapObj.transform.
-            Destroy(mapObj.GetChild(i).gameObject);
-        }*/
-
-
         foreach(Transform child in mapObj.transform)
         {
             Destroy(child.gameObject);
@@ -160,6 +151,7 @@ public class MapManager : MonoBehaviour
 
         for (int y = 0; y < 4; y++)
         {
+            print($"{}");
             int newStartCoordIndex = Random.Range(0, _startingNodes.Count);
             _startingNodes[newStartCoordIndex].GetComponent<MapNode>()._isStartRoom = true;
             _startingNodes.RemoveAt(newStartCoordIndex);
