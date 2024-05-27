@@ -28,7 +28,6 @@ public class BasicEnemyHandler : MonoBehaviour
             {
                 _stats._health -= 10;
             }
-            Debug.Log(_stats._health);
             if (_stats._health <= 0)
             {
                 Defeat();
@@ -40,7 +39,6 @@ public class BasicEnemyHandler : MonoBehaviour
         {
             Color c = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
             c.a = c.a - (1.0f * Time.deltaTime);
-            Debug.Log(c.a);
             transform.GetChild(0).GetComponent<MeshRenderer>().material.color = c;
         }
         if (_particleSystem.isStopped)

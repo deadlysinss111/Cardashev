@@ -69,7 +69,8 @@ public class PlayerController : MonoBehaviour
             //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
             if (NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, alteredPos, NavMesh.AllAreas,  path))
             {
-                DrawPath(path);
+                TrailCalculator.DrawPath(path, ref _lineRenderer);
+                _lastCalculatedWalkTime = GetPathTime(path);
             }
 
             // Instantiate click effect at the clicked point
@@ -112,61 +113,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("error in movement card generation");
         }
     }
-
-    // Draw the path using line renderer
-     void DrawPath(NavMeshPath path)
-    {
-        _pathPoints.Clear();
-
-        // Add the first point
-        _pathPoints.Add(transform.position);
-
-        // Iterate through each segment between corners
-        for (int i = 0; i < path.corners.Length - 1; i++)
-        {
-            // Get the start and end points of the segment
-            Vector3 start = path.corners[i];
-            Vector3 end = path.corners[i + 1];
-
-            _lastCalculatedWalkTime = GetWalkTime(end);
-
-            // Interpolate points along the segment between start and end
-            int segments = Mathf.CeilToInt(Vector3.Distance(start, end) / 0.1f); // Adjust segment length as needed
-            for (int j = 0; j <= segments; j++)
-            {
-                // Calculate the point along the segment
-                float t = (float)j / segments;
-
-                // Add the point to the path points
-                Vector3 point = Vector3.Lerp(start, end, t);
-
-                // Project the point onto the NavMesh surface
-                _pathPoints.Add(ProjectToNavMeshSurface(point));
-            }
-        }
-
-        // Set positions for the line renderer
-        _lineRenderer.positionCount = _pathPoints.Count;
-        _lineRenderer.SetPositions(_pathPoints.ToArray());// Update the line renderer positions
-    }
-
-    // Project a point onto the NavMesh surface
-     Vector3 ProjectToNavMeshSurface(Vector3 point)
-    {
-        // Project the point onto the NavMesh surface
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(point, out hit, 10f, NavMesh.AllAreas))
-        {
-            // Return the projected point
-            return hit.position;
-        }
-        else
-        {
-            // Return the original point if projection fails
-            Debug.LogWarning("Failed to project point onto NavMesh surface.");
-            return point;
-        }
-    }
+    
 
     // Coroutine to update the path as the agent moves
      IEnumerator UpdatePath()
@@ -190,19 +137,6 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         ClearPath();
-    }
-
-    // Get the time to traverse the path
-    public float GetWalkTime(Vector3 destination)
-    {
-        // Calculate the path to the destination
-        NavMeshPath path = new NavMeshPath();
-        if (_agent.CalculatePath(destination, path))
-        {
-            Debug.Log("Path time: " + GetPathTime(path));
-            return GetPathTime(path);
-        }
-        return 0;
     }
 
     // Get the time to traverse the path

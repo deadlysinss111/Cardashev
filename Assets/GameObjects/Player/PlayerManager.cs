@@ -18,8 +18,11 @@ public class PlayerManager : MonoBehaviour
     [NonSerialized] public Coroutine _waitForConfirmationCoroutine;
 
     string _currentState;
+    Action _currentAction;
     Dictionary<string, Action> _states;
     [NonSerialized] public string _defaultState;
+
+    Func<UltiContext, bool> _ultimate;
 
     PlayerManager() 
     {
@@ -33,17 +36,20 @@ public class PlayerManager : MonoBehaviour
         _input.Enable();
         _health = GetComponent<StatManager>();
 
+        Class brawler = ClassFactory.Brawler();
+        _ultimate = brawler._ultimate;
+
         StartCoroutine(StartSimulation());
     }
 
     // /!\ depracated function
     // This state change function disable the previous control listener state and enable the new one
-    public void SetLeftClickTo(Action target)
-    {
-        _input.Main.LeftClick.performed -= _lastLeftClickAction;
-        _lastLeftClickAction = ctx => { target(); };
-        _input.Main.LeftClick.performed += _lastLeftClickAction;
-    }
+    //public void SetLeftClickTo(Action target)
+    //{
+    //    _input.Main.LeftClick.performed -= _lastLeftClickAction;
+    //    _lastLeftClickAction = ctx => { target(); };
+    //    _input.Main.LeftClick.performed += _lastLeftClickAction;
+    //}
 
     public void AddState(string name, Action func)
     {
@@ -59,7 +65,7 @@ public class PlayerManager : MonoBehaviour
         if(_states.TryGetValue(name, out func))
         {
             _currentState = name;
-            SetLeftClickTo(_states[name]);
+            _currentAction = func;
             return true;
         }
         return false;
@@ -81,4 +87,13 @@ public class PlayerManager : MonoBehaviour
         SetToDefult();
     }
 
+    public void UseUltimate()
+    {
+        _ultimate(new UltiContext());
+    }
+
+    public void ExecuteCurrentStateAction()
+    {
+        _currentAction();
+    }
 }
