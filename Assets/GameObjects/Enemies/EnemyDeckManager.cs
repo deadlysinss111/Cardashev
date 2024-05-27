@@ -7,12 +7,8 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using static UnityEngine.GraphicsBuffer;
 
-public class DeckManager : MonoBehaviour
+public class EnemyDeckManager : DeckManager
 {
-    protected List<Card> _hand;
-    public List<Card> _remainsInDeck;
-    protected List<Card> _discardPile;
-
     void Start()
     {
         Init();
@@ -26,7 +22,7 @@ public class DeckManager : MonoBehaviour
     }
 
     // called when the player draws a card
-    public void Draw()
+    public new void Draw()
     {
         // if the deck is empty, we shuffle the discard pile into it
         if (_remainsInDeck.Count == 0)
@@ -49,7 +45,8 @@ public class DeckManager : MonoBehaviour
         // since we drew it, we remove the card from the deck
         _remainsInDeck.RemoveAt(rdm);
 
-        DisplayHand();
+        //DisplayHand();
+        Play(clone.GetComponent<Card>());
     }
 
     void Discard(Card target)
@@ -62,20 +59,21 @@ public class DeckManager : MonoBehaviour
     }
 
     // this function makes a card apperaing on screen
-    public GameObject SpawnCard(Card target)
+    public new GameObject SpawnCard(Card target)
     {
         GameObject obj = Instantiate(target.gameObject);
-        obj.transform.SetParent(GameObject.FindGameObjectsWithTag("Canvas")[0].transform, false);
-        obj.transform.localScale = new Vector3(10, 1, 10);
+        //obj.transform.SetParent(GameObject.FindGameObjectsWithTag("Canvas")[0].transform, false);
+        //obj.transform.localScale = new Vector3(10, 1, 10);
         return obj;
     }
 
     public void Play(Card target)
     {
-        if (GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(target) == true)
-        {
+        //if (GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(target) == true)
+        //{
+        target._trigger();
             Discard(target);
-        }
+        //}
     }
 
     // handling positions in order to have a good looking displaying

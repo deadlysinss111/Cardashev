@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] int _healthDanger;
 
     NavMeshAgent _agent;
+    EnemyDeckManager _enemyDeckManager;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,7 @@ public class EnemyController : MonoBehaviour
         _player = GameObject.Find("Player");
         _enemyHandler = GetComponent<BasicEnemyHandler>();
         _agent = GetComponent<NavMeshAgent>();
+        _enemyDeckManager = GetComponent<EnemyDeckManager>();
     }
 
     // Update is called once per framee
@@ -27,6 +29,10 @@ public class EnemyController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             DecidePath();
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            _enemyDeckManager.Draw();
         }
     }
 

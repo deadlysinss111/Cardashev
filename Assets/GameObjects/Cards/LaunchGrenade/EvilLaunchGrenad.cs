@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class LaunchGrenade : Card
+public class EvilLaunchGrenade : LaunchGrenade
 {
     CustomActions _input;
     [SerializeField] LayerMask _clickableLayers;
@@ -27,8 +27,8 @@ public class LaunchGrenade : Card
 
     protected override void ClickEvent()
     {
-        print("clicked");
-        _input.Main.prev.performed += ctx => Preview();
+        StartCardAction();
+        //_input.Main.prev.performed += ctx => Preview();
     }
 
     private void Preview()
@@ -72,11 +72,6 @@ public class LaunchGrenade : Card
 
         // Launche the grenade only when confirmed
 
-        StartCardAction();
-    }
-
-    protected void StartCardAction()
-    {
         ClearPath();
 
         Object grenade = Resources.Load("Grenade");
