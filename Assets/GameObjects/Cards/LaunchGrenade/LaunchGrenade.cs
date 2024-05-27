@@ -20,11 +20,12 @@ public class LaunchGrenade : Card
         _input = new CustomActions();
         _lineRenderer = GetComponent<LineRenderer>();
         _pathPoints = new List<Vector3>();
+        GameObject.Find("Player").GetComponent<PlayerManager>().AddState("grenade", Preview);
     }
 
     public override void Effect()
     {
-        GameObject.Find("Player").GetComponent<PlayerController>().SetToMovementState();
+        GameObject.Find("Player").GetComponent<PlayerManager>().SetToState("movement");
         base.Effect();
     }
 
@@ -72,7 +73,7 @@ public class LaunchGrenade : Card
 
         Object grenadePrefab = Resources.Load("Grenade");
         GameObject grenade = (GameObject)Instantiate(grenadePrefab);
-        grenade.GetComponent<Rigidbody>().transform.position = GameObject.Find("Player").transform.position;
+        grenade.GetComponent<Rigidbody>().transform.position = GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos;
         grenade.GetComponent<Rigidbody>().velocity = _grenadeInitVelocity;
         
 
@@ -152,7 +153,7 @@ public class LaunchGrenade : Card
 
         // We initialize base values
         float step = 0.01f;
-        Vector3 virtualPos = GameObject.Find("Player").transform.position;
+        Vector3 virtualPos = GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos;
         Vector3 nextPos;
         CalculateInitialVelocity(virtualPos, destination);
         Vector3 virtualVelocity = _grenadeInitVelocity;

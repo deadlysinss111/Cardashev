@@ -36,16 +36,12 @@ public class PlayerController : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _lineRenderer = GetComponent<LineRenderer>();
-        GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _agent.transform.position;
         _pathPoints = new List<Vector3>();
-
         _input = new CustomActions();
-    }
 
-    // Assign input actions to enter the movement state
-     public void SetToMovementState()
-    {
-        GameObject.Find("Player").GetComponent<PlayerManager>().SetLeftClickTo(() => ClickToVisualize()); // Handle click to visualize the path
+        PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        manager._virtualPos = _agent.transform.position;
+        manager.AddState("movement", ClickToVisualize);
     }
 
     // Handle click to visualize the path
