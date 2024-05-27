@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ public class BasicEnemyHandler : MonoBehaviour
 {
     StatManager _stats;
     bool _waitForDestroy;
+
+    public float Health { get => _stats._health; private set => throw new InvalidCastException(); }
 
     ParticleSystem _particleSystem;
     // Start is called before the first frame update

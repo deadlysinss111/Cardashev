@@ -9588,17 +9588,17 @@ NavMeshAgent:
   m_GameObject: {fileID: 1465837509893341099}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 51.12
+  m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_Acceleration: 9999
+  avoidancePriority: 40
+  m_AngularSpeed: 0
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
-  m_Height: 102.240005
-  m_BaseOffset: 51.120003
+  m_Height: 2
+  m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!23 &4108778292654738226
@@ -9732,11 +9732,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1465837509893341099}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67750835fe5019e4e82c13a99e29a75e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _healthDanger: 40
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
