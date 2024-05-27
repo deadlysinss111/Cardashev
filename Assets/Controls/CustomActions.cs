@@ -53,6 +53,15 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Focus"",
+                    ""type"": ""Button"",
+                    ""id"": ""c0251a30-0490-4a0d-b1e9-6a7e1f2ba005"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -88,6 +97,17 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""action"": ""SpaceBar"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe66b46b-d892-4cd3-8208-cb0449dadb86"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Focus"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -99,6 +119,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         m_Main_LeftClick = m_Main.FindAction("LeftClick", throwIfNotFound: true);
         m_Main_Confirm = m_Main.FindAction("Confirm", throwIfNotFound: true);
         m_Main_SpaceBar = m_Main.FindAction("SpaceBar", throwIfNotFound: true);
+        m_Main_Focus = m_Main.FindAction("Focus", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -163,6 +184,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Main_LeftClick;
     private readonly InputAction m_Main_Confirm;
     private readonly InputAction m_Main_SpaceBar;
+    private readonly InputAction m_Main_Focus;
     public struct MainActions
     {
         private @CustomActions m_Wrapper;
@@ -170,6 +192,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         public InputAction @LeftClick => m_Wrapper.m_Main_LeftClick;
         public InputAction @Confirm => m_Wrapper.m_Main_Confirm;
         public InputAction @SpaceBar => m_Wrapper.m_Main_SpaceBar;
+        public InputAction @Focus => m_Wrapper.m_Main_Focus;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -188,6 +211,9 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @SpaceBar.started += instance.OnSpaceBar;
             @SpaceBar.performed += instance.OnSpaceBar;
             @SpaceBar.canceled += instance.OnSpaceBar;
+            @Focus.started += instance.OnFocus;
+            @Focus.performed += instance.OnFocus;
+            @Focus.canceled += instance.OnFocus;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -201,6 +227,9 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @SpaceBar.started -= instance.OnSpaceBar;
             @SpaceBar.performed -= instance.OnSpaceBar;
             @SpaceBar.canceled -= instance.OnSpaceBar;
+            @Focus.started -= instance.OnFocus;
+            @Focus.performed -= instance.OnFocus;
+            @Focus.canceled -= instance.OnFocus;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -223,5 +252,6 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         void OnLeftClick(InputAction.CallbackContext context);
         void OnConfirm(InputAction.CallbackContext context);
         void OnSpaceBar(InputAction.CallbackContext context);
+        void OnFocus(InputAction.CallbackContext context);
     }
 }
