@@ -11,6 +11,12 @@ public class MapPathScript : MonoBehaviour
     private void Awake()
     {
         shapeController = GetComponent<SpriteShapeController>();
+        GetComponent<SpriteShapeRenderer>().color = Color.blue;
+    }
+
+    public void LockPath()
+    {
+        GetComponent<SpriteShapeRenderer>().color = Color.grey;
     }
 
     public void SetShapePosition(Vector3 start, Vector3 end)

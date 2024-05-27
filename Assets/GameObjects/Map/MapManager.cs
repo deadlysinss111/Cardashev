@@ -4,6 +4,7 @@ using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D;
+using UnityEngine.XR;
 using static UnityEngine.GraphicsBuffer;
 
 /*public class MapNode
@@ -24,13 +25,20 @@ public class MapManager : MonoBehaviour
 {
     int _mapSizeX;
     int _mapSizeY;
-    List<List<MapNode>> _mapGrid;
-    List<Vector2> _startingCoords;
 
+    // For map generation
+    List<GameObject> _startingNodes;
+
+    // PREFABS
     GameObject _mapNodePrefab;
     GameObject _mapPathPrefab;
-    [SerializeField] GameObject _startingNode;
-    MapNode _playerLocation;
+    
+    // For map navigation
+    [SerializeField] GameObject _startingNode; // TODO auto create this one and make it invisible at Start()
+    List<List<GameObject>> _mapGrid;
+    GameObject _playerLocation;
+
+    // Miscenalious
     [SerializeField] LayerMask _clickableLayers;
 
     void Start()
@@ -38,10 +46,15 @@ public class MapManager : MonoBehaviour
         _mapSizeX = 7;
         _mapSizeY = 15;
 
+        _mapGrid = new List<List<GameObject>>(_mapSizeX);
+
         _mapNodePrefab = (GameObject)Resources.Load("Map Node");
         _mapPathPrefab = (GameObject)Resources.Load("Map Path");
-        _playerLocation = GameObject.FindGameObjectsWithTag("Map Starting Node")[0].transform.GetComponent<MapNode>();
-        _playerLocation.SelectNode();
+        // Generate an invisible starting node
+        _playerLocation = Instantiate(_mapNodePrefab).transform.gameObject;
+        _playerLocation.transform.SetParent(GameObject.FindGameObjectsWithTag("Map")[0].transform, false);
+        _playerLocation.transform.localPosition = new Vector3(1, 3);
+        _playerLocation.GetComponent<MapNode>().SelectNode();
     }
 
     void Update()
@@ -49,68 +62,75 @@ public class MapManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
-            // Uses a Raycast to get the map node that was targeted
+            // Use a Raycast to get the map node that was targeted
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))
             {
                 // Get the MapNode Component
-                MapNode node = hit.transform.gameObject.GetComponent<MapNode>();
-                for (int i = 0; i < _playerLocation._nextNodes.Count; i++)
+                GameObject curNode = hit.transform.gameObject;
+                foreach (GameObject nextNode in _playerLocation.GetComponent<MapNode>()._nextNodes)
                 {
-                    if(ReferenceEquals(node, _playerLocation._nextNodes[i]))
+                    if (ReferenceEquals(curNode, nextNode))
                     {
-                        node.SelectNode();
-                        _playerLocation = node;
-                        _playerLocation.UnselectNode();
+                        MovePlayerTo(curNode);
                         break;
                     }
                 }
             }
         }
 
-        /*if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             GenerateMap();
-        }*/
+        }
     }
 
-    void MovePlayerOnMap()
+    void MovePlayerTo(GameObject nodeToMoveTo)
     {
-
+        nodeToMoveTo.GetComponent<MapNode>().SelectNode();
+        _playerLocation = nodeToMoveTo;
+        _playerLocation.GetComponent<MapNode>().UnselectNode();
     }
 
     void InitMapGrid()
     {
         // Destroy all children if they already exist
-        Transform mapCanvasObj = GameObject.FindGameObjectsWithTag("Map Canvas")[0].transform;
-        int childrenToRemove = mapCanvasObj.childCount;
-        for (int i = 0; i < childrenToRemove; i++)
+        Transform mapObj = GameObject.FindGameObjectsWithTag("Map Node Parent")[0].transform;
+        int childrenToRemove = mapObj.childCount;
+        print(childrenToRemove);
+        /*for (int i = 0; i < childrenToRemove; i++)
         {
-            Destroy(mapCanvasObj.GetChild(i).gameObject);
+            mapObj.transform.
+            Destroy(mapObj.GetChild(i).gameObject);
+        }*/
+
+
+        foreach(Transform child in mapObj.transform)
+        {
+            Destroy(child.gameObject);
         }
 
-        int spaceBetweenNodes = 50;
+        int spaceBetweenNodes = 5;
 
-        _mapGrid = new List<List<MapNode>>();
-        _startingCoords = new List<Vector2>();
+        _startingNodes = new List<GameObject>();
 
         for (int i = 0; i < _mapSizeX; i++)
         {
-            _startingCoords.Add(new Vector2(i, 0));
-            _mapGrid.Add(new List<MapNode>());
+            _mapGrid.Add(new List<GameObject>(_mapSizeY));
             for (int j = 0; j < _mapSizeY; j++)
             {
-                _mapGrid[i].Add(new MapNode());
                 GameObject obj = Instantiate(_mapNodePrefab);
-                _mapGrid[i][j] = obj.GetComponent<MapNode>();
-                //// WARNING : don't forget to create a "Map Canvas" tag when merging codes !!
-                obj.transform.SetParent(GameObject.FindGameObjectsWithTag("Map Canvas")[0].transform, false);
-                obj.transform.localPosition = new Vector3(i * spaceBetweenNodes, j * spaceBetweenNodes);
+                _mapGrid[i].Add(obj);
+                obj.transform.SetParent(mapObj, false);
+                obj.transform.localPosition = new Vector3(i * spaceBetweenNodes, 4, j * spaceBetweenNodes);
 
             }
         }
-        /*print($"size x : {_mapGrid.Count}");
-        print($"size y : {_mapGrid[0].Count}");
-        print($"Sarting coords : {_startingCoords.Count}");*/
+
+        // Generate starting coords
+        for (int i = 0; i < _mapSizeX; i++)
+        {
+            _startingNodes.Add(_mapGrid[i][0]);
+        }
     }
 
     void GenerateMap()
@@ -121,19 +141,14 @@ public class MapManager : MonoBehaviour
         /*GameObject nextRoom;
         for (int pathNb = 0; pathNb < 4; pathNb++)
         {
-            print($"Path : {pathNb}");
-            int newStartCoordIndex = Random.Range(0, _startingCoords.Count);
-            nextRoom = new Vector2(_startingCoords[newStartCoordIndex].x, 0);
-            _startingCoords.RemoveAt(newStartCoordIndex);
-            foreach (Vector2 item in _startingCoords)
-            {
-                print($"Starting Coord: {item}");
-            }
-            //print($"Sarting coords : {_startingCoords.Count}");
+            int newStartCoordIndex = Random.Range(0, _startingNodes.Count);
+            nextRoom = new Vector2(_startingNodes[newStartCoordIndex], 0);
+            _startingNodes.RemoveAt(newStartCoordIndex);
+            //print($"Sarting coords : {_startingNodes.Count}");
             for (int floorNb = 1; floorNb < _mapSizeY; floorNb++)
             {
                 int targetRoom = (int)nextRoom.x;
-                int selectedRoom = Mathf.Clamp(Random.Range(targetRoom-1, targetRoom+2), 0, _mapSizeX-1);
+                int selectedRoom = Mathf.Clamp(Random.Range(targetRoom - 1, targetRoom + 2), 0, _mapSizeX - 1);
                 //print($"Selected Room : {selectedRoom}");
                 MapNode curNode = _mapGrid[selectedRoom][floorNb];
                 curNode._nextRooms.Add(nextRoom);
@@ -145,10 +160,9 @@ public class MapManager : MonoBehaviour
 
         for (int y = 0; y < 4; y++)
         {
-            int newStartCoordIndex = Random.Range(0, _startingCoords.Count);
-            print(_startingCoords[newStartCoordIndex].y);
-            _mapGrid[(int)_startingCoords[newStartCoordIndex].x][0]._isStartRoom = true;
-            _startingCoords.RemoveAt(newStartCoordIndex);
+            int newStartCoordIndex = Random.Range(0, _startingNodes.Count);
+            _startingNodes[newStartCoordIndex].GetComponent<MapNode>()._isStartRoom = true;
+            _startingNodes.RemoveAt(newStartCoordIndex);
         }
 
         // Cleaning undesired nodes
@@ -156,9 +170,9 @@ public class MapManager : MonoBehaviour
         {
             for (int j = 0; j < _mapSizeY; j++)
             {
-                if (!_mapGrid[i][j]._isStartRoom)
+                if (!_mapGrid[i][j].GetComponent<MapNode>()._isStartRoom)
                 {
-                    _mapGrid[i][j].gameObject.SetActive(false);
+                    _mapGrid[i][j].SetActive(false);
                 }
             }
         }
