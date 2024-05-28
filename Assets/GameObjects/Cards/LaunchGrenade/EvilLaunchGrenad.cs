@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +10,7 @@ public class EvilLaunchGrenade : LaunchGrenade
     [SerializeField] LayerMask _clickableLayers;
     Coroutine _waitForConfirmationCoroutine;
     List<Vector3> _pathPoints;
+
 
     LineRenderer _lineRenderer;
 
@@ -20,9 +22,9 @@ public class EvilLaunchGrenade : LaunchGrenade
         _input.Enable();
     }
 
-    public override void Effect()
+    public override void Effect(GameObject enemy)
     {
-        base.Effect();
+        StartCardAction(enemy);
     }
 
     protected override void ClickEvent()
@@ -73,12 +75,19 @@ public class EvilLaunchGrenade : LaunchGrenade
         // Launche the grenade only when confirmed
 
         ClearPath();
+    }
 
-        Object grenade = Resources.Load("Grenade");
-        Instantiate(grenade);
+    protected void StartCardAction(GameObject enemy)
+    {
+        GameObject grenade = (GameObject)Instantiate(Resources.Load("Grenade"));
+        Vector3 pos = enemy.transform.position;
+        pos.y = pos.y + 0.5f;
+        grenade.transform.position = pos;
+        grenade.GetComponent<Rigidbody>().velocity = TrailCalculator.BellCurveInititialVelocity(pos, GameObject.Find("Player").transform.position, Mathf.Clamp(Vector3.Distance(pos, GameObject.Find("Player").transform.position), 1f, 5f));
+        BetterDebug.Log(grenade.GetComponent<Rigidbody>().velocity, grenade.transform.position);
 
         // Trigger the card play event
-        base.ClickEvent();
+        //base.ClickEvent();
     }
 
     void ClearPath()

@@ -36,17 +36,32 @@ public class EnemyDeckManager : DeckManager
         
         // we need to duplicate the card's game object so that we can display it an destroy it later easily
         GameObject clone = SpawnCard(_remainsInDeck[rdm]);
-        _hand.Add(clone.GetComponent<Card>());
+        _discardPile.Add(_remainsInDeck[rdm]);
+
+        Card[] alts = clone.GetComponents<Card>();
+        Card card = new Card();
+
+        for (int i = 0; i < alts.Length; i++)
+        {
+            // Very stupid methinks
+            if (alts[i].GetType().ToString().Contains("Evil"))
+            {
+                card = alts[i];
+            }
+        }
+
+        _hand.Add(card);
         Card toDiscard = _remainsInDeck[rdm];
+        Debug.Log(clone.GetComponents<Card>()[1]);
 
         // it's kinda dirty but we use the closure to easily keep the card in memory and add it to discard pile later
-        clone.GetComponent<Card>()._trigger += () => { _discardPile.Add(toDiscard); Debug.Log(toDiscard); };
+        card._trigger += () => { _discardPile.Add(toDiscard); Debug.Log(toDiscard); };
 
         // since we drew it, we remove the card from the deck
         _remainsInDeck.RemoveAt(rdm);
 
         //DisplayHand();
-        Play(clone.GetComponent<Card>());
+        Play(card);
     }
 
     void Discard(Card target)
@@ -71,7 +86,7 @@ public class EnemyDeckManager : DeckManager
     {
         //if (GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(target) == true)
         //{
-        target._trigger();
+        target.Effect(gameObject);
             Discard(target);
         //}
     }

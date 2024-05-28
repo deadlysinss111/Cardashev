@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5140981619071243993}
   - component: {fileID: 3082283686928567178}
   - component: {fileID: 4934749188351065461}
+  - component: {fileID: -5086945887928047425}
   - component: {fileID: -3639945158098582263}
   m_Layer: 0
   m_Name: Plane
@@ -129,6 +130,30 @@ MonoBehaviour:
   _clickableLayers:
     serializedVersion: 2
     m_Bits: 1
+--- !u!114 &-5086945887928047425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7770915759181933807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d714098b5cd4a43479c7ca1cbbdf19c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: 
+  _description: 
+  _duration: 2
+  _endingTime: 0
+  _stats: 
+  _goldValue: 0
+  _clickableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  _clickableLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!120 &-3639945158098582263
 LineRenderer:
   serializedVersion: 2

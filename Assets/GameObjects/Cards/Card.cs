@@ -24,6 +24,10 @@ public class Card : MonoBehaviour
     {
         _endingTime = Time.time + _duration;
     }
+    public virtual void Effect(GameObject go)
+    {
+        Effect();
+    }
 
     public float GetRemainingTime()
     {
