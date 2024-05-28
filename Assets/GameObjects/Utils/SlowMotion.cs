@@ -1,32 +1,36 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
-public class SlowMotion : MonoBehaviour
+public class SlowMotionWithProgressBar : MonoBehaviour
 {
     // Slow motion variables
-    public float _slowdownFactor = 0.10f;
+    public float _slowdownFactor;
 
-    public float _slowdownLength = 2f; // How long the slow motion will last
+    public float _slowdownLength; // Maximum duration the slow motion can last
 
     // Focus bar variables
     public GameObject _focusBar;
 
-    public bool _isRunning;
-    public float _duration = 5f; // Set a default duration
-
-    private Coroutine _slowMotionCoroutine;
-    private Coroutine _countdownCoroutine;
-    private Coroutine _cooldownCoroutine;
-
+    private bool _isActive;
     private CustomActions _input;
 
-    // function to handle the focus action
+    // Circular progress bar variables
+    private bool _progressBarIsActive;
+
+    private bool _isRefilling;
+    private float _indicatorTimer;
+    private float _maxIndicatorTimer;
+    private Image _radialProgressBar;
+    private float _lerpSpeed = 3f; // Speed of interpolation
+
     private void Awake()
     {
         _input = new CustomActions();
-        _input.Main.Focus.performed += OnFocusPerformed;
-        _input.Main.Focus.canceled += OnFocusCanceled;
+        _input.Main.Focus.performed += context => StartSlowMotion();
+        _input.Main.Focus.canceled += context => StopSlowMotion();
+
+        // Initialize the radial progress bar
+        _radialProgressBar = _focusBar.transform.Find("RadialProgressBar").GetComponent<Image>();
     }
 
     // Enable and disable the input actions
@@ -40,97 +44,101 @@ public class SlowMotion : MonoBehaviour
         _input.Main.Disable();
     }
 
-    // Handle the focus action
-    private void OnFocusPerformed(InputAction.CallbackContext context)// CallbackContext is the context of the action
+    public void StartSlowMotion()
     {
-        DoSlowMotion();
-    }
+        Time.timeScale = _slowdownFactor;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
 
-    // Handle the focus action cancelation
-    private void OnFocusCanceled(InputAction.CallbackContext context)
-    {
-        ResetTimeScale();
-        StopCountdown();
-    }
+        _isActive = true;
+        _progressBarIsActive = true;
+        _isRefilling = false;
 
-    // Function to handle the slow motion
-    public void DoSlowMotion()
-    {
-        if (_isRunning || (_cooldownCoroutine != null))
-        {
-            return;
-        }
-
-        if (_slowMotionCoroutine != null)
-        {
-            StopCoroutine(_slowMotionCoroutine);
-        }
-        if (_countdownCoroutine != null)
-        {
-            StopCoroutine(_countdownCoroutine);
-        }
-
-        Time.timeScale = _slowdownFactor; // Time.timeScale is the speed of the game
-        Time.fixedDeltaTime = Time.timeScale * 0.02f; // Time.fixedDeltaTime is the time between each physics update
-
-        _slowMotionCoroutine = StartCoroutine(StopSlowMotion(_duration));// variable to store the coroutine
-        _countdownCoroutine = StartCoroutine(StartCountdown(_duration));
-    }
-
-    // Function to stop the slow motion
-    private IEnumerator StopSlowMotion(float duration)
-    {
-        // Calculate the time used during slow motion
-        float usedTime = _duration - duration;
-
-        yield return new WaitForSecondsRealtime(_slowdownLength); // Use WaitForSecondsRealtime for time scale-independent waiting
-
-        ResetTimeScale();
-
-        if (_cooldownCoroutine != null)
-        {
-            StopCoroutine(_cooldownCoroutine);
-        }
-
-        _cooldownCoroutine = StartCoroutine(Cooldown(usedTime));
-    }
-
-    private IEnumerator Cooldown(float usedTime)
-    {
-        // Calculate the cooldown duration based on the time used
-        float cooldownDuration = usedTime * 2;
-
-        yield return new WaitForSecondsRealtime(cooldownDuration);
-
-        _isRunning = false;
-    }
-
-    private void ResetTimeScale()
-    {
-        Time.timeScale = 1f; // Reset the time scale
-        Time.fixedDeltaTime = 0.02f; // Reset the fixed delta time
-    }
-
-    private IEnumerator StartCountdown(float duration)
-    {
-        _isRunning = true;
         _focusBar.SetActive(true);
-
-        var radialProgressBar = _focusBar.transform.Find("RadialProgressBar").GetComponent<CircularProgressBar>();
-        if (radialProgressBar != null)
-        {
-            radialProgressBar.ActivateCountdown(duration);
-        }
-
-        yield return new WaitForSecondsRealtime(duration); // Use WaitForSecondsRealtime for time scale-independent waiting
-
-        _isRunning = false;
-        _focusBar.SetActive(false);
+        ActivateCountdown(_slowdownLength);
     }
 
-    private void StopCountdown()
+    public void StopSlowMotion()
     {
-        _isRunning = false;
-        _focusBar.SetActive(false);
+        _isActive = false;
+
+        // Reset TimeScale
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
+
+        StartRefill();
+    }
+
+    public void DecreaseTimer()
+    {
+        _slowdownLength -= Time.unscaledDeltaTime;
+    }
+
+    public void IncreaseTimer()
+    {
+        _slowdownLength += Time.unscaledDeltaTime / 4;
+    }
+
+    public void StartRefill()
+    {
+        _isRefilling = true;
+        _progressBarIsActive = true;
+    }
+
+    public void ActivateCountdown(float countdownTime)
+    {
+        _maxIndicatorTimer = 5f;
+        _indicatorTimer = countdownTime;
+    }
+
+    public void StopCountdown()
+    {
+        _progressBarIsActive = false;
+    }
+
+    private void Update()
+    {
+        if (_isActive)
+        {
+            DecreaseTimer();
+            if (_slowdownLength <= 0)
+            {
+                StopSlowMotion();
+            }
+        }
+
+        if (_progressBarIsActive)
+        {
+            if (_isRefilling)
+            {
+                // Smoothly refill the progress bar using Lerp
+                _indicatorTimer += Time.unscaledDeltaTime/4; // Increment the indicator timer
+                _radialProgressBar.fillAmount = Mathf.Lerp(_radialProgressBar.fillAmount, _indicatorTimer / _maxIndicatorTimer, _lerpSpeed * Time.unscaledDeltaTime);
+                
+                IncreaseTimer(); // Increase the timer
+
+                // Stop refilling once max is reached
+                if (_indicatorTimer >= _maxIndicatorTimer)
+                {
+                    _isRefilling = false;
+                    _indicatorTimer = _maxIndicatorTimer; // Ensure the timer is exactly at max
+                    _radialProgressBar.fillAmount = 1f; // Ensure the fill amount is exactly 1
+                    _slowdownLength = _maxIndicatorTimer; // Ensure the timer is exactly at max
+
+
+                    // Stop the countdown when fully refilled
+                    StopCountdown();
+                }
+            }
+            else
+            {
+                _indicatorTimer -= Time.unscaledDeltaTime; // Use unscaledDeltaTime instead of deltaTime
+                _radialProgressBar.fillAmount = _indicatorTimer / _maxIndicatorTimer;
+
+                if (_indicatorTimer <= 0)
+                {
+                    StopCountdown();
+                }
+            }
+        }
     }
 }
