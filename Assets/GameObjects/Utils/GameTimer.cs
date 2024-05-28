@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class GameTimer : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public float _timePassed;
+
+    [SerializeField] private GameObject _timerText;
+
     void Start()
     {
-        
+        _timePassed = 0;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        _timePassed += Time.deltaTime;
+
+        int minutes = Mathf.FloorToInt(_timePassed / 60);
+        int seconds = Mathf.FloorToInt(_timePassed % 60);
+
+        _timerText.GetComponent<TMPro.TextMeshProUGUI>().text = $"{minutes:D2}:{seconds:D2}";
     }
 }
