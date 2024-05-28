@@ -27,7 +27,16 @@ public class LaunchGrenade : Card
         _pathPoints = new List<Vector3>();
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         _id = 0;
-        while (manager.AddState("grenade"+_id.ToString(), Preview) == false) _id++;
+        while (manager.AddState("grenade"+_id.ToString(), EnterGrenadeState) == false) _id++;
+    }
+
+    void EnterGrenadeState()
+    {
+        PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        manager.SetLeftClickTo(FireGrenade);
+        manager.SetRightClickTo(() => { manager.SetToDefult(); ClearPath(); });
+        manager.SetHoverTo(Preview);
+        GameObject.Find("Player").GetComponent<PlayerController>().ClearPath();
     }
 
     public override void Effect()
@@ -56,15 +65,11 @@ public class LaunchGrenade : Card
             Vector3 playerPos = GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos;
             _grenadeInitVelocity = TrailCalculator.BellCurveInititialVelocity(playerPos, alteredPos, 10.0f);
             TrailCalculator.BellCurve(playerPos, _grenadeInitVelocity, ref _lineRenderer, out _pathPoints);
-
-            GameObject.Find("Player").GetComponent<PlayerManager>().SetLeftClickTo(()=>WaitForConfirmation(alteredPos));
         }
     }
 
-    void WaitForConfirmation(Vector3 destination)
+    void FireGrenade()
     {
-
-        // Launche the grenade only when confirmed
         ClearPath();
 
         UnityEngine.Object GRENADE = Resources.Load("Grenade");

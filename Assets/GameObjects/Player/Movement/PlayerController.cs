@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
     bool _movementEnabled;
 
+    Vector3 _virtualDestination;
+
     // Initialization
      void Awake()
     {
@@ -43,7 +45,15 @@ public class PlayerController : MonoBehaviour
 
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager._virtualPos = _agent.transform.position;
-        manager.AddState("movement", Preview);
+        manager.AddState("movement", EnterMovementState);
+    }
+
+    void EnterMovementState()
+    {
+        PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        manager.SetLeftClickTo(ApplyMovement);
+        manager.SetLeftClickTo(() => { });
+        manager.SetHoverTo(Preview);
     }
 
     // Handle click to visualize the path
@@ -75,23 +85,21 @@ public class PlayerController : MonoBehaviour
                 Instantiate(_clickEffect, alteredPos + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
             }
 
-            GameObject.Find("Player").GetComponent<PlayerManager>().SetLeftClickTo(() => WaitForConfirmation(alteredPos));
+            _virtualDestination = alteredPos;
         }
     }
 
     // Coroutine to wait for confirmation input
-     void WaitForConfirmation(Vector3 destination)
+     void ApplyMovement()
     {
-        // Update agent destination only when confirmed
-        
         ClearPath();
 
-        GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = destination;
+        GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _virtualDestination;
 
         Card moveCard = new Card();
         moveCard._trigger += () =>
         {
-            _agent.destination = destination;
+            _agent.destination = _virtualDestination;
             StartCoroutine(UpdatePath());
         };
         moveCard._duration = _lastCalculatedWalkTime;
@@ -145,7 +153,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Clear the path from the line renderer
-     void ClearPath()
+     public void ClearPath()
     {
         _lineRenderer.positionCount = 0;
     }

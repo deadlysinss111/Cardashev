@@ -23,7 +23,9 @@ public class PlayerManager : MonoBehaviour
     [NonSerialized] public string _defaultState;
 
     Func<UltiContext, bool> _ultimate;
-    Action _middleware;
+    Action _mouseHover;
+    Action _leftClick;
+    Action _rightClick;
 
     PlayerManager() 
     {
@@ -38,17 +40,29 @@ public class PlayerManager : MonoBehaviour
 
         Class brawler = ClassFactory.Brawler();
         _ultimate = brawler._ultimate;
+        _ultimateProgression = 0;
 
+        _rightClick = () => { };
         _input.Main.LeftClick.performed += ctx => LeftClickMiddleware();
+        _input.Main.RightClick.performed += ctx => _rightClick();
 
         StartCoroutine(StartSimulation());
     }
 
-     ///!\ depracated function
      //This state change function disable the previous control listener state and enable the new one
     public void SetLeftClickTo(Action target)
     {
-        _middleware = target;
+        _leftClick = target;
+    }
+    
+    public void SetHoverTo(Action target)
+    {
+        _mouseHover = target;
+    }
+    
+    public void SetRightClickTo(Action target)
+    {
+        _rightClick = target;
     }
 
     private void LeftClickMiddleware()
@@ -65,7 +79,7 @@ public class PlayerManager : MonoBehaviour
                 return;
             }
         }
-        _middleware();
+        _leftClick();
     }
 
     public bool AddState(string name, Action func)
@@ -84,7 +98,7 @@ public class PlayerManager : MonoBehaviour
         if(_states.TryGetValue(name, out func))
         {
             _currentState = name;
-            _currentAction = func;
+            func();
             return true;
         }
         return false;
@@ -108,12 +122,16 @@ public class PlayerManager : MonoBehaviour
 
     public void UseUltimate()
     {
-        _ultimate(new UltiContext());
+        if(_ultimateProgression >= 100)
+        {
+            _ultimate(new UltiContext());
+            _ultimateProgression = 0;
+        }
     }
 
     public void ExecuteCurrentStateAction()
     {
-        _currentAction();
+        _mouseHover();
     }
 
     public List<string> GetDeck()

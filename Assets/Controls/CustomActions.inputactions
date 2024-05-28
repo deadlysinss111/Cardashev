@@ -15,7 +15,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Confirm",
+                    "name": "RightClick",
                     "type": "Button",
                     "id": "5af59fdf-787a-400f-bf73-ff46ac8aec08",
                     "expectedControlType": "Button",
@@ -52,7 +52,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Confirm",
+                    "action": "RightClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
