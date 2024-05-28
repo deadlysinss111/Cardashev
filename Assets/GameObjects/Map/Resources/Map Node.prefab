@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1696852440317144881}
   - component: {fileID: 4628148059762327993}
   - component: {fileID: -8010272374056151354}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Map Node
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,4 +119,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextNodes: []
-  _isStartRoom: 0

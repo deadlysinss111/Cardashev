@@ -7,20 +7,6 @@ using UnityEngine.U2D;
 using UnityEngine.XR;
 using static UnityEngine.GraphicsBuffer;
 
-/*public class MapNode
-{
-    public List<GameObject> _nextRooms;
-    public GameObject _mapNodeObject;
-
-    public bool _isStartRoom;
-
-    public MapNode()
-    {
-        _nextRooms = new List<GameObject>();
-        _isStartRoom = false;
-    }
-}*/
-
 public class MapManager : MonoBehaviour
 {
     int _mapSizeX;
@@ -30,13 +16,12 @@ public class MapManager : MonoBehaviour
     List<GameObject> _startingNodes;
 
     // PREFABS
-    GameObject _mapNodePrefab;
-    GameObject _mapPathPrefab;
+    GameObject MAP_NODE;
+    GameObject MAP_PATH;
     
     // For map navigation
-    [SerializeField] GameObject _startingNode; // TODO auto create this one and make it invisible at Start()
     List<List<GameObject>> _mapGrid;
-    GameObject _playerLocation;
+    GameObject _playerLocation; // TODO auto create this one and make it invisible at Start()
 
     // Miscenalious
     [SerializeField] LayerMask _clickableLayers;
@@ -47,35 +32,20 @@ public class MapManager : MonoBehaviour
         _mapSizeY = 15;
 
         _mapGrid = new List<List<GameObject>>(_mapSizeX);
+        _startingNodes = new List<GameObject>();
 
-        _mapNodePrefab = (GameObject)Resources.Load("Map Node");
-        _mapPathPrefab = (GameObject)Resources.Load("Map Path");
+        MAP_NODE = (GameObject)Resources.Load("Map Node");
+        MAP_PATH = (GameObject)Resources.Load("Map Path");
         // Generate an invisible starting node
-        _playerLocation = Instantiate(_mapNodePrefab).transform.gameObject;
-        _playerLocation.transform.SetParent(GameObject.FindGameObjectsWithTag("Map")[0].transform, false);
-        _playerLocation.transform.localPosition = new Vector3(1, 3);
-        _playerLocation.GetComponent<MapNode>().SelectNode();
+        _playerLocation = Instantiate(MAP_NODE).transform.gameObject;
+        _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
     }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            RaycastHit hit;
-            // Use a Raycast to get the map node that was targeted
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))
-            {
-                // Get the MapNode Component
-                GameObject curNode = hit.transform.gameObject;
-                foreach (GameObject nextNode in _playerLocation.GetComponent<MapNode>()._nextNodes)
-                {
-                    if (ReferenceEquals(curNode, nextNode))
-                    {
-                        MovePlayerTo(curNode);
-                        break;
-                    }
-                }
-            }
+            RaycastTarget();
         }
 
         if (Input.GetKeyDown(KeyCode.G))
@@ -87,40 +57,45 @@ public class MapManager : MonoBehaviour
     void MovePlayerTo(GameObject nodeToMoveTo)
     {
         nodeToMoveTo.GetComponent<MapNode>().SelectNode();
-        _playerLocation = nodeToMoveTo;
         _playerLocation.GetComponent<MapNode>().UnselectNode();
+        _playerLocation = nodeToMoveTo;
+    }
+
+    void RaycastTarget()
+    {
+        RaycastHit hit;
+        // Use a Raycast to get the map node that was targeted
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))
+        {
+            // Get the MapNode Component
+            GameObject curNode = hit.transform.gameObject;
+            foreach (GameObject nextNode in _playerLocation.GetComponent<MapNode>()._nextNodes)
+            {
+                if (ReferenceEquals(curNode, nextNode))
+                {
+                    MovePlayerTo(curNode);
+                    break;
+                }
+            }
+        }
     }
 
     void InitMapGrid()
     {
-        // Destroy all children if they already exist
         Transform mapObj = GameObject.FindGameObjectsWithTag("Map Node Parent")[0].transform;
-        foreach(Transform child in mapObj.transform)
-        {
-            Destroy(child.gameObject);
-        }
 
         int spaceBetweenNodes = 5;
-
-        _startingNodes = new List<GameObject>();
 
         for (int i = 0; i < _mapSizeX; i++)
         {
             _mapGrid.Add(new List<GameObject>(_mapSizeY));
             for (int j = 0; j < _mapSizeY; j++)
             {
-                GameObject obj = Instantiate(_mapNodePrefab);
+                GameObject obj = Instantiate(MAP_NODE);
                 _mapGrid[i].Add(obj);
                 obj.transform.SetParent(mapObj, false);
                 obj.transform.localPosition = new Vector3(i * spaceBetweenNodes, 4, j * spaceBetweenNodes);
-
             }
-        }
-
-        // Generate starting coords
-        for (int i = 0; i < _mapSizeX; i++)
-        {
-            _startingNodes.Add(_mapGrid[i][0]);
         }
     }
 
@@ -129,40 +104,50 @@ public class MapManager : MonoBehaviour
         InitMapGrid();
 
         // WIP Path generation
-        /*GameObject nextRoom;
-        for (int pathNb = 0; pathNb < 4; pathNb++)
-        {
-            int newStartCoordIndex = Random.Range(0, _startingNodes.Count);
-            nextRoom = new Vector2(_startingNodes[newStartCoordIndex], 0);
-            _startingNodes.RemoveAt(newStartCoordIndex);
-            //print($"Sarting coords : {_startingNodes.Count}");
-            for (int floorNb = 1; floorNb < _mapSizeY; floorNb++)
-            {
-                int targetRoom = (int)nextRoom.x;
-                int selectedRoom = Mathf.Clamp(Random.Range(targetRoom - 1, targetRoom + 2), 0, _mapSizeX - 1);
-                //print($"Selected Room : {selectedRoom}");
-                MapNode curNode = _mapGrid[selectedRoom][floorNb];
-                curNode._nextRooms.Add(nextRoom);
-                //curNode._mapNodeObject.gameObject.GetComponent<LineRenderer>().SetPosition(0, curNode._mapNodeObject.gameObject.transform.position);
-                //curNode._mapNodeObject.gameObject.GetComponent<LineRenderer>().SetPosition(1, _mapGrid[(int)curNode._prevRooms[0].x][(int)curNode._prevRooms[0].y]._mapNodeObject.gameObject.transform.position);
-                nextRoom = new Vector2(selectedRoom, floorNb);
-            }
-        }*/
 
+        // Starting nodes attribution
+        List<GameObject> freeNodelist = new List<GameObject>();
+        for (int i = 0; i < _mapSizeX; i++)
+        {
+            freeNodelist.Add(_mapGrid[i][0]);
+        }
         for (int y = 0; y < 4; y++)
         {
-            print($"{}");
-            int newStartCoordIndex = Random.Range(0, _startingNodes.Count);
-            _startingNodes[newStartCoordIndex].GetComponent<MapNode>()._isStartRoom = true;
-            _startingNodes.RemoveAt(newStartCoordIndex);
+            int newStartCoordIndex = Random.Range(0, freeNodelist.Count);
+            GameObject startingNode = freeNodelist[newStartCoordIndex];
+            startingNode.GetComponent<MapNode>()._isStartingNode = true;
+            startingNode.GetComponent<MapNode>()._startingXCoord = newStartCoordIndex;
+            _playerLocation.GetComponent<MapNode>()._nextNodes.Add(startingNode);
+            _startingNodes.Add(startingNode);
+            freeNodelist.RemoveAt(newStartCoordIndex);
         }
 
-        // Cleaning undesired nodes
+        foreach (GameObject startingNode in _startingNodes)
+        {
+            int x = startingNode.GetComponent<MapNode>()._startingXCoord;
+            for (int floorNb = 0; floorNb < _mapSizeY-1; floorNb++)
+            {
+                int nextNodeXIndex = Mathf.Clamp(Random.Range(x - 1, x + 2), 0, _mapSizeX - 1);
+                //print(nextNodeXIndex);
+                _mapGrid[x][floorNb].GetComponent<MapNode>()._nextNodes.Add(_mapGrid[nextNodeXIndex][floorNb+1]);
+
+                // Placing paths between nodes
+                GameObject newPath = Instantiate(MAP_PATH);
+                newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
+                newPath.GetComponent<MapPathScript>().SetPathPoints(_mapGrid[x][floorNb], _mapGrid[nextNodeXIndex][floorNb + 1]);
+
+
+                // Saving the x coordinate of the next node for the next iteration of the loop
+                x = nextNodeXIndex;
+            }
+        }
+
+        // Disabling path-less nodes to make them invisible
         for (int i = 0; i < _mapSizeX; i++)
         {
             for (int j = 0; j < _mapSizeY; j++)
             {
-                if (!_mapGrid[i][j].GetComponent<MapNode>()._isStartRoom)
+                if (_mapGrid[i][j].GetComponent<MapNode>()._nextNodes.Count == 0)
                 {
                     _mapGrid[i][j].SetActive(false);
                 }

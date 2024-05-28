@@ -8,34 +8,28 @@ public class MapNode : MonoBehaviour
 {
     [NonSerialized] public GameObject _mapNode;
     public List<GameObject> _nextNodes;
-    GameObject _nodePath1;
-    GameObject _nodePath2;
 
-    public bool _isStartRoom;
+    [NonSerialized] public bool _isStartingNode;
+    [NonSerialized] public int _startingXCoord;
 
     private void Start()
     {
         _mapNode = GetComponent<GameObject>();
         GetComponent<MeshRenderer>().material.color = Color.blue;
-        _isStartRoom = false;
+        _isStartingNode = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetAsOriginalNode()
     {
-
-    }
-
-    public void SetAsStartingNode()
-    {
-        _isStartRoom = true;
-        GetComponent<MeshRenderer>().material.color = Color.clear;
+        transform.SetParent(GameObject.FindGameObjectsWithTag("Map")[0].transform, false);
+        transform.localPosition = new Vector3(1, 3);
+        transform.name = "Original Node";
+        GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void SelectNode()
     {
-        print("Node selected !");
-        if (_isStartRoom)
+        if (_isStartingNode)
         {
             return;
         }
@@ -44,7 +38,7 @@ public class MapNode : MonoBehaviour
 
     public void UnselectNode()
     {
-        if (_isStartRoom)
+        if (_isStartingNode)
         {
             return;
         }
@@ -53,7 +47,7 @@ public class MapNode : MonoBehaviour
 
     public void LockNode()
     {
-        if (_isStartRoom)
+        if (_isStartingNode)
         {
             return;
         }

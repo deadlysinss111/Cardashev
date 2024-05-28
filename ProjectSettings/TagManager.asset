@@ -8,6 +8,7 @@ TagManager:
   - Map Starting Node
   - Map
   - Map Node Parent
+  - Map Path Parent
   layers:
   - Default
   - TransparentFX
