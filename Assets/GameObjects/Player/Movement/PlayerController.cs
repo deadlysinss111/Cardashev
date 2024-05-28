@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     {
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager.SetLeftClickTo(ApplyMovement);
-        manager.SetLeftClickTo(() => { });
+        manager.SetRightClickTo(() => { });
         manager.SetHoverTo(Preview);
     }
 
