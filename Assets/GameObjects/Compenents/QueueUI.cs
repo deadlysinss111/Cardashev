@@ -8,31 +8,31 @@ using UnityEngine.UI;
 public class QueueUI : MonoBehaviour
 {
     // TODO: Get that from the player instead
-    private QueueComponent queue;
+    private QueueComponent _queue;
 
-    Image secs_bar;
-    TMP_Text secs_text;
-    float bar_scale;
-    float bar_max = 10f;
+    Image _secsBar;
+    TMP_Text _secsText;
+    float _barScale;
+    float _barMax = 10f;
 
     // Start is called before the first frame update
     void Start()
     {
-        queue = GameObject.Find("Player").GetComponent<QueueComponent>();
+        _queue = GameObject.Find("Player").GetComponent<QueueComponent>();
 
-        secs_bar = transform.Find("Foreground").GetComponent<Image>();
-        bar_scale = secs_bar.transform.localScale.x;
-        secs_text = transform.Find("Seconds").GetComponent<TMP_Text>();
+        _secsBar = transform.Find("Foreground").GetComponent<Image>();
+        _barScale = _secsBar.transform.localScale.x;
+        _secsText = transform.Find("Seconds").GetComponent<TMP_Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
         // Sets the scale of the bar based on the queue's total time
-        Vector3 scale = secs_bar.transform.localScale;
-        scale.x = (queue.TotalQueueTime() / bar_max) * bar_scale;
-        secs_bar.transform.localScale = scale;
+        Vector3 scale = _secsBar.transform.localScale;
+        scale.x = (_queue.TotalQueueTime() / _barMax) * _barScale;
+        _secsBar.transform.localScale = scale;
         // Rounds the time and sets the text
-        secs_text.text = Math.Round(queue.TotalQueueTime(), 1) + "s";
+        _secsText.text = Math.Round(_queue.TotalQueueTime(), 1) + "s";
     }
 }
