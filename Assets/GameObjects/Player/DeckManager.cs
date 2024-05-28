@@ -15,11 +15,6 @@ public class DeckManager : MonoBehaviour
 
     void Start()
     {
-        Init();
-    }
-
-    void Init()
-    {
         _hand = new List<Card>();
         _discardPile = new List<Card>();
         //_remainsInDeck = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<ScriptManager>().GetDeck();
@@ -32,12 +27,13 @@ public class DeckManager : MonoBehaviour
         if (_remainsInDeck.Count == 0)
         {
             _remainsInDeck = _discardPile;
-            _discardPile = new List<Card>();
+            //_discardPile = new List<Card>();
+            _discardPile.Clear();
         }
 
         // we draw a random card
-        int rdm = Random.Range(0, _remainsInDeck.Count-1);
-        
+        int rdm = Random.Range(0, _remainsInDeck.Count);
+
         // we need to duplicate the card's game object so that we can display it an destroy it later easily
         GameObject clone = SpawnCard(_remainsInDeck[rdm]);
         _hand.Add(clone.GetComponent<Card>());
