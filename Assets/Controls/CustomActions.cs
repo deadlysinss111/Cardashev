@@ -62,6 +62,15 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ultimate"",
+                    ""type"": ""Button"",
+                    ""id"": ""a9c57a1f-fd43-4099-bc12-2f214e8ccf89"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -108,6 +117,17 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""action"": ""Focus"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""20426477-d11c-4d1c-b465-e12548bdb421"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ultimate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -120,6 +140,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         m_Main_Confirm = m_Main.FindAction("Confirm", throwIfNotFound: true);
         m_Main_SpaceBar = m_Main.FindAction("SpaceBar", throwIfNotFound: true);
         m_Main_Focus = m_Main.FindAction("Focus", throwIfNotFound: true);
+        m_Main_Ultimate = m_Main.FindAction("Ultimate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -185,6 +206,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Main_Confirm;
     private readonly InputAction m_Main_SpaceBar;
     private readonly InputAction m_Main_Focus;
+    private readonly InputAction m_Main_Ultimate;
     public struct MainActions
     {
         private @CustomActions m_Wrapper;
@@ -193,6 +215,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         public InputAction @Confirm => m_Wrapper.m_Main_Confirm;
         public InputAction @SpaceBar => m_Wrapper.m_Main_SpaceBar;
         public InputAction @Focus => m_Wrapper.m_Main_Focus;
+        public InputAction @Ultimate => m_Wrapper.m_Main_Ultimate;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -214,6 +237,9 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @Focus.started += instance.OnFocus;
             @Focus.performed += instance.OnFocus;
             @Focus.canceled += instance.OnFocus;
+            @Ultimate.started += instance.OnUltimate;
+            @Ultimate.performed += instance.OnUltimate;
+            @Ultimate.canceled += instance.OnUltimate;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -230,6 +256,9 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @Focus.started -= instance.OnFocus;
             @Focus.performed -= instance.OnFocus;
             @Focus.canceled -= instance.OnFocus;
+            @Ultimate.started -= instance.OnUltimate;
+            @Ultimate.performed -= instance.OnUltimate;
+            @Ultimate.canceled -= instance.OnUltimate;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -253,5 +282,6 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         void OnConfirm(InputAction.CallbackContext context);
         void OnSpaceBar(InputAction.CallbackContext context);
         void OnFocus(InputAction.CallbackContext context);
+        void OnUltimate(InputAction.CallbackContext context);
     }
 }
