@@ -59,6 +59,13 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))// Check if the hit point is on the NavMesh
         {
+
+            // TEMP CODE -- Remove if I forgor
+            // Baptiste :p
+            Renderer rend = hit.transform.GetComponent<Renderer>();
+            rend.material.color = Color.green;
+            // \~ TEMP CODE END
+
             // Crop the destination to the center of the target tile
             Vector3 alteredPos = hit.transform.position;
             alteredPos.y += 0.5f;
