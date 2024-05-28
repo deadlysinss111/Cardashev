@@ -6,7 +6,7 @@
             "id": "4963b5e1-f748-44ab-8da8-b20d7aa48337",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "LeftClick",
                     "type": "Button",
                     "id": "cdf76f82-2e3e-44b0-80b4-05d927d8e1e6",
                     "expectedControlType": "Button",
@@ -24,9 +24,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "prev",
+                    "name": "SpaceBar",
                     "type": "Button",
-                    "id": "15d13b9d-c93f-47f2-ba17-1afd304865e1",
+                    "id": "84df5206-91f2-4f7a-ae54-e6223a071301",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -41,13 +41,13 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "LeftClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "34350f90-cd06-4da7-a641-906644006307",
+                    "id": "bcd99931-0c3e-4651-9aaa-aee9f4ee6f19",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
@@ -58,12 +58,12 @@
                 },
                 {
                     "name": "",
-                    "id": "61f0fce3-2148-4e11-a6b6-31758e139c3c",
+                    "id": "2e2adef1-ce97-4fa5-a7d7-0fb66fe7e452",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "prev",
+                    "action": "SpaceBar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
