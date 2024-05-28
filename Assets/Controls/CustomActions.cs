@@ -37,7 +37,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Confirm"",
+                    ""name"": ""RightClick"",
                     ""type"": ""Button"",
                     ""id"": ""5af59fdf-787a-400f-bf73-ff46ac8aec08"",
                     ""expectedControlType"": ""Button"",
@@ -92,7 +92,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Confirm"",
+                    ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -137,7 +137,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         // Main
         m_Main = asset.FindActionMap("Main", throwIfNotFound: true);
         m_Main_LeftClick = m_Main.FindAction("LeftClick", throwIfNotFound: true);
-        m_Main_Confirm = m_Main.FindAction("Confirm", throwIfNotFound: true);
+        m_Main_RightClick = m_Main.FindAction("RightClick", throwIfNotFound: true);
         m_Main_SpaceBar = m_Main.FindAction("SpaceBar", throwIfNotFound: true);
         m_Main_Focus = m_Main.FindAction("Focus", throwIfNotFound: true);
         m_Main_Ultimate = m_Main.FindAction("Ultimate", throwIfNotFound: true);
@@ -203,7 +203,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Main;
     private List<IMainActions> m_MainActionsCallbackInterfaces = new List<IMainActions>();
     private readonly InputAction m_Main_LeftClick;
-    private readonly InputAction m_Main_Confirm;
+    private readonly InputAction m_Main_RightClick;
     private readonly InputAction m_Main_SpaceBar;
     private readonly InputAction m_Main_Focus;
     private readonly InputAction m_Main_Ultimate;
@@ -212,7 +212,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         private @CustomActions m_Wrapper;
         public MainActions(@CustomActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @LeftClick => m_Wrapper.m_Main_LeftClick;
-        public InputAction @Confirm => m_Wrapper.m_Main_Confirm;
+        public InputAction @RightClick => m_Wrapper.m_Main_RightClick;
         public InputAction @SpaceBar => m_Wrapper.m_Main_SpaceBar;
         public InputAction @Focus => m_Wrapper.m_Main_Focus;
         public InputAction @Ultimate => m_Wrapper.m_Main_Ultimate;
@@ -228,9 +228,9 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @LeftClick.started += instance.OnLeftClick;
             @LeftClick.performed += instance.OnLeftClick;
             @LeftClick.canceled += instance.OnLeftClick;
-            @Confirm.started += instance.OnConfirm;
-            @Confirm.performed += instance.OnConfirm;
-            @Confirm.canceled += instance.OnConfirm;
+            @RightClick.started += instance.OnRightClick;
+            @RightClick.performed += instance.OnRightClick;
+            @RightClick.canceled += instance.OnRightClick;
             @SpaceBar.started += instance.OnSpaceBar;
             @SpaceBar.performed += instance.OnSpaceBar;
             @SpaceBar.canceled += instance.OnSpaceBar;
@@ -247,9 +247,9 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @LeftClick.started -= instance.OnLeftClick;
             @LeftClick.performed -= instance.OnLeftClick;
             @LeftClick.canceled -= instance.OnLeftClick;
-            @Confirm.started -= instance.OnConfirm;
-            @Confirm.performed -= instance.OnConfirm;
-            @Confirm.canceled -= instance.OnConfirm;
+            @RightClick.started -= instance.OnRightClick;
+            @RightClick.performed -= instance.OnRightClick;
+            @RightClick.canceled -= instance.OnRightClick;
             @SpaceBar.started -= instance.OnSpaceBar;
             @SpaceBar.performed -= instance.OnSpaceBar;
             @SpaceBar.canceled -= instance.OnSpaceBar;
@@ -279,7 +279,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     public interface IMainActions
     {
         void OnLeftClick(InputAction.CallbackContext context);
-        void OnConfirm(InputAction.CallbackContext context);
+        void OnRightClick(InputAction.CallbackContext context);
         void OnSpaceBar(InputAction.CallbackContext context);
         void OnFocus(InputAction.CallbackContext context);
         void OnUltimate(InputAction.CallbackContext context);
