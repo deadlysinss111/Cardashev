@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class LaunchGrenade : Card
@@ -16,12 +18,16 @@ public class LaunchGrenade : Card
 
     Vector3 _grenadeInitVelocity;
 
+    byte _id;
+
     private void Awake()
     {
         _input = new CustomActions();
         _lineRenderer = GetComponent<LineRenderer>();
         _pathPoints = new List<Vector3>();
-        GameObject.Find("Player").GetComponent<PlayerManager>().AddState("grenade", Preview);
+        PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        _id = 0;
+        while (manager.AddState("grenade"+_id.ToString(), Preview) == false) _id++;
     }
 
     public override void Effect()
@@ -32,7 +38,7 @@ public class LaunchGrenade : Card
 
     public override void ClickEvent()
     {
-        GameObject.Find("Player").GetComponent<PlayerManager>().SetToState("grenade");
+        GameObject.Find("Player").GetComponent<PlayerManager>().SetToState("grenade" + _id.ToString());
     }
 
     private void Preview()
@@ -44,13 +50,6 @@ public class LaunchGrenade : Card
             Vector3 alteredPos = hit.transform.position;
             alteredPos.y += 0.5f;
 
-            // Cancel the previous confirmation waiting coroutine
-            if (GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine != null)
-            {
-                StopCoroutine(GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine);
-                ClearPath();
-            }
-
             // Calculate the path to the clicked point
             NavMeshPath path = new NavMeshPath();
 
@@ -58,27 +57,20 @@ public class LaunchGrenade : Card
             _grenadeInitVelocity = TrailCalculator.BellCurveInititialVelocity(playerPos, alteredPos, 10.0f);
             TrailCalculator.BellCurve(playerPos, _grenadeInitVelocity, ref _lineRenderer, out _pathPoints);
 
-            // Start waiting for confirmation
-            GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine = StartCoroutine(WaitForConfirmation(hit.point));
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetLeftClickTo(()=>WaitForConfirmation(alteredPos));
         }
     }
 
-    IEnumerator WaitForConfirmation(Vector3 destination)
+    void WaitForConfirmation(Vector3 destination)
     {
-        // Wait for the confirmation input
-        while (_input.Main.Confirm.triggered == false)
-        {
-            yield return null;
-        }
 
         // Launche the grenade only when confirmed
         ClearPath();
 
-        Object grenadePrefab = Resources.Load("Grenade");
-        GameObject grenade = (GameObject)Instantiate(grenadePrefab);
+        UnityEngine.Object GRENADE = Resources.Load("Grenade");
+        GameObject grenade = (GameObject)Instantiate(GRENADE);
         grenade.GetComponent<Rigidbody>().transform.position = GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos;
         grenade.GetComponent<Rigidbody>().velocity = _grenadeInitVelocity;
-        
 
         // Trigger the card play event
         base.ClickEvent();

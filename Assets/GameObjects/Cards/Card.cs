@@ -37,7 +37,7 @@ public class Card : MonoBehaviour
 
     public virtual void ClickEvent()
     {
-        GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<DeckManager>().Play(this);
+        GameObject.Find("Player").GetComponent<DeckManager>().Play(this);
     }
 
 }

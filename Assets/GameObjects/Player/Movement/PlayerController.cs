@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
 
     float _lastCalculatedWalkTime;
 
+    bool _movementEnabled;
+
     // Initialization
      void Awake()
     {
@@ -41,11 +43,11 @@ public class PlayerController : MonoBehaviour
 
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager._virtualPos = _agent.transform.position;
-        manager.AddState("movement", ClickToVisualize);
+        manager.AddState("movement", Preview);
     }
 
     // Handle click to visualize the path
-     void ClickToVisualize()
+     void Preview()
     {
         // Raycast to the clicked point
         RaycastHit hit;
@@ -54,13 +56,6 @@ public class PlayerController : MonoBehaviour
             // Crop the destination to the center of the target tile
             Vector3 alteredPos = hit.transform.position;
             alteredPos.y += 0.5f;
-
-            // Cancel the previous confirmation waiting coroutine
-            if (GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine != null)
-            {
-                StopCoroutine(GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine);
-                ClearPath();
-            }
 
             // Calculate the path to the clicked point
             NavMeshPath path = new NavMeshPath();
@@ -80,20 +75,13 @@ public class PlayerController : MonoBehaviour
                 Instantiate(_clickEffect, alteredPos + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
             }
 
-            // Start waiting for confirmation
-            GameObject.Find("Player").GetComponent<PlayerManager>()._waitForConfirmationCoroutine = StartCoroutine(WaitForConfirmation(hit.point));
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetLeftClickTo(() => WaitForConfirmation(alteredPos));
         }
     }
 
     // Coroutine to wait for confirmation input
-     IEnumerator WaitForConfirmation(Vector3 destination)
+     void WaitForConfirmation(Vector3 destination)
     {
-        // Wait for the confirmation input
-        while (_input.Main.Confirm.triggered == false)
-        {
-            yield return null;
-        }
-
         // Update agent destination only when confirmed
         
         ClearPath();

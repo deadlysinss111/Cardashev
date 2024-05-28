@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 
@@ -13,7 +14,6 @@ public class PlayerManager : MonoBehaviour
 
     [NonSerialized] public Vector3 _virtualPos;
     CustomActions _input;
-    Action<InputAction.CallbackContext> _lastLeftClickAction;
 
     [NonSerialized] public Coroutine _waitForConfirmationCoroutine;
 
@@ -23,10 +23,10 @@ public class PlayerManager : MonoBehaviour
     [NonSerialized] public string _defaultState;
 
     Func<UltiContext, bool> _ultimate;
+    Action _middleware;
 
     PlayerManager() 
     {
-        _lastLeftClickAction = ctx => { };
         _states = new Dictionary<string, Action>();
         _defaultState = "movement";
     }
@@ -39,24 +39,43 @@ public class PlayerManager : MonoBehaviour
         Class brawler = ClassFactory.Brawler();
         _ultimate = brawler._ultimate;
 
+        _input.Main.LeftClick.performed += ctx => LeftClickMiddleware();
+
         StartCoroutine(StartSimulation());
     }
 
-    // /!\ depracated function
-    // This state change function disable the previous control listener state and enable the new one
-    //public void SetLeftClickTo(Action target)
-    //{
-    //    _input.Main.LeftClick.performed -= _lastLeftClickAction;
-    //    _lastLeftClickAction = ctx => { target(); };
-    //    _input.Main.LeftClick.performed += _lastLeftClickAction;
-    //}
+     ///!\ depracated function
+     //This state change function disable the previous control listener state and enable the new one
+    public void SetLeftClickTo(Action target)
+    {
+        _middleware = target;
+    }
 
-    public void AddState(string name, Action func)
+    private void LeftClickMiddleware()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, -1))
+        {
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("UI"))
+            {
+                return;
+            }
+        }
+        _middleware();
+    }
+
+    public bool AddState(string name, Action func)
     {
         if(_states.ContainsKey(name) == false)
         {
             _states[name] = func;
+            return true;
         }
+        return false;
     }
 
     public bool SetToState(string name)
@@ -95,5 +114,15 @@ public class PlayerManager : MonoBehaviour
     public void ExecuteCurrentStateAction()
     {
         _currentAction();
+    }
+
+    public List<string> GetDeck()
+    {
+        List<string> deck = new List<string>();
+        for(int i=0; i < 4; i++) 
+        {
+            deck.Add("LaunchGrenadeModel");
+        }
+        return deck;
     }
 }

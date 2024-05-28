@@ -3105,11 +3105,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ced8d5d0a47789498a90ba684efebca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _remainsInDeck:
-  - {fileID: 4934749188351065461, guid: 80aa96c20e888a44d90c20b1099e803e, type: 3}
-  - {fileID: 4934749188351065461, guid: 80aa96c20e888a44d90c20b1099e803e, type: 3}
-  - {fileID: 4934749188351065461, guid: 80aa96c20e888a44d90c20b1099e803e, type: 3}
-  - {fileID: 4934749188351065461, guid: 80aa96c20e888a44d90c20b1099e803e, type: 3}
 --- !u!114 &1351601168
 MonoBehaviour:
   m_ObjectHideFlags: 0

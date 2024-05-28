@@ -10,7 +10,7 @@ using static UnityEngine.GraphicsBuffer;
 public class DeckManager : MonoBehaviour
 {
     private List<Card> _hand;
-    public List<Card> _remainsInDeck;
+    private List<Card> _remainsInDeck;
     private List<Card> _discardPile;
 
     void Start()
@@ -22,7 +22,18 @@ public class DeckManager : MonoBehaviour
     {
         _hand = new List<Card>();
         _discardPile = new List<Card>();
-        //_remainsInDeck = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<ScriptManager>().GetDeck();
+        List<string>toLoad = GameObject.Find("Player").GetComponent<PlayerManager>().GetDeck();
+        _remainsInDeck = new List<Card>();
+        foreach (string name in toLoad)
+        {
+            GameObject CARD = (GameObject)Resources.Load(name);
+            GameObject card = Instantiate(CARD);
+            card.layer = LayerMask.NameToLayer("UI");
+            card.transform.SetParent(GameObject.Find("Canvas").transform, false);
+            card.transform.localScale = new Vector3(10, 1, 10);
+            _remainsInDeck.Add(card.GetComponent<Card>());
+            card.SetActive(false);
+        }
     }
 
     // called when the player draws a card
@@ -37,14 +48,11 @@ public class DeckManager : MonoBehaviour
 
         // we draw a random card
         int rdm = Random.Range(0, _remainsInDeck.Count-1);
-        
-        // we need to duplicate the card's game object so that we can display it an destroy it later easily
-        GameObject clone = SpawnCard(_remainsInDeck[rdm]);
-        _hand.Add(clone.GetComponent<Card>());
-        Card toDiscard = _remainsInDeck[rdm];
 
-        // it's kinda dirty but we use the closure to easily keep the card in memory and add it to discard pile later
-        clone.GetComponent<Card>()._trigger += () => { _discardPile.Add(toDiscard); Debug.Log(toDiscard); };
+        // we need to duplicate the card's game object so that we can display it an destroy it later easily
+        Card obj = _remainsInDeck[rdm];
+        obj.gameObject.SetActive(true);
+        _hand.Add(obj);
 
         // since we drew it, we remove the card from the deck
         _remainsInDeck.RemoveAt(rdm);
@@ -56,18 +64,11 @@ public class DeckManager : MonoBehaviour
     {
         _hand.Remove(target);
 
-        Destroy(target.gameObject);
+        _discardPile.Add(target);
+        
+        target.gameObject.SetActive(false);
 
         DisplayHand();
-    }
-
-    // this function makes a card apperaing on screen
-    public GameObject SpawnCard(Card target)
-    {
-        GameObject obj = Instantiate(target.gameObject);
-        obj.transform.SetParent(GameObject.FindGameObjectsWithTag("Canvas")[0].transform, false);
-        obj.transform.localScale = new Vector3(10, 1, 10);
-        return obj;
     }
 
     public void Play(Card target)
