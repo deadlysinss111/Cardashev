@@ -47,13 +47,11 @@ public class ButtonHandler : MonoBehaviour
 
     public void MouseEnter()
     {
-        Debug.Log("Enter");
         mouse_on = true;
     }
 
     public void MouseExit()
     {
-        Debug.Log("Exit");
         mouse_on = false;
     }
 }

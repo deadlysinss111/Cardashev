@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEditor;
 using UnityEditor.SearchService;
 using UnityEngine;
@@ -9,21 +10,19 @@ public class MainMenuManager : MonoBehaviour
 {
     // By how much buttons will scale up when hovering them
     public float _buttonsSelectMult = 1.2f;
-
-    public bool _useChildren = false;
-    public List<GameObject> _menuObjects = new();
-
-    readonly Dictionary<string, GameObject> _menus = new();
-    string _currentMenu = string.Empty;
+    public List<GameObject> _menuObjects;
+    Dictionary<string, GameObject> _menus;
+    string _currentMenu;
 
     private void Start()
     {
-        if (_useChildren)
-        {
-            _menuObjects.Clear();
-            foreach (Transform child in transform)
-                _menuObjects.Add(child.gameObject);
-        }
+        _menuObjects = new();
+        _currentMenu = string.Empty;
+        _menus = new();
+
+        //_menuObjects.Clear();
+        foreach (Transform child in transform)
+            _menuObjects.Add(child.gameObject);
 
         // Create a dictionary based on the menu_objects list
         for (int i = 0; i < _menuObjects.Count; i++)
@@ -33,8 +32,6 @@ public class MainMenuManager : MonoBehaviour
         //BetterDebug.LogDict<string, GameObject>(_menus);
 
         SetMenu(_menuObjects[0].name);
-        Debug.Log(this.GetMenu("Options"));
-        Debug.Log(this.GetMenu());
 
     }
 
@@ -82,34 +79,40 @@ public class MainMenuManager : MonoBehaviour
     /// MAIN MENU ///
     /////////////////
 
-    public void MainMenuStart()
+    public void GoToCharacterSelection()
     {
-        Debug.Log("Start");
+        SetMenu("New Game");
+    }
+
+    public void StartGame()
+    {
         SceneManager.LoadScene("SampleScene");
     }
 
-    public void MainMenuOptions()
+    public void GoToOptions()
     {
-        Debug.Log("Options");
         SetMenu("Options");
     }
 
-    public void MainMenuQuit()
+    public void QuitGame()
     {
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
         Application.Quit();
-        Debug.Log("Quit");
     }
 
     ////////////////////
     /// OPTIONS MENU ///
     ////////////////////
 
-    public void OptionsMenuBack()
+    public void GoToMain()
     {
-        Debug.Log("Options Back Button");
         SetMenu("Main");
+    }
+
+    public void SelectCharacter(string name)
+    {
+        
     }
 }
