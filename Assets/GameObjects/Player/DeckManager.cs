@@ -43,17 +43,6 @@ public class DeckManager : MonoBehaviour
 
         // we draw a random card
         int rdm = Random.Range(0, _remainsInDeck.Count-1);
-<<<<<<< HEAD
-
-        /* ! MERGE ARTIFACT !    Maybe we can get rid of allat
-            // we need to duplicate the card's game object so that we can display it an destroy it later easily
-            GameObject clone = SpawnCard(_remainsInDeck[rdm]);
-            hand.Add(clone.GetComponent<Card>());
-            Card toDiscard = _remainsInDeck[rdm];
-        */
-        
-=======
->>>>>>> main
 
         // we need to duplicate the card's game object so that we can display it an destroy it later easily
         Card obj = _remainsInDeck[rdm];

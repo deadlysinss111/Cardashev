@@ -31,14 +31,9 @@ public class PlayerController : MonoBehaviour
     float _lastCalculatedWalkTime;
 
     bool _movementEnabled;
-
-<<<<<<< HEAD
-     // Initialization
-=======
     Vector3 _virtualDestination;
 
     // Initialization
->>>>>>> main
      void Awake()
      {
         // Loads in the fields useful data and references
@@ -51,10 +46,6 @@ public class PlayerController : MonoBehaviour
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager._virtualPos = _agent.transform.position;
-<<<<<<< HEAD
-        manager.AddState("movement", Preview);
-     }
-=======
         manager.AddState("movement", EnterMovementState, ExitState);
     }
 
@@ -70,16 +61,9 @@ public class PlayerController : MonoBehaviour
     {
         ClearPath();
     }
->>>>>>> main
 
      // Handle click to visualize the path
      void Preview()
-<<<<<<< HEAD
-     {
-        // Raycast to the clicked point
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))// Check if the hit point is on the NavMesh
-=======
     {
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         // Crop the destination to the center of the target tile
@@ -92,7 +76,6 @@ public class PlayerController : MonoBehaviour
         // In the following snipet, the commented code are those that use not cropped positions
         //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
         if (NavMesh.CalculatePath(manager._virtualPos, alteredPos, NavMesh.AllAreas,  path))
->>>>>>> main
         {
             TrailCalculator.DrawPath(path, ref _lineRenderer);
             _lastCalculatedWalkTime = GetPathTime(path);

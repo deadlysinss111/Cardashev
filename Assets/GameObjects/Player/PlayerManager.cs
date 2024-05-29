@@ -59,29 +59,8 @@ public class PlayerManager : MonoBehaviour
         StartCoroutine(StartSimulation());
     }
 
-<<<<<<< HEAD
-    /*
-    ~~ Code of Chatloupidou :3 */
-    // Controls' effect setup Action
-    public void TargetInteractible()
-    {
-        
-    }
 
-    // Actual effect of controls when it comes to Interactibles
-    public void ClickOnInteractible()
-    {
-
-    }
-    /*
-    ~~ End of code of Chatloupidou ;3 */
-
-
-    ///!\ depracated function
     //This state change function disable the previous control listener state and enable the new one
-=======
-     //This state change function disable the previous control listener state and enable the new one
->>>>>>> main
     public void SetLeftClickTo(Action target)
     {
         _leftClick = target;
@@ -137,12 +116,10 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
-<<<<<<< HEAD
+
         Debug.Log("Called somewhere with name = " + name);
-        Action func;
-=======
+
         Action[] func;
->>>>>>> main
         if(_states.TryGetValue(name, out func))
         {
             Action[] exit;

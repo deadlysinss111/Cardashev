@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 /*
  • Interactible's base abstract class, containing virtual effects TBD in actual classes, but every functionnality to trigger Interactbiles
@@ -16,7 +17,7 @@ public abstract class Interactible : MonoBehaviour
      FIELDS 
     */
     // Yes, there is one ! This is useful to quickly determine the distance of the Interactible to the player
-    [SerializeField] protected static GameObject _playerRef;
+    protected static GameObject _playerRef;
 
     /* 
      PROPERTIES
@@ -82,7 +83,7 @@ public abstract class Interactible : MonoBehaviour
         // Pause time :3
     }
 
-    protected void OnRaycastHit()
+    public void OnRaycastHit()
     {
         // Tests the distance of the player from the one of the Interactible in all 3 axis
         if (Vector3.Distance(this.transform.position, _playerRef.transform.position) <= _RaycastHitDist)
@@ -91,10 +92,54 @@ public abstract class Interactible : MonoBehaviour
             Debug.Log(this.gameObject.name + " was raycast-hit within invalid distance !");
     }
 
+    // ------
+    // STATE WATCHER
+    // ------
 
-    // Event subscribing
+    private void OnMouseEnter()
+    {
+        Debug.Log("auuuuUUUUUuugh");
+        // Changes the PlayerManager state
+        _playerRef.GetComponent<PlayerManager>().SetToState("InteractibleTargeting");
+    }
+    private void OnMouseExit()
+    {
+        // Restores the previous state
+        _playerRef.GetComponent<PlayerManager>().SetToDefult();
+    }
+
+
     protected void Awake()
     {
+        // Field setup
+        _playerRef = GameObject.Find("Player").gameObject;
+
+        // Event subscribing
         _UeOnRaycastHit.AddListener(OnRaycastHit);
+
+        // Mesh Combining
+        List<MeshFilter> meshFilters = new List<MeshFilter>();
+        List<CombineInstance> combine = new List<CombineInstance>();
+
+        foreach (Transform child in this.transform)
+            if (child.GetComponent<MeshFilter>() != null)
+                meshFilters.Add(child.GetComponent<MeshFilter>());
+
+        for (int i = 0;  i < meshFilters.Count ; ++i)
+        {
+            // Filling out a temp combineInstance and adding it to the combine List
+            CombineInstance combInstTemp = new CombineInstance();
+            combInstTemp.mesh = meshFilters[i].sharedMesh;
+            combInstTemp.transform = meshFilters[i].transform.localToWorldMatrix; // BUG, the transform should be the location relative to the parent
+            Debug.Log("transform : " + meshFilters[i].transform);
+            combine.Add(combInstTemp);
+        }
+
+        // Combining meshes together, and activating it
+        Mesh combinedMesh = new Mesh();
+        combinedMesh.CombineMeshes(combine.ToArray());
+        transform.GetComponent<MeshFilter>().sharedMesh = combinedMesh;
+        transform.GetComponent<MeshCollider>().sharedMesh = combinedMesh;
+        gameObject.SetActive(true);
     }
 }
