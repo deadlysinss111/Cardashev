@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager._virtualPos = _agent.transform.position;
-        manager.AddState("movement", EnterMovementState);
+        manager.AddState("movement", EnterMovementState, ExitState);
     }
 
     void EnterMovementState()
@@ -56,37 +56,38 @@ public class PlayerController : MonoBehaviour
         manager.SetHoverTo(Preview);
     }
 
+    void ExitState()
+    {
+        ClearPath();
+    }
+
     // Handle click to visualize the path
      void Preview()
     {
-        // Raycast to the clicked point
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))// Check if the hit point is on the NavMesh
+        PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        // Crop the destination to the center of the target tile
+        Vector3 alteredPos = manager._lastHit.transform.position;
+        alteredPos.y += 0.5f;
+
+        // Calculate the path to the clicked point
+        NavMeshPath path = new NavMeshPath();
+
+        // In the following snipet, the commented code are those that use not cropped positions
+        //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
+        if (NavMesh.CalculatePath(manager._virtualPos, alteredPos, NavMesh.AllAreas,  path))
         {
-            // Crop the destination to the center of the target tile
-            Vector3 alteredPos = hit.transform.position;
-            alteredPos.y += 0.5f;
-
-            // Calculate the path to the clicked point
-            NavMeshPath path = new NavMeshPath();
-
-            // In the following snipet, the commented code are those that use not cropped positions
-            //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
-            if (NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, alteredPos, NavMesh.AllAreas,  path))
-            {
-                TrailCalculator.DrawPath(path, ref _lineRenderer);
-                _lastCalculatedWalkTime = GetPathTime(path);
-            }
-
-            // Instantiate click effect at the clicked point
-            if (_clickEffect != null)
-            {
-                //Instantiate(_clickEffect, hit.point + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
-                Instantiate(_clickEffect, alteredPos + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
-            }
-
-            _virtualDestination = alteredPos;
+            TrailCalculator.DrawPath(path, ref _lineRenderer);
+            _lastCalculatedWalkTime = GetPathTime(path);
         }
+
+        // Instantiate click effect at the clicked point
+        if (_clickEffect != null)
+        {
+            //Instantiate(_clickEffect, hit.point + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
+            Instantiate(_clickEffect, alteredPos + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
+        }
+
+        _virtualDestination = alteredPos;
     }
 
     // Coroutine to wait for confirmation input

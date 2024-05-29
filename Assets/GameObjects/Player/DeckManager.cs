@@ -38,8 +38,7 @@ public class DeckManager : MonoBehaviour
         if (_remainsInDeck.Count == 0)
         {
             _remainsInDeck = _discardPile;
-            //_discardPile = new List<Card>();
-            _discardPile.Clear();
+            _discardPile = new List<Card> { };
         }
 
         // we draw a random card
