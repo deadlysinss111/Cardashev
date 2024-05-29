@@ -41,11 +41,34 @@ public class PlayerManager : MonoBehaviour
 
         _input.Main.LeftClick.performed += ctx => LeftClickMiddleware();
 
+        /*
+        ~~ Code of Chatloupidou :3 */
+        //AddState("Interactible Select", TargetInteractible);
+        /*
+        ~~ End of code of Chatloupidou ;3 */
+
         StartCoroutine(StartSimulation());
     }
 
-     ///!\ depracated function
-     //This state change function disable the previous control listener state and enable the new one
+    /*
+    ~~ Code of Chatloupidou :3 */
+    // Controls' effect setup Action
+    public void TargetInteractible()
+    {
+        
+    }
+
+    // Actual effect of controls when it comes to Interactibles
+    public void ClickOnInteractible()
+    {
+
+    }
+    /*
+    ~~ End of code of Chatloupidou ;3 */
+
+
+    ///!\ depracated function
+    //This state change function disable the previous control listener state and enable the new one
     public void SetLeftClickTo(Action target)
     {
         _middleware = target;
@@ -80,6 +103,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
+        Debug.Log("Called somewhere with name = " + name);
         Action func;
         if(_states.TryGetValue(name, out func))
         {

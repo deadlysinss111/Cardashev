@@ -25,41 +25,36 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]  LayerMask _clickableLayers;
 
-     float _lookRotationSpeed = 8f;
-     List<Vector3> _pathPoints;
+    float _lookRotationSpeed = 8f;
+    List<Vector3> _pathPoints;
 
     float _lastCalculatedWalkTime;
 
     bool _movementEnabled;
 
-    // Initialization
+     // Initialization
      void Awake()
-    {
+     {
+        // Loads in the fields useful data and references
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _lineRenderer = GetComponent<LineRenderer>();
         _pathPoints = new List<Vector3>();
         _input = new CustomActions();
 
+        // Loading in PlayerManager a new state and its Action to change what the controls will do
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager._virtualPos = _agent.transform.position;
         manager.AddState("movement", Preview);
-    }
+     }
 
-    // Handle click to visualize the path
+     // Handle click to visualize the path
      void Preview()
-    {
+     {
         // Raycast to the clicked point
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))// Check if the hit point is on the NavMesh
         {
-
-            // TEMP CODE -- Remove if I forgor
-            // Baptiste :p
-            Renderer rend = hit.transform.GetComponent<Renderer>();
-            rend.material.color = Color.green;
-            // \~ TEMP CODE END
-
             // Crop the destination to the center of the target tile
             Vector3 alteredPos = hit.transform.position;
             alteredPos.y += 0.5f;

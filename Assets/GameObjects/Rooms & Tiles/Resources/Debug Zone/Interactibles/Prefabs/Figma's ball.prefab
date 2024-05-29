@@ -114,9 +114,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5500776742229685968}
+  - component: {fileID: 3222771931073907893}
   m_Layer: 0
   m_Name: Figma's ball
-  m_TagString: Untagged
+  m_TagString: InteractibleObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,6 +139,18 @@ Transform:
   - {fileID: 7112792914818745359}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3222771931073907893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6019182266086917352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6658a6fa1b63724eb432663c0676927, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7872050793722489718
 GameObject:
   m_ObjectHideFlags: 0

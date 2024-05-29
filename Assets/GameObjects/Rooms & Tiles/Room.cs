@@ -69,7 +69,7 @@ public class Room : MonoBehaviour
                     // Finds the correct path to the asset, taking into accounts the Zone Type and asset type
                     string modelPath = "";
                     if(tilemap.name == "Interactibles")
-                        modelPath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/3D Models/" + model.name;
+                        modelPath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/Prefabs/" + model.name;
                     else
                         modelPath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/" + model.name;
                     Debug.Log("Attempt to load the prefab " + modelPath);

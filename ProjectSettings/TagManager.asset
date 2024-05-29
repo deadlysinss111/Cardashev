@@ -7,6 +7,10 @@ TagManager:
   - Canvas
   - Map Canvas
   - Map Starting Node
+  - TMInteractibles
+  - TMTopology
+  - TMDecorations
+  - InteractibleObject
   layers:
   - Default
   - TransparentFX
