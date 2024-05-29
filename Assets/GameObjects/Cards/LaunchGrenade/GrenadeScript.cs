@@ -1,13 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class GrenadeScript : MonoBehaviour
 {
-    public int _lifetime;
-    void Awake()
+    private void OnCollisionEnter(Collision other)
     {
-        //transform.position = GameObject.Find("Player").transform.position + Vector3.Scale(new Vector3(5.0f, 5.0f, 5.0f), GameObject.Find("Player").transform.rotation.eulerAngles);
-        //GetComponent<Rigidbody>().AddForce(Vector3.Scale(new Vector3(0, 0.2f, 0.1f), GameObject.Find("Player").transform.rotation.eulerAngles));
+        StatManager manager;
+        if (GetComponent<Rigidbody>().velocity.y > 0)
+            return;
+
+        Collider[] hits = Physics.OverlapSphere(transform.position, 5);
+        foreach (Collider c in hits)
+        {
+            if (c.gameObject.TryGetComponent<StatManager>(out manager))
+            {
+                manager._health -= 10;
+                Destroy(gameObject);
+            }
+        }
     }
 }

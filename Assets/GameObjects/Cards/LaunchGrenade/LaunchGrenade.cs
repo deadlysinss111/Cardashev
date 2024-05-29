@@ -41,7 +41,6 @@ public class LaunchGrenade : Card
         manager.SetLeftClickTo(FireGrenade);
         manager.SetRightClickTo(()=> { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefult(); });
         manager.SetHoverTo(Preview);
-        GameObject.Find("Player").GetComponent<PlayerController>().ClearPath();
         _previwRadius.SetActive(true);
     }
 

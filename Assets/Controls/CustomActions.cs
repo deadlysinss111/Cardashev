@@ -90,6 +90,54 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""CameraControls"",
+            ""id"": ""9c9317c0-d7e1-498c-8325-27f790de6603"",
+            ""actions"": [
+                {
+                    ""name"": ""RotateToLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""45080c3d-f7b6-42a9-9849-3ca14f37b48c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateToRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""5ff420f2-8e4a-452e-9b30-60c644d6cf0b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b35c75d5-4903-46d8-830e-4fbf00b3c6c0"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateToLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9524ec78-03cf-4c50-82d0-416fd370d77b"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateToRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -99,6 +147,10 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         m_Main_LeftClick = m_Main.FindAction("LeftClick", throwIfNotFound: true);
         m_Main_RightClick = m_Main.FindAction("RightClick", throwIfNotFound: true);
         m_Main_SpaceBar = m_Main.FindAction("SpaceBar", throwIfNotFound: true);
+        // CameraControls
+        m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
+        m_CameraControls_RotateToLeft = m_CameraControls.FindAction("RotateToLeft", throwIfNotFound: true);
+        m_CameraControls_RotateToRight = m_CameraControls.FindAction("RotateToRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -218,10 +270,69 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         }
     }
     public MainActions @Main => new MainActions(this);
+
+    // CameraControls
+    private readonly InputActionMap m_CameraControls;
+    private List<ICameraControlsActions> m_CameraControlsActionsCallbackInterfaces = new List<ICameraControlsActions>();
+    private readonly InputAction m_CameraControls_RotateToLeft;
+    private readonly InputAction m_CameraControls_RotateToRight;
+    public struct CameraControlsActions
+    {
+        private @CustomActions m_Wrapper;
+        public CameraControlsActions(@CustomActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @RotateToLeft => m_Wrapper.m_CameraControls_RotateToLeft;
+        public InputAction @RotateToRight => m_Wrapper.m_CameraControls_RotateToRight;
+        public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CameraControlsActions set) { return set.Get(); }
+        public void AddCallbacks(ICameraControlsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CameraControlsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CameraControlsActionsCallbackInterfaces.Add(instance);
+            @RotateToLeft.started += instance.OnRotateToLeft;
+            @RotateToLeft.performed += instance.OnRotateToLeft;
+            @RotateToLeft.canceled += instance.OnRotateToLeft;
+            @RotateToRight.started += instance.OnRotateToRight;
+            @RotateToRight.performed += instance.OnRotateToRight;
+            @RotateToRight.canceled += instance.OnRotateToRight;
+        }
+
+        private void UnregisterCallbacks(ICameraControlsActions instance)
+        {
+            @RotateToLeft.started -= instance.OnRotateToLeft;
+            @RotateToLeft.performed -= instance.OnRotateToLeft;
+            @RotateToLeft.canceled -= instance.OnRotateToLeft;
+            @RotateToRight.started -= instance.OnRotateToRight;
+            @RotateToRight.performed -= instance.OnRotateToRight;
+            @RotateToRight.canceled -= instance.OnRotateToRight;
+        }
+
+        public void RemoveCallbacks(ICameraControlsActions instance)
+        {
+            if (m_Wrapper.m_CameraControlsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICameraControlsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CameraControlsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CameraControlsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CameraControlsActions @CameraControls => new CameraControlsActions(this);
     public interface IMainActions
     {
         void OnLeftClick(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
         void OnSpaceBar(InputAction.CallbackContext context);
+    }
+    public interface ICameraControlsActions
+    {
+        void OnRotateToLeft(InputAction.CallbackContext context);
+        void OnRotateToRight(InputAction.CallbackContext context);
     }
 }

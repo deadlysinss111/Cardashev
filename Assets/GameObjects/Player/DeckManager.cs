@@ -42,7 +42,7 @@ public class DeckManager : MonoBehaviour
         }
 
         // we draw a random card
-        int rdm = Random.Range(0, _remainsInDeck.Count-1);
+        int rdm = Random.Range(0, _remainsInDeck.Count);
 
         // we need to duplicate the card's game object so that we can display it an destroy it later easily
         Card obj = _remainsInDeck[rdm];
