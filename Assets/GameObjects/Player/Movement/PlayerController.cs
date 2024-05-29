@@ -32,7 +32,13 @@ public class PlayerController : MonoBehaviour
 
     bool _movementEnabled;
 
+<<<<<<< HEAD
      // Initialization
+=======
+    Vector3 _virtualDestination;
+
+    // Initialization
+>>>>>>> main
      void Awake()
      {
         // Loads in the fields useful data and references
@@ -45,55 +51,74 @@ public class PlayerController : MonoBehaviour
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager._virtualPos = _agent.transform.position;
+<<<<<<< HEAD
         manager.AddState("movement", Preview);
      }
+=======
+        manager.AddState("movement", EnterMovementState, ExitState);
+    }
+
+    void EnterMovementState()
+    {
+        PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        manager.SetLeftClickTo(ApplyMovement);
+        manager.SetRightClickTo(() => { });
+        manager.SetHoverTo(Preview);
+    }
+
+    void ExitState()
+    {
+        ClearPath();
+    }
+>>>>>>> main
 
      // Handle click to visualize the path
      void Preview()
+<<<<<<< HEAD
      {
         // Raycast to the clicked point
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))// Check if the hit point is on the NavMesh
+=======
+    {
+        PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        // Crop the destination to the center of the target tile
+        Vector3 alteredPos = manager._lastHit.transform.position;
+        alteredPos.y += 0.5f;
+
+        // Calculate the path to the clicked point
+        NavMeshPath path = new NavMeshPath();
+
+        // In the following snipet, the commented code are those that use not cropped positions
+        //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
+        if (NavMesh.CalculatePath(manager._virtualPos, alteredPos, NavMesh.AllAreas,  path))
+>>>>>>> main
         {
-            // Crop the destination to the center of the target tile
-            Vector3 alteredPos = hit.transform.position;
-            alteredPos.y += 0.5f;
-
-            // Calculate the path to the clicked point
-            NavMeshPath path = new NavMeshPath();
-
-            // In the following snipet, the commented code are those that use not cropped positions
-            //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
-            if (NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, alteredPos, NavMesh.AllAreas,  path))
-            {
-                TrailCalculator.DrawPath(path, ref _lineRenderer);
-                _lastCalculatedWalkTime = GetPathTime(path);
-            }
-
-            // Instantiate click effect at the clicked point
-            if (_clickEffect != null)
-            {
-                //Instantiate(_clickEffect, hit.point + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
-                Instantiate(_clickEffect, alteredPos + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
-            }
-
-            GameObject.Find("Player").GetComponent<PlayerManager>().SetLeftClickTo(() => WaitForConfirmation(alteredPos));
+            TrailCalculator.DrawPath(path, ref _lineRenderer);
+            _lastCalculatedWalkTime = GetPathTime(path);
         }
+
+        // Instantiate click effect at the clicked point
+        if (_clickEffect != null)
+        {
+            //Instantiate(_clickEffect, hit.point + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
+            Instantiate(_clickEffect, alteredPos + new Vector3(0, 0.1f, 0), _clickEffect.transform.rotation);
+        }
+
+        _virtualDestination = alteredPos;
     }
 
     // Coroutine to wait for confirmation input
-     void WaitForConfirmation(Vector3 destination)
+     void ApplyMovement()
     {
-        // Update agent destination only when confirmed
-        
         ClearPath();
 
-        GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = destination;
+        GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _virtualDestination;
 
         Card moveCard = new Card();
         moveCard._trigger += () =>
         {
-            _agent.destination = destination;
+            _agent.destination = _virtualDestination;
             StartCoroutine(UpdatePath());
         };
         moveCard._duration = _lastCalculatedWalkTime;
@@ -147,7 +172,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Clear the path from the line renderer
-     void ClearPath()
+     public void ClearPath()
     {
         _lineRenderer.positionCount = 0;
     }

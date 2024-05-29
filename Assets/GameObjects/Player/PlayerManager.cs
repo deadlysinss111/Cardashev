@@ -19,16 +19,22 @@ public class PlayerManager : MonoBehaviour
 
     string _currentState;
     Action _currentAction;
-    Dictionary<string, Action> _states;
+    Dictionary<string, Action[]> _states;
     [NonSerialized] public string _defaultState;
 
     Func<UltiContext, bool> _ultimate;
-    Action _middleware;
+    Action _mouseHover;
+    Action _leftClick;
+    Action _rightClick;
+
+    [NonSerialized] public RaycastHit _lastHit;
+    [SerializeField] LayerMask _clickableLayers;
 
     PlayerManager() 
     {
-        _states = new Dictionary<string, Action>();
+        _states = new Dictionary<string, Action[]>();
         _defaultState = "movement";
+        _currentState = "movement";
     }
     private void Awake()
     {
@@ -38,8 +44,11 @@ public class PlayerManager : MonoBehaviour
 
         Class brawler = ClassFactory.Brawler();
         _ultimate = brawler._ultimate;
+        _ultimateProgression = 0;
 
+        _rightClick = () => { };
         _input.Main.LeftClick.performed += ctx => LeftClickMiddleware();
+        _input.Main.RightClick.performed += ctx => _rightClick();
 
         /*
         ~~ Code of Chatloupidou :3 */
@@ -50,6 +59,7 @@ public class PlayerManager : MonoBehaviour
         StartCoroutine(StartSimulation());
     }
 
+<<<<<<< HEAD
     /*
     ~~ Code of Chatloupidou :3 */
     // Controls' effect setup Action
@@ -69,9 +79,22 @@ public class PlayerManager : MonoBehaviour
 
     ///!\ depracated function
     //This state change function disable the previous control listener state and enable the new one
+=======
+     //This state change function disable the previous control listener state and enable the new one
+>>>>>>> main
     public void SetLeftClickTo(Action target)
     {
-        _middleware = target;
+        _leftClick = target;
+    }
+    
+    public void SetHoverTo(Action target)
+    {
+        _mouseHover = target;
+    }
+    
+    public void SetRightClickTo(Action target)
+    {
+        _rightClick = target;
     }
 
     private void LeftClickMiddleware()
@@ -88,14 +111,25 @@ public class PlayerManager : MonoBehaviour
                 return;
             }
         }
-        _middleware();
+        _leftClick();
+    }
+    
+    private void MouseHoverMiddleware()
+    {
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100, _clickableLayers))
+        {
+            _mouseHover();
+        }
     }
 
-    public bool AddState(string name, Action func)
+    public bool AddState(string name, Action enter, Action exit)
     {
         if(_states.ContainsKey(name) == false)
         {
-            _states[name] = func;
+            Action[] buffer = new Action[2];
+            buffer[0] = enter;
+            buffer[1] = exit;
+            _states[name] = buffer;
             return true;
         }
         return false;
@@ -103,12 +137,19 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
+<<<<<<< HEAD
         Debug.Log("Called somewhere with name = " + name);
         Action func;
+=======
+        Action[] func;
+>>>>>>> main
         if(_states.TryGetValue(name, out func))
         {
+            Action[] exit;
+            _states.TryGetValue(_currentState, out exit);
+            exit[1]();
             _currentState = name;
-            _currentAction = func;
+            func[0]();
             return true;
         }
         return false;
@@ -122,7 +163,7 @@ public class PlayerManager : MonoBehaviour
     // We wait for every states to be added to the state machine and we set the default state
     IEnumerator StartSimulation()
     {
-        int offset = 2;
+        int offset = 3;
         while(offset-- == 0)
         {
             yield return null;
@@ -132,12 +173,16 @@ public class PlayerManager : MonoBehaviour
 
     public void UseUltimate()
     {
-        _ultimate(new UltiContext());
+        if(_ultimateProgression >= 100)
+        {
+            _ultimate(new UltiContext());
+            _ultimateProgression = 0;
+        }
     }
 
     public void ExecuteCurrentStateAction()
     {
-        _currentAction();
+        MouseHoverMiddleware();
     }
 
     public List<string> GetDeck()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 
@@ -35,8 +36,7 @@ public static class ClassFactory
     {
         return new Class("brawler", 100, (UltiContext ctx) => {
 
-            UnityEngine.Object grenadePrefab = Resources.Load("Grenade");
-            GameObject grenade = (GameObject)UnityEngine.Object.Instantiate(grenadePrefab);
+            Debug.Log(":)");
 
             return true;
         });

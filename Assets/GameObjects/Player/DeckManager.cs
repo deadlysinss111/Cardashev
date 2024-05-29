@@ -38,12 +38,12 @@ public class DeckManager : MonoBehaviour
         if (_remainsInDeck.Count == 0)
         {
             _remainsInDeck = _discardPile;
-            //_discardPile = new List<Card>();
-            _discardPile.Clear();
+            _discardPile = new List<Card> { };
         }
 
         // we draw a random card
         int rdm = Random.Range(0, _remainsInDeck.Count-1);
+<<<<<<< HEAD
 
         /* ! MERGE ARTIFACT !    Maybe we can get rid of allat
             // we need to duplicate the card's game object so that we can display it an destroy it later easily
@@ -52,6 +52,8 @@ public class DeckManager : MonoBehaviour
             Card toDiscard = _remainsInDeck[rdm];
         */
         
+=======
+>>>>>>> main
 
         // we need to duplicate the card's game object so that we can display it an destroy it later easily
         Card obj = _remainsInDeck[rdm];
