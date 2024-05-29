@@ -10014,11 +10014,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d49d35966fd7b4c984ba363e365947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _remainsInDeck:
-  - {fileID: 4934749188351065461, guid: 80aa96c20e888a44d90c20b1099e803e, type: 3}
-  - {fileID: 4934749188351065461, guid: 80aa96c20e888a44d90c20b1099e803e, type: 3}
-  - {fileID: 4934749188351065461, guid: 80aa96c20e888a44d90c20b1099e803e, type: 3}
-  - {fileID: 4934749188351065461, guid: 80aa96c20e888a44d90c20b1099e803e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ using static UnityEngine.GraphicsBuffer;
 
 public class EnemyDeckManager : DeckManager
 {
+    Card _activeCard;
+    float _activeCardEndTime;
+
     void Start()
     {
         Init();
@@ -18,12 +22,34 @@ public class EnemyDeckManager : DeckManager
     {
         _hand = new List<Card>();
         _discardPile = new List<Card>();
-        //_remainsInDeck = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<ScriptManager>().GetDeck();
+        List<string> toLoad = GetComponent<BasicEnemyHandler>().GetDeck();
+        _remainsInDeck = new List<Card>();
+        foreach (string name in toLoad)
+        {
+            GameObject go = new GameObject(name);
+            Type t = Type.GetType(name);
+            go.transform.parent = gameObject.transform;
+            go.AddComponent(t);
+            _remainsInDeck.Add((Card)go.GetComponent(t));
+
+        }
+    }
+
+    private void Update()
+    {
+        if (_activeCard is null) return;
+        
+        if (Time.time > _activeCardEndTime)
+        {
+            _activeCard = null;
+        }
     }
 
     // called when the player draws a card
     public new void Draw()
     {
+        if (_activeCard is not null) return;
+
         // if the deck is empty, we shuffle the discard pile into it
         if (_remainsInDeck.Count == 0)
         {
@@ -32,45 +58,28 @@ public class EnemyDeckManager : DeckManager
         }
 
         // we draw a random card
-        int rdm = Random.Range(0, _remainsInDeck.Count-1);
-        
+        int rdm = UnityEngine.Random.Range(0, _remainsInDeck.Count - 1);
+
         // we need to duplicate the card's game object so that we can display it an destroy it later easily
-        GameObject clone = SpawnCard(_remainsInDeck[rdm]);
-        _discardPile.Add(_remainsInDeck[rdm]);
-
-        Card[] alts = clone.GetComponents<Card>();
-        Card card = new Card();
-
-        for (int i = 0; i < alts.Length; i++)
-        {
-            // Very stupid methinks
-            if (alts[i].GetType().ToString().Contains("Evil"))
-            {
-                card = alts[i];
-            }
-        }
-
-        _hand.Add(card);
-        Card toDiscard = _remainsInDeck[rdm];
-        Debug.Log(clone.GetComponents<Card>()[1]);
-
-        // it's kinda dirty but we use the closure to easily keep the card in memory and add it to discard pile later
-        card._trigger += () => { _discardPile.Add(toDiscard); Debug.Log(toDiscard); };
+        Card obj = _remainsInDeck[rdm];
+        obj.gameObject.SetActive(true);
+        _hand.Add(obj);
 
         // since we drew it, we remove the card from the deck
         _remainsInDeck.RemoveAt(rdm);
+        _discardPile.Add(obj);
 
         //DisplayHand();
-        Play(card);
+        Play(obj);
     }
 
     void Discard(Card target)
     {
         _hand.Remove(target);
 
-        Destroy(target.gameObject);
+        //Destroy(target.gameObject);
 
-        DisplayHand();
+        //DisplayHand();
     }
 
     // this function makes a card apperaing on screen
@@ -87,7 +96,9 @@ public class EnemyDeckManager : DeckManager
         //if (GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(target) == true)
         //{
         target.Effect(gameObject);
-            Discard(target);
+        _activeCard = target;
+        _activeCardEndTime = Time.time + target._duration;
+        Discard(target);
         //}
     }
 

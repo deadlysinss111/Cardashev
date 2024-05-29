@@ -68,7 +68,7 @@ public class LaunchGrenade : Card
         }
     }
 
-    void FireGrenade()
+    protected void FireGrenade()
     {
         ClearPath();
 

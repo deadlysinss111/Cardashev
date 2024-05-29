@@ -21,6 +21,8 @@ public class EnemyController : MonoBehaviour
         _enemyHandler = GetComponent<BasicEnemyHandler>();
         _agent = GetComponent<NavMeshAgent>();
         _enemyDeckManager = GetComponent<EnemyDeckManager>();
+
+        _enemyHandler._virtualPos = _agent.transform.position;
     }
 
     // Update is called once per framee
