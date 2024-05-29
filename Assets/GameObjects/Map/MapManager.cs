@@ -36,6 +36,7 @@ public class MapManager : MonoBehaviour
 
         MAP_NODE = (GameObject)Resources.Load("Map Node");
         MAP_PATH = (GameObject)Resources.Load("Map Path");
+        print(MAP_PATH);
         // Generate an invisible starting node
         _playerLocation = Instantiate(MAP_NODE).transform.gameObject;
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
@@ -107,8 +108,9 @@ public class MapManager : MonoBehaviour
 
         // Starting nodes attribution
         List<GameObject> freeNodelist = new List<GameObject>();
-        for (int i = 0; i < _mapSizeX; i++)
+        for (int i = 1; i < _mapSizeX-1; i++)
         {
+            _mapGrid[i][0].GetComponent<MapNode>()._startingXCoord = i;
             freeNodelist.Add(_mapGrid[i][0]);
         }
         for (int y = 0; y < 4; y++)
@@ -116,7 +118,7 @@ public class MapManager : MonoBehaviour
             int newStartCoordIndex = Random.Range(0, freeNodelist.Count);
             GameObject startingNode = freeNodelist[newStartCoordIndex];
             startingNode.GetComponent<MapNode>()._isStartingNode = true;
-            startingNode.GetComponent<MapNode>()._startingXCoord = newStartCoordIndex;
+            startingNode.name = "Starting Node";
             _playerLocation.GetComponent<MapNode>()._nextNodes.Add(startingNode);
             _startingNodes.Add(startingNode);
             freeNodelist.RemoveAt(newStartCoordIndex);
@@ -128,14 +130,12 @@ public class MapManager : MonoBehaviour
             for (int floorNb = 0; floorNb < _mapSizeY-1; floorNb++)
             {
                 int nextNodeXIndex = Mathf.Clamp(Random.Range(x - 1, x + 2), 0, _mapSizeX - 1);
-                //print(nextNodeXIndex);
                 _mapGrid[x][floorNb].GetComponent<MapNode>()._nextNodes.Add(_mapGrid[nextNodeXIndex][floorNb+1]);
 
-                // Placing paths between nodes
-                GameObject newPath = Instantiate(MAP_PATH);
+                // TODO placing paths between nodes
+                /*GameObject newPath = Instantiate(MAP_PATH);
                 newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
-                newPath.GetComponent<MapPathScript>().SetPathPoints(_mapGrid[x][floorNb], _mapGrid[nextNodeXIndex][floorNb + 1]);
-
+                newPath.GetComponentInChildren<MapPathScript>().SetPathPoints(_mapGrid[x][floorNb], _mapGrid[nextNodeXIndex][floorNb + 1]);*/
 
                 // Saving the x coordinate of the next node for the next iteration of the loop
                 x = nextNodeXIndex;
@@ -150,6 +150,10 @@ public class MapManager : MonoBehaviour
                 if (_mapGrid[i][j].GetComponent<MapNode>()._nextNodes.Count == 0)
                 {
                     _mapGrid[i][j].SetActive(false);
+                }
+                if (_mapGrid[i][j].GetComponent<MapNode>()._isStartingNode)
+                {
+                    //_mapGrid[i][j].SetActive(true);
                 }
             }
         }

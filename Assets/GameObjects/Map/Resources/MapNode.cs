@@ -29,10 +29,7 @@ public class MapNode : MonoBehaviour
 
     public void SelectNode()
     {
-        if (_isStartingNode)
-        {
-            return;
-        }
+        print("Select Node");
         GetComponent<MeshRenderer>().material.color = Color.yellow;
     }
 
