@@ -15,16 +15,23 @@ public class GameTimer : MonoBehaviour
 
     void Update()
     {
+        if (GameOverManager.Instance._inGameOver) return;
+
         _timePassed += Time.deltaTime;
 
-        int minutes = Mathf.FloorToInt(_timePassed / 60);
-        int seconds = Mathf.FloorToInt(_timePassed % 60);
-
-        _timerText.GetComponent<TMPro.TextMeshProUGUI>().text = $"{minutes:D2}:{seconds:D2}";
+        _timerText.GetComponent<TMPro.TextMeshProUGUI>().text = GetFormattedTime();
 
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
         {
             GameOverManager.Instance.StartGameOver();
         }
+    }
+
+    public string GetFormattedTime()
+    {
+        int minutes = Mathf.FloorToInt(_timePassed / 60);
+        int seconds = Mathf.FloorToInt(_timePassed % 60);
+
+        return $"{minutes:D2}:{seconds:D2}";
     }
 }
