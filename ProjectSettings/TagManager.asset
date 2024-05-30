@@ -9,6 +9,7 @@ TagManager:
   - Map
   - Map Node Parent
   - Map Path Parent
+  - InteractibleObject
   layers:
   - Default
   - TransparentFX
