@@ -82,4 +82,9 @@ public class DeckManager : MonoBehaviour
             _hand[i].transform.localPosition = new Vector3(-400 + 150 * i, -200, 0);
         }
     }
+
+    public void ShowDeck()
+    {
+
+    }
 }

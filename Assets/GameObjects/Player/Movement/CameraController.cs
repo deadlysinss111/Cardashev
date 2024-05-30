@@ -10,10 +10,14 @@ public class CameraController : MonoBehaviour
     public Transform _target;
 
     public float _smoothSpeed = 8f;
-    public Vector3 _offset;
+    Vector3 _offset;
     Quaternion _rotation;
     Action _currentMode;
     CustomActions _input;
+
+    // Clockwise positions around player starting behind him
+    Vector3[] _offsetPositions;
+    byte _offsetID;
 
     private void Awake()
     {
@@ -24,6 +28,13 @@ public class CameraController : MonoBehaviour
         _input.CameraControls.RotateToLeft.performed += ctx => RotateToLeft();
         _input.CameraControls.RotateToRight.performed += ctx => RotateToRight();
         _rotation = transform.rotation;
+        _offsetPositions = new Vector3[4];
+        _offsetPositions[0] = new Vector3(0, 15, -10);
+        _offsetPositions[1] = new Vector3(10, 15, 0);
+        _offsetPositions[2] = new Vector3(0, 15, 10);
+        _offsetPositions[3] = new Vector3(-10, 15, 0);
+        _offsetID = 0;
+        _offset = _offsetPositions[0];
     }
 
     void Update()
@@ -74,29 +85,68 @@ public class CameraController : MonoBehaviour
 
     private void RotateToLeft()
     {
-        // Movement transformations
-        Vector3 gap = _target.position - transform.position;
-        gap = Quaternion.AngleAxis(90, Vector3.up) * gap;
-        _offset.x = gap.x;
-        _offset.z = gap.z;
-
-        // Rotation transformations
-        _rotation *= Quaternion.AngleAxis(-45, Vector3.right);
-        _rotation *= Quaternion.AngleAxis(-90, Vector3.up);
-        _rotation *= Quaternion.AngleAxis(45, Vector3.right);
-    }
-    
-    private void RotateToRight()
-    {
-        // Movement transformations
-        Vector3 gap = _target.position - transform.position;
-        gap = Quaternion.AngleAxis(-90, Vector3.up) * gap;
-        _offset.x = gap.x ;
-        _offset.z = gap.z ;
+        if(_offsetID == 0)
+        {
+            _offsetID = 3;
+        }
+        else
+        {
+            --_offsetID;
+        }
+        _offset = _offsetPositions[_offsetID];
 
         // Rotation transformations
         _rotation *= Quaternion.AngleAxis(-45, Vector3.right);
         _rotation *= Quaternion.AngleAxis(90, Vector3.up);
         _rotation *= Quaternion.AngleAxis(45, Vector3.right);
     }
+    private void RotateToRight()
+    {
+        if(_offsetID == 3)
+        {
+            _offsetID = 0;
+        }
+        else
+        {
+            ++_offsetID;
+        }
+        _offset = _offsetPositions[_offsetID];
+
+        // Rotation transformations
+        _rotation *= Quaternion.AngleAxis(-45, Vector3.right);
+        _rotation *= Quaternion.AngleAxis(-90, Vector3.up);
+        _rotation *= Quaternion.AngleAxis(45, Vector3.right);
+    }
+
+
+    // Some really cool maths rotations with a shift bug left
+    // May be usefull if we want to let the player move around freely
+
+    //private void RotateToLeft()
+    //{
+    //    // Movement transformations
+    //    Vector3 gap = _target.position - transform.position;
+    //    gap = Quaternion.AngleAxis(90, Vector3.up) * gap;
+    //    _offset.x = gap.x;
+    //    _offset.z = gap.z;
+
+    //    // Rotation transformations
+    //    _rotation *= Quaternion.AngleAxis(-45, Vector3.right);
+    //    _rotation *= Quaternion.AngleAxis(-90, Vector3.up);
+    //    _rotation *= Quaternion.AngleAxis(45, Vector3.right);
+    //}
+
+    //private void RotateToRight()
+    //{
+    //    // Movement transformations
+    //    Vector3 gap = _target.position - transform.position;
+    //    gap = Quaternion.AngleAxis(-90, Vector3.up) * gap;
+    //    _offset.x = gap.x ;
+    //    _offset.z = gap.z ;
+
+    //    // Rotation transformations
+    //    _rotation *= Quaternion.AngleAxis(-45, Vector3.right);
+    //    _rotation *= Quaternion.AngleAxis(90, Vector3.up);
+    //    _rotation *= Quaternion.AngleAxis(45, Vector3.right);
+    //}
 }
