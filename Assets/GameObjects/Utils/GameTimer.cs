@@ -21,5 +21,10 @@ public class GameTimer : MonoBehaviour
         int seconds = Mathf.FloorToInt(_timePassed % 60);
 
         _timerText.GetComponent<TMPro.TextMeshProUGUI>().text = $"{minutes:D2}:{seconds:D2}";
+
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
+        {
+            GameOverManager.Instance.StartGameOver();
+        }
     }
 }
