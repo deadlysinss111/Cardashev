@@ -5,12 +5,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-
+using UnityEngine.UIElements;
 
 public class PlayerManager : MonoBehaviour
 {
+    // In game visible fields
+
     [NonSerialized] public StatManager _health;
     byte _ultimateProgression;
+    public int _goldAmount;
+
+
+    // Functional fields
 
     [NonSerialized] public Vector3 _virtualPos;
     CustomActions _input;
@@ -45,10 +51,12 @@ public class PlayerManager : MonoBehaviour
         Class brawler = ClassFactory.Brawler();
         _ultimate = brawler._ultimate;
         _ultimateProgression = 0;
+        _goldAmount = 0;
 
         _rightClick = () => { };
         _input.Main.LeftClick.performed += ctx => LeftClickMiddleware();
         _input.Main.RightClick.performed += ctx => _rightClick();
+
 
         /*
         ~~ Code of Chatloupidou :3 */
