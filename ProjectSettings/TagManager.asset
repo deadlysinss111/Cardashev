@@ -5,8 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Canvas
-  - Map Canvas
   - Map Starting Node
+  - Map
+  - Map Node Parent
+  - Map Path Parent
   layers:
   - Default
   - TransparentFX

@@ -2,34 +2,52 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class MapNode : MonoBehaviour
 {
     [NonSerialized] public GameObject _mapNode;
     public List<GameObject> _nextNodes;
 
-    public bool _isStartRoom;
+    [NonSerialized] public bool _isStartingNode;
+    [NonSerialized] public int _startingXCoord;
 
     private void Start()
     {
         _mapNode = GetComponent<GameObject>();
-        _isStartRoom = false;
+        GetComponent<MeshRenderer>().material.color = Color.blue;
+        _isStartingNode = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetAsOriginalNode()
     {
-
+        transform.SetParent(GameObject.FindGameObjectsWithTag("Map")[0].transform, false);
+        transform.localPosition = new Vector3(1, 3);
+        transform.name = "Original Node";
+        GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void SelectNode()
     {
-        print("Node selected !");
+        print("Select Node");
         GetComponent<MeshRenderer>().material.color = Color.yellow;
     }
 
     public void UnselectNode()
     {
-        GetComponent<MeshRenderer>().material.color = Color.white;
+        if (_isStartingNode)
+        {
+            return;
+        }
+        GetComponent<MeshRenderer>().material.color = Color.blue;
+    }
+
+    public void LockNode()
+    {
+        if (_isStartingNode)
+        {
+            return;
+        }
+        GetComponent<MeshRenderer>().material.color = Color.grey;
     }
 }
