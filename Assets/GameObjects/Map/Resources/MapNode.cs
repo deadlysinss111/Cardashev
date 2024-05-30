@@ -31,11 +31,10 @@ public class MapNode : MonoBehaviour
 
     public void SelectNode()
     {
-        print("Select Node");
+        //print("Select Node");
         GetComponent<MeshRenderer>().material.color = Color.yellow;
         GlobalInformations._prefabToLoadOnRoomEnter = _linkedScene;
         SceneManager.LoadScene("TestLvl");
-        
     }
 
     public void UnselectNode()

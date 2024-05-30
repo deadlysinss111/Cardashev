@@ -55,7 +55,10 @@ public class PlayerManager : MonoBehaviour
         //AddState("Interactible Select", TargetInteractible);
         /*
         ~~ End of code of Chatloupidou ;3 */
+    }
 
+    private void Start()
+    {
         StartCoroutine(StartSimulation());
     }
 
@@ -116,9 +119,6 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
-
-        Debug.Log("Called somewhere with name = " + name);
-
         Action[] func;
         if(_states.TryGetValue(name, out func))
         {

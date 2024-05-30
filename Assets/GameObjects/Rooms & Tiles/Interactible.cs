@@ -135,7 +135,7 @@ public abstract class Interactible : MonoBehaviour
             CombineInstance combInstTemp = new CombineInstance();
             combInstTemp.mesh = curMeshFilter.sharedMesh;
             combInstTemp.transform = Matrix4x4.TRS(curMFTransfrom.localPosition, curMFTransfrom.localRotation, curMFTransfrom.localScale);
-            Debug.Log("transform : " + meshFilters[i].transform.localPosition);
+            //Debug.Log("transform : " + meshFilters[i].transform.localPosition);
             combine.Add(combInstTemp);
         }
 

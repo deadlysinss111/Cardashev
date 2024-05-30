@@ -41,9 +41,9 @@ public struct RoomPrefabDesc
 */
 public struct RoomPrefabEncyclopedia
 {
-    public readonly Dictionary<ZoneType, string> ZoneFolderName { get; }
+    public Dictionary<ZoneType, string> ZoneFolderName { get; }
     // ! TODO: Implement when we'll want to compose a room of multiple prefabs
-    public readonly Dictionary<string, RoomPrefabDesc> RoomBook { get; }
+    public Dictionary<string, RoomPrefabDesc> RoomBook { get; }
 
     public RoomPrefabEncyclopedia(Dictionary<ZoneType, string> ARGZoneFolderName, Dictionary<string, RoomPrefabDesc> ARGRoomBook)
     {

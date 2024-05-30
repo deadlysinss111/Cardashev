@@ -1,19 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class OnEnterTestLvl : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
-        Room room = new Room();
+        Room room = gameObject.GetComponent<Room>();
         room.OnEnterRoom(GlobalInformations._prefabToLoadOnRoomEnter);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        NavMeshSurface surface = GameObject.Find("RoomAnchor").AddComponent<NavMeshSurface>();
+        surface.BuildNavMesh();
     }
 }

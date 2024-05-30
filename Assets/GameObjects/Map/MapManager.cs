@@ -28,6 +28,13 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
+        _mapGrid = GlobalInformations._mapNodes;
+
+        if (_mapGrid != null)
+        {
+            return;
+        }
+
         _mapSizeX = 7;
         _mapSizeY = 15;
 
@@ -36,10 +43,11 @@ public class MapManager : MonoBehaviour
 
         MAP_NODE = (GameObject)Resources.Load("Map Node");
         MAP_PATH = (GameObject)Resources.Load("Map Path");
-        print(MAP_PATH);
         // Generate an invisible starting node
         _playerLocation = Instantiate(MAP_NODE).transform.gameObject;
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
+
+        GenerateMap();
     }
 
     void Update()

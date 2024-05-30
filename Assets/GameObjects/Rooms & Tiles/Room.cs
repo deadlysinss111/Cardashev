@@ -72,7 +72,7 @@ public class Room : MonoBehaviour
                         modelPath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/Prefabs/" + model.name;
                     else
                         modelPath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/" + model.name;
-                    Debug.Log("Attempt to load the prefab " + modelPath);
+                    //Debug.Log("Attempt to load the prefab " + modelPath);
                     Instantiate(Resources.Load(modelPath), model.transform.position, model.transform.rotation, newTilemap.transform);
                 }
             }
@@ -125,7 +125,7 @@ public class Room : MonoBehaviour
     }
 
 
-    void Start()
+    void Awake()
     {
         // • Creates the RoomPrefabEncyclopedia for the Room class. This is done by filling 2 Dictionaries, and instantiating the struct.
         // ! TODO: Fill the second Dictionary with actual data when we'll want to compose room with multiple prefabs
