@@ -98,12 +98,22 @@ public abstract class Interactible : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        Debug.Log("auuuuUUUUUuugh");
+        // Adds the Outline component
+        Outline outlineComp = this.AddComponent<Outline>();
+        outlineComp.OutlineMode = Outline.Mode.OutlineAll;
+        outlineComp.OutlineColor = Color.green;
+        outlineComp.OutlineWidth = 4.7f;
+
         // Changes the PlayerManager state
         _playerRef.GetComponent<PlayerManager>().SetToState("InteractibleTargeting");
     }
     private void OnMouseExit()
     {
+        // Removes the Outline component
+        Outline outlineComp = this.GetComponent<Outline>();
+        if (outlineComp != null)
+            Destroy(outlineComp);
+
         // Restores the previous state
         _playerRef.GetComponent<PlayerManager>().SetToDefult();
     }
@@ -135,7 +145,6 @@ public abstract class Interactible : MonoBehaviour
             CombineInstance combInstTemp = new CombineInstance();
             combInstTemp.mesh = curMeshFilter.sharedMesh;
             combInstTemp.transform = Matrix4x4.TRS(curMFTransfrom.localPosition, curMFTransfrom.localRotation, curMFTransfrom.localScale);
-            Debug.Log("transform : " + meshFilters[i].transform.localPosition);
             combine.Add(combInstTemp);
         }
 
