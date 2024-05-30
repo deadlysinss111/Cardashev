@@ -50,12 +50,6 @@ public class PlayerManager : MonoBehaviour
         _input.Main.LeftClick.performed += ctx => LeftClickMiddleware();
         _input.Main.RightClick.performed += ctx => _rightClick();
 
-        /*
-        ~~ Code of Chatloupidou :3 */
-        //AddState("Interactible Select", TargetInteractible);
-        /*
-        ~~ End of code of Chatloupidou ;3 */
-
         StartCoroutine(StartSimulation());
     }
 
@@ -95,10 +89,14 @@ public class PlayerManager : MonoBehaviour
     
     private void MouseHoverMiddleware()
     {
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100, _clickableLayers))
+        //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100, _clickableLayers))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit))
         {
+            Destroy(_lastHit.transform.gameObject);
             _mouseHover();
         }
+        else
+            Debug.Log("shrug");
     }
 
     public bool AddState(string name, Action enter, Action exit)

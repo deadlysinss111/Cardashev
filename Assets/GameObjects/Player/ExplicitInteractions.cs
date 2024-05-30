@@ -40,43 +40,51 @@ public class ExplicitInteractions : MonoBehaviour
         // Sets up the functions for the controls
         _manager.SetLeftClickTo(RaycastResponseCaller);
         _manager.SetHoverTo( () => { } );
-        _manager.SetRightClickTo( () => { } );
+        _manager.SetRightClickTo(MouseOverPreview);
     }
     private void OnExitState() { }
 
 
-    //// • Finds the root parent of the Interactible's prefab and highlight it
-    //// ! Changing hte materail color is a very bad idea, this need to change TODO
-    //public void MouseOverPreview()
-    //{
-    //    // Raycast from the mouse, storing the hit if it succeeded
-    //    RaycastHit raycastHit;
-    //    if (false == Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out raycastHit))
-    //        return;
+    // • Finds the root parent of the Interactible's prefab and highlight it
+    // ! Changing hte materail color is a very bad idea, this need to change TODO
+    public void MouseOverPreview()
+    {
+        // Raycast from the mouse, storing the hit if it succeeded
+        RaycastHit raycastHit;
+        if (false == Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out raycastHit))
+            return;
 
-    //    // If it finds the GameObject's parent prefab, changes the GameManager's state and highlight the prefab
-    //    GameObject raycastTarget = FindPrefabOriginRecur(raycastHit.transform.gameObject);
-    //    if (raycastTarget != null)
-    //    {
-    //        // Restores the old material color if any Interactible was previously highlighted
-    //        if (_currentInteractible != null)
-    //            _currentInteractible.GetComponent<MeshRenderer>().material.color = _baseColor;
+        // If it finds the GameObject's parent prefab, changes the GameManager's state and highlight the prefab
+        GameObject raycastTarget = FindPrefabOriginRecur(raycastHit.transform.gameObject);
+        if (raycastTarget != null)
+        {
+            // Restores the old material color if any Interactible was previously highlighted
+            if (_currentInteractible != null)
+                _currentInteractible.GetComponent<MeshRenderer>().material.color = _baseColor;
 
-    //        // Updates the selected Interactible and saves its current material color
-    //        _currentInteractible = raycastTarget;
-    //        //_baseColor = _currentInteractible.GetComponent<MeshRenderer>().material.color;
-    //        foreach(GameObject obj in _currentInteractible.GetComponentsInChildren<GameObject>())
-    //        {
-    //            _baseColor = obj.GetComponent<MeshRenderer>().material.color;
-    //            obj.GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.0f, 0.5f, 1.0f);
-    //        }
-    //    }
-    //}
+            // Updates the selected Interactible and saves its current material color
+            _currentInteractible = raycastTarget;
+            //_baseColor = _currentInteractible.GetComponent<MeshRenderer>().material.color;
+            foreach (GameObject obj in _currentInteractible.GetComponentsInChildren<GameObject>())
+            {
+                _baseColor = obj.GetComponent<MeshRenderer>().material.color;
+                obj.GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.0f, 0.5f, 1.0f);
+            }
+        }
+    }
 
     // Calls the response to a raycast hit event of the Interactbile target
     public void RaycastResponseCaller()
     {
-        _currentInteractible.GetComponent<Interactible>().OnRaycastHit();
+        // Updates the current Interactible
+        Debug.Log(_manager._lastHit.collider.gameObject.name);
+        _currentInteractible = FindPrefabOriginRecur(_manager._lastHit.collider.gameObject);
+
+        // ""Raises"" a RaycastHit event, given the Interactible isn't null for some reason
+        if (_currentInteractible != null)
+            _currentInteractible.GetComponent<Interactible>().OnRaycastHit();
+        else
+            Debug.Log("Interactible was null !");
     }
 
 
@@ -84,7 +92,8 @@ public class ExplicitInteractions : MonoBehaviour
     // UTILITIY METHODS
     // ------
 
-    // Recursively looks for the root prefab of a GameObject
+    // ! Might be deprecated, since now the parent-most object is the only one to possess a Collider
+    //   Recursively looks for the root prefab of a GameObject
     public GameObject FindPrefabOriginRecur(GameObject ARGprefabChild)
     {
         // Unfruitful search assumed from the start
