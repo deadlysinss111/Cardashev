@@ -127,11 +127,15 @@ public abstract class Interactible : MonoBehaviour
 
         for (int i = 0;  i < meshFilters.Count ; ++i)
         {
+            // Stored current meshFilter data since we need to read it a bunch
+            MeshFilter curMeshFilter = meshFilters[i];
+            Transform curMFTransfrom = curMeshFilter.transform;
+
             // Filling out a temp combineInstance and adding it to the combine List
             CombineInstance combInstTemp = new CombineInstance();
-            combInstTemp.mesh = meshFilters[i].sharedMesh;
-            combInstTemp.transform = meshFilters[i].transform.localToWorldMatrix; // BUG, the transform should be the location relative to the parent
-            Debug.Log("transform : " + meshFilters[i].transform);
+            combInstTemp.mesh = curMeshFilter.sharedMesh;
+            combInstTemp.transform = Matrix4x4.TRS(curMFTransfrom.localPosition, curMFTransfrom.localRotation, curMFTransfrom.localScale);
+            Debug.Log("transform : " + meshFilters[i].transform.localPosition);
             combine.Add(combInstTemp);
         }
 
