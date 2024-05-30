@@ -8,6 +8,8 @@ public class GameTimer : MonoBehaviour
 
     [SerializeField] private GameObject _timerText;
 
+    [SerializeField] private GameObject _winScreen;
+
     void Start()
     {
         _timePassed = 0;
@@ -15,7 +17,7 @@ public class GameTimer : MonoBehaviour
 
     void Update()
     {
-        if (GameOverManager.Instance._inGameOver) return;
+        if (GameOverManager.Instance._inGameOver || _winScreen.GetComponent<WinManager>()._onWinScreen) return;
 
         _timePassed += Time.deltaTime;
 
@@ -24,6 +26,10 @@ public class GameTimer : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
         {
             GameOverManager.Instance.StartGameOver();
+        }
+        else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
+        {
+            _winScreen.SetActive(true);
         }
     }
 
