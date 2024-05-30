@@ -25,24 +25,25 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]  LayerMask _clickableLayers;
 
-     float _lookRotationSpeed = 8f;
-     List<Vector3> _pathPoints;
+    float _lookRotationSpeed = 8f;
+    List<Vector3> _pathPoints;
 
     float _lastCalculatedWalkTime;
 
     bool _movementEnabled;
-
     Vector3 _virtualDestination;
 
     // Initialization
      void Awake()
-    {
+     {
+        // Loads in the fields useful data and references
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _lineRenderer = GetComponent<LineRenderer>();
         _pathPoints = new List<Vector3>();
         _input = new CustomActions();
 
+        // Loading in PlayerManager a new state and its Action to change what the controls will do
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager._virtualPos = _agent.transform.position;
         manager.AddState("movement", EnterMovementState, ExitState);
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour
         ClearPath();
     }
 
-    // Handle click to visualize the path
+     // Handle click to visualize the path
      void Preview()
     {
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
