@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.U2D;
 
 public class MapNode : MonoBehaviour
@@ -11,6 +12,7 @@ public class MapNode : MonoBehaviour
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
+    string _linkedScene = "large empty area";
 
     private void Start()
     {
@@ -31,6 +33,9 @@ public class MapNode : MonoBehaviour
     {
         print("Select Node");
         GetComponent<MeshRenderer>().material.color = Color.yellow;
+        GlobalInformations._prefabToLoadOnRoomEnter = _linkedScene;
+        SceneManager.LoadScene("TestLvl");
+        
     }
 
     public void UnselectNode()
