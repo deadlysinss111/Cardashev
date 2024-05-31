@@ -1,12 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
-struct ANIMSTATES
+internal struct ANIMSTATES
 {
     public const string IDLE = "IDLE";
     public const string WALK = "WALK";
@@ -14,28 +11,28 @@ struct ANIMSTATES
 
 public class PlayerController : MonoBehaviour
 {
-     CustomActions _input;
+    private CustomActions _input;
 
-     NavMeshAgent _agent;
-     Animator _animator;
-     LineRenderer _lineRenderer;
+    private NavMeshAgent _agent;
+    private Animator _animator;
+    private LineRenderer _lineRenderer;
 
     [Header("Movement")]
-    [SerializeField]  ParticleSystem _clickEffect;
+    [SerializeField] private ParticleSystem _clickEffect;
 
-    [SerializeField]  LayerMask _clickableLayers;
+    [SerializeField] private LayerMask _clickableLayers;
 
-     float _lookRotationSpeed = 8f;
-     List<Vector3> _pathPoints;
+    private float _lookRotationSpeed = 8f;
+    private List<Vector3> _pathPoints;
 
-    float _lastCalculatedWalkTime;
+    private float _lastCalculatedWalkTime;
 
-    bool _movementEnabled;
+    private bool _movementEnabled;
 
-    Vector3 _virtualDestination;
+    private Vector3 _virtualDestination;
 
     // Initialization
-     void Awake()
+    private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
@@ -48,7 +45,7 @@ public class PlayerController : MonoBehaviour
         manager.AddState("movement", EnterMovementState);
     }
 
-    void EnterMovementState()
+    private void EnterMovementState()
     {
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager.SetLeftClickTo(ApplyMovement);
@@ -57,7 +54,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Handle click to visualize the path
-     void Preview()
+    private void Preview()
     {
         // Raycast to the clicked point
         RaycastHit hit;
@@ -72,7 +69,7 @@ public class PlayerController : MonoBehaviour
 
             // In the following snipet, the commented code are those that use not cropped positions
             //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
-            if (NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, alteredPos, NavMesh.AllAreas,  path))
+            if (NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, alteredPos, NavMesh.AllAreas, path))
             {
                 TrailCalculator.DrawPath(path, ref _lineRenderer);
                 _lastCalculatedWalkTime = GetPathTime(path);
@@ -90,7 +87,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Coroutine to wait for confirmation input
-     void ApplyMovement()
+    private void ApplyMovement()
     {
         ClearPath();
 
@@ -109,10 +106,9 @@ public class PlayerController : MonoBehaviour
             Debug.Log("error in movement card generation");
         }
     }
-    
 
     // Coroutine to update the path as the agent moves
-     IEnumerator UpdatePath()
+    private IEnumerator UpdatePath()
     {
         // Wait for the agent to reach the destination
         while (_agent.pathPending || _agent.remainingDistance > _agent.stoppingDistance)
@@ -136,7 +132,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Get the time to traverse the path
-     float GetPathTime(NavMeshPath path)
+    private float GetPathTime(NavMeshPath path)
     {
         // Calculate the time to traverse the path
         float time = 0;
@@ -153,32 +149,32 @@ public class PlayerController : MonoBehaviour
     }
 
     // Clear the path from the line renderer
-     public void ClearPath()
+    public void ClearPath()
     {
         _lineRenderer.positionCount = 0;
     }
 
     // Enable input actions
-    void OnEnable()
+    private void OnEnable()
     {
         _input.Enable();
     }
 
     // Disable input actions
-    void OnDisable()
+    private void OnDisable()
     {
         _input.Disable();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         //FaceTarget();
-        SetAnimations();
+        //SetAnimations();
     }
 
     // Rotate the player to face the target destination
-     void FaceTarget()
+    private void FaceTarget()
     {
         // Calculate the direction to the target destination
         Vector3 direction = (_agent.destination - transform.position).normalized;
@@ -191,7 +187,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Set animations based on agent velocity
-     void SetAnimations()
+    private void SetAnimations()
     {
         if (_agent.velocity == Vector3.zero)
         {

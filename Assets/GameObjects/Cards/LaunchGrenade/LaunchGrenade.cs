@@ -34,7 +34,7 @@ public class LaunchGrenade : Card
     {
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager.SetLeftClickTo(FireGrenade);
-        manager.SetRightClickTo(() => { manager.SetToDefult(); ClearPath(); });
+        manager.SetRightClickTo(() => { manager.SetToDefault(); ClearPath(); });
         manager.SetHoverTo(Preview);
         GameObject.Find("Player").GetComponent<PlayerController>().ClearPath();
     }

@@ -1,47 +1,57 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class SlowMotionWithProgressBar : MonoBehaviour
 {
     // Slow motion variables
-    public float _slowdownFactor;
-
-    public float _slowdownLength; // Maximum duration the slow motion can last
+    public float _slowdownFactor = 0.1f;
+    public float _slowdownLength = 5.0f; // Maximum duration the slow motion can last
 
     // Focus bar variables
     public GameObject _focusBar;
 
     private bool _isActive;
-    private CustomActions _input;
+    private PlayerInput _pInput;
 
     // Circular progress bar variables
     private bool _progressBarIsActive;
-
     private bool _isRefilling;
     private float _indicatorTimer;
-    private float _maxIndicatorTimer;
+    private float _maxIndicatorTimer = 5.0f;
     private Image _radialProgressBar;
     private float _lerpSpeed = 3f; // Speed of interpolation
 
     private void Awake()
     {
-        _input = new CustomActions();
-        _input.Main.Focus.performed += context => StartSlowMotion();
-        _input.Main.Focus.canceled += context => StopSlowMotion();
+        _pInput = GetComponent<PlayerInput>();
 
         // Initialize the radial progress bar
         _radialProgressBar = _focusBar.transform.Find("RadialProgressBar").GetComponent<Image>();
     }
 
-    // Enable and disable the input actions
     private void OnEnable()
     {
-        _input.Main.Enable();
+        // Enable the input actions when the object is enabled
+        _pInput.actions["Focus"].performed += OnFocusPerformed;
+        _pInput.actions["Focus"].canceled += OnFocusCanceled;
     }
 
     private void OnDisable()
     {
-        _input.Main.Disable();
+        // Disable the input actions when the object is disabled
+        _pInput.actions["Focus"].performed -= OnFocusPerformed;
+        _pInput.actions["Focus"].canceled -= OnFocusCanceled;
+    }
+
+    private void OnFocusPerformed(InputAction.CallbackContext context)
+    {
+        StartSlowMotion();
+    }
+
+    private void OnFocusCanceled(InputAction.CallbackContext context)
+    {
+        StopSlowMotion();
     }
 
     public void StartSlowMotion()
@@ -86,7 +96,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
 
     public void ActivateCountdown(float countdownTime)
     {
-        _maxIndicatorTimer = 5f;
+        _maxIndicatorTimer = countdownTime;
         _indicatorTimer = countdownTime;
     }
 
@@ -111,9 +121,9 @@ public class SlowMotionWithProgressBar : MonoBehaviour
             if (_isRefilling)
             {
                 // Smoothly refill the progress bar using Lerp
-                _indicatorTimer += Time.unscaledDeltaTime/4; // Increment the indicator timer
+                _indicatorTimer += Time.unscaledDeltaTime / 4; // Increment the indicator timer
                 _radialProgressBar.fillAmount = Mathf.Lerp(_radialProgressBar.fillAmount, _indicatorTimer / _maxIndicatorTimer, _lerpSpeed * Time.unscaledDeltaTime);
-                
+
                 IncreaseTimer(); // Increase the timer
 
                 // Stop refilling once max is reached
@@ -123,7 +133,6 @@ public class SlowMotionWithProgressBar : MonoBehaviour
                     _indicatorTimer = _maxIndicatorTimer; // Ensure the timer is exactly at max
                     _radialProgressBar.fillAmount = 1f; // Ensure the fill amount is exactly 1
                     _slowdownLength = _maxIndicatorTimer; // Ensure the timer is exactly at max
-
 
                     // Stop the countdown when fully refilled
                     StopCountdown();
