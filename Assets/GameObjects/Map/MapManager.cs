@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -131,27 +132,19 @@ public class MapManager : MonoBehaviour
         }
 
         // Flag just for putting a "Rest" room at the end of the first path
-        bool isFirstPath = true;
+        //bool isFirstPath = true;
         // Generating paths between each node
         foreach (GameObject startingNode in _startingNodes)
         {
             int x = startingNode.GetComponent<MapNode>()._startingXCoord;
             for (int floorNb = 0; floorNb < _mapSizeY-1; floorNb++)
             {
-                int nextNodeXIndex = Mathf.Clamp(Random.Range(x - 1, x + 2), 0, _mapSizeX - 1);
+                int nextNodeXIndex = Random.Range(Mathf.Clamp(x - 1, 0, _mapSizeX - 1), Mathf.Clamp(x + 2, 0, _mapSizeX - 1));
+                nextNodeXIndex = ArePathsCrossing(x, floorNb, nextNodeXIndex);
+
                 GameObject nextNode = _mapGrid[nextNodeXIndex][floorNb + 1];
                 _mapGrid[x][floorNb].GetComponent<MapNode>()._nextNodes.Add(nextNode);
 
-                /*int result = ArePathsCrossing(x, floorNb, nextNodeXIndex);
-                switch (result)
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        break; 
-                    case 2:
-                        break;
-                }*/
 
                 // WIP placing paths between nodes
                 CreatePathBetween(_mapGrid[x][floorNb], nextNode);
@@ -164,7 +157,7 @@ public class MapManager : MonoBehaviour
                     CreatePathBetween(nextNode, _bossRoom);
                 }
             }
-            isFirstPath = false;
+            //isFirstPath = false;
         }
 
         // Disabling path-less nodes to make them invisible
@@ -175,10 +168,6 @@ public class MapManager : MonoBehaviour
                 if (_mapGrid[i][j].GetComponent<MapNode>()._nextNodes.Count == 0)
                 {
                     _mapGrid[i][j].SetActive(false);
-                }
-                if (_mapGrid[i][j].GetComponent<MapNode>()._isStartingNode)
-                {
-                    //_mapGrid[i][j].SetActive(true);
                 }
             }
         }
@@ -193,11 +182,26 @@ public class MapManager : MonoBehaviour
 
     int ArePathsCrossing(int x, int floor, int nextX)
     {
-        GameObject originalNode = _mapGrid[x][floor];
-        GameObject targetNode = _mapGrid[nextX][floor+1];
-        GameObject originalCrossedNode = _mapGrid[nextX][floor];
-        GameObject targetCrossedNode = _mapGrid[x][floor+1];
+        if (x == nextX) return nextX;
 
-        return 0;
+        List<int> correctedX = new List<int> { x };
+
+        foreach (GameObject node in _mapGrid[nextX][floor].GetComponent<MapNode>()._nextNodes)
+        {
+            if (ReferenceEquals(node, _mapGrid[x][floor+1]))
+            {
+                correctedX.Add(nextX + 2 * (x < nextX ? -1 : 1));
+                if (Mathf.Round(correctedX[1] - x) > 1)
+                {
+                    return x;
+                }
+            }
+        }
+
+        if (correctedX.Count == 1)
+        {
+            return nextX;
+        }
+        return correctedX[Random.Range(0, 2)];
     }
 }
