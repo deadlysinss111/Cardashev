@@ -53,6 +53,24 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Focus"",
+                    ""type"": ""Button"",
+                    ""id"": ""c0251a30-0490-4a0d-b1e9-6a7e1f2ba005"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ultimate"",
+                    ""type"": ""Button"",
+                    ""id"": ""a9c57a1f-fd43-4099-bc12-2f214e8ccf89"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -86,6 +104,28 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""SpaceBar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe66b46b-d892-4cd3-8208-cb0449dadb86"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Focus"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""20426477-d11c-4d1c-b465-e12548bdb421"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ultimate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -151,6 +191,8 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
         m_CameraControls_RotateToLeft = m_CameraControls.FindAction("RotateToLeft", throwIfNotFound: true);
         m_CameraControls_RotateToRight = m_CameraControls.FindAction("RotateToRight", throwIfNotFound: true);
+        m_Main_Focus = m_Main.FindAction("Focus", throwIfNotFound: true);
+        m_Main_Ultimate = m_Main.FindAction("Ultimate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -215,6 +257,8 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Main_LeftClick;
     private readonly InputAction m_Main_RightClick;
     private readonly InputAction m_Main_SpaceBar;
+    private readonly InputAction m_Main_Focus;
+    private readonly InputAction m_Main_Ultimate;
     public struct MainActions
     {
         private @CustomActions m_Wrapper;
@@ -222,6 +266,8 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         public InputAction @LeftClick => m_Wrapper.m_Main_LeftClick;
         public InputAction @RightClick => m_Wrapper.m_Main_RightClick;
         public InputAction @SpaceBar => m_Wrapper.m_Main_SpaceBar;
+        public InputAction @Focus => m_Wrapper.m_Main_Focus;
+        public InputAction @Ultimate => m_Wrapper.m_Main_Ultimate;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -240,6 +286,12 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @SpaceBar.started += instance.OnSpaceBar;
             @SpaceBar.performed += instance.OnSpaceBar;
             @SpaceBar.canceled += instance.OnSpaceBar;
+            @Focus.started += instance.OnFocus;
+            @Focus.performed += instance.OnFocus;
+            @Focus.canceled += instance.OnFocus;
+            @Ultimate.started += instance.OnUltimate;
+            @Ultimate.performed += instance.OnUltimate;
+            @Ultimate.canceled += instance.OnUltimate;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -253,6 +305,12 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @SpaceBar.started -= instance.OnSpaceBar;
             @SpaceBar.performed -= instance.OnSpaceBar;
             @SpaceBar.canceled -= instance.OnSpaceBar;
+            @Focus.started -= instance.OnFocus;
+            @Focus.performed -= instance.OnFocus;
+            @Focus.canceled -= instance.OnFocus;
+            @Ultimate.started -= instance.OnUltimate;
+            @Ultimate.performed -= instance.OnUltimate;
+            @Ultimate.canceled -= instance.OnUltimate;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -329,6 +387,8 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         void OnLeftClick(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
         void OnSpaceBar(InputAction.CallbackContext context);
+        void OnFocus(InputAction.CallbackContext context);
+        void OnUltimate(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
