@@ -14,7 +14,9 @@ public class PlayerManager : MonoBehaviour
     [NonSerialized] public StatManager _health;
     byte _ultimateProgression;
     public int _goldAmount;
-    public List<Card> _deck;
+
+    static public List<Card> _deck;
+    static public Class _class;
 
 
     // Functional fields
@@ -47,8 +49,7 @@ public class PlayerManager : MonoBehaviour
         _input.Enable();
         _health = GetComponent<StatManager>();
 
-        Class brawler = ClassFactory.Brawler();
-        _ultimate = brawler._ultimate;
+        _ultimate = _class._ultimate;
         _ultimateProgression = 0;
         _goldAmount = 0;
 

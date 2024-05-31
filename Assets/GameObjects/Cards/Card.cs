@@ -47,7 +47,7 @@ public class Card : MonoBehaviour
 
     public void SetToCollectible(Action func)
     {
-        _clickEffect = ()=> { GameObject.Find("Player").GetComponent<PlayerManager>()._deck.Add(this); func(); };
+        _clickEffect = ()=> { PlayerManager._deck.Add(this); func(); };
     }
 
     public virtual void OnUpgrade()

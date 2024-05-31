@@ -29,16 +29,20 @@ public struct UltiContext
     }
 }
 
+
 public static class ClassFactory
 {
-    public static UltiContext _context;
-    public static Class Brawler()
+    public static Dictionary<string, Class> _classesBook = new Dictionary<string, Class>() 
     {
-        return new Class("brawler", 100, (UltiContext ctx) => {
+        {
+            "brawler", new Class("brawler", 100, (UltiContext ctx) => {
 
-            Debug.Log(":)");
+                Debug.Log(":)");
 
-            return true;
-        });
-    }
+                return true;
+            }) 
+        }
+    };
+
+    public static UltiContext _context;
 } 

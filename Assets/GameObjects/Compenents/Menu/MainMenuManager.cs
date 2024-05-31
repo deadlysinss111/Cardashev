@@ -113,6 +113,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void SelectCharacter(string name)
     {
-        
+        ClassFactory._classesBook.TryGetValue(name, out PlayerManager._class);
+        SceneManager.LoadScene("MapNavigation");
     }
 }
