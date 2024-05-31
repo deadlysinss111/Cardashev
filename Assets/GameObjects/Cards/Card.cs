@@ -16,6 +16,9 @@ public class Card : MonoBehaviour
     public Action _trigger;
     public Action _clickEffect;
 
+    public int _currLv = 1;
+    public int _maxLv = 3;
+
     public Card()
     {
         _trigger += ()=>Effect();
@@ -47,4 +50,27 @@ public class Card : MonoBehaviour
         _clickEffect = ()=> { GameObject.Find("Player").GetComponent<PlayerManager>()._deck.Add(this); func(); };
     }
 
+    public virtual void OnUpgrade()
+    {
+        for (int i=0; i< _stats.Length; i++)
+        {
+            _stats[i] += 2 * _currLv;
+        }
+    }
+
+    public bool CanUpgrade()
+    {
+        return _currLv < _maxLv;
+    }
+
+    public bool Upgrade()
+    {
+        if (CanUpgrade())
+        {
+            _currLv++;
+            OnUpgrade();
+            return true;
+        }
+        return false;
+    }
 }
