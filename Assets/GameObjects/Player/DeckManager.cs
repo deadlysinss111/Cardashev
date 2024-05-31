@@ -31,6 +31,14 @@ public class DeckManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.L))
+        {
+            _remainsInDeck[Random.Range(0, _remainsInDeck.Count - 1)].Upgrade();
+        }
+    }
+
     // called when the player draws a card
     public void Draw()
     {

@@ -24,6 +24,8 @@ public class LaunchGrenade : Card
 
     private void Awake()
     {
+        _maxLv = 2;
+        _stats = new int[3];
         _input = new CustomActions();
         _lineRenderer = GetComponent<LineRenderer>();
         _pathPoints = new List<Vector3>();
@@ -104,7 +106,10 @@ public class LaunchGrenade : Card
     {
         _input.Disable();
     }
-    
 
-    
+    public override void OnUpgrade()
+    {
+        base.OnUpgrade();
+    }
+
 }
