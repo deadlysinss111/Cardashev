@@ -159,7 +159,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -807, y: -522}
+  m_AnchoredPosition: {x: -807, y: -467}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &262661419
@@ -206,7 +206,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1310540723}
         m_TargetAssemblyTypeName: DeckManager, Assembly-CSharp
         m_MethodName: Draw
         m_Mode: 1
@@ -1870,6 +1870,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7232163658981407054, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
   m_PrefabInstance: {fileID: 1310540721}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1310540723 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8115398100823143788, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+  m_PrefabInstance: {fileID: 1310540721}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ced8d5d0a47789498a90ba684efebca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1367346379
 GameObject:
   m_ObjectHideFlags: 0
@@ -2764,7 +2775,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 97, y: -521}
+  m_AnchoredPosition: {x: 97, y: -466}
   m_SizeDelta: {x: 800, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1664684510
