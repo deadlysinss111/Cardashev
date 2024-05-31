@@ -10,6 +10,7 @@ public class OnLeaveRoom : MonoBehaviour
 {
     PlayerManager _manager;
     List<GameObject> _buttons;
+    bool _left = false;
 
 
     private void Awake()
@@ -32,8 +33,12 @@ public class OnLeaveRoom : MonoBehaviour
 
     void GenerateRewards()
     {
-        GenerateGolds();
-        DisplayButtons();
+        if(!_left)
+        {
+            GenerateGolds();
+            DisplayButtons();
+            _left = true;
+        }
     }
 
     GameObject GenerateItem()
@@ -50,10 +55,7 @@ public class OnLeaveRoom : MonoBehaviour
         GameObject button = GenerateItem();
         int amount = UnityEngine.Random.Range(10, 20);
         button.GetComponent<Button>().onClick.AddListener(() => { _manager._goldAmount = amount; });
-        //var split1 = button.GetComponentInChildren<Transform>();
-        //var split2 = split1.gameObject;
-        //var split3 = split2.GetComponent<TextMeshPro>();
-        //split3.SetText(amount.ToString());
+        button.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText(amount.ToString());
         _buttons.Add(button);
     }
 
@@ -64,11 +66,11 @@ public class OnLeaveRoom : MonoBehaviour
 
     void DisplayButtons()
     {
-        int y = 1500;
+        int y = 300;
         foreach (GameObject button in _buttons)
         {
-            button.transform.localPosition = new Vector3(400, y, 0);
-            y -= 200;
+            button.transform.localPosition = new Vector3(0, y, 0);
+            y -= 100;
         }
     }
 }
