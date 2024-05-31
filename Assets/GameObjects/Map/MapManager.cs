@@ -114,6 +114,7 @@ public class MapManager : MonoBehaviour
         _bossRoom.transform.SetParent(mapObj, false);
         _bossRoom.transform.localPosition = new Vector3(_mapSizeX/2 * spaceBetweenNodes, 4, (_mapSizeY+1) * spaceBetweenNodes);
         _bossRoom.transform.localScale *= 2;
+        _bossRoom.GetComponent<MapNode>().SetRoomTypeTo(RoomType.Boss);
     }
 
     void GenerateMap()
@@ -180,6 +181,8 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+
+        GiveTypeToRooms();
     }
 
     void CreatePathBetween(GameObject node1, GameObject node2)
@@ -187,6 +190,61 @@ public class MapManager : MonoBehaviour
         GameObject newPath = Instantiate(MAP_PATH);
         newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
         newPath.GetComponent<MapPathScript>().SetPathPoints(node1, node2);
+    }
+
+    void GiveTypeToRooms()
+    {
+        foreach (GameObject node in _startingNodes)
+        {
+            // Stores every rooms in this path, which will then be randomly placed along the path.
+            List<RoomType> rooms = new List<RoomType>();
+            // Rules: every path start with a Fight, at least 1 path has a Rest right before the Boss, then fill with the following ratios:
+            // Shop: 1/path
+            int shopToPlace = 1;
+            // Rest: 75% -> 1/path + 25% -> 1/path
+            int restToPlace = 1 + (Random.Range(0, 100) >= 25 ? 0 : 1);
+            // Elite: 1-2/Zone
+            int eliteToPlace = (Random.Range(0, 100) >= 50 ? 1 : 2);
+            // remaining nodes are 50/50 Fights or Events
+            int roomsToPlace = 0;
+            MapNode curRoom = node.GetComponent<MapNode>();
+            for (int i = 0; i < _mapSizeY; i++)
+            {
+                if (curRoom.RoomType != RoomType.None)
+                {
+                    switch (curRoom.RoomType)
+                    {
+                        case RoomType.Shop:
+                            shopToPlace--;
+                            break;
+                        case RoomType.Rest:
+                            restToPlace--;
+                            break;
+                        case RoomType.Elite:
+                            eliteToPlace--;
+                            break;
+                    }
+                }
+
+                roomsToPlace++;
+            }
+            int fightEventToPlace = roomsToPlace - (shopToPlace + restToPlace + eliteToPlace);
+            print(roomsToPlace);
+
+            // Place a Fight on the first room
+            curRoom.SetRoomTypeTo(RoomType.Combat);
+            fightEventToPlace--;
+            roomsToPlace--;
+            curRoom = curRoom._nextNodes[0].GetComponent<MapNode>();
+
+            while (roomsToPlace > 0)
+            {
+                curRoom.SetRoomTypeTo(Random.Range(0, 100) >= 50 ? RoomType.Event : RoomType.Combat);
+                roomsToPlace--;
+                fightEventToPlace--;
+                curRoom = curRoom._nextNodes[0].GetComponent<MapNode>();
+            }
+        }
     }
 
     int ArePathsCrossing(int x, int floor, int nextX)
