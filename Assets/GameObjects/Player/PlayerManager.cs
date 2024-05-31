@@ -14,14 +14,13 @@ public class PlayerManager : MonoBehaviour
     [NonSerialized] public StatManager _health;
     byte _ultimateProgression;
     public int _goldAmount;
+    public List<Card> _deck;
 
 
     // Functional fields
 
     [NonSerialized] public Vector3 _virtualPos;
     CustomActions _input;
-
-    [NonSerialized] public Coroutine _waitForConfirmationCoroutine;
 
     string _currentState;
     Action _currentAction;
@@ -54,15 +53,23 @@ public class PlayerManager : MonoBehaviour
         _goldAmount = 0;
 
         _rightClick = () => { };
-        _input.Main.LeftClick.performed += ctx => LeftClickMiddleware();
-        _input.Main.RightClick.performed += ctx => _rightClick();
+        _input.Main.LeftClick.performed += AssigneLC;
+        _input.Main.RightClick.performed += AssigneRC ;
+    }
 
+    private void OnDestroy()
+    {
+        _input.Main.LeftClick.performed -= AssigneLC;
+        _input.Main.RightClick.performed -= AssigneRC;
+    }
 
-        /*
-        ~~ Code of Chatloupidou :3 */
-        //AddState("Interactible Select", TargetInteractible);
-        /*
-        ~~ End of code of Chatloupidou ;3 */
+    private void AssigneLC(InputAction.CallbackContext context)
+    {
+        LeftClickMiddleware();
+    }
+    private void AssigneRC(InputAction.CallbackContext context)
+    {
+        _rightClick();
     }
 
     private void Start()

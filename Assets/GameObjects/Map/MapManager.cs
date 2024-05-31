@@ -48,6 +48,7 @@ public class MapManager : MonoBehaviour
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
 
         GenerateMap();
+        GlobalInformations._mapNodes = _mapGrid;
     }
 
     void Update()

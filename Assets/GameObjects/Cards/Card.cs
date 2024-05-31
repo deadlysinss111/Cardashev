@@ -14,10 +14,12 @@ public class Card : MonoBehaviour
     public int _goldValue;
     public Action _onDiscard;
     public Action _trigger;
+    public Action _clickEffect;
 
     public Card()
     {
         _trigger += ()=>Effect();
+        _clickEffect = ClickEvent;
     }
 
     public virtual void Effect()
@@ -32,12 +34,17 @@ public class Card : MonoBehaviour
 
     private void OnMouseDown()
     {
-        ClickEvent();
+        _clickEffect();
     }
 
     public virtual void ClickEvent()
     {
         GameObject.Find("Player").GetComponent<DeckManager>().Play(this);
+    }
+
+    public void SetToCollectible(Action func)
+    {
+        _clickEffect = ()=> { GameObject.Find("Player").GetComponent<PlayerManager>()._deck.Add(this); func(); };
     }
 
 }
