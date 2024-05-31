@@ -2130,7 +2130,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.1
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 4e0bdef02c9e8c64c9ba57d09d83b60c, type: 2}
   m_BuildHeightMesh: 0
@@ -3909,6 +3909,7 @@ GameObject:
   - component: {fileID: 1351601170}
   - component: {fileID: 1351601169}
   - component: {fileID: 1351601171}
+  - component: {fileID: 1351601172}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -4151,6 +4152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _goldAmount: 0
+  _deck: []
   _clickableLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -4169,6 +4171,18 @@ MonoBehaviour:
   _slowdownFactor: 0.05
   _slowdownLength: 5
   _focusBar: {fileID: 976413950}
+--- !u!114 &1351601172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351601161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51f31e2bfe99afc4e97ec7ad6780f9cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1385539280
 GameObject:
   m_ObjectHideFlags: 0

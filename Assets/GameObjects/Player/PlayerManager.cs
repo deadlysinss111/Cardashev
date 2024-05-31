@@ -84,12 +84,12 @@ public class PlayerManager : MonoBehaviour
         _rightClick = target;
     }
 
-    private void RightClickMiddleware()
+    private void RightClickMiddleware(InputAction.CallbackContext context)
     {
         _rightClick();
     }
 
-    private void LeftClickMiddleware()
+    private void LeftClickMiddleware(InputAction.CallbackContext context)
     {
         if (EventSystem.current.IsPointerOverGameObject())
         {
@@ -130,11 +130,6 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
-<<<<<<< HEAD
-=======
-        //Debug.Log("Called somewhere with name = " + name);
-
->>>>>>> InteractibleObject
         Action[] func;
         if(_states.TryGetValue(name, out func))
         {

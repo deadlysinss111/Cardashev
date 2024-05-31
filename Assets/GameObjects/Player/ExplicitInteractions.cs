@@ -82,8 +82,6 @@ public class ExplicitInteractions : MonoBehaviour
         // "Raises" a RaycastHit event, given the Interactible isn't null for some reason
         if (_currentInteractible != null)
             _currentInteractible.GetComponent<Interactible>().OnRaycastHit();
-        else
-            Debug.Log("Interactible was null !");
     }
 
 
