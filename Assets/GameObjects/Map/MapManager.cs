@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class MapManager : MonoBehaviour
     // For map navigation
     List<List<GameObject>> _mapGrid;
     GameObject _playerLocation; // TODO auto create this one and make it invisible at Start()
+    GameObject _bossRoom;
 
     // Miscenalious
     [SerializeField] LayerMask _clickableLayers;
@@ -107,6 +109,11 @@ public class MapManager : MonoBehaviour
                 obj.transform.localPosition = new Vector3(i * spaceBetweenNodes, 4, j * spaceBetweenNodes);
             }
         }
+
+        _bossRoom = Instantiate(MAP_NODE);
+        _bossRoom.transform.SetParent(mapObj, false);
+        _bossRoom.transform.localPosition = new Vector3(_mapSizeX/2 * spaceBetweenNodes, 4, (_mapSizeY+1) * spaceBetweenNodes);
+        _bossRoom.transform.localScale *= 2;
     }
 
     void GenerateMap()
@@ -133,22 +140,33 @@ public class MapManager : MonoBehaviour
             freeNodelist.RemoveAt(newStartCoordIndex);
         }
 
+        // Flag just for putting a "Rest" room at the end of the first path
+        //bool isFirstPath = true;
+        // Generating paths between each node
         foreach (GameObject startingNode in _startingNodes)
         {
             int x = startingNode.GetComponent<MapNode>()._startingXCoord;
             for (int floorNb = 0; floorNb < _mapSizeY-1; floorNb++)
             {
-                int nextNodeXIndex = Mathf.Clamp(Random.Range(x - 1, x + 2), 0, _mapSizeX - 1);
-                _mapGrid[x][floorNb].GetComponent<MapNode>()._nextNodes.Add(_mapGrid[nextNodeXIndex][floorNb+1]);
+                int nextNodeXIndex = Random.Range(Mathf.Clamp(x - 1, 0, _mapSizeX - 1), Mathf.Clamp(x + 2, 0, _mapSizeX - 1));
+                nextNodeXIndex = ArePathsCrossing(x, floorNb, nextNodeXIndex);
 
-                // TODO placing paths between nodes
-                /*GameObject newPath = Instantiate(MAP_PATH);
-                newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
-                newPath.GetComponentInChildren<MapPathScript>().SetPathPoints(_mapGrid[x][floorNb], _mapGrid[nextNodeXIndex][floorNb + 1]);*/
+                GameObject nextNode = _mapGrid[nextNodeXIndex][floorNb + 1];
+                _mapGrid[x][floorNb].GetComponent<MapNode>()._nextNodes.Add(nextNode);
+
+
+                // WIP placing paths between nodes
+                CreatePathBetween(_mapGrid[x][floorNb], nextNode);
 
                 // Saving the x coordinate of the next node for the next iteration of the loop
                 x = nextNodeXIndex;
+                if (floorNb == _mapSizeY - 2)
+                {
+                    nextNode.GetComponent<MapNode>()._nextNodes.Add(_bossRoom);
+                    CreatePathBetween(nextNode, _bossRoom);
+                }
             }
+            //isFirstPath = false;
         }
 
         // Disabling path-less nodes to make them invisible
@@ -160,17 +178,39 @@ public class MapManager : MonoBehaviour
                 {
                     _mapGrid[i][j].SetActive(false);
                 }
-                if (_mapGrid[i][j].GetComponent<MapNode>()._isStartingNode)
-                {
-                    //_mapGrid[i][j].SetActive(true);
-                }
             }
         }
     }
 
-    bool ArePathsCrossing(MapNode room1, MapNode room2)
+    void CreatePathBetween(GameObject node1, GameObject node2)
     {
+        GameObject newPath = Instantiate(MAP_PATH);
+        newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
+        newPath.GetComponent<MapPathScript>().SetPathPoints(node1, node2);
+    }
 
-        return false;
+    int ArePathsCrossing(int x, int floor, int nextX)
+    {
+        if (x == nextX) return nextX;
+
+        List<int> correctedX = new List<int> { x };
+
+        foreach (GameObject node in _mapGrid[nextX][floor].GetComponent<MapNode>()._nextNodes)
+        {
+            if (ReferenceEquals(node, _mapGrid[x][floor+1]))
+            {
+                correctedX.Add(nextX + 2 * (x < nextX ? -1 : 1));
+                if (Mathf.Round(correctedX[1] - x) > 1)
+                {
+                    return x;
+                }
+            }
+        }
+
+        if (correctedX.Count == 1)
+        {
+            return nextX;
+        }
+        return correctedX[Random.Range(0, 2)];
     }
 }
