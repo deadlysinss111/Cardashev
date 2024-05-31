@@ -18,6 +18,7 @@ public abstract class Interactible : MonoBehaviour
     */
     // Yes, there is one ! This is useful to quickly determine the distance of the Interactible to the player
     protected static GameObject _playerRef;
+    protected static PlayerManager _playerManager;
 
     /* 
      PROPERTIES
@@ -38,9 +39,11 @@ public abstract class Interactible : MonoBehaviour
     /* 
      METHODS
     */
+    // !! IMPORTANT NOTE
+    //    All OnCollision...() methods need 1 of the 2 GameObject to have a RigidBody, NOT Kinematic, EVERY constraints ticked (if you want it unaffected by physics)
     protected void OnTriggerEnter(Collider ARGcollider)
     {
-        switch (ARGcollider.tag)
+        switch (ARGcollider.gameObject.tag)
         {
             case "Player":
                 Debug.Log("Player came into contact with " + this.gameObject.name);
@@ -50,8 +53,8 @@ public abstract class Interactible : MonoBehaviour
                 Debug.Log(ARGcollider.gameObject.name + "Enemy came into contact with " + this.gameObject.name);
                 break;
 
-            // Should be repalces by more case, since this is intended to detect projectiles, attack hitboxes or explosions
-            // TODO : add more case when those 3 will be implemeneted
+            // Should be replaced by more case, since this is intended to detect projectiles, attack hitboxes or explosions
+            // TODO : add more case when those 3 will be implemented
             default:
                 Debug.Log("Something else came into contact with " + this.gameObject.name);
                 break;
@@ -60,28 +63,25 @@ public abstract class Interactible : MonoBehaviour
 
     protected void OnTriggerExit(Collider ARGcollider)
     {
-        switch (ARGcollider.tag)
+        switch (ARGcollider.gameObject.tag)
         {
             case "Player":
-                Debug.Log("Player came ended with " + this.gameObject.name);
+                Debug.Log("Player left contact with " + this.gameObject.name);
                 break;
 
             case "Enemy":
-                Debug.Log(ARGcollider.gameObject.name + "Enemy came ended with " + this.gameObject.name);
+                Debug.Log(ARGcollider.gameObject.name + "Enemy left contact with " + this.gameObject.name);
                 break;
 
-            // Should be repalced by more case, since this is intended to detect projectiles, attack hitboxes or explosions
-            // TODO : add more case when those 3 will be implemeneted
+            // Should be replaced by more case, since this is intended to detect projectiles, attack hitboxes or explosions
+            // TODO : add more case when those 3 will be implemented
             default:
-                Debug.Log("Something else ended contact with " + this.gameObject.name);
+                Debug.Log("Something else left contact with " + this.gameObject.name);
                 break;
         }
     }
 
-    protected void OnTriggerStay(Collider ARGcollider)
-    {
-        // Pause time :3
-    }
+    protected void OnTriggerStay(Collider ARGcollider) { }
 
     public void OnRaycastHit()
     {
@@ -91,6 +91,7 @@ public abstract class Interactible : MonoBehaviour
         else
             Debug.Log(this.gameObject.name + " was raycast-hit within invalid distance !");
     }
+
 
     // ------
     // STATE WATCHER
@@ -104,8 +105,9 @@ public abstract class Interactible : MonoBehaviour
         outlineComp.OutlineColor = Color.green;
         outlineComp.OutlineWidth = 4.7f;
 
-        // Changes the PlayerManager state
-        _playerRef.GetComponent<PlayerManager>().SetToState("InteractibleTargeting");
+        // Changes the PlayerManager state and tells it it should do a MouseHover check since what's under the mouse just changed
+        _playerManager.SetToState("InteractibleTargeting");
+        _playerManager.TriggerMouseHovering();
     }
     private void OnMouseExit()
     {
@@ -115,14 +117,20 @@ public abstract class Interactible : MonoBehaviour
             Destroy(outlineComp);
 
         // Restores the previous state
-        _playerRef.GetComponent<PlayerManager>().SetToDefult();
+        _playerManager.SetToDefault();
     }
 
+
+    // ------
+    // INITIALIZATION
+    // ------
 
     protected void Awake()
     {
         // Field setup
         _playerRef = GameObject.Find("Player").gameObject;
+        _playerManager = _playerRef.GetComponent<PlayerManager>();
+        _RaycastHitDist = 10.0f;
 
         // Event subscribing
         _UeOnRaycastHit.AddListener(OnRaycastHit);

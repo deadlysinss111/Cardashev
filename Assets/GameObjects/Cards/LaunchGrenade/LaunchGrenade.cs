@@ -39,7 +39,7 @@ public class LaunchGrenade : Card
     {
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         manager.SetLeftClickTo(FireGrenade);
-        manager.SetRightClickTo(()=> { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefult(); });
+        manager.SetRightClickTo(()=> { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(Preview);
         GameObject.Find("Player").GetComponent<PlayerController>().ClearPath();
         _previwRadius.SetActive(true);
@@ -53,7 +53,7 @@ public class LaunchGrenade : Card
 
     public override void Effect()
     {
-        GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefult();
+        GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
         base.Effect();
     }
 

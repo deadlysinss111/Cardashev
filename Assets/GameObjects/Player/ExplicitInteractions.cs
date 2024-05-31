@@ -77,10 +77,9 @@ public class ExplicitInteractions : MonoBehaviour
     public void RaycastResponseCaller()
     {
         // Updates the current Interactible
-        Debug.Log(_manager._lastHit.collider.gameObject.name);
         _currentInteractible = FindPrefabOriginRecur(_manager._lastHit.collider.gameObject);
 
-        // ""Raises"" a RaycastHit event, given the Interactible isn't null for some reason
+        // "Raises" a RaycastHit event, given the Interactible isn't null for some reason
         if (_currentInteractible != null)
             _currentInteractible.GetComponent<Interactible>().OnRaycastHit();
         else

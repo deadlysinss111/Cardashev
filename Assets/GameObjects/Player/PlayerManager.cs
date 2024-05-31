@@ -92,11 +92,8 @@ public class PlayerManager : MonoBehaviour
         //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100, _clickableLayers))
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit))
         {
-            Destroy(_lastHit.transform.gameObject);
             _mouseHover();
         }
-        else
-            Debug.Log("shrug");
     }
 
     public bool AddState(string name, Action enter, Action exit)
@@ -114,8 +111,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
-
-        Debug.Log("Called somewhere with name = " + name);
+        //Debug.Log("Called somewhere with name = " + name);
 
         Action[] func;
         if(_states.TryGetValue(name, out func))
@@ -130,7 +126,7 @@ public class PlayerManager : MonoBehaviour
         return false;
     }
 
-    public void SetToDefult()
+    public void SetToDefault()
     {
         SetToState(_defaultState);
     }
@@ -143,7 +139,7 @@ public class PlayerManager : MonoBehaviour
         {
             yield return null;
         }
-        SetToDefult();
+        SetToDefault();
     }
 
     public void UseUltimate()
@@ -155,7 +151,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void ExecuteCurrentStateAction()
+    // This method is useful when an object of the scene detects that the mouse went over them
+    // When that happens, the concerned object calls this to avoid Raycasting every frame from MouseHoverMiddleware()
+    public void TriggerMouseHovering()
     {
         MouseHoverMiddleware();
     }

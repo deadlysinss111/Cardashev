@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour
     {
         _startcolor = GetComponent<MeshRenderer>().material.color;
         GetComponent<MeshRenderer>().material.color = Color.yellow;
-        _playerManager.ExecuteCurrentStateAction();
+        _playerManager.TriggerMouseHovering();
     }
     void OnMouseExit()
     {
