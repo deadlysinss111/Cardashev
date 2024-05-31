@@ -39,11 +39,8 @@ public class ExplicitInteractions : MonoBehaviour
     {
         // Sets up the functions for the controls
         _manager.SetLeftClickTo(RaycastResponseCaller);
-        _manager.SetHoverTo(MouseOverPreview);
-        _manager.SetRightClickTo( () => { } );
-
-        // Extra force call to have the preview on the same frame the state changes
-        MouseOverPreview();
+        _manager.SetHoverTo( () => { } );
+        _manager.SetRightClickTo(MouseOverPreview);
     }
     private void OnExitState() { }
 
@@ -68,7 +65,7 @@ public class ExplicitInteractions : MonoBehaviour
             // Updates the selected Interactible and saves its current material color
             _currentInteractible = raycastTarget;
             //_baseColor = _currentInteractible.GetComponent<MeshRenderer>().material.color;
-            foreach(GameObject obj in _currentInteractible.GetComponentsInChildren<GameObject>())
+            foreach (GameObject obj in _currentInteractible.GetComponentsInChildren<GameObject>())
             {
                 _baseColor = obj.GetComponent<MeshRenderer>().material.color;
                 obj.GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.0f, 0.5f, 1.0f);
@@ -79,7 +76,12 @@ public class ExplicitInteractions : MonoBehaviour
     // Calls the response to a raycast hit event of the Interactbile target
     public void RaycastResponseCaller()
     {
-        _currentInteractible.GetComponent<Interactible>().OnRaycastHit();
+        // Updates the current Interactible
+        _currentInteractible = FindPrefabOriginRecur(_manager._lastHit.collider.gameObject);
+
+        // "Raises" a RaycastHit event, given the Interactible isn't null for some reason
+        if (_currentInteractible != null)
+            _currentInteractible.GetComponent<Interactible>().OnRaycastHit();
     }
 
 
@@ -87,7 +89,8 @@ public class ExplicitInteractions : MonoBehaviour
     // UTILITIY METHODS
     // ------
 
-    // Recursively looks for the root prefab of a GameObject
+    // ! Might be deprecated, since now the parent-most object is the only one to possess a Collider
+    //   Recursively looks for the root prefab of a GameObject
     public GameObject FindPrefabOriginRecur(GameObject ARGprefabChild)
     {
         // Unfruitful search assumed from the start

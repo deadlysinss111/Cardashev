@@ -53,30 +53,20 @@ public class PlayerManager : MonoBehaviour
         _goldAmount = 0;
 
         _rightClick = () => { };
-        _input.Main.LeftClick.performed += AssigneLC;
-        _input.Main.RightClick.performed += AssigneRC ;
+        _input.Main.LeftClick.performed += LeftClickMiddleware;
+        _input.Main.RightClick.performed += RightClickMiddleware ;
     }
 
     private void OnDestroy()
     {
-        _input.Main.LeftClick.performed -= AssigneLC;
-        _input.Main.RightClick.performed -= AssigneRC;
-    }
-
-    private void AssigneLC(InputAction.CallbackContext context)
-    {
-        LeftClickMiddleware();
-    }
-    private void AssigneRC(InputAction.CallbackContext context)
-    {
-        _rightClick();
+        _input.Main.LeftClick.performed -= LeftClickMiddleware;
+        _input.Main.RightClick.performed -= RightClickMiddleware;
     }
 
     private void Start()
     {
         StartCoroutine(StartSimulation());
     }
-
 
     //This state change function disable the previous control listener state and enable the new one
     public void SetLeftClickTo(Action target)
@@ -94,7 +84,12 @@ public class PlayerManager : MonoBehaviour
         _rightClick = target;
     }
 
-    private void LeftClickMiddleware()
+    private void RightClickMiddleware(InputAction.CallbackContext context)
+    {
+        _rightClick();
+    }
+
+    private void LeftClickMiddleware(InputAction.CallbackContext context)
     {
         if (EventSystem.current.IsPointerOverGameObject())
         {
@@ -113,7 +108,8 @@ public class PlayerManager : MonoBehaviour
     
     private void MouseHoverMiddleware()
     {
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100, _clickableLayers))
+        //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100, _clickableLayers))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit))
         {
             _mouseHover();
         }
@@ -147,7 +143,7 @@ public class PlayerManager : MonoBehaviour
         return false;
     }
 
-    public void SetToDefult()
+    public void SetToDefault()
     {
         SetToState(_defaultState);
     }
@@ -160,7 +156,7 @@ public class PlayerManager : MonoBehaviour
         {
             yield return null;
         }
-        SetToDefult();
+        SetToDefault();
     }
 
     public void UseUltimate()
@@ -172,7 +168,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void ExecuteCurrentStateAction()
+    // This method is useful when an object of the scene detects that the mouse went over them
+    // When that happens, the concerned object calls this to avoid Raycasting every frame from MouseHoverMiddleware()
+    public void TriggerMouseHovering()
     {
         MouseHoverMiddleware();
     }
