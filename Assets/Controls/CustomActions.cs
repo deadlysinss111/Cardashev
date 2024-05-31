@@ -187,12 +187,12 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         m_Main_LeftClick = m_Main.FindAction("LeftClick", throwIfNotFound: true);
         m_Main_RightClick = m_Main.FindAction("RightClick", throwIfNotFound: true);
         m_Main_SpaceBar = m_Main.FindAction("SpaceBar", throwIfNotFound: true);
+        m_Main_Focus = m_Main.FindAction("Focus", throwIfNotFound: true);
+        m_Main_Ultimate = m_Main.FindAction("Ultimate", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
         m_CameraControls_RotateToLeft = m_CameraControls.FindAction("RotateToLeft", throwIfNotFound: true);
         m_CameraControls_RotateToRight = m_CameraControls.FindAction("RotateToRight", throwIfNotFound: true);
-        m_Main_Focus = m_Main.FindAction("Focus", throwIfNotFound: true);
-        m_Main_Ultimate = m_Main.FindAction("Ultimate", throwIfNotFound: true);
     }
 
     public void Dispose()
