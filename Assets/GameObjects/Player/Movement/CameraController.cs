@@ -1,56 +1,57 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
     public Transform _target;
-
     public float _smoothSpeed = 8f;
     public Vector3 _offset;
-    Action _currentMode;
-    CustomActions _input;
+
+    private Action _currentMode;
+    private PlayerInput _pInput;
+    private Vector2 _moveInput;
+
+    private InputActionRebindingExtensions.RebindingOperation _rebindingOperation;
 
     private void Awake()
     {
         _currentMode = LockedMode;
-        _input = new CustomActions();
-        _input.Enable();
-        _input.Main.SpaceBar.performed += ctx => ChangeMode();
+        _pInput = GetComponent<PlayerInput>();
     }
 
-    void Update()
+    private void OnEnable()
+    {
+        // Enable input actions
+        _pInput.actions["SpaceBar"].performed += OnChangeModePerformed;
+        _pInput.actions["Move"].performed += OnMovePerformed;
+        _pInput.actions["Move"].canceled += OnMoveCanceled;
+    }
+
+    private void OnDisable()
+    {
+        // Disable input actions
+        _pInput.actions["SpaceBar"].performed -= OnChangeModePerformed;
+        _pInput.actions["Move"].performed -= OnMovePerformed;
+        _pInput.actions["Move"].canceled -= OnMoveCanceled;
+    }
+
+    private void Update()
     {
         _currentMode();
     }
 
     private void LockedMode()
     {
-        Vector3 desiredPosition = new Vector3(_target.position.x + _offset.x, _target.position.y + _offset.y, _target.position.z + _offset.z);
+        Vector3 desiredPosition = _target.position + _offset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, _smoothSpeed * Time.deltaTime);
         transform.position = smoothedPosition;
     }
 
     private void UnlockedMode()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.Translate(new Vector3(0.0f, 0.5f, 0.5f));
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.Translate(new Vector3(0.0f, -0.5f, -0.5f));
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.Translate(new Vector3(-1.0f, 0.0f, 0.0f));
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.Translate(new Vector3(1.0f, 0.0f, 0.0f));
-        }
+        Vector3 move = new Vector3(_moveInput.x, 0, _moveInput.y);
+        transform.Translate(move * Time.deltaTime * _smoothSpeed, Space.World);
     }
 
     private void ChangeMode()
@@ -63,5 +64,67 @@ public class CameraController : MonoBehaviour
         {
             _currentMode = LockedMode;
         }
+    }
+
+    private void OnChangeModePerformed(InputAction.CallbackContext context)
+    {
+        ChangeMode();
+    }
+
+    private void OnMovePerformed(InputAction.CallbackContext context)
+    {
+        _moveInput = context.ReadValue<Vector2>();
+    }
+
+    private void OnMoveCanceled(InputAction.CallbackContext context)
+    {
+        _moveInput = Vector2.zero;
+    }
+
+    public void StartRebinding(string actionName)
+    {
+        var action = _pInput.actions[actionName];
+        if (action == null)
+        {
+            Debug.LogError($"Action '{actionName}' not found.");
+            return;
+        }
+
+        // Cancel any ongoing rebinding operation
+        if (_rebindingOperation != null)
+        {
+            _rebindingOperation.Dispose();
+        }
+
+        _rebindingOperation = action.PerformInteractiveRebinding()
+            .OnComplete(operation => RebindComplete())
+            .OnCancel(operation => RebindCancel())
+            .Start();
+    }
+
+    private void RebindComplete()
+    {
+        Debug.Log("Rebind complete!");
+        _rebindingOperation.Dispose();
+        _rebindingOperation = null;
+    }
+
+    private void RebindCancel()
+    {
+        Debug.Log("Rebind canceled!");
+        _rebindingOperation.Dispose();
+        _rebindingOperation = null;
+    }
+
+    public string GetBindingDisplayString(string actionName)
+    {
+        var action = _pInput.actions[actionName];
+        if (action == null)
+        {
+            Debug.LogError($"Action '{actionName}' not found.");
+            return string.Empty;
+        }
+
+        return action.GetBindingDisplayString();
     }
 }

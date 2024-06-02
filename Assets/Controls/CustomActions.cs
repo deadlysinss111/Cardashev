@@ -132,41 +132,32 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""Game"",
-            ""id"": ""5cad343e-5809-4a78-9fdd-16f5fec26add"",
+            ""name"": ""Camera"",
+            ""id"": ""7e17df8c-bc0c-45d1-9288-b7d542dc3d78"",
             ""actions"": [
                 {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
-                    ""id"": ""7215fe68-016d-4a5b-a8d9-49ff8b57675f"",
+                    ""id"": ""6a6d74cc-e531-4c6a-9ed2-78d98436a44a"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Jump"",
-                    ""type"": ""Value"",
-                    ""id"": ""8214a985-1afb-4f98-b2d1-80004dfb558a"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""name"": ""SpaceBar"",
+                    ""type"": ""Button"",
+                    ""id"": ""54f5fedb-9728-444d-a034-fb27b4c9e5fa"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Look"",
-                    ""type"": ""Value"",
-                    ""id"": ""0b4e5b26-2cd9-4cdd-b8fa-4fa29a33fb45"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
-                    ""name"": ""WASD"",
-                    ""id"": ""8c27e5d6-00be-4282-abcd-5941edf03fb5"",
+                    ""name"": ""Movements"",
+                    ""id"": ""d4da2ff8-2dbb-45ed-81bb-d70f73f4a825"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -177,7 +168,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""ac026b6a-4a66-4628-9587-ad9ef1906a54"",
+                    ""id"": ""dfd629bd-44bb-4155-947e-626a92e1c8f6"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -188,7 +179,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""d1da647e-184d-4fa4-a0a7-ba929fc175f7"",
+                    ""id"": ""a06b64b5-41ba-4e53-8503-34b5ab579d8f"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -199,7 +190,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""732d95a4-071e-4da3-89a5-6ef7dca2eaf2"",
+                    ""id"": ""27560b2c-7c12-44c3-8075-85c547e3b0c0"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -210,7 +201,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""a26f6840-9d72-4868-984a-bc6d086e931c"",
+                    ""id"": ""658948af-f30c-4a09-a48c-17e678e80c39"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -221,23 +212,12 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""64ca9875-894a-476d-af61-5574924fc16a"",
+                    ""id"": ""3ba385e0-da65-42d3-a5d7-ec51ee02beb8"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Jump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""44dc3002-a56e-4cde-b49a-6c5f740693fc"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
+                    ""action"": ""SpaceBar"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -253,11 +233,10 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         m_Main_SpaceBar = m_Main.FindAction("SpaceBar", throwIfNotFound: true);
         m_Main_Focus = m_Main.FindAction("Focus", throwIfNotFound: true);
         m_Main_Ultimate = m_Main.FindAction("Ultimate", throwIfNotFound: true);
-        // Game
-        m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
-        m_Game_Move = m_Game.FindAction("Move", throwIfNotFound: true);
-        m_Game_Jump = m_Game.FindAction("Jump", throwIfNotFound: true);
-        m_Game_Look = m_Game.FindAction("Look", throwIfNotFound: true);
+        // Camera
+        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
+        m_Camera_Move = m_Camera.FindAction("Move", throwIfNotFound: true);
+        m_Camera_SpaceBar = m_Camera.FindAction("SpaceBar", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -394,67 +373,59 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     }
     public MainActions @Main => new MainActions(this);
 
-    // Game
-    private readonly InputActionMap m_Game;
-    private List<IGameActions> m_GameActionsCallbackInterfaces = new List<IGameActions>();
-    private readonly InputAction m_Game_Move;
-    private readonly InputAction m_Game_Jump;
-    private readonly InputAction m_Game_Look;
-    public struct GameActions
+    // Camera
+    private readonly InputActionMap m_Camera;
+    private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
+    private readonly InputAction m_Camera_Move;
+    private readonly InputAction m_Camera_SpaceBar;
+    public struct CameraActions
     {
         private @CustomActions m_Wrapper;
-        public GameActions(@CustomActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Game_Move;
-        public InputAction @Jump => m_Wrapper.m_Game_Jump;
-        public InputAction @Look => m_Wrapper.m_Game_Look;
-        public InputActionMap Get() { return m_Wrapper.m_Game; }
+        public CameraActions(@CustomActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Camera_Move;
+        public InputAction @SpaceBar => m_Wrapper.m_Camera_SpaceBar;
+        public InputActionMap Get() { return m_Wrapper.m_Camera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(GameActions set) { return set.Get(); }
-        public void AddCallbacks(IGameActions instance)
+        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
+        public void AddCallbacks(ICameraActions instance)
         {
-            if (instance == null || m_Wrapper.m_GameActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_GameActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_CameraActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CameraActionsCallbackInterfaces.Add(instance);
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
-            @Jump.started += instance.OnJump;
-            @Jump.performed += instance.OnJump;
-            @Jump.canceled += instance.OnJump;
-            @Look.started += instance.OnLook;
-            @Look.performed += instance.OnLook;
-            @Look.canceled += instance.OnLook;
+            @SpaceBar.started += instance.OnSpaceBar;
+            @SpaceBar.performed += instance.OnSpaceBar;
+            @SpaceBar.canceled += instance.OnSpaceBar;
         }
 
-        private void UnregisterCallbacks(IGameActions instance)
+        private void UnregisterCallbacks(ICameraActions instance)
         {
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
-            @Jump.started -= instance.OnJump;
-            @Jump.performed -= instance.OnJump;
-            @Jump.canceled -= instance.OnJump;
-            @Look.started -= instance.OnLook;
-            @Look.performed -= instance.OnLook;
-            @Look.canceled -= instance.OnLook;
+            @SpaceBar.started -= instance.OnSpaceBar;
+            @SpaceBar.performed -= instance.OnSpaceBar;
+            @SpaceBar.canceled -= instance.OnSpaceBar;
         }
 
-        public void RemoveCallbacks(IGameActions instance)
+        public void RemoveCallbacks(ICameraActions instance)
         {
-            if (m_Wrapper.m_GameActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_CameraActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IGameActions instance)
+        public void SetCallbacks(ICameraActions instance)
         {
-            foreach (var item in m_Wrapper.m_GameActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_CameraActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_GameActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_CameraActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public GameActions @Game => new GameActions(this);
+    public CameraActions @Camera => new CameraActions(this);
     public interface IMainActions
     {
         void OnLeftClick(InputAction.CallbackContext context);
@@ -463,10 +434,9 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         void OnFocus(InputAction.CallbackContext context);
         void OnUltimate(InputAction.CallbackContext context);
     }
-    public interface IGameActions
+    public interface ICameraActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnJump(InputAction.CallbackContext context);
-        void OnLook(InputAction.CallbackContext context);
+        void OnSpaceBar(InputAction.CallbackContext context);
     }
 }
