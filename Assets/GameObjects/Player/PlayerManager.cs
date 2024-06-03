@@ -49,9 +49,10 @@ public class PlayerManager : MonoBehaviour
         _input = new CustomActions();
         _input.Enable();
         _health = GetComponent<StatManager>();
+        _deck = new List<Card>();
 
         _ultimateProgression = 0;
-        _goldAmount = 0;
+        _goldAmount = 100;
 
         _rightClick = () => { };
         _input.Main.LeftClick.performed += LeftClickMiddleware;

@@ -35,6 +35,7 @@ public class LaunchGrenade : Card
         UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
         _previwRadius = (GameObject)Instantiate(RADIUS);
         _previwRadius.SetActive(false);
+        _goldValue = 60;
     }
 
     void EnterGrenadeState()

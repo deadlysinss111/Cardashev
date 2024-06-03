@@ -9,29 +9,33 @@ public class Collection : MonoBehaviour
     List<GameObject> _currentUnlocked;
     List<GameObject> _currentLocked;
 
-    public static Dictionary<string, List<Card>> _unlocked;
-    public static Dictionary<string, List<Card>> _locked;
+    // temp way to let the player have cards we'd like to have it in some external files)
+    public static Dictionary<string, List<string>> _unlocked = new Dictionary<string, List<string>>()
+    {
+        { "brawler", new List<string>(){ "LaunchGrenade" } }
+    };
+    public static Dictionary<string, List<string>> _locked;
 
     void Load(string toLoad)
     {
-        _unlocked = new Dictionary<string, List<Card>>();
-        _locked = new Dictionary<string, List<Card>>();
+        _unlocked = new Dictionary<string, List<string>>();
+        _locked = new Dictionary<string, List<string>>();
 
-        List<Card> cards;
+        List<string> cards;
 
         _unlocked.TryGetValue(toLoad, out cards);
-        foreach(Card target in cards)
+        foreach(string target in cards)
         {
-            UnityEngine.Object CARD = Resources.Load(target.name);
+            UnityEngine.Object CARD = Resources.Load(target);
             GameObject card = (GameObject)Instantiate(CARD);
             card.transform.SetParent(_canvas.transform, false);
             _currentUnlocked.Add(card);
         }
 
         _locked.TryGetValue(toLoad, out cards);
-        foreach(Card target in cards)
+        foreach(string target in cards)
         {
-            UnityEngine.Object CARD = Resources.Load(target.name);
+            UnityEngine.Object CARD = Resources.Load(target);
             GameObject card = (GameObject)Instantiate(CARD);
             card.transform.SetParent(_canvas.transform, false);
             // Either do something here to distinguish locked card

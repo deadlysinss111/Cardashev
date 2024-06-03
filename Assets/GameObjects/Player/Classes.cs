@@ -7,7 +7,7 @@ using UnityEngine;
 
 static public class Idealist
 {
-    static public string _name;
+    static public string _name = "brawler";
     static public byte _HP;
     static public Action _ultimate;
 }
