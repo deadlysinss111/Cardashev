@@ -21,6 +21,6 @@ public class Blocker : MonoBehaviour
 
     private void FixedUpdate()
     {
-        GlobalInformations._gameTimer += Time.deltaTime;
+        //GlobalInformations._gameTimer += Time.deltaTime;
     }
 }

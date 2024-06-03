@@ -412,6 +412,7 @@ MonoBehaviour:
   _clickableLayers:
     serializedVersion: 2
     m_Bits: 8
+  _BlockerProbability: 65
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

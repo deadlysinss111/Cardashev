@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Burst.CompilerServices;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Splines;
 using UnityEngine.U2D;
 using UnityEngine.XR;
 using static UnityEngine.GraphicsBuffer;
+using Random = UnityEngine.Random;
 
 public class MapManager : MonoBehaviour
 {
@@ -19,6 +22,7 @@ public class MapManager : MonoBehaviour
     // PREFABS
     GameObject MAP_NODE;
     GameObject MAP_PATH;
+    GameObject BLOCKER;
     
     // For map navigation
     List<List<GameObject>> _mapGrid;
@@ -27,6 +31,7 @@ public class MapManager : MonoBehaviour
 
     // Miscenalious
     [SerializeField] LayerMask _clickableLayers;
+    [SerializeField] float _BlockerProbability;
 
     void Start()
     {
@@ -45,6 +50,7 @@ public class MapManager : MonoBehaviour
 
         MAP_NODE = (GameObject)Resources.Load("Map Node");
         MAP_PATH = (GameObject)Resources.Load("Map Path");
+        BLOCKER  = (GameObject)Resources.Load("TimerDoor");
         // Generate an invisible starting node
         _playerLocation = Instantiate(MAP_NODE).transform.gameObject;
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
@@ -64,6 +70,7 @@ public class MapManager : MonoBehaviour
         {
             GenerateMap();
         }
+        GlobalInformations._gameTimer += Time.deltaTime;
     }
 
     void MovePlayerTo(GameObject nodeToMoveTo)
@@ -187,6 +194,11 @@ public class MapManager : MonoBehaviour
         GameObject newPath = Instantiate(MAP_PATH);
         newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
         newPath.GetComponent<MapPathScript>().SetPathPoints(node1, node2);
+        // Temporary, might be replaed later
+        if (Random.Range(0, 100) < _BlockerProbability)
+        {
+            GenerateBlocker(newPath);
+        }
     }
 
     int ArePathsCrossing(int x, int floor, int nextX)
@@ -212,5 +224,26 @@ public class MapManager : MonoBehaviour
             return nextX;
         }
         return correctedX[Random.Range(0, 2)];
+    }
+
+    void GenerateBlocker(GameObject newPath)
+    {
+        print("Added a blocker");
+        GameObject blocker = Instantiate(BLOCKER);
+        blocker.transform.SetParent(GameObject.FindGameObjectWithTag("Map").transform, false);
+        Vector3 pos = newPath.transform.position;
+
+        Vector3 point1 = newPath.GetComponent<MapPathScript>()._spline[0].Position;
+        Vector3 point2 = newPath.GetComponent<MapPathScript>()._spline[1].Position;
+        Vector3 midpoint = (point1 + point2) / 2.0f;
+
+        float3 posE;
+        float3 tanE;
+        float3 upE;
+        bool a = newPath.GetComponent<MapPathScript>()._spline.Evaluate(0.5f, out posE, out tanE, out upE);
+        BetterDebug.Log(a, posE, tanE, upE);
+
+        blocker.transform.position = pos + midpoint;
+        blocker.transform.rotation = Quaternion.LookRotation(new Vector3(tanE.x, tanE.y, tanE.z), new Vector3(upE.x, upE.y, upE.z));
     }
 }
