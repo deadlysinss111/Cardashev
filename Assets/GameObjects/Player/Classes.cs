@@ -5,18 +5,11 @@ using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 
-public struct Class
+static public class Idealist
 {
-    public string _name;
-    public byte _HP;
-    public Func<UltiContext, bool> _ultimate;
-
-    internal Class(string name, byte hp, Func<UltiContext, bool> ulti)
-    {
-        _name = name;
-        _HP = hp;
-        _ultimate = ulti;
-    }
+    static public string _name;
+    static public byte _HP;
+    static public Action _ultimate;
 }
 
 public struct UltiContext
@@ -30,19 +23,19 @@ public struct UltiContext
 }
 
 
-public static class ClassFactory
+static public class ClassFactory
 {
-    public static Dictionary<string, Class> _classesBook = new Dictionary<string, Class>() 
+    static public void Brawler()
     {
-        {
-            "brawler", new Class("brawler", 100, (UltiContext ctx) => {
-
-                Debug.Log(":)");
-
-                return true;
-            }) 
-        }
-    };
+        Idealist._name = "brawler";
+        Idealist._HP = 100;
+        Idealist._ultimate = () => { Debug.Log("ulti used"); };
+    }
 
     public static UltiContext _context;
+
+    static public Dictionary<string, Action> _classesBook = new Dictionary<string, Action>()
+    {
+        { "brawler", Brawler }
+    };
 } 

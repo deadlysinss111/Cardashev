@@ -9,13 +9,13 @@ public class Collection : MonoBehaviour
     List<GameObject> _currentUnlocked;
     List<GameObject> _currentLocked;
 
-    static Dictionary<Class, List<Card>> _unlocked;
-    static Dictionary<Class, List<Card>> _locked;
+    static Dictionary<string, List<Card>> _unlocked;
+    static Dictionary<string, List<Card>> _locked;
 
-    void Load(Class toLoad)
+    void Load(string toLoad)
     {
-        _unlocked = new Dictionary<Class, List<Card>>();
-        _locked = new Dictionary<Class, List<Card>>();
+        _unlocked = new Dictionary<string, List<Card>>();
+        _locked = new Dictionary<string, List<Card>>();
 
         List<Card> cards;
 

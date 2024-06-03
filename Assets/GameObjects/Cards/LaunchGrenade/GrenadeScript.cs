@@ -17,8 +17,8 @@ public class GrenadeScript : MonoBehaviour
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
             {
                 manager._health -= 10;
-                Destroy(gameObject);
             }
         }
+        Destroy(gameObject);
     }
 }

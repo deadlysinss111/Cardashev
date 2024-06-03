@@ -16,7 +16,6 @@ public class PlayerManager : MonoBehaviour
     public int _goldAmount;
 
     static public List<Card> _deck;
-    static public Class _class;
 
 
     // Functional fields
@@ -29,7 +28,6 @@ public class PlayerManager : MonoBehaviour
     Dictionary<string, Action[]> _states;
     [NonSerialized] public string _defaultState;
 
-    Func<UltiContext, bool> _ultimate;
     Action _mouseHover;
     Action _leftClick;
     Action _rightClick;
@@ -49,7 +47,6 @@ public class PlayerManager : MonoBehaviour
         _input.Enable();
         _health = GetComponent<StatManager>();
 
-        _ultimate = _class._ultimate;
         _ultimateProgression = 0;
         _goldAmount = 0;
 
@@ -164,7 +161,7 @@ public class PlayerManager : MonoBehaviour
     {
         if(_ultimateProgression >= 100)
         {
-            _ultimate(new UltiContext());
+            Idealist._ultimate();
             _ultimateProgression = 0;
         }
     }

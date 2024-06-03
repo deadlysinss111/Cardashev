@@ -54,7 +54,11 @@ public class LaunchGrenade : Card
 
     public override void Effect()
     {
-        GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+        UnityEngine.Object GRENADE = Resources.Load("Grenade");
+        GameObject grenade = (GameObject)Instantiate(GRENADE);
+        grenade.GetComponent<Rigidbody>().transform.position = GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos + new Vector3(0, 1, 0);
+        grenade.GetComponent<Rigidbody>().velocity = _grenadeInitVelocity;
+
         base.Effect();
     }
 
@@ -80,12 +84,7 @@ public class LaunchGrenade : Card
     void FireGrenade()
     {
         ClearPath();
-
-        UnityEngine.Object GRENADE = Resources.Load("Grenade");
-        GameObject grenade = (GameObject)Instantiate(GRENADE);
-        grenade.GetComponent<Rigidbody>().transform.position = GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos;
-        grenade.GetComponent<Rigidbody>().velocity = _grenadeInitVelocity;
-
+        GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
         // Trigger the card play event
         base.ClickEvent();
     }

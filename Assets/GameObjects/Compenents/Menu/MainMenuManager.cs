@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -113,7 +114,9 @@ public class MainMenuManager : MonoBehaviour
 
     public void SelectCharacter(string name)
     {
-        ClassFactory._classesBook.TryGetValue(name, out PlayerManager._class);
+        Action init;
+        ClassFactory._classesBook.TryGetValue(name, out init);
+        init();
         SceneManager.LoadScene("MapNavigation");
     }
 }
