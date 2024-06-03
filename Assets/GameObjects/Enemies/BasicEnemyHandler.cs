@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,17 @@ public class BasicEnemyHandler : MonoBehaviour
     StatManager _stats;
     bool _waitForDestroy;
 
+    [NonSerialized] public Vector3 _virtualPos;
+
+    public float Health { get => _stats._health; private set => throw new InvalidCastException(); }
+
     ParticleSystem _particleSystem;
+
+    string _currentState;
+    Action _currentAction;
+    Dictionary<string, Action> _states;
+    [NonSerialized] public string _defaultState;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +33,7 @@ public class BasicEnemyHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        print("I was here");
         if (_waitForDestroy == false)
         { 
             if (Input.GetKeyDown(KeyCode.H))
@@ -52,4 +64,44 @@ public class BasicEnemyHandler : MonoBehaviour
         _particleSystem.Play();
         _waitForDestroy = true;
     }
+
+    public List<string> GetDeck()
+    {
+        List<string> deck = new List<string>();
+        for (int i = 0; i < 4; i++)
+        {
+            // Instead of loading a prefab, we directly run the card's script
+            deck.Add("EvilLaunchGrenade");
+        }
+        return deck;
+    }
+
+    public bool AddState(string name, Action func)
+    {
+        if (_states.ContainsKey(name) == false)
+        {
+            _states[name] = func;
+            return true;
+        }
+        return false;
+    }
+
+    public bool SetToState(string name)
+    {
+        Action func;
+        if (_states.TryGetValue(name, out func))
+        {
+            _currentState = name;
+            func();
+            return true;
+        }
+        return false;
+    }
+
+    public void SetToDefult()
+    {
+        SetToState(_defaultState);
+    }
+
+    public void ExecuteCurrentStateAction() { }
 }

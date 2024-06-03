@@ -81,7 +81,7 @@ public class LaunchGrenade : Card
         TrailCalculator.BellCurve(playerPos, _grenadeInitVelocity, ref _lineRenderer, out _pathPoints);
     }
 
-    void FireGrenade()
+    protected void FireGrenade()
     {
         ClearPath();
         GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();

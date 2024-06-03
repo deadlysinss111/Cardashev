@@ -9,9 +9,9 @@ using static UnityEngine.GraphicsBuffer;
 
 public class DeckManager : MonoBehaviour
 {
-    private List<Card> _hand;
-    private List<Card> _remainsInDeck;
-    private List<Card> _discardPile;
+    protected List<Card> _hand;
+    protected List<Card> _remainsInDeck;
+    protected List<Card> _discardPile;
 
     void Start()
     {
