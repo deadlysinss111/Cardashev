@@ -41,7 +41,7 @@ public abstract class Interactible : MonoBehaviour
     */
     // !! IMPORTANT NOTE
     //    All OnCollision...() methods need 1 of the 2 GameObject to have a RigidBody, NOT Kinematic, EVERY constraints ticked (if you want it unaffected by physics)
-    protected void OnTriggerEnter(Collider ARGcollider)
+    virtual protected void OnTriggerEnter(Collider ARGcollider)
     {
         switch (ARGcollider.gameObject.tag)
         {
@@ -61,7 +61,7 @@ public abstract class Interactible : MonoBehaviour
         }
     }
 
-    protected void OnTriggerExit(Collider ARGcollider)
+    virtual protected void OnTriggerExit(Collider ARGcollider)
     {
         switch (ARGcollider.gameObject.tag)
         {
@@ -81,9 +81,9 @@ public abstract class Interactible : MonoBehaviour
         }
     }
 
-    protected void OnTriggerStay(Collider ARGcollider) { }
+    virtual protected void OnTriggerStay(Collider ARGcollider) { }
 
-    public void OnRaycastHit()
+    virtual public void OnRaycastHit()
     {
         // Tests the distance of the player from the one of the Interactible in all 3 axis
         if (Vector3.Distance(this.transform.position, _playerRef.transform.position) <= _RaycastHitDist)
@@ -134,6 +134,9 @@ public abstract class Interactible : MonoBehaviour
 
         // Event subscribing
         _UeOnRaycastHit.AddListener(OnRaycastHit);
+
+        // Non combined mesh scenario
+        if (transform.childCount == 0) return;
 
         // Mesh Combining
         List<MeshFilter> meshFilters = new List<MeshFilter>();

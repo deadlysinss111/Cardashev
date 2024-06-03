@@ -116,7 +116,7 @@ public class OnLeaveRoom : MonoBehaviour
             card.transform.SetParent(GameObject.Find("Canvas").transform, false);
             card.transform.localScale = new Vector3(10, 1, 10);
             card.transform.localPosition = new Vector3(150*(i-1), 0, -0.1f);
-            card.GetComponent<Card>().SetToCollectible(() => { foreach (GameObject slot in cards) { Destroy(slot); }; _cardBG.SetActive(false); });
+            card.GetComponent<Card>().SetToCollectible(() => { foreach (GameObject slot in cards) { Destroy(slot); }; _cardBG.SetActive(false); return true; });
             cards[i] = card;
         }
         

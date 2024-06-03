@@ -30,10 +30,8 @@ public class BasicEnemyHandler : MonoBehaviour
         _waitForDestroy = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        print("I was here");
         if (_waitForDestroy == false)
         { 
             if (Input.GetKeyDown(KeyCode.H))
@@ -71,37 +69,8 @@ public class BasicEnemyHandler : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             // Instead of loading a prefab, we directly run the card's script
-            deck.Add("EvilLaunchGrenade");
+            deck.Add("LaunchGrenade");
         }
         return deck;
     }
-
-    public bool AddState(string name, Action func)
-    {
-        if (_states.ContainsKey(name) == false)
-        {
-            _states[name] = func;
-            return true;
-        }
-        return false;
-    }
-
-    public bool SetToState(string name)
-    {
-        Action func;
-        if (_states.TryGetValue(name, out func))
-        {
-            _currentState = name;
-            func();
-            return true;
-        }
-        return false;
-    }
-
-    public void SetToDefult()
-    {
-        SetToState(_defaultState);
-    }
-
-    public void ExecuteCurrentStateAction() { }
 }
