@@ -19,7 +19,8 @@ public enum RoomType
 public class MapNode : MonoBehaviour
 {
     [NonSerialized] public GameObject _mapNode;
-    public List<GameObject> _nextNodes;
+
+    public GameObject[] _nextNodes;
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
@@ -51,6 +52,18 @@ public class MapNode : MonoBehaviour
         GetComponent<MeshRenderer>().enabled = false;
     }
 
+    public bool HasNextNode()
+    {
+        foreach (var node in _nextNodes)
+        {
+            if (node == null)
+                continue;
+            else
+                return true;
+        }
+        return false;
+    }
+
     public void SelectNode()
     {
         GetComponent<MeshRenderer>().material.color = Color.yellow;
@@ -70,27 +83,21 @@ public class MapNode : MonoBehaviour
         {
             case RoomType.Shop:
                 GetComponent<MeshRenderer>().material.color = Color.yellow;
-                print("shop");
                 break;
             case RoomType.Boss:
                 GetComponent<MeshRenderer>().material.color = Color.black;
-                print("boss");
                 break;
             case RoomType.Rest:
                 GetComponent<MeshRenderer>().material.color = Color.white;
-                print("rest");
                 break;
             case RoomType.Event:
                 GetComponent<MeshRenderer>().material.color = Color.green;
-                print("event");
                 break;
             case RoomType.Combat:
                 GetComponent<MeshRenderer>().material.color = Color.red;
-                print("combat");
                 break;
             case RoomType.Elite:
                 GetComponent<MeshRenderer>().material.color = Color.magenta;
-                print("elite");
                 break;
 
         }

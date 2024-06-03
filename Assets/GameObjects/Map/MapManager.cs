@@ -15,6 +15,7 @@ public class MapManager : MonoBehaviour
 
     // For map generation
     List<GameObject> _startingNodes;
+    int NUMBER_OF_PATH;
 
     // PREFABS
     GameObject MAP_NODE;
@@ -30,6 +31,7 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
+        NUMBER_OF_PATH = 4;
         _mapGrid = GlobalInformations._mapNodes;
 
         if (_mapGrid != null)
@@ -38,7 +40,7 @@ public class MapManager : MonoBehaviour
         }
 
         _mapSizeX = 7;
-        _mapSizeY = 15;
+        _mapSizeY = 8;
 
         _mapGrid = new List<List<GameObject>>(_mapSizeX);
         _startingNodes = new List<GameObject>();
@@ -47,6 +49,7 @@ public class MapManager : MonoBehaviour
         MAP_PATH = (GameObject)Resources.Load("Map Path");
         // Generate an invisible starting node
         _playerLocation = Instantiate(MAP_NODE).transform.gameObject;
+        _playerLocation.GetComponent<MapNode>()._nextNodes = new GameObject[NUMBER_OF_PATH];
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
 
         GenerateMap();
@@ -105,7 +108,9 @@ public class MapManager : MonoBehaviour
             {
                 GameObject obj = Instantiate(MAP_NODE);
                 _mapGrid[i].Add(obj);
+                obj.GetComponent<MapNode>()._nextNodes = new GameObject[NUMBER_OF_PATH];
                 obj.transform.SetParent(mapObj, false);
+
                 obj.transform.localPosition = new Vector3(i * spaceBetweenNodes, 4, j * spaceBetweenNodes);
             }
         }
@@ -130,13 +135,13 @@ public class MapManager : MonoBehaviour
             _mapGrid[i][0].GetComponent<MapNode>()._startingXCoord = i;
             freeNodelist.Add(_mapGrid[i][0]);
         }
-        for (int y = 0; y < 4; y++)
+        for (int y = 0; y < NUMBER_OF_PATH; y++)
         {
             int newStartCoordIndex = Random.Range(0, freeNodelist.Count);
             GameObject startingNode = freeNodelist[newStartCoordIndex];
             startingNode.GetComponent<MapNode>()._isStartingNode = true;
             startingNode.name = "Starting Node";
-            _playerLocation.GetComponent<MapNode>()._nextNodes.Add(startingNode);
+            _playerLocation.GetComponent<MapNode>()._nextNodes[y] = startingNode;
             _startingNodes.Add(startingNode);
             freeNodelist.RemoveAt(newStartCoordIndex);
         }
@@ -144,17 +149,24 @@ public class MapManager : MonoBehaviour
         // Flag just for putting a "Rest" room at the end of the first path
         //bool isFirstPath = true;
         // Generating paths between each node
-        foreach (GameObject startingNode in _startingNodes)
+        for (int nodeNb=0; nodeNb < _startingNodes.Count; nodeNb++)
         {
-            int x = startingNode.GetComponent<MapNode>()._startingXCoord;
+            int x = _startingNodes[nodeNb].GetComponent<MapNode>()._startingXCoord;
             for (int floorNb = 0; floorNb < _mapSizeY-1; floorNb++)
             {
-                int nextNodeXIndex = Random.Range(Mathf.Clamp(x - 1, 0, _mapSizeX - 1), Mathf.Clamp(x + 2, 0, _mapSizeX - 1));
-                nextNodeXIndex = ArePathsCrossing(x, floorNb, nextNodeXIndex);
+                int nextNodeXIndex;
+                if (floorNb == 0)
+                {
+                    nextNodeXIndex = x;
+                }
+                else
+                {
+                    nextNodeXIndex = Random.Range(Mathf.Clamp(x - 1, 0, _mapSizeX - 1), Mathf.Clamp(x + 2, 0, _mapSizeX - 1));
+                }
+                nextNodeXIndex = Mathf.Clamp(ArePathsCrossing(x, floorNb, nextNodeXIndex), 0, _mapSizeX - 1);
 
                 GameObject nextNode = _mapGrid[nextNodeXIndex][floorNb + 1];
-                _mapGrid[x][floorNb].GetComponent<MapNode>()._nextNodes.Add(nextNode);
-
+                _mapGrid[x][floorNb].GetComponent<MapNode>()._nextNodes[nodeNb] = nextNode;
 
                 // WIP placing paths between nodes
                 CreatePathBetween(_mapGrid[x][floorNb], nextNode);
@@ -163,7 +175,7 @@ public class MapManager : MonoBehaviour
                 x = nextNodeXIndex;
                 if (floorNb == _mapSizeY - 2)
                 {
-                    nextNode.GetComponent<MapNode>()._nextNodes.Add(_bossRoom);
+                    nextNode.GetComponent<MapNode>()._nextNodes[nodeNb] = _bossRoom;
                     CreatePathBetween(nextNode, _bossRoom);
                 }
             }
@@ -175,10 +187,7 @@ public class MapManager : MonoBehaviour
         {
             for (int j = 0; j < _mapSizeY; j++)
             {
-                if (_mapGrid[i][j].GetComponent<MapNode>()._nextNodes.Count == 0)
-                {
-                    _mapGrid[i][j].SetActive(false);
-                }
+                _mapGrid[i][j].SetActive(_mapGrid[i][j].GetComponent<MapNode>().HasNextNode());
             }
         }
 
@@ -194,7 +203,9 @@ public class MapManager : MonoBehaviour
 
     void GiveTypeToRooms()
     {
-        foreach (GameObject node in _startingNodes)
+        // Elite: 1-2/Zone
+        int eliteToPlace = (Random.Range(0, 100) >= 50 ? 1 : 2);
+        for (int i = 0; i < _startingNodes.Count; i++)
         {
             // Stores every rooms in this path, which will then be randomly placed along the path.
             List<RoomType> rooms = new List<RoomType>();
@@ -203,46 +214,51 @@ public class MapManager : MonoBehaviour
             int shopToPlace = 1;
             // Rest: 75% -> 1/path + 25% -> 1/path
             int restToPlace = 1 + (Random.Range(0, 100) >= 25 ? 0 : 1);
-            // Elite: 1-2/Zone
-            int eliteToPlace = (Random.Range(0, 100) >= 50 ? 1 : 2);
             // remaining nodes are 50/50 Fights or Events
             int roomsToPlace = 0;
-            MapNode curRoom = node.GetComponent<MapNode>();
-            for (int i = 0; i < _mapSizeY; i++)
+            // Current percentage to place a Fight room
+            int fightPerc = 50;
+            MapNode curRoom = _startingNodes[i].GetComponent<MapNode>();
+            while (curRoom.RoomType != RoomType.Boss)
             {
-                if (curRoom.RoomType != RoomType.None)
+                switch (curRoom.RoomType)
                 {
-                    switch (curRoom.RoomType)
-                    {
-                        case RoomType.Shop:
-                            shopToPlace--;
-                            break;
-                        case RoomType.Rest:
-                            restToPlace--;
-                            break;
-                        case RoomType.Elite:
-                            eliteToPlace--;
-                            break;
-                    }
+                    case RoomType.Shop:
+                        shopToPlace--;
+                        break;
+                    case RoomType.Rest:
+                        restToPlace--;
+                        break;
+                    case RoomType.Elite:
+                        eliteToPlace--;
+                        break;
                 }
-
+                curRoom = curRoom._nextNodes[i].GetComponent<MapNode>();
                 roomsToPlace++;
             }
             int fightEventToPlace = roomsToPlace - (shopToPlace + restToPlace + eliteToPlace);
-            print(roomsToPlace);
+
+            curRoom = _startingNodes[i].GetComponent<MapNode>();
 
             // Place a Fight on the first room
             curRoom.SetRoomTypeTo(RoomType.Combat);
             fightEventToPlace--;
-            roomsToPlace--;
-            curRoom = curRoom._nextNodes[0].GetComponent<MapNode>();
+            curRoom = curRoom._nextNodes[i].GetComponent<MapNode>();
 
-            while (roomsToPlace > 0)
+            while (curRoom.RoomType != RoomType.Boss)
             {
-                curRoom.SetRoomTypeTo(Random.Range(0, 100) >= 50 ? RoomType.Event : RoomType.Combat);
-                roomsToPlace--;
+                if (Random.Range(0, 100) <= fightPerc)
+                {
+                    curRoom.SetRoomTypeTo(RoomType.Combat);
+                    fightPerc -= 15;
+                }
+                else
+                {
+                    curRoom.SetRoomTypeTo(RoomType.Event);
+                    fightPerc += 15;
+                }
                 fightEventToPlace--;
-                curRoom = curRoom._nextNodes[0].GetComponent<MapNode>();
+                curRoom = curRoom._nextNodes[Mathf.Clamp(i, 0, curRoom._nextNodes.Length - 1)].GetComponent<MapNode>();
             }
         }
     }
