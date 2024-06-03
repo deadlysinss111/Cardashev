@@ -31,6 +31,7 @@ public class OnLeaveRoom : MonoBehaviour
         }
     }
 
+    // Displays the rewards screen
     IEnumerator DisplayScreen()
     {
         while(_winScreen.transform.GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0).length > 

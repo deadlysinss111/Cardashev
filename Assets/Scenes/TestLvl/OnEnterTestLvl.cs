@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class OnEnterTestLvl : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
+        // Deactivate the Zone'a map object
         GameObject.Find("Map(Clone)").SetActive(false);
+
+        // Loads in the room corresponding to the node
         Room room = gameObject.GetComponent<Room>();
         room.OnEnterRoom(GlobalInformations._prefabToLoadOnRoomEnter);
+
+        // Bakes the walkable surface
         NavMeshSurface surface = GameObject.Find("RoomAnchor").AddComponent<NavMeshSurface>();
         surface.BuildNavMesh();
     }
