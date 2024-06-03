@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using static UnityEditorInternal.VersionControl.ListControl;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class PlayerManager : MonoBehaviour
     CustomActions _input;
 
     string _currentState;
+    string _lastState;
     Action _currentAction;
     Dictionary<string, Action[]> _states;
     [NonSerialized] public string _defaultState;
@@ -40,6 +42,7 @@ public class PlayerManager : MonoBehaviour
         _states = new Dictionary<string, Action[]>();
         _defaultState = "movement";
         _currentState = "movement";
+        _lastState = "movement";
     }
     private void Awake()
     {
@@ -131,6 +134,7 @@ public class PlayerManager : MonoBehaviour
         Action[] func;
         if(_states.TryGetValue(name, out func))
         {
+            _lastState = _currentState;
             Action[] exit;
             _states.TryGetValue(_currentState, out exit);
             exit[1]();
@@ -139,6 +143,11 @@ public class PlayerManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void SetToLastState()
+    {
+        SetToState(_lastState);
     }
 
     public void SetToDefault()

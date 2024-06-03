@@ -117,7 +117,7 @@ public abstract class Interactible : MonoBehaviour
             Destroy(outlineComp);
 
         // Restores the previous state
-        _playerManager.SetToDefault();
+        _playerManager.SetToLastState();
     }
 
 
