@@ -13,25 +13,25 @@ public class UltimateManager : MonoBehaviour
 
     private void Awake()
     {
-        // Ensure the PlayerInput component is attached
+        
         _pInput = GetComponent<PlayerInput>();
     }
 
     private void OnEnable()
     {
-        // Enable the input actions when the object is enabled
+        
         _pInput.actions["Ultimate"].performed += OnUltimatePerformed;
     }
 
     private void OnDisable()
     {
-        // Disable the input actions when the object is disabled
+        
         _pInput.actions["Ultimate"].performed -= OnUltimatePerformed;
     }
 
     private void OnUltimatePerformed(InputAction.CallbackContext context)
     {
-        // Call UseUltimate when the ultimate action is performed
+        
         UseUltimate();
     }
 
@@ -49,7 +49,7 @@ public class UltimateManager : MonoBehaviour
     {
         if (_isCooldown)
         {
-            // Update the cooldown timer
+            
             _cooldown.fillAmount += 1 / _cooldownTime * Time.deltaTime;
             if (_cooldown.fillAmount >= 1)
             {

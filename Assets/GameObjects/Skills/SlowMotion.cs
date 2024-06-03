@@ -1,30 +1,30 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class SlowMotionWithProgressBar : MonoBehaviour
 {
     // Slow motion variables
-    public float _slowdownFactor = 0.1f;
-    public float _slowdownLength = 5.0f; // Maximum duration the slow motion can last
+    public float _slowdownFactor;
+    public float _slowdownLength; // Maximum duration the slow motion can last
 
     // Focus bar variables
     public GameObject _focusBar;
 
     private bool _isActive;
-    private PlayerInput _pInput;
+    private PlayerInput _pInput; // Changed from CustomActions to PlayerInput
 
     // Circular progress bar variables
     private bool _progressBarIsActive;
     private bool _isRefilling;
     private float _indicatorTimer;
-    private float _maxIndicatorTimer = 5.0f;
+    private float _maxIndicatorTimer;
     private Image _radialProgressBar;
     private float _lerpSpeed = 3f; // Speed of interpolation
 
     private void Awake()
     {
-        _pInput = GetComponent<PlayerInput>();
+        _pInput = GetComponent<PlayerInput>(); // Ensure PlayerInput component is attached
 
         // Initialize the radial progress bar
         _radialProgressBar = _focusBar.transform.Find("RadialProgressBar").GetComponent<Image>();
@@ -35,6 +35,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
         // Enable the input actions when the object is enabled
         _pInput.actions["Focus"].performed += OnFocusPerformed;
         _pInput.actions["Focus"].canceled += OnFocusCanceled;
+        _pInput.actions["Focus"].Enable();
     }
 
     private void OnDisable()
@@ -42,6 +43,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
         // Disable the input actions when the object is disabled
         _pInput.actions["Focus"].performed -= OnFocusPerformed;
         _pInput.actions["Focus"].canceled -= OnFocusCanceled;
+        _pInput.actions["Focus"].Disable();
     }
 
     private void OnFocusPerformed(InputAction.CallbackContext context)
@@ -96,7 +98,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
 
     public void ActivateCountdown(float countdownTime)
     {
-        _maxIndicatorTimer = countdownTime;
+        _maxIndicatorTimer = 5f;
         _indicatorTimer = countdownTime;
     }
 

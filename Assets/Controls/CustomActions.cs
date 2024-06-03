@@ -46,15 +46,6 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SpaceBar"",
-                    ""type"": ""Button"",
-                    ""id"": ""84df5206-91f2-4f7a-ae54-e6223a071301"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Focus"",
                     ""type"": ""Button"",
                     ""id"": ""c0251a30-0490-4a0d-b1e9-6a7e1f2ba005"",
@@ -68,6 +59,24 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""a9c57a1f-fd43-4099-bc12-2f214e8ccf89"",
                     ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CameraMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""84df5206-91f2-4f7a-ae54-e6223a071301"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CameraMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""9f26c795-27ce-4286-b9c5-e2458bf3f370"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -98,17 +107,6 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""2e2adef1-ce97-4fa5-a7d7-0fb66fe7e452"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SpaceBar"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""fe66b46b-d892-4cd3-8208-cb0449dadb86"",
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
@@ -128,6 +126,72 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                     ""action"": ""Ultimate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2e2adef1-ce97-4fa5-a7d7-0fb66fe7e452"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Camera"",
+                    ""id"": ""4ef1f50e-c5f9-4aa1-aa11-722298b933ef"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMove"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""4e6925f7-473e-4a86-aa74-a95f484fa71d"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""6b11ac06-a7ae-4af6-a617-2f4ebc758554"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""37925d5e-781a-4bd9-aeeb-d6a9d55c72cb "",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""8222f59d-d06d-4f21-98b2-071b2e982134"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -230,9 +294,10 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         m_Main = asset.FindActionMap("Main", throwIfNotFound: true);
         m_Main_LeftClick = m_Main.FindAction("LeftClick", throwIfNotFound: true);
         m_Main_RightClick = m_Main.FindAction("RightClick", throwIfNotFound: true);
-        m_Main_SpaceBar = m_Main.FindAction("SpaceBar", throwIfNotFound: true);
         m_Main_Focus = m_Main.FindAction("Focus", throwIfNotFound: true);
         m_Main_Ultimate = m_Main.FindAction("Ultimate", throwIfNotFound: true);
+        m_Main_CameraMode = m_Main.FindAction("CameraMode", throwIfNotFound: true);
+        m_Main_CameraMove = m_Main.FindAction("CameraMove", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Move = m_Camera.FindAction("Move", throwIfNotFound: true);
@@ -300,18 +365,20 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     private List<IMainActions> m_MainActionsCallbackInterfaces = new List<IMainActions>();
     private readonly InputAction m_Main_LeftClick;
     private readonly InputAction m_Main_RightClick;
-    private readonly InputAction m_Main_SpaceBar;
     private readonly InputAction m_Main_Focus;
     private readonly InputAction m_Main_Ultimate;
+    private readonly InputAction m_Main_CameraMode;
+    private readonly InputAction m_Main_CameraMove;
     public struct MainActions
     {
         private @CustomActions m_Wrapper;
         public MainActions(@CustomActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @LeftClick => m_Wrapper.m_Main_LeftClick;
         public InputAction @RightClick => m_Wrapper.m_Main_RightClick;
-        public InputAction @SpaceBar => m_Wrapper.m_Main_SpaceBar;
         public InputAction @Focus => m_Wrapper.m_Main_Focus;
         public InputAction @Ultimate => m_Wrapper.m_Main_Ultimate;
+        public InputAction @CameraMode => m_Wrapper.m_Main_CameraMode;
+        public InputAction @CameraMove => m_Wrapper.m_Main_CameraMove;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -327,15 +394,18 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @RightClick.started += instance.OnRightClick;
             @RightClick.performed += instance.OnRightClick;
             @RightClick.canceled += instance.OnRightClick;
-            @SpaceBar.started += instance.OnSpaceBar;
-            @SpaceBar.performed += instance.OnSpaceBar;
-            @SpaceBar.canceled += instance.OnSpaceBar;
             @Focus.started += instance.OnFocus;
             @Focus.performed += instance.OnFocus;
             @Focus.canceled += instance.OnFocus;
             @Ultimate.started += instance.OnUltimate;
             @Ultimate.performed += instance.OnUltimate;
             @Ultimate.canceled += instance.OnUltimate;
+            @CameraMode.started += instance.OnCameraMode;
+            @CameraMode.performed += instance.OnCameraMode;
+            @CameraMode.canceled += instance.OnCameraMode;
+            @CameraMove.started += instance.OnCameraMove;
+            @CameraMove.performed += instance.OnCameraMove;
+            @CameraMove.canceled += instance.OnCameraMove;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -346,15 +416,18 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             @RightClick.started -= instance.OnRightClick;
             @RightClick.performed -= instance.OnRightClick;
             @RightClick.canceled -= instance.OnRightClick;
-            @SpaceBar.started -= instance.OnSpaceBar;
-            @SpaceBar.performed -= instance.OnSpaceBar;
-            @SpaceBar.canceled -= instance.OnSpaceBar;
             @Focus.started -= instance.OnFocus;
             @Focus.performed -= instance.OnFocus;
             @Focus.canceled -= instance.OnFocus;
             @Ultimate.started -= instance.OnUltimate;
             @Ultimate.performed -= instance.OnUltimate;
             @Ultimate.canceled -= instance.OnUltimate;
+            @CameraMode.started -= instance.OnCameraMode;
+            @CameraMode.performed -= instance.OnCameraMode;
+            @CameraMode.canceled -= instance.OnCameraMode;
+            @CameraMove.started -= instance.OnCameraMove;
+            @CameraMove.performed -= instance.OnCameraMove;
+            @CameraMove.canceled -= instance.OnCameraMove;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -430,9 +503,10 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     {
         void OnLeftClick(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
-        void OnSpaceBar(InputAction.CallbackContext context);
         void OnFocus(InputAction.CallbackContext context);
         void OnUltimate(InputAction.CallbackContext context);
+        void OnCameraMode(InputAction.CallbackContext context);
+        void OnCameraMove(InputAction.CallbackContext context);
     }
     public interface ICameraActions
     {

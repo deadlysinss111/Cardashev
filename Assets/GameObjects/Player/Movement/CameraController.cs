@@ -17,23 +17,25 @@ public class CameraController : MonoBehaviour
     private void Awake()
     {
         _currentMode = LockedMode;
-        _pInput = GetComponent<PlayerInput>();
+        _pInput = GameObject.Find("Player").GetComponent<PlayerInput>();
     }
 
     private void OnEnable()
     {
-        // Enable input actions
-        _pInput.actions["SpaceBar"].performed += OnChangeModePerformed;
-        _pInput.actions["Move"].performed += OnMovePerformed;
-        _pInput.actions["Move"].canceled += OnMoveCanceled;
+        
+        _pInput.actions["CameraMode"].performed += OnChangeModePerformed;
+        _pInput.actions["CameraMove"].performed += OnMovePerformed;
+        _pInput.actions["CameraMove"].canceled += OnMoveCanceled;
     }
 
     private void OnDisable()
     {
-        // Disable input actions
-        _pInput.actions["SpaceBar"].performed -= OnChangeModePerformed;
-        _pInput.actions["Move"].performed -= OnMovePerformed;
-        _pInput.actions["Move"].canceled -= OnMoveCanceled;
+        if (_pInput != null)
+        {
+            _pInput.actions["CameraMode"].performed -= OnChangeModePerformed;
+            _pInput.actions["CameraMove"].performed -= OnMovePerformed;
+            _pInput.actions["CameraMove"].canceled -= OnMoveCanceled;
+        }
     }
 
     private void Update()
@@ -90,7 +92,7 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        // Cancel any ongoing rebinding operation
+        
         if (_rebindingOperation != null)
         {
             _rebindingOperation.Dispose();
