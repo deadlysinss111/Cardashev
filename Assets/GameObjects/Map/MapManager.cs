@@ -187,7 +187,8 @@ public class MapManager : MonoBehaviour
         {
             for (int j = 0; j < _mapSizeY; j++)
             {
-                _mapGrid[i][j].SetActive(_mapGrid[i][j].GetComponent<MapNode>().HasNextNode());
+                if (_mapGrid[i][j].GetComponent<MapNode>().NumberOfNextNode() == 0)
+                    Destroy(_mapGrid[i][j]);
             }
         }
 
@@ -302,8 +303,7 @@ public class MapManager : MonoBehaviour
                     curRoom.SetRoomTypeTo(rooms[0]);
                     rooms.RemoveAt(0);
                 }
-                // WARNING TODO : CHECK
-                curRoom = curRoom._nextNodes[Mathf.Clamp(pathNb, 0, curRoom._nextNodes.Length - 1)].GetComponent<MapNode>();
+                curRoom = curRoom._nextNodes[pathNb].GetComponent<MapNode>();
             }
             //print("Remaining rooms: "+rooms.Count);
         }

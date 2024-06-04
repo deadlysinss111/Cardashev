@@ -52,16 +52,17 @@ public class MapNode : MonoBehaviour
         GetComponent<MeshRenderer>().enabled = false;
     }
 
-    public bool HasNextNode()
+    public int NumberOfNextNode()
     {
+        int pathCount = 0;
         foreach (var node in _nextNodes)
         {
             if (node == null)
                 continue;
             else
-                return true;
+                pathCount++;
         }
-        return false;
+        return pathCount;
     }
 
     public void SelectNode()
