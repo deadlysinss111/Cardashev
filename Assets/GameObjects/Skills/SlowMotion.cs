@@ -122,27 +122,27 @@ public class SlowMotionWithProgressBar : MonoBehaviour
         {
             if (_isRefilling)
             {
-                // Smoothly refill the progress bar using Lerp
-                _indicatorTimer += Time.unscaledDeltaTime / 4; // Increment the indicator timer
+                
+                _indicatorTimer += Time.unscaledDeltaTime / 4; 
                 _radialProgressBar.fillAmount = Mathf.Lerp(_radialProgressBar.fillAmount, _indicatorTimer / _maxIndicatorTimer, _lerpSpeed * Time.unscaledDeltaTime);
 
-                IncreaseTimer(); // Increase the timer
+                IncreaseTimer(); 
 
-                // Stop refilling once max is reached
+                
                 if (_indicatorTimer >= _maxIndicatorTimer)
                 {
                     _isRefilling = false;
-                    _indicatorTimer = _maxIndicatorTimer; // Ensure the timer is exactly at max
-                    _radialProgressBar.fillAmount = 1f; // Ensure the fill amount is exactly 1
-                    _slowdownLength = _maxIndicatorTimer; // Ensure the timer is exactly at max
+                    _indicatorTimer = _maxIndicatorTimer; 
+                    _radialProgressBar.fillAmount = 1f; 
+                    _slowdownLength = _maxIndicatorTimer; 
 
-                    // Stop the countdown when fully refilled
+                    
                     StopCountdown();
                 }
             }
             else
             {
-                _indicatorTimer -= Time.unscaledDeltaTime; // Use unscaledDeltaTime instead of deltaTime
+                _indicatorTimer -= Time.unscaledDeltaTime; 
                 _radialProgressBar.fillAmount = _indicatorTimer / _maxIndicatorTimer;
 
                 if (_indicatorTimer <= 0)
