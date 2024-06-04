@@ -42,6 +42,34 @@ public class Collection : MonoBehaviour
             _currentLocked.Add(card);
         }
     }
+
+    public static bool Unlock(string playerId, string card)
+    {
+        if (_locked.ContainsKey(playerId) == false)
+        {
+            throw new KeyNotFoundException("The playable character " + playerId + " doesn't exist.");
+        }
+        if (_locked[playerId].Contains(card) == false)
+        {
+            return false;
+        }
+        _locked[playerId].Remove(card);
+        if (_unlocked.ContainsKey(playerId))
+        {
+            _unlocked.Add(playerId, new List<string>());
+        }
+        _unlocked[playerId].Add(card);
+        return true;
+    }
+
+    public static bool IsUnlocked(string playerId, string card)
+    {
+        if (_locked.ContainsKey(playerId) == false)
+        {
+            throw new KeyNotFoundException("The playable character " + playerId + " doesn't exist.");
+        }
+        return _locked[playerId].Contains(card);
+    }
     
     // All below values for positions are totally random and meant to be changed later on
     void Display()
