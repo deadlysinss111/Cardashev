@@ -420,7 +420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _time: 10
-  _limit: 0.85
+  _limit: 0.9
   _door1: {fileID: 4749309566362246478}
   _door2: {fileID: 2227981962494864044}
 --- !u!1 &4749309566362246478

@@ -412,7 +412,7 @@ MonoBehaviour:
   _clickableLayers:
     serializedVersion: 2
     m_Bits: 8
-  _BlockerProbability: 65
+  _BlockerProbability: 15.1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +519,7 @@ GameObject:
   - component: {fileID: 729919117}
   - component: {fileID: 729919116}
   m_Layer: 0
-  m_Name: TimerDoorWall
+  m_Name: TimerDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -70,7 +70,6 @@ public class MapManager : MonoBehaviour
         {
             GenerateMap();
         }
-        GlobalInformations._gameTimer += Time.deltaTime;
     }
 
     void MovePlayerTo(GameObject nodeToMoveTo)
@@ -230,7 +229,7 @@ public class MapManager : MonoBehaviour
     {
         print("Added a blocker");
         GameObject blocker = Instantiate(BLOCKER);
-        blocker.transform.SetParent(GameObject.FindGameObjectWithTag("Map").transform, false);
+        blocker.transform.SetParent(GameObject.FindGameObjectWithTag("Map Door Parent").transform, false);
         Vector3 pos = newPath.transform.position;
 
         Vector3 point1 = newPath.GetComponent<MapPathScript>()._spline[0].Position;
@@ -240,10 +239,12 @@ public class MapManager : MonoBehaviour
         float3 posE;
         float3 tanE;
         float3 upE;
-        bool a = newPath.GetComponent<MapPathScript>()._spline.Evaluate(0.5f, out posE, out tanE, out upE);
-        BetterDebug.Log(a, posE, tanE, upE);
+        if (newPath.GetComponent<MapPathScript>()._spline.Evaluate(0.5f, out posE, out tanE, out upE))
+        {
+            BetterDebug.Log(posE, tanE, upE);
 
-        blocker.transform.position = pos + midpoint;
-        blocker.transform.rotation = Quaternion.LookRotation(new Vector3(tanE.x, tanE.y, tanE.z), new Vector3(upE.x, upE.y, upE.z));
+            blocker.transform.position = pos + midpoint;
+            blocker.transform.rotation = Quaternion.LookRotation(new Vector3(tanE.x, tanE.y, tanE.z), new Vector3(upE.x, upE.y, upE.z));
+        }
     }
 }
