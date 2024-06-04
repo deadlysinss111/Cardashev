@@ -12,11 +12,15 @@ public class Merchant : Interactible
         base.Awake();
         _interface = GameObject.Find("ShopInterface");
         _interface.SetActive(false);
+        _RaycastHitDist = 4;
     }
 
     public override void OnRaycastHit()
     {
-        DrawOfferedCards();
+        if (Vector3.Distance(this.transform.position, _playerRef.transform.position) <= _RaycastHitDist)
+            DrawOfferedCards();
+        else
+            print("you're too far from the merchant");
     }
 
     void DrawOfferedCards()
