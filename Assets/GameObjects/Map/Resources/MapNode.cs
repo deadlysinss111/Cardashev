@@ -31,6 +31,11 @@ public class MapNode : MonoBehaviour
     { 
         get => _roomType;
     }
+    private int _uniqueNextNode;
+    public int UniqueNextNode
+    {
+        get => _uniqueNextNode;
+    }
 
     private void Awake()
     {
@@ -39,9 +44,33 @@ public class MapNode : MonoBehaviour
 
     private void Start()
     {
+        _uniqueNextNode = 0;
         _roomType = RoomType.None;
         _mapNode = GetComponent<GameObject>();
         _isStartingNode = false;
+    }
+
+    public void AddNextNode(int index, GameObject node)
+    {
+        int emptyCheck = 0;
+        foreach (GameObject item in _nextNodes)
+            if (item == null) emptyCheck++;
+        if (emptyCheck == 4) _uniqueNextNode++;
+
+        _nextNodes[index] = node;
+
+        foreach (GameObject item in _nextNodes)
+        {
+            if (item == null)
+            {
+                continue;
+            }
+            if (!ReferenceEquals(item, node))
+            {
+                _uniqueNextNode++;
+                print(_uniqueNextNode);
+            }
+        }
     }
 
     public void SetAsOriginalNode()
@@ -55,12 +84,23 @@ public class MapNode : MonoBehaviour
     public int NumberOfNextNode()
     {
         int pathCount = 0;
-        foreach (var node in _nextNodes)
+        foreach (GameObject node in _nextNodes)
         {
             if (node == null)
                 continue;
             else
-                pathCount++;
+            {
+                List<GameObject> temp = new List<GameObject>();
+                foreach (GameObject otherNode in _nextNodes)
+                {
+                    if (ReferenceEquals(node, otherNode))
+                        continue;
+
+                    temp.Add(otherNode);
+                }
+                if (!temp.Contains(node))
+                    pathCount++;
+            }
         }
         return pathCount;
     }

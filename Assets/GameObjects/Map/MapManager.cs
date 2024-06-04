@@ -152,11 +152,13 @@ public class MapManager : MonoBehaviour
             freeNodelist.RemoveAt(newStartCoordIndex);
         }
 
-        // Flag just for putting a "Rest" room at the end of the first path
-        //bool isFirstPath = true;
         // Generating paths between each node
+
+        int blockerToPlace = 2;
         for (int nodeNb=0; nodeNb < _startingNodes.Count; nodeNb++)
         {
+            // Flag for placing only 1 blocker per path
+            bool blockerWasPlaced = false;
             int x = _startingNodes[nodeNb].GetComponent<MapNode>()._startingXCoord;
             for (int floorNb = 0; floorNb < _mapSizeY-1; floorNb++)
             {
@@ -172,16 +174,23 @@ public class MapManager : MonoBehaviour
                 nextNodeXIndex = Mathf.Clamp(ArePathsCrossing(x, floorNb, nextNodeXIndex), 0, _mapSizeX - 1);
 
                 GameObject nextNode = _mapGrid[nextNodeXIndex][floorNb + 1];
-                _mapGrid[x][floorNb].GetComponent<MapNode>()._nextNodes[nodeNb] = nextNode;
+                _mapGrid[x][floorNb].GetComponent<MapNode>().AddNextNode(nodeNb, nextNode);
 
                 // WIP placing paths between nodes
-                CreatePathBetween(_mapGrid[x][floorNb], nextNode);
+                GameObject newPath = CreatePathBetween(_mapGrid[x][floorNb], nextNode);
+                if (_mapGrid[x][floorNb].GetComponent<MapNode>().UniqueNextNode >= 2 && blockerToPlace > 0 && !blockerWasPlaced)
+                {
+                    print(_mapGrid[x][floorNb].GetComponent<MapNode>().UniqueNextNode);
+                    blockerToPlace--;
+                    blockerWasPlaced = true;
+                    GenerateBlocker(newPath);
+                }
 
                 // Saving the x coordinate of the next node for the next iteration of the loop
                 x = nextNodeXIndex;
                 if (floorNb == _mapSizeY - 2)
                 {
-                    nextNode.GetComponent<MapNode>()._nextNodes[nodeNb] = _bossRoom;
+                    nextNode.GetComponent<MapNode>().AddNextNode(nodeNb, _bossRoom);
                     CreatePathBetween(nextNode, _bossRoom);
                 }
             }
@@ -193,7 +202,7 @@ public class MapManager : MonoBehaviour
         {
             for (int j = 0; j < _mapSizeY; j++)
             {
-                if (_mapGrid[i][j].GetComponent<MapNode>().NumberOfNextNode() == 0)
+                if (_mapGrid[i][j].GetComponent<MapNode>().UniqueNextNode == 0)
                     Destroy(_mapGrid[i][j]);
             }
         }
@@ -201,16 +210,12 @@ public class MapManager : MonoBehaviour
         GiveTypeToRooms();
     }
 
-    void CreatePathBetween(GameObject node1, GameObject node2)
+    GameObject CreatePathBetween(GameObject node1, GameObject node2)
     {
         GameObject newPath = Instantiate(MAP_PATH);
         newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
         newPath.GetComponent<MapPathScript>().SetPathPoints(node1, node2);
-        // Temporary, might be replaed later
-        if (Random.Range(0, 100) < _BlockerProbability)
-        {
-            GenerateBlocker(newPath);
-        }
+        return newPath;
     }
 
     void GiveTypeToRooms()
@@ -347,7 +352,7 @@ public class MapManager : MonoBehaviour
 
     void GenerateBlocker(GameObject newPath)
     {
-        print("Added a blocker");
+        //print("Added a blocker");
         GameObject blocker = Instantiate(BLOCKER);
         blocker.transform.SetParent(GameObject.FindGameObjectWithTag("Map Door Parent").transform, false);
         Vector3 pos = newPath.transform.position;
@@ -361,7 +366,7 @@ public class MapManager : MonoBehaviour
         float3 upE;
         if (newPath.GetComponent<MapPathScript>()._spline.Evaluate(0.5f, out posE, out tanE, out upE))
         {
-            BetterDebug.Log(posE, tanE, upE);
+            //BetterDebug.Log(posE, tanE, upE);
 
             blocker.transform.position = pos + midpoint;
             blocker.transform.rotation = Quaternion.LookRotation(new Vector3(tanE.x, tanE.y, tanE.z), new Vector3(upE.x, upE.y, upE.z));
