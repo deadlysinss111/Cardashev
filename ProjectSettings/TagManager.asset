@@ -10,6 +10,7 @@ TagManager:
   - Map Node Parent
   - Map Path Parent
   - InteractibleObject
+  - Map Door Parent
   layers:
   - Default
   - TransparentFX

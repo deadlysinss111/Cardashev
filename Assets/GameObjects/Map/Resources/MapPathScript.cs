@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 public class MapPathScript : MonoBehaviour
 {
-    Spline _spline;
+    public Spline _spline;
     private int _splineIndex;
     private float _time;
 
