@@ -12,7 +12,7 @@ public class OnEnterTestLvl : MonoBehaviour
 
         // Loads in the room corresponding to the node
         Room room = gameObject.GetComponent<Room>();
-        room.OnEnterRoom(GlobalInformations._prefabToLoadOnRoomEnter);
+        room.OnEnterRoom(GI._prefabToLoadOnRoomEnter);
 
         // Bakes the walkable surface
         NavMeshSurface surface = GameObject.Find("RoomAnchor").AddComponent<NavMeshSurface>();

@@ -1,77 +1,89 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.Build;
+using Unity.Mathematics;
 
-static public class GlobalInformations
+// GI stands for GlobalInformations
+static public class GI
 {
-    // Container GameObjects
-    public static GameObject[] _persistentSceneContainers = new GameObject[3];
+    [SerializeField] public static GameObject _mapPrefab;
 
-    // Data needed for scene transition (Map <-> Room)
-    static public string _prefabToLoadOnRoomEnter;
-    static public List<List<GameObject>> _mapNodes; // TODO check for removal
-
-
-
-    // Misc stuff to avoid aftternoons of "WHY ? WHY ? WHYYYYYY ? oh that's why."
+    // Misc stuff to avoid afternoons of "WHY ? WHY ? WHYYYYYY ? oh that's why."
+    // When adding elements, never put any `=` anywhere or this will break the below array
     public enum PersistentSceneContainer
     {
-        UNKNOWN = -1,
+        NON_PERSISTENT = -1,
         Map,
-        Room,
-        EscMenu
     }
+
+    // Array that stores prefabs for each
+
+    // Array that stores persistent GameObjects. Its size automatically fits the Enum size
+    public static GameObject[] _persistentSceneContainers = new GameObject[Enum.GetNames(typeof(PersistentSceneContainer)).Length - 1];
+
+    // Data needed for scene transition (Map --> Room)
+    static public string _prefabToLoadOnRoomEnter;
+    static public List<List<GameObject>> _mapNodes; // TODO check for removal
 
 
     /*
      METHODS
     */
-    static public bool IsSceneContainerNull(PersistentSceneContainer ARGsceneContainerID)
+    // 2 Methods to give information to the loader
+    static public bool IsPersistentSceneContainerNull(string ARGsceneContainerName)
     {
-        // Target of the verification
-        GameObject checkTarget = _persistentSceneContainers[ARGsceneContainerID];
-
-        // Translates the string into a target for the verification
-        switch (ARGsceneContainerID)
-        {
-            case PersistentSceneContainer.Map:
-                checkTarget = _mapSceneContainer;
-                break;
-            case PersistentSceneContainer.Room:
-                checkTarget = _roomSceneContainer;
-                break;
-            case PersistentSceneContainer.EscMenu:
-                checkTarget = _escapeMenuSceneContainer;
-                break;
-
-            default:
-                checkTarget = null;
-                Debug.Log("GlobalInformations => IsSceneContainerNull didn't find a matching string !\nError incoming, take coveeeeeer !!! >:O");
-        }
+        PersistentSceneContainer sceneID = SceneNametoEnum(ARGsceneContainerName);
 
         // Performs the check
-        if (checkTarget == null)
+        if (_persistentSceneContainers[ (int)sceneID ] == null)
             return true;
         else
             return false;
     }
+    static public bool IsSceneContainerPersistent(string ARGsceneContainerName)
+    {
+        PersistentSceneContainer sceneID = SceneNametoEnum(ARGsceneContainerName);
 
-    // Translates a string into an enum memeber
-    static public PersistentSceneContainer StringtoEnum(string ARGsceneContainerName)
+        // Performs the check
+        if (sceneID == PersistentSceneContainer.NON_PERSISTENT)
+            return false;
+        else
+            return true;
+    }
+
+    // Translates a string into an enum member. Don't forget any !
+    static public PersistentSceneContainer SceneNametoEnum(string ARGsceneContainerName)
     {
         switch (ARGsceneContainerName)
         {
             case "Map":
                 return PersistentSceneContainer.Map;
-                
-            case "Room":
-                return PersistentSceneContainer.Room;
-                
-            case "Esc Menu":
-                return PersistentSceneContainer.EscMenu;
 
             default:
-                return PersistentSceneContainer.UNKNOWN;
+                Debug.Log("SceneNametoEnum() found object to be NON_PERSISTENT. Maybe the switch case is incomplete ?");
+                return PersistentSceneContainer.NON_PERSISTENT;
+        }
+    }
+
+    // Instantiates and saves a persistent scene container GameObject
+    static public void InstantiateAndCull(string ARGsceneContainerName)
+    {
+        GameObject sceneContainer = _persistentSceneContainers[ (int) SceneNametoEnum(ARGsceneContainerName) ];
+        
+        switch (ARGsceneContainerName)
+        {
+            case "Map":
+                // Instantiate, save and cull
+                sceneContainer = MonoBehaviour.Instantiate(_mapPrefab);
+                MonoBehaviour.DontDestroyOnLoad(sceneContainer);
+                sceneContainer.SetActive(false);
+                break;
+
+            default:
+                Debug.Log("how TF did you get an error in there ? õ_Ô");
+                break;
         }
     }
 }
