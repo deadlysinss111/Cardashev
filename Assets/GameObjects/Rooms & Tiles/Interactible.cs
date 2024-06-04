@@ -19,6 +19,7 @@ public abstract class Interactible : MonoBehaviour
     // Yes, there is one ! This is useful to quickly determine the distance of the Interactible to the player
     protected static GameObject _playerRef;
     protected static PlayerManager _playerManager;
+    [SerializeField] bool _isHiglightable = true;
 
     /* 
      PROPERTIES
@@ -39,8 +40,6 @@ public abstract class Interactible : MonoBehaviour
     /* 
      METHODS
     */
-    // !! IMPORTANT NOTE
-    //    All OnCollision...() methods need 1 of the 2 GameObject to have a RigidBody, NOT Kinematic, EVERY constraints ticked (if you want it unaffected by physics)
     virtual protected void OnTriggerEnter(Collider ARGcollider)
     {
         switch (ARGcollider.gameObject.tag)
@@ -99,25 +98,31 @@ public abstract class Interactible : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        // Adds the Outline component
-        Outline outlineComp = this.AddComponent<Outline>();
-        outlineComp.OutlineMode = Outline.Mode.OutlineAll;
-        outlineComp.OutlineColor = Color.green;
-        outlineComp.OutlineWidth = 4.7f;
+        if (_isHiglightable)
+        {
+            // Adds the Outline component
+            Outline outlineComp = this.AddComponent<Outline>();
+            outlineComp.OutlineMode = Outline.Mode.OutlineAll;
+            outlineComp.OutlineColor = Color.green;
+            outlineComp.OutlineWidth = 4.7f;
 
-        // Changes the PlayerManager state and tells it it should do a MouseHover check since what's under the mouse just changed
-        _playerManager.SetToState("InteractibleTargeting");
-        _playerManager.TriggerMouseHovering();
+            // Changes the PlayerManager state and tells it it should do a MouseHover check since what's under the mouse just changed
+            _playerManager.SetToState("InteractibleTargeting");
+            _playerManager.TriggerMouseHovering();
+        }
     }
     private void OnMouseExit()
     {
-        // Removes the Outline component
-        Outline outlineComp = this.GetComponent<Outline>();
-        if (outlineComp != null)
-            Destroy(outlineComp);
+        if (_isHiglightable)
+        {
+            // Removes the Outline component
+            Outline outlineComp = this.GetComponent<Outline>();
+            if (outlineComp != null)
+                Destroy(outlineComp);
 
-        // Restores the previous state
-        _playerManager.SetToLastState();
+            // Restores the previous state
+            _playerManager.SetToLastState();
+        }
     }
 
 

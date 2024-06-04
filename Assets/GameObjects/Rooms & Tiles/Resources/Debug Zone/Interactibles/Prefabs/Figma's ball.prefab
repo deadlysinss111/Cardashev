@@ -132,6 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62b8ca840667bd94ab2ad8d8005c6825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isHiglightable: 1
   _UeOnRaycastHit:
     m_PersistentCalls:
       m_Calls: []

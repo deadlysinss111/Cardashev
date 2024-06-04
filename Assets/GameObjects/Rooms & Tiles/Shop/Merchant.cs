@@ -10,7 +10,7 @@ public class Merchant : Interactible
     private new void Awake()
     {
         base.Awake();
-        _interface = GameObject.Find("ShopInterface");
+        _interface = GameObject.Find("Canvas").GetComponent<CanvasScript>()._shopInterface;
         _interface.SetActive(false);
         _RaycastHitDist = 4;
     }
@@ -36,7 +36,7 @@ public class Merchant : Interactible
             UnityEngine.Object CARD = Resources.Load(pool[Random.Range(0, pool.Count)]+"Model");
             GameObject cardObj = (GameObject)Instantiate(CARD);
             cardObj.transform.SetParent(_interface.transform, false);
-            cardObj.transform.localPosition = new Vector3(x, 100, 0);
+            cardObj.transform.localPosition = new Vector3(x, 100, 0.1f);
             cardObj.transform.localScale = new Vector3(5, 1, 5);
 
             // We set it's gold value
@@ -51,7 +51,7 @@ public class Merchant : Interactible
             priceTxt.text = amount.ToString();
             priceTxt.color = Color.red;
             priceTxt.fontSize = 200;
-            priceObj.transform.localPosition = new Vector3(x-5, 60, 0);
+            priceObj.transform.localPosition = new Vector3(x-5, 60, 0.1f);
 
             // We set the card as a collectible with a price
             cardComp.SetToCollectible(() =>

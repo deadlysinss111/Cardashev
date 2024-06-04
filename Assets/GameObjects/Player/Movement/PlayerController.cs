@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
@@ -33,6 +35,8 @@ public class PlayerController : MonoBehaviour
     bool _movementEnabled;
     Vector3 _virtualDestination;
 
+    List<NavMeshPath> _paths;
+
     // Initialization
      void Awake()
      {
@@ -42,6 +46,7 @@ public class PlayerController : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
         _pathPoints = new List<Vector3>();
         _input = new CustomActions();
+        _paths = new List<NavMeshPath>();
 
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
@@ -77,7 +82,9 @@ public class PlayerController : MonoBehaviour
         //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
         if (NavMesh.CalculatePath(manager._virtualPos, alteredPos, NavMesh.AllAreas,  path))
         {
-            TrailCalculator.DrawPath(path, ref _lineRenderer);
+            _paths.Add(path);
+            TrailCalculator.DrawPath(_paths, ref _lineRenderer);
+            _paths.Remove(path);
             _lastCalculatedWalkTime = GetPathTime(path);
         }
 
@@ -93,16 +100,26 @@ public class PlayerController : MonoBehaviour
 
     // Coroutine to wait for confirmation input
      void ApplyMovement()
-    {
-        ClearPath();
+     {
+        // We keep trail of the preview
+        NavMeshPath path = new NavMeshPath();
+        NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, _virtualDestination, NavMesh.AllAreas, path);
+        _paths.Add(path);
+        TrailCalculator.DrawPath(_paths, ref _lineRenderer);
+
+        //ClearPath();
 
         GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _virtualDestination;
 
+        // We stock the information so that the closure knows what to take
+        Vector3 vect = _virtualDestination;
+
+        // We need to dynamically create a card in order to subscribe it to the stack
         Card moveCard = new Card();
         moveCard._trigger += () =>
         {
-            _agent.destination = _virtualDestination;
-            StartCoroutine(UpdatePath());
+            _agent.destination = vect;
+            StartCoroutine(UpdatePath(path));
         };
         moveCard._duration = _lastCalculatedWalkTime;
 
@@ -110,15 +127,24 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("error in movement card generation");
         }
-    }
+     }
     
 
     // Coroutine to update the path as the agent moves
-     IEnumerator UpdatePath()
+     IEnumerator UpdatePath(NavMeshPath path)
     {
+        Vector3[] corners = path.corners;
+        Vector3[] newPath = new Vector3[corners.Length -1];
+        
+        
         // Wait for the agent to reach the destination
         while (_agent.pathPending || _agent.remainingDistance > _agent.stoppingDistance)
         {
+            for (int i = 1; i < corners.Length-1; i++)
+            {
+                newPath[i] = corners[i];
+            }
+
             // Update the path as the agent moves
             Vector3 playerPosition = transform.position;
             while (_pathPoints.Count > 0 && Vector3.Distance(playerPosition, _pathPoints[0]) < 0.1f)
@@ -134,7 +160,7 @@ public class PlayerController : MonoBehaviour
             }
             yield return null;
         }
-        ClearPath();
+        //ClearPath();
     }
 
     // Get the time to traverse the path

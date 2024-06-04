@@ -13,15 +13,80 @@ public static class TrailCalculator
     {
         List<Vector3> pathPoints = new List<Vector3>();
 
-        // Add the first point
-        //pathPoints.Add(transform.position);
-
         // Iterate through each segment between corners
         for (int i = 0; i < path.corners.Length - 1; i++)
         {
             // Get the start and end points of the segment
             Vector3 start = path.corners[i];
             Vector3 end = path.corners[i + 1];
+
+            //_lastCalculatedWalkTime = GetWalkTime(end);
+
+            // Interpolate points along the segment between start and end
+            int segments = Mathf.CeilToInt(Vector3.Distance(start, end) / 0.1f); // Adjust segment length as needed
+            for (int j = 0; j <= segments; j++)
+            {
+                // Calculate the point along the segment
+                float t = (float)j / segments;
+
+                // Add the point to the path points
+                Vector3 point = Vector3.Lerp(start, end, t);
+
+                // Project the point onto the NavMesh surface
+                pathPoints.Add(ProjectToNavMeshSurface(point));
+            }
+        }
+
+        // Set positions for the line renderer
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
+    }
+
+    static public void DrawPath(List<NavMeshPath> paths, ref LineRenderer lineRenderer)
+    {
+        List<Vector3> pathPoints = new List<Vector3>();
+
+        foreach (var path in paths)
+        {
+            // Iterate through each segment between corners
+            for (int i = 0; i < path.corners.Length - 1; i++)
+            {
+                // Get the start and end points of the segment
+                Vector3 start = path.corners[i];
+                Vector3 end = path.corners[i + 1];
+
+                //_lastCalculatedWalkTime = GetWalkTime(end);
+
+                // Interpolate points along the segment between start and end
+                int segments = Mathf.CeilToInt(Vector3.Distance(start, end) / 0.1f); // Adjust segment length as needed
+                for (int j = 0; j <= segments; j++)
+                {
+                    // Calculate the point along the segment
+                    float t = (float)j / segments;
+
+                    // Add the point to the path points
+                    Vector3 point = Vector3.Lerp(start, end, t);
+
+                    // Project the point onto the NavMesh surface
+                    pathPoints.Add(ProjectToNavMeshSurface(point));
+                }
+            }
+        }
+        // Set positions for the line renderer
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
+    }
+
+    static public void DrawPath(Vector3[] path, ref LineRenderer lineRenderer)
+    {
+        List<Vector3> pathPoints = new List<Vector3>();
+
+        // Iterate through each segment between corners
+        for (int i = 0; i < path.Length - 1; i++)
+        {
+            // Get the start and end points of the segment
+            Vector3 start = path[i];
+            Vector3 end = path[i + 1];
 
             //_lastCalculatedWalkTime = GetWalkTime(end);
 

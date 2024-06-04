@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ public class PlayerManager : MonoBehaviour
 
         _rightClick = () => { };
         _input.Main.LeftClick.performed += LeftClickMiddleware;
-        _input.Main.RightClick.performed += RightClickMiddleware ;
+        _input.Main.RightClick.performed += RightClickMiddleware;
     }
 
     private void OnDestroy()

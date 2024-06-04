@@ -12,7 +12,7 @@ public class MapNode : MonoBehaviour
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
-    string _linkedScene = "large empty area";
+    string _linkedScene = "Shop";
 
     private void Start()
     {
