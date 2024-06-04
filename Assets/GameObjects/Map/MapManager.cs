@@ -205,20 +205,24 @@ public class MapManager : MonoBehaviour
     {
         // Elite: 1-2/Zone
         int eliteToPlace = (Random.Range(0, 100) >= 50 ? 1 : 2);
-        for (int i = 0; i < _startingNodes.Count; i++)
+        //print(eliteToPlace);
+        
+        for (int pathNb = 0; pathNb < _startingNodes.Count; pathNb++)
         {
+            bool needToPlaceElite = true;
+            //print("======================== Next Path ========================");
             // Stores every rooms in this path, which will then be randomly placed along the path.
             List<RoomType> rooms = new List<RoomType>();
             // Rules: every path start with a Fight, at least 1 path has a Rest right before the Boss, then fill with the following ratios:
             // Shop: 1/path
             int shopToPlace = 1;
             // Rest: 75% -> 1/path + 25% -> 1/path
-            int restToPlace = 1 + (Random.Range(0, 100) >= 25 ? 0 : 1);
+            int restToPlace = 1;// + (Random.Range(0, 100) >= 25 ? 0 : 1);
             // remaining nodes are 50/50 Fights or Events
             int roomsToPlace = 0;
             // Current percentage to place a Fight room
             int fightPerc = 50;
-            MapNode curRoom = _startingNodes[i].GetComponent<MapNode>();
+            MapNode curRoom = _startingNodes[pathNb].GetComponent<MapNode>()._nextNodes[pathNb].GetComponent<MapNode>();
             while (curRoom.RoomType != RoomType.Boss)
             {
                 switch (curRoom.RoomType)
@@ -230,36 +234,78 @@ public class MapManager : MonoBehaviour
                         restToPlace--;
                         break;
                     case RoomType.Elite:
-                        eliteToPlace--;
+                        roomsToPlace--;
+                        break;
+                    case RoomType.Combat:
+                        roomsToPlace--;
+                        break;
+                    case RoomType.Event:
+                        roomsToPlace--;
                         break;
                 }
-                curRoom = curRoom._nextNodes[i].GetComponent<MapNode>();
+                curRoom = curRoom._nextNodes[pathNb].GetComponent<MapNode>();
                 roomsToPlace++;
             }
-            int fightEventToPlace = roomsToPlace - (shopToPlace + restToPlace + eliteToPlace);
+            /*print("roomsToPlace: " + roomsToPlace);
+            print("shopToPlace: " + shopToPlace);
+            print("restToPlace: " + restToPlace);
+            print("eliteToPlace: " + eliteToPlace);*/
+            int fightEventToPlace = roomsToPlace - Mathf.Clamp(shopToPlace, 0, 1) - Mathf.Clamp(restToPlace, 0, 1);
 
-            curRoom = _startingNodes[i].GetComponent<MapNode>();
-
-            // Place a Fight on the first room
-            curRoom.SetRoomTypeTo(RoomType.Combat);
-            fightEventToPlace--;
-            curRoom = curRoom._nextNodes[i].GetComponent<MapNode>();
-
-            while (curRoom.RoomType != RoomType.Boss)
+            while (shopToPlace > 0)
+            {
+                rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Shop);
+                shopToPlace--;
+            }
+            while (restToPlace > 0)
+            {
+                rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Rest);
+                restToPlace--;
+            }
+            while (fightEventToPlace > 0)
             {
                 if (Random.Range(0, 100) <= fightPerc)
                 {
-                    curRoom.SetRoomTypeTo(RoomType.Combat);
-                    fightPerc -= 15;
+                    if (needToPlaceElite && eliteToPlace > 0)
+                    {
+                        rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Elite);
+                        eliteToPlace--;
+                        needToPlaceElite = false;
+                    }
+                    else
+                    {
+                        rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Combat);
+                        fightPerc -= 15;
+                    }
                 }
                 else
                 {
-                    curRoom.SetRoomTypeTo(RoomType.Event);
+                    rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Event);
                     fightPerc += 15;
                 }
                 fightEventToPlace--;
-                curRoom = curRoom._nextNodes[Mathf.Clamp(i, 0, curRoom._nextNodes.Length - 1)].GetComponent<MapNode>();
             }
+
+            /*foreach (var item in rooms)
+            {
+                print("Room type: " + item);
+            }*/
+
+            // Place a Fight on the first room
+            _startingNodes[pathNb].GetComponent<MapNode>().SetRoomTypeTo(RoomType.Combat);
+            curRoom = _startingNodes[pathNb].GetComponent<MapNode>()._nextNodes[pathNb].GetComponent<MapNode>();
+
+            while (curRoom.RoomType != RoomType.Boss)
+            {
+                if (curRoom.RoomType == RoomType.None)
+                {
+                    curRoom.SetRoomTypeTo(rooms[0]);
+                    rooms.RemoveAt(0);
+                }
+                // WARNING TODO : CHECK
+                curRoom = curRoom._nextNodes[Mathf.Clamp(pathNb, 0, curRoom._nextNodes.Length - 1)].GetComponent<MapNode>();
+            }
+            //print("Remaining rooms: "+rooms.Count);
         }
     }
 
