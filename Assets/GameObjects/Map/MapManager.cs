@@ -30,7 +30,7 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
-        _mapGrid = GlobalInformations._mapNodes;
+        _mapGrid = GI._mapNodes;
 
         if (_mapGrid != null)
         {
@@ -50,7 +50,7 @@ public class MapManager : MonoBehaviour
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
 
         GenerateMap();
-        GlobalInformations._mapNodes = _mapGrid;
+        GI._mapNodes = _mapGrid;
     }
 
     void Update()

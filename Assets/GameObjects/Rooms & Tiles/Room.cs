@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
 // TODO: Optimize the code by using Resources.Load() only once per kind-of tile rather than for every instances of tile
@@ -17,8 +19,16 @@ public class Room : MonoBehaviour
     // Clarifies the Zone's type to pull the correct asset and match the aesthetic
     private ZoneType _zoneType = ZoneType.Debug;
 
-    // Essential structs
-    private static RoomPrefabEncyclopedia ROOM_ENCYCLOPEDIA;
+    // Essential struct
+    private static RoomPrefabEncyclopedia ROOM_ENCYCLOPEDIA = new RoomPrefabEncyclopedia
+    (
+        new Dictionary<ZoneType, string>
+        {
+            { ZoneType.Debug, "Debug" }
+        },
+        new Dictionary<string, RoomPrefabDesc>
+        { }
+    );
 
 
     /*
@@ -30,18 +40,16 @@ public class Room : MonoBehaviour
     /*
      EVENTS
     */
-    // Nothing for now
+    // Nothing yet
 
 
     /*
      METHODS
     */
-
-    // Should be triggered when the room is entered for the first time
-    public void OnEnterRoom(string ARGprefabName)
+    public void EnterRoom(/* prefab name comes from GI*/)
     {
         // Go find and instantiate the room prefab for the floor
-        GameObject roomPrefab = (GameObject)Resources.Load(ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + ARGprefabName);
+        GameObject roomPrefab = (GameObject)Resources.Load(ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + GI._prefabToLoad);
 
         // Prepares some GameObjects we'll need to instantiate quite a few times during this method
         GameObject gridTemplate = new GameObject();
@@ -85,14 +93,10 @@ public class Room : MonoBehaviour
 
         // TODO: Places Entities (ennemies and the like)
     }
-    // Should be triggered when the room is exited (after a death or an exit)
-    public void OnExitRoom()
+
+    public void ExitRoom()
     {
-        // Empties all Tilemaps from the Room Anchor
-        foreach (Transform child in this.transform)
-        {
-            Destroy(child.gameObject);
-        }
+        // Nothing until retrospective
     }
 
     // Generic method to get a child by name
@@ -127,28 +131,25 @@ public class Room : MonoBehaviour
 
     void Awake()
     {
-        // • Creates the RoomPrefabEncyclopedia for the Room class. This is done by filling 2 Dictionaries, and instantiating the struct.
-        // ! TODO: Fill the second Dictionary with actual data when we'll want to compose room with multiple prefabs
-        Dictionary<ZoneType, string> ZoneFolderName = new Dictionary<ZoneType, string>();
-        ZoneFolderName.Add(ZoneType.Debug, "Debug");
+        /* Old way of creating the Encyclopedias
+        Dictionary<ZoneType, string> ZoneFolderName = new Dictionary<ZoneType, string>
+        {
+            { ZoneType.Debug, "Debug"}
+        };
 
         Dictionary<string, RoomPrefabDesc> RoomBook = new Dictionary<string, RoomPrefabDesc>();
 
         ROOM_ENCYCLOPEDIA = new RoomPrefabEncyclopedia(ZoneFolderName, RoomBook);
+        */
 
-        _zoneType = ZoneType.Debug;
+        Debug.Log("Room awoken !");
+
+        // Loads the room the player entered and bakes its surface
+        EnterRoom();
+        NavMeshSurface surface = GameObject.Find("RoomAnchor").AddComponent<NavMeshSurface>();
+        surface.BuildNavMesh();
     }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log("Room Loading attempt...");
-            OnEnterRoom("TestRoom");
-        }
-        if(Input.GetKeyDown(KeyCode.L))
-        {
-            Debug.Log("Room Unloading attempt...");
-            OnExitRoom();
-        }
-    }
+
+
+    // CODE TO BE MOVED IN THE REWARD CLASS
 }

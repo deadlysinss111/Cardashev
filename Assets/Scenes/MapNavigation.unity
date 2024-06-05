@@ -338,7 +338,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 447b115b1bbc5a24b86c5331ad7e883d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _map: {fileID: 4979730516601424549, guid: 979c05eb0e229ea4fa3a0feb98eec3d2, type: 3}
+  _UeSceneChange:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1234773650
 Transform:
   m_ObjectHideFlags: 0
