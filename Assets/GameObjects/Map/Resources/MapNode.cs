@@ -21,14 +21,17 @@ public class MapNode : MonoBehaviour
     [NonSerialized] public GameObject _mapNode;
 
     public GameObject[] _nextNodes;
+    public MapBlocker _blocker;
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
     string _linkedScene = "large empty area";
+    bool _playerCameThrough;
 
-    private RoomType _roomType;
+    Color _defaultColor;
+    public RoomType _roomType;
     public RoomType RoomType
-    { 
+    {
         get => _roomType;
     }
     private int _uniqueNextNode;
@@ -48,6 +51,7 @@ public class MapNode : MonoBehaviour
         _roomType = RoomType.None;
         _mapNode = GetComponent<GameObject>();
         _isStartingNode = false;
+        _playerCameThrough = false;
     }
 
     public void AddNextNode(int index, GameObject node)
@@ -68,7 +72,6 @@ public class MapNode : MonoBehaviour
             if (!ReferenceEquals(item, node))
             {
                 _uniqueNextNode++;
-                print(_uniqueNextNode);
             }
         }
     }
@@ -107,14 +110,15 @@ public class MapNode : MonoBehaviour
 
     public void SelectNode()
     {
-        GetComponent<MeshRenderer>().material.color = Color.yellow;
-        GlobalInformations._prefabToLoadOnRoomEnter = _linkedScene;
-        SceneManager.LoadScene("TestLvl");
+        GetComponent<MeshRenderer>().material.color = Color.cyan;
+        _playerCameThrough = true;
+        //GlobalInformations._prefabToLoadOnRoomEnter = _linkedScene;
+        //SceneManager.LoadScene("TestLvl");
     }
 
     public void UnselectNode()
     {
-        GetComponent<MeshRenderer>().material.color = Color.blue;
+        GetComponent<MeshRenderer>().material.color = _defaultColor;
     }
 
     public void SetRoomTypeTo(RoomType roomType)
@@ -123,29 +127,36 @@ public class MapNode : MonoBehaviour
         switch (roomType)
         {
             case RoomType.Shop:
-                GetComponent<MeshRenderer>().material.color = Color.yellow;
+                SetDefaultColorTo(Color.yellow);
                 break;
             case RoomType.Boss:
-                GetComponent<MeshRenderer>().material.color = Color.black;
+                SetDefaultColorTo(Color.black);
                 break;
             case RoomType.Rest:
-                GetComponent<MeshRenderer>().material.color = Color.white;
+                SetDefaultColorTo(Color.white);
                 break;
             case RoomType.Event:
-                GetComponent<MeshRenderer>().material.color = Color.green;
+                SetDefaultColorTo(Color.green);
                 break;
             case RoomType.Combat:
-                GetComponent<MeshRenderer>().material.color = Color.red;
+                SetDefaultColorTo(Color.red);
                 break;
             case RoomType.Elite:
-                GetComponent<MeshRenderer>().material.color = Color.magenta;
+                SetDefaultColorTo(Color.magenta);
                 break;
 
         }
     }
 
+    void SetDefaultColorTo(Color defaultColor)
+    {
+        GetComponent<MeshRenderer>().material.color = defaultColor;
+        _defaultColor = defaultColor;
+    }
+
     public void LockNode()
     {
+        if (_playerCameThrough) return;
         GetComponent<MeshRenderer>().material.color = Color.grey;
     }
 }

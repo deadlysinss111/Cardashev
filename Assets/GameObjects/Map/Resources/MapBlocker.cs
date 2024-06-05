@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blocker : MonoBehaviour
+public class MapBlocker : MonoBehaviour
 {
     [SerializeField] private float _time;
     [SerializeField] private float _limit;
 
     private bool _isLocked;
-    bool IsLocked { get { return _isLocked; } }
+    public bool IsLocked { get => _isLocked; }
 
     public GameObject _door1;
     public GameObject _door2;
 
     private void Awake()
     {
-        _isLocked = false;
+        _isLocked = true;
     }
 
     // Update is called once per frame
