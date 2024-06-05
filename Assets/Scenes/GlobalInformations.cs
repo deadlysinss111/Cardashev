@@ -18,13 +18,11 @@ static public class GI
         Map,
     }
 
-    // Array that stores prefabs for each
-
     // Array that stores persistent GameObjects. Its size automatically fits the Enum size
     public static GameObject[] _persistentSceneContainers = new GameObject[Enum.GetNames(typeof(PersistentSceneContainer)).Length - 1];
 
     // Data needed for scene transition (Map --> Room)
-    static public string _prefabToLoadOnRoomEnter;
+    static public string _prefabToLoad;
     static public List<List<GameObject>> _mapNodes; // TODO check for removal
 
 

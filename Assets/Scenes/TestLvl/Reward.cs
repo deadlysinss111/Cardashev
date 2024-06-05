@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class OnLeaveRoom : MonoBehaviour
+public class Reward : MonoBehaviour
 {
     PlayerManager _manager;
     List<GameObject> _buttons;
@@ -19,6 +19,7 @@ public class OnLeaveRoom : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Awoken");
         _buttons = new List<GameObject>();
         _manager = GameObject.Find("Player").GetComponent<PlayerManager>();
     }
@@ -44,12 +45,9 @@ public class OnLeaveRoom : MonoBehaviour
         _leaveButton = GenerateItem(false);
         _leaveButton.transform.localPosition = new Vector3(0, -300, 0);
         _leaveButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Leave");
-        _leaveButton.GetComponent<Button>().onClick.AddListener(Leave);
-    }
-
-    void Leave()
-    {
-        SceneManager.LoadScene("MapNavigation");
+        _leaveButton.GetComponent<Button>().onClick.AddListener( () =>
+            { Loader loaderScript = GameObject.Find("Loader").GetComponent<Loader>();
+              loaderScript._UeSceneChange.Invoke("Room", "Map", LoadSceneMode.Single); });
     }
 
     void GenerateRewards()
@@ -120,6 +118,5 @@ public class OnLeaveRoom : MonoBehaviour
             card.GetComponent<Card>().SetToCollectible(() => { foreach (GameObject slot in cards) { Destroy(slot); }; _cardBG.SetActive(false); });
             cards[i] = card;
         }
-        
     }
 }

@@ -33,7 +33,7 @@ public class MapNode : MonoBehaviour
     {
         //print("Select Node");
         GetComponent<MeshRenderer>().material.color = Color.yellow;
-        GI._prefabToLoadOnRoomEnter = _linkedScene;
+        GI._prefabToLoad = _linkedScene;
         SceneManager.LoadScene("TestLvl");
     }
 
