@@ -8,6 +8,7 @@ using UnityEngine.AI;
 public static class TrailCalculator
 {
 
+    // -- DrawPath overloads below --
     // Draw the path using line renderer
     static public void DrawPath(NavMeshPath path, ref LineRenderer lineRenderer)
     {
@@ -109,6 +110,46 @@ public static class TrailCalculator
         lineRenderer.positionCount = pathPoints.Count;
         lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
     }
+
+    static public void DrawPath(List<Vector3[]> paths, ref LineRenderer lineRenderer)
+    {
+        List<Vector3> pathPoints = new List<Vector3>();
+
+        foreach (var path in paths)
+        {
+            // Iterate through each segment between corners
+            for (int i = 1; i < path.Length; i++)
+            {
+                // Get the start and end points of the segment
+                Vector3 start = path[i -1];
+                Vector3 end = path[i];
+
+                // Interpolate points along the segment between start and end
+                int segments = Mathf.CeilToInt(Vector3.Distance(start, end) / 0.1f); // Adjust segment length as needed
+                for (int j = 0; j <= segments; j++)
+                {
+                    // Calculate the point along the segment
+                    float t = (float)j / segments;
+
+                    // Add the point to the path points
+                    Vector3 point = Vector3.Lerp(start, end, t);
+
+                    // Project the point onto the NavMesh surface
+                    if (!float.IsNaN(point.x) && !float.IsNaN(point.y) && !float.IsNaN(point.z))
+                        Debug.Log(point.x);
+                        pathPoints.Add(ProjectToNavMeshSurface(point));
+                }
+            }
+        }
+        // Set positions for the line renderer
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
+    }
+
+    // --  DrawPath overloads above --
+
+
+
 
     // Project a point onto the NavMesh surface
     static public Vector3 ProjectToNavMeshSurface(Vector3 point)

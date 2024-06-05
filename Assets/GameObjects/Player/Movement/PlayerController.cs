@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
      NavMeshAgent _agent;
      Animator _animator;
      LineRenderer _lineRenderer;
+     LineRenderer _previewLineRenderer;
 
     [Header("Movement")]
     [SerializeField]  ParticleSystem _clickEffect;
@@ -35,18 +36,20 @@ public class PlayerController : MonoBehaviour
     bool _movementEnabled;
     Vector3 _virtualDestination;
 
-    List<NavMeshPath> _paths;
+    List<Vector3[]> _paths;
+    Vector3[] _previewPath;
 
     // Initialization
-     void Awake()
-     {
+    void Awake()
+    {
         // Loads in the fields useful data and references
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _lineRenderer = GetComponent<LineRenderer>();
+        _previewLineRenderer = GameObject.Find("RoomAnchor").GetComponent<LineRenderer>();
         _pathPoints = new List<Vector3>();
         _input = new CustomActions();
-        _paths = new List<NavMeshPath>();
+        _paths = new List<Vector3[]>();
 
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
@@ -82,9 +85,8 @@ public class PlayerController : MonoBehaviour
         //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
         if (NavMesh.CalculatePath(manager._virtualPos, alteredPos, NavMesh.AllAreas,  path))
         {
-            _paths.Add(path);
-            TrailCalculator.DrawPath(_paths, ref _lineRenderer);
-            _paths.Remove(path);
+            _previewPath = path.corners;
+            TrailCalculator.DrawPath(_previewPath, ref _previewLineRenderer);
             _lastCalculatedWalkTime = GetPathTime(path);
         }
 
@@ -104,7 +106,7 @@ public class PlayerController : MonoBehaviour
         // We keep trail of the preview
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, _virtualDestination, NavMesh.AllAreas, path);
-        _paths.Add(path);
+        _paths.Add(path.corners);
         TrailCalculator.DrawPath(_paths, ref _lineRenderer);
 
         //ClearPath();
@@ -114,12 +116,33 @@ public class PlayerController : MonoBehaviour
         // We stock the information so that the closure knows what to take
         Vector3 vect = _virtualDestination;
 
+        List<Vector3> slicedPath = new List<Vector3>();
+        
+        for(int i =0; i<path.corners.Length-1; i++)
+        {
+            Vector3 start = path.corners[i];
+            Vector3 end = path.corners[i+1];
+            int segments = Mathf.CeilToInt(Vector3.Distance(start, end) / 0.1f); // Adjust segment length as needed
+
+            for (int j = 0; j <= segments; j++)
+            {
+                // Calculate the point along the segment
+                float t = (float)j / segments;
+
+                // Add the point to the path points
+                Vector3 point = Vector3.Lerp(start, end, t);
+
+                // Project the point onto the NavMesh surface
+                slicedPath.Add(point);
+            }
+        }
+
         // We need to dynamically create a card in order to subscribe it to the stack
         Card moveCard = new Card();
         moveCard._trigger += () =>
         {
             _agent.destination = vect;
-            StartCoroutine(UpdatePath(path));
+            StartCoroutine(UpdatePath(slicedPath.ToArray()));
         };
         moveCard._duration = _lastCalculatedWalkTime;
 
@@ -131,36 +154,26 @@ public class PlayerController : MonoBehaviour
     
 
     // Coroutine to update the path as the agent moves
-     IEnumerator UpdatePath(NavMeshPath path)
+     IEnumerator UpdatePath(Vector3[] path)
     {
-        Vector3[] corners = path.corners;
-        Vector3[] newPath = new Vector3[corners.Length -1];
-        
-        
         // Wait for the agent to reach the destination
-        while (_agent.pathPending || _agent.remainingDistance > _agent.stoppingDistance)
+        //while (_agent.pathPending || _agent.remainingDistance > _agent.stoppingDistance)
+        while (path.Length > 1)
         {
-            for (int i = 1; i < corners.Length-1; i++)
+            if (Vector3.Magnitude(path[path.Length-1] - path[0]) > Vector3.Magnitude(path[path.Length-1] - GameObject.Find("Player").transform.position))
             {
-                newPath[i] = corners[i];
-            }
-
-            // Update the path as the agent moves
-            Vector3 playerPosition = transform.position;
-            while (_pathPoints.Count > 0 && Vector3.Distance(playerPosition, _pathPoints[0]) < 0.1f)
-            {
-                // Remove the first point if the player is close enough
-                _pathPoints.RemoveAt(0);
-
-                // Set positions for the line renderer
-                _lineRenderer.positionCount = _pathPoints.Count;
-
-                // Update the line renderer positions
-                _lineRenderer.SetPositions(_pathPoints.ToArray());
+                Vector3[] newPath = new Vector3[path.Length - 1];
+                for (int i = 0; i < path.Length - 1; i++)
+                {
+                    newPath[i] = path[i + 1];
+                }
+                path = newPath;
+                _paths[0] = path;
+                TrailCalculator.DrawPath(_paths, ref _lineRenderer);
             }
             yield return null;
         }
-        //ClearPath();
+        _paths.RemoveAt(0);
     }
 
     // Get the time to traverse the path
