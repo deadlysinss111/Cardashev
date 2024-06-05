@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,16 +11,23 @@ public class Collection : MonoBehaviour
     List<GameObject> _currentLocked;
 
     // temp way to let the player have cards we'd like to have it in some external files)
-    public static Dictionary<string, List<string>> _unlocked = new Dictionary<string, List<string>>()
+    public static Dictionary<string, List<string>> _unlocked = new()
     {
         { "brawler", new List<string>(){ "LaunchGrenade" } }
     };
-    public static Dictionary<string, List<string>> _locked;
+    public static Dictionary<string, List<Tuple<string, UnlockCondition>>> _locked = new()
+    {
+        { "brawler", new List<Tuple<string, UnlockCondition>>()
+        {
+            new Tuple<string, UnlockCondition>("Jeku", new UnlockCondition("jumps", 300))
+        }
+    };
 
     void Load(string toLoad)
     {
-        _unlocked = new Dictionary<string, List<string>>();
-        _locked = new Dictionary<string, List<string>>();
+        // Has no purpose other than resetting the dictionaries (for now)
+        //_unlocked = new Dictionary<string, List<string>>();
+        //_locked = new Dictionary<string, List<Tuple<string, UnlockCondition>>>();
 
         List<string> cards;
 
@@ -32,7 +40,15 @@ public class Collection : MonoBehaviour
             _currentUnlocked.Add(card);
         }
 
-        _locked.TryGetValue(toLoad, out cards);
+        List<Tuple<string, UnlockCondition>> lockedCards;
+        _locked.TryGetValue(toLoad, out lockedCards);
+
+        cards.Clear();
+        foreach (Tuple<string, UnlockCondition> locked in lockedCards)
+        {
+            cards.Add(locked.Item1);
+        }
+
         foreach(string target in cards)
         {
             UnityEngine.Object CARD = Resources.Load(target);
@@ -58,6 +74,7 @@ public class Collection : MonoBehaviour
         {
             _unlocked.Add(playerId, new List<string>());
         }
+        _locked[playerId].Remove(card);
         _unlocked[playerId].Add(card);
         return true;
     }
