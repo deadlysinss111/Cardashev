@@ -106,6 +106,8 @@ public class PlayerController : MonoBehaviour
         };
         moveCard._duration = _lastCalculatedWalkTime;
 
+        GlobalStats.UpdateStat("mouvements", 1);
+
         if (false == GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(moveCard))
         {
             Debug.Log("error in movement card generation");

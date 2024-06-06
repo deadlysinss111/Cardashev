@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Collection : MonoBehaviour
 {
@@ -18,8 +19,9 @@ public class Collection : MonoBehaviour
     public static Dictionary<string, List<Tuple<string, UnlockCondition>>> _locked = new()
     {
         { "brawler", new List<Tuple<string, UnlockCondition>>()
-        {
-            new Tuple<string, UnlockCondition>("Jeku", new UnlockCondition("jumps", 300))
+            {
+                new Tuple<string, UnlockCondition>("Jeku", new UnlockCondition("mouvements", 10))
+            }
         }
     };
 
@@ -43,6 +45,7 @@ public class Collection : MonoBehaviour
         List<Tuple<string, UnlockCondition>> lockedCards;
         _locked.TryGetValue(toLoad, out lockedCards);
 
+        // Fill the list with the name of the cards from the tuples
         cards.Clear();
         foreach (Tuple<string, UnlockCondition> locked in lockedCards)
         {
@@ -59,35 +62,95 @@ public class Collection : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Unlock a card of the playerId player
+    /// </summary>
+    /// <param name="playerId">The id of the player the card is for</param>
+    /// <param name="card">The card to unlock</param>
+    /// <returns></returns>
+    /// <exception cref="KeyNotFoundException"></exception>
     public static bool Unlock(string playerId, string card)
     {
         if (_locked.ContainsKey(playerId) == false)
         {
             throw new KeyNotFoundException("The playable character " + playerId + " doesn't exist.");
         }
-        if (_locked[playerId].Contains(card) == false)
+
+        List<Tuple<string, UnlockCondition>> cards;
+        if (_locked.TryGetValue(playerId, out cards))
         {
+            // tuple = cardName + Condition
+            foreach (var tuple in cards)
+            {
+                if (tuple.Item1.Equals(card))
+                {
+                    _locked[playerId].Remove(tuple);
+                    _unlocked[playerId].Add(card);
+                    return true;
+                }
+            }
             return false;
         }
-        _locked[playerId].Remove(card);
-        if (_unlocked.ContainsKey(playerId))
-        {
-            _unlocked.Add(playerId, new List<string>());
-        }
-        _locked[playerId].Remove(card);
-        _unlocked[playerId].Add(card);
         return true;
     }
+    /// <summary>
+    /// Unlock a card by trying to find its corresponding player
+    /// </summary>
+    /// <param name="card">The card to unlock</param>
+    /// <returns></returns>
+    public static bool Unlock(string card)
+    {
+        List<Tuple<string, UnlockCondition>> cards;
+        foreach (var playerId in _locked.Keys)
+        {
+            if (_locked.TryGetValue(playerId, out cards))
+            {
+                // tuple = cardName + Condition
+                foreach (var tuple in cards)
+                {
+                    if (tuple.Item1.Equals(card))
+                    {
+                        _locked[playerId].Remove(tuple);
+                        _unlocked[playerId].Add(card);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+        return false;
+    }
 
+    /// <summary>
+    /// Checks if a card of the playerId player is unlocked
+    /// </summary>
+    /// <param name="playerId">The id of the player the card is from</param>
+    /// <param name="card">The card to verify</param>
+    /// <returns></returns>
+    /// <exception cref="KeyNotFoundException"></exception>
     public static bool IsUnlocked(string playerId, string card)
     {
         if (_locked.ContainsKey(playerId) == false)
         {
             throw new KeyNotFoundException("The playable character " + playerId + " doesn't exist.");
         }
-        return _locked[playerId].Contains(card);
+        return _unlocked[playerId].Contains(card);
     }
-    
+    /// <summary>
+    /// Checks if a card is unlocked, trying to find its corresponding player
+    /// </summary>
+    /// <param name="card">The card to verify</param>
+    /// <returns></returns>
+    public static bool IsUnlocked(string card)
+    {
+        foreach (var playerId in _unlocked.Keys)
+        {
+            if (_unlocked[playerId].Contains(card))
+                return true;
+        }
+        return false;
+    }
+
     // All below values for positions are totally random and meant to be changed later on
     void Display()
     {
