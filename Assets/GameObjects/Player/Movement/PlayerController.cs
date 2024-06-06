@@ -10,8 +10,8 @@ using static UnityEngine.GraphicsBuffer;
 
 struct ANIMSTATES
 {
-    public const string IDLE = "IDLE";
-    public const string WALK = "WALK";
+    public const string IDLE = "Idle";
+    public const string WALK = "Walk";
 }
 
 public class PlayerController : MonoBehaviour
