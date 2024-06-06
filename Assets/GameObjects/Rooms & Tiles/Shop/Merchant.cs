@@ -7,11 +7,10 @@ public class Merchant : Interactible
 {
     GameObject _interface;
 
-    private new void Awake()
+    private void Start()
     {
-        base.Awake();
         _interface = GameObject.Find("Canvas").GetComponent<CanvasScript>()._shopInterface;
-        _interface.SetActive(false);
+        print(_interface.name);
         _RaycastHitDist = 4;
     }
 

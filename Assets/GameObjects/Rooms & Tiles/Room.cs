@@ -80,7 +80,7 @@ public class Room : MonoBehaviour
                         modelPath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/Prefabs/" + model.name;
                     else
                         modelPath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/" + model.name;
-                    //Debug.Log("Attempt to load the prefab " + modelPath);
+                    Debug.Log("Attempt to load the prefab " + modelPath);
                     Instantiate(Resources.Load(modelPath), model.transform.position, model.transform.rotation, newTilemap.transform);
                 }
             }
