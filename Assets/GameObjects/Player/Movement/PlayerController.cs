@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
@@ -36,7 +37,7 @@ public class PlayerController : MonoBehaviour
     bool _movementEnabled;
     Vector3 _virtualDestination;
 
-    List<Vector3[]> _paths;
+    List<List<Vector3>> _paths;
     Vector3[] _previewPath;
 
     // Initialization
@@ -49,7 +50,7 @@ public class PlayerController : MonoBehaviour
         _previewLineRenderer = GameObject.Find("RoomAnchor").GetComponent<LineRenderer>();
         _pathPoints = new List<Vector3>();
         _input = new CustomActions();
-        _paths = new List<Vector3[]>();
+        _paths = new List<List<Vector3>>();
 
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
@@ -106,7 +107,7 @@ public class PlayerController : MonoBehaviour
         // We keep trail of the preview
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, _virtualDestination, NavMesh.AllAreas, path);
-        _paths.Add(path.corners);
+        _paths.Add(path.corners.ToList());
         TrailCalculator.DrawPath(_paths, ref _lineRenderer);
 
         //ClearPath();
@@ -136,13 +137,14 @@ public class PlayerController : MonoBehaviour
                 slicedPath.Add(point);
             }
         }
+        slicedPath.Reverse();
 
         // We need to dynamically create a card in order to subscribe it to the stack
         Card moveCard = new Card();
         moveCard._trigger += () =>
         {
             _agent.destination = vect;
-            StartCoroutine(UpdatePath(slicedPath.ToArray()));
+            StartCoroutine(UpdatePath(slicedPath));
         };
         moveCard._duration = _lastCalculatedWalkTime;
 
@@ -154,31 +156,25 @@ public class PlayerController : MonoBehaviour
     
 
     // Coroutine to update the path as the agent moves
-     IEnumerator UpdatePath(Vector3[] path)
-    {
+     IEnumerator UpdatePath(List<Vector3> path)
+     {
         // Wait for the agent to reach the destination
-        //while (_agent.pathPending || _agent.remainingDistance > _agent.stoppingDistance)
-        while (path.Length > 1)
+        while (path.Count > 1)
         {
-            if (Vector3.Magnitude(path[path.Length-1] - path[0]) > Vector3.Magnitude(path[path.Length-1] - GameObject.Find("Player").transform.position))
+            if (Vector3.Magnitude(path[path.Count - 1] - GameObject.Find("Player").transform.position) > 0.1)
             {
-                Vector3[] newPath = new Vector3[path.Length - 1];
-                for (int i = 0; i < path.Length - 1; i++)
-                {
-                    newPath[i] = path[i + 1];
-                }
-                path = newPath;
+                path.RemoveAt(path.Count-1);
                 _paths[0] = path;
                 TrailCalculator.DrawPath(_paths, ref _lineRenderer);
             }
             yield return null;
         }
         _paths.RemoveAt(0);
-    }
+     }
 
     // Get the time to traverse the path
      float GetPathTime(NavMeshPath path)
-    {
+     {
         // Calculate the time to traverse the path
         float time = 0;
         for (int i = 0; i < path.corners.Length - 1; i++)
@@ -191,7 +187,7 @@ public class PlayerController : MonoBehaviour
             time += Vector3.Distance(start, end) / _agent.speed;
         }
         return time;
-    }
+     }
 
     // Clear the path from the line renderer
      public void ClearPath()
