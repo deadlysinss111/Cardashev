@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.U2D;
@@ -20,12 +21,14 @@ public class MapNode : MonoBehaviour
 {
     [NonSerialized] public GameObject _mapNode;
 
+    Animator _animator;
+
     public GameObject[] _nextNodes;
     public MapBlocker _blocker;
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
-    string _linkedScene = "large empty area";
+    //string _linkedScene = "large empty area";
     bool _playerCameThrough;
 
     Color _defaultColor;
@@ -42,7 +45,7 @@ public class MapNode : MonoBehaviour
 
     private void Awake()
     {
-        GetComponent<MeshRenderer>().material.color = Color.blue;        
+        _animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -107,11 +110,22 @@ public class MapNode : MonoBehaviour
         }
         return pathCount;
     }
+    public bool IsLockedByBlocker()
+    {
+        return _blocker && _blocker.IsLocked;
+    }
 
     public void SelectNode()
     {
         GetComponent<MeshRenderer>().material.color = Color.cyan;
         _playerCameThrough = true;
+
+        foreach (GameObject node in _nextNodes)
+        {
+            if (node == null) continue;
+            if (node.GetComponent<MapNode>().IsLockedByBlocker()) continue;
+            node.GetComponent<MapNode>().IsSelectable(true);
+        }
         //GlobalInformations._prefabToLoadOnRoomEnter = _linkedScene;
         //SceneManager.LoadScene("TestLvl");
     }
@@ -119,6 +133,11 @@ public class MapNode : MonoBehaviour
     public void UnselectNode()
     {
         GetComponent<MeshRenderer>().material.color = _defaultColor;
+        foreach (GameObject node in _nextNodes)
+        {
+            if (node == null) continue;
+            node.GetComponent<MapNode>().IsSelectable(false);
+        }
     }
 
     public void SetRoomTypeTo(RoomType roomType)
@@ -148,6 +167,11 @@ public class MapNode : MonoBehaviour
         }
     }
 
+    public void IsSelectable(bool value)
+    {
+        _animator.SetBool("CanBeSelected", value);
+    }
+
     void SetDefaultColorTo(Color defaultColor)
     {
         GetComponent<MeshRenderer>().material.color = defaultColor;
@@ -158,5 +182,16 @@ public class MapNode : MonoBehaviour
     {
         if (_playerCameThrough) return;
         GetComponent<MeshRenderer>().material.color = Color.grey;
+    }
+
+    private void OnMouseEnter()
+    {
+        if (!_animator.GetBool("MouseHover"))
+            _animator.SetBool("MouseHover", true);
+    }
+
+    private void OnMouseExit()
+    {
+        _animator.SetBool("MouseHover", false);
     }
 }

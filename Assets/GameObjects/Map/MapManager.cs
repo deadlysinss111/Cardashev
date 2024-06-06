@@ -30,10 +30,16 @@ public class MapManager : MonoBehaviour
     List<List<GameObject>> _mapGrid;
     GameObject _playerLocation; // TODO auto create this one and make it invisible at Start()
     GameObject _bossRoom;
+    CameraManager _cameraManager;
 
     // Miscenalious
     [SerializeField] LayerMask _clickableLayers;
     [SerializeField] float _BlockerProbability;
+
+    private void Awake()
+    {
+        _cameraManager = GetComponent<CameraManager>();
+    }
 
     void Start()
     {
@@ -46,7 +52,7 @@ public class MapManager : MonoBehaviour
         }
 
         _mapSizeX = 7;
-        _mapSizeY = 8;
+        _mapSizeY = 6; // Number of floors
 
         _mapGrid = new List<List<GameObject>>(_mapSizeX);
         _startingNodes = new List<GameObject>();
@@ -55,10 +61,10 @@ public class MapManager : MonoBehaviour
         MAP_PATH = (GameObject)Resources.Load("Map Path");
         BLOCKER  = (GameObject)Resources.Load("TimerDoor");
         // Generate an invisible starting node
-        _playerLocation = Instantiate(MAP_NODE).transform.gameObject;
+        _playerLocation = Instantiate(MAP_NODE);
         _playerLocation.GetComponent<MapNode>()._nextNodes = new GameObject[NUMBER_OF_PATH];
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
-
+        _playerLocation.GetComponent<MapNode>().SelectNode();
         GenerateMap();
         GlobalInformations._mapNodes = _mapGrid;
     }
@@ -81,6 +87,7 @@ public class MapManager : MonoBehaviour
         nodeToMoveTo.GetComponent<MapNode>().SelectNode();
         _playerLocation.GetComponent<MapNode>().UnselectNode();
         _playerLocation = nodeToMoveTo;
+        _cameraManager.MoveCamToNode(nodeToMoveTo);
     }
 
     void LockAllNodes()
@@ -100,7 +107,7 @@ public class MapManager : MonoBehaviour
         if (!firstCall) curNode.UnselectNode();
         foreach (GameObject nextNode in curNode._nextNodes)
         {
-            if (!nextNode) continue;
+            if (!nextNode || nextNode.GetComponent<MapNode>().IsLockedByBlocker()) continue;
             RecursiveUnlock(nextNode, false);
         }
     }
@@ -117,7 +124,7 @@ public class MapManager : MonoBehaviour
             {
                 if (ReferenceEquals(targetNode, nextNode))
                 {
-                    if (targetNode.GetComponent<MapNode>()._blocker && targetNode.GetComponent<MapNode>()._blocker.IsLocked) return;
+                    if (targetNode.GetComponent<MapNode>().IsLockedByBlocker()) return;
                     MovePlayerTo(targetNode);
                     LockAllNodes();
                     RecursiveUnlock(_playerLocation, true);
@@ -142,8 +149,11 @@ public class MapManager : MonoBehaviour
                 _mapGrid[i].Add(obj);
                 obj.GetComponent<MapNode>()._nextNodes = new GameObject[NUMBER_OF_PATH];
                 obj.transform.SetParent(mapObj, false);
-
                 obj.transform.localPosition = new Vector3(i * spaceBetweenNodes, 4, j * spaceBetweenNodes);
+                float moveAmplitude = 3f;
+                int rotAmplitude = 45;
+                obj.transform.position += new Vector3(Random.Range(-moveAmplitude, moveAmplitude + .1f), 0, 0);
+                obj.transform.rotation = Quaternion.AngleAxis(Random.Range(-rotAmplitude, rotAmplitude + 1), Vector3.up);
             }
         }
 
@@ -167,13 +177,14 @@ public class MapManager : MonoBehaviour
             _mapGrid[i][0].GetComponent<MapNode>()._startingXCoord = i;
             freeNodelist.Add(_mapGrid[i][0]);
         }
-        for (int y = 0; y < NUMBER_OF_PATH; y++)
+        for (int pathNb = 0; pathNb < NUMBER_OF_PATH; pathNb++)
         {
             int newStartCoordIndex = Random.Range(0, freeNodelist.Count);
             GameObject startingNode = freeNodelist[newStartCoordIndex];
             startingNode.GetComponent<MapNode>()._isStartingNode = true;
             startingNode.name = "Starting Node";
-            _playerLocation.GetComponent<MapNode>()._nextNodes[y] = startingNode;
+            _playerLocation.GetComponent<MapNode>()._nextNodes[pathNb] = startingNode;
+            startingNode.GetComponent<MapNode>().IsSelectable(true);
             _startingNodes.Add(startingNode);
             freeNodelist.RemoveAt(newStartCoordIndex);
         }
@@ -238,6 +249,17 @@ public class MapManager : MonoBehaviour
                     Destroy(_mapGrid[i][j]);
             }
         }
+
+        // Setting the position of the camera to the "center".
+        Vector3 centerPos = new Vector3(0, 0, 0);
+        foreach (GameObject node in _startingNodes)
+        {
+            centerPos += node.transform.position;
+        }
+        centerPos = centerPos / _startingNodes.Count;
+
+        _playerLocation.transform.position = centerPos;
+        _cameraManager.SetCamPos(centerPos, true);
 
         GiveTypeToRooms();
     }
