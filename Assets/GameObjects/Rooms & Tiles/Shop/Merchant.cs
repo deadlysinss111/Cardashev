@@ -10,7 +10,6 @@ public class Merchant : Interactible
     private void Start()
     {
         _interface = GameObject.Find("Canvas").GetComponent<CanvasScript>()._shopInterface;
-        print(_interface.name);
         _RaycastHitDist = 4;
     }
 
@@ -61,7 +60,6 @@ public class Merchant : Interactible
                     manager._goldAmount -= amount;
                     Destroy(cardObj);
                     Destroy(priceObj);
-                    print(manager._goldAmount);
                     return true;
                 }
                 return false;

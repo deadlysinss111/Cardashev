@@ -19,7 +19,6 @@ public class Reward : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Awoken");
         _buttons = new List<GameObject>();
         _manager = GameObject.Find("Player").GetComponent<PlayerManager>();
     }
