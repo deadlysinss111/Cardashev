@@ -16,11 +16,17 @@ public class Collection : MonoBehaviour
     {
         { "brawler", new List<string>(){ "LaunchGrenade" } }
     };
-    public static Dictionary<string, List<Tuple<string, UnlockCondition>>> _locked = new()
+    public static Dictionary<string, List<Tuple<string, List<UnlockCondition>>>> _locked = new()
     {
-        { "brawler", new List<Tuple<string, UnlockCondition>>()
+        { "brawler", new List<Tuple<string, List<UnlockCondition>>>()
             {
-                new Tuple<string, UnlockCondition>("Jeku", new UnlockCondition("mouvements", 10))
+                new Tuple<string, List<UnlockCondition>>(
+                    "Jeku",
+                    new(){
+                        new UnlockCondition("mouvements", 10),
+                        new UnlockCondition("jumps", 15),
+                    }
+                )
             }
         }
     };
@@ -42,12 +48,12 @@ public class Collection : MonoBehaviour
             _currentUnlocked.Add(card);
         }
 
-        List<Tuple<string, UnlockCondition>> lockedCards;
+        List<Tuple<string, List<UnlockCondition>>> lockedCards;
         _locked.TryGetValue(toLoad, out lockedCards);
 
         // Fill the list with the name of the cards from the tuples
         cards.Clear();
-        foreach (Tuple<string, UnlockCondition> locked in lockedCards)
+        foreach (Tuple<string, List<UnlockCondition>> locked in lockedCards)
         {
             cards.Add(locked.Item1);
         }
@@ -76,7 +82,7 @@ public class Collection : MonoBehaviour
             throw new KeyNotFoundException("The playable character " + playerId + " doesn't exist.");
         }
 
-        List<Tuple<string, UnlockCondition>> cards;
+        List<Tuple<string, List<UnlockCondition>>> cards;
         if (_locked.TryGetValue(playerId, out cards))
         {
             // tuple = cardName + Condition
@@ -100,7 +106,7 @@ public class Collection : MonoBehaviour
     /// <returns></returns>
     public static bool Unlock(string card)
     {
-        List<Tuple<string, UnlockCondition>> cards;
+        List<Tuple<string, List<UnlockCondition>>> cards;
         foreach (var playerId in _locked.Keys)
         {
             if (_locked.TryGetValue(playerId, out cards))

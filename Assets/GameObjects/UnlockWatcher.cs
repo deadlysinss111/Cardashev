@@ -37,11 +37,12 @@ public struct UnlockCondition
 /// </summary>
 public class UnlockWatcher : MonoBehaviour
 {
-    private static Dictionary<string, UnlockCondition> unlockables;
+    private static Dictionary<string, List<UnlockCondition>> unlockables;
     //GlobalStats _stats = GameObject.FindGameObjectWithTag("Player").GetComponent<GlobalStats>();
 
     private void Start()
     {
+        unlockables = new();
         foreach (var cardList in Collection._locked)
         {
             foreach(var card in cardList.Value)
@@ -55,19 +56,37 @@ public class UnlockWatcher : MonoBehaviour
     /// Defines a lambda function to listen to a specific stat
     /// </summary>
     /// <param name="tuple">The unlockable to define a listener for</param>
-    static void AddUnlockable(Tuple<string, UnlockCondition> tuple)
+    static void AddUnlockable(Tuple<string, List<UnlockCondition>> tuple)
     {
-        GlobalStats.ListenToStat(tuple.Item2._stat, () => {
-            Debug.Log("Listener Function");
-            if (tuple.Item2.IsComplete() && Collection.IsUnlocked(tuple.Item1) == false)
+        foreach (var cond in tuple.Item2)
+        {
+            GlobalStats.ListenToStat(cond._stat, () => {
+                Debug.Log("Listener Function");
+                if (AreCondComplete(tuple.Item1) && Collection.IsUnlocked(tuple.Item1) == false)
+                {
+                    Debug.Log($"Unlockable {tuple.Item1} get!");
+                    Collection.Unlock(tuple.Item1);
+                }
+                else
+                {
+                    Debug.Log("You got NOTHING! You LOSE! GOOD DAY SIR!");
+                }
+            });
+            if (unlockables.ContainsKey(tuple.Item1) == false)
             {
-                Debug.Log($"Unlockable {tuple.Item1} get!");
-                Collection.Unlock(tuple.Item1);
+                unlockables.Add(tuple.Item1, new List<UnlockCondition>());
             }
-            else
-            {
-                Debug.Log("You got NOTHING! You LOSE! GOOD DAY SIR!");
-            }
-        });
+            unlockables[tuple.Item1].Add(cond);
+        }
+    }
+
+    public static bool AreCondComplete(string card)
+    {
+        foreach (var cond in unlockables[card])
+        {
+            if (cond.IsComplete() == false)
+                return false;
+        }
+        return true;
     }
 }
