@@ -142,8 +142,6 @@ public class Room : MonoBehaviour
         ROOM_ENCYCLOPEDIA = new RoomPrefabEncyclopedia(ZoneFolderName, RoomBook);
         */
 
-        Debug.Log("Room awoken !");
-
         // Loads the room the player entered and bakes its surface
         EnterRoom();
         NavMeshSurface surface = GameObject.Find("RoomAnchor").AddComponent<NavMeshSurface>();
