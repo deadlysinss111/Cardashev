@@ -4,18 +4,18 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     // Could probably be used later
-    GameObject _player;
+    protected GameObject _player;
 
-    BasicEnemyHandler _enemyHandler;
-    [SerializeField] int _healthDanger;
+    protected BasicEnemyHandler _enemyHandler;
+    [SerializeField] protected int _healthDanger;
 
-    NavMeshAgent _agent;
-    EnemyDeckManager _enemyDeckManager;
+    protected NavMeshAgent _agent;
+    protected EnemyDeckManager _enemyDeckManager;
 
-    float _queueTimer;
+    protected float _queueTimer;
 
     void Start()
     {
@@ -32,39 +32,8 @@ public class EnemyController : MonoBehaviour
         _queueTimer -= Time.deltaTime;
         if(_queueTimer <= 0)
         {
-            int rdm = Random.Range(0, 2);
-            if (rdm == 0)
-            {
-                _queueTimer = DecidePath();
-            }
-            else if (rdm == 1)
-            {
-                _queueTimer = _enemyDeckManager.Play();
-            }
+            Act();
         }
-    }
-
-    float DecidePath()
-    {
-        Vector3 towardPlayer = _player.transform.position - transform.position;
-        
-
-        Vector3 dest;
-        if (_enemyHandler.Health <  _healthDanger)
-        {
-            Vector3 awayPlayer = transform.position - towardPlayer;
-            dest = RandomNavmeshLocation(4f, awayPlayer);
-            dest -= awayPlayer/2;
-        }
-        else
-        {
-            dest = RandomNavmeshLocation(4f, towardPlayer);
-            dest -= towardPlayer/2;
-        }
-        NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
-        _agent.SetDestination(dest);
-        return GetPathTime(path);
     }
 
     public Vector3 RandomNavmeshLocation(float radius, Vector3 pos)
@@ -80,7 +49,7 @@ public class EnemyController : MonoBehaviour
         return finalPosition;
     }
 
-    float GetPathTime(NavMeshPath path)
+    protected float GetPathTime(NavMeshPath path)
     {
         // Calculate the time to traverse the path
         float time = 0;
@@ -95,4 +64,7 @@ public class EnemyController : MonoBehaviour
         }
         return time;
     }
+
+    // Act is the location of the behaviour three
+    protected virtual void Act() { }
 }

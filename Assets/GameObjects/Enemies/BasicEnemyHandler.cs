@@ -19,7 +19,6 @@ public class BasicEnemyHandler : MonoBehaviour
     Dictionary<string, Action> _states;
     [NonSerialized] public string _defaultState;
 
-    // Start is called before the first frame update
     void Start()
     {
         _stats = GetComponent<StatManager>();
