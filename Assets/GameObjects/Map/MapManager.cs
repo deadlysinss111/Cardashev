@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Burst.CompilerServices;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Splines;
 using UnityEngine.U2D;
 using UnityEngine.XR;
 using static UnityEngine.GraphicsBuffer;
+using Random = UnityEngine.Random;
 
 public class MapManager : MonoBehaviour
 {
@@ -15,18 +19,29 @@ public class MapManager : MonoBehaviour
 
     // For map generation
     List<GameObject> _startingNodes;
+    int NUMBER_OF_PATH;
 
     // PREFABS
     GameObject MAP_NODE;
     GameObject MAP_PATH;
+    GameObject BLOCKER;
+    GameObject RADIOACTIVE_CLOUD;
+    [SerializeField] GameObject _radioactiveCloud;
     
     // For map navigation
     List<List<GameObject>> _mapGrid;
     GameObject _playerLocation; // TODO auto create this one and make it invisible at Start()
     GameObject _bossRoom;
+    CameraManager _cameraManager;
 
     // Miscenalious
     [SerializeField] LayerMask _clickableLayers;
+    [SerializeField] float _BlockerProbability;
+
+    private void Awake()
+    {
+        _cameraManager = GetComponent<CameraManager>();
+    }
 
     void Start()
     {
@@ -37,18 +52,22 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        _mapSizeX = 7;
-        _mapSizeY = 15;
+        NUMBER_OF_PATH = 6;
+        _mapSizeX = 8;
+        _mapSizeY = 10; // Number of floors
 
         _mapGrid = new List<List<GameObject>>(_mapSizeX);
         _startingNodes = new List<GameObject>();
 
         MAP_NODE = (GameObject)Resources.Load("Map Node");
         MAP_PATH = (GameObject)Resources.Load("Map Path");
+        BLOCKER  = (GameObject)Resources.Load("TimerDoor");
+        RADIOACTIVE_CLOUD = (GameObject)Resources.Load("Radioactive Cloud");
         // Generate an invisible starting node
-        _playerLocation = Instantiate(MAP_NODE).transform.gameObject;
+        _playerLocation = Instantiate(MAP_NODE);
+        _playerLocation.GetComponent<MapNode>()._nextNodes = new GameObject[NUMBER_OF_PATH];
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
-
+        _playerLocation.GetComponent<MapNode>().SelectNode();
         GenerateMap();
         GI._mapNodes = _mapGrid;
     }
@@ -58,6 +77,11 @@ public class MapManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             RaycastTarget();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            MoveCloud();
         }
 
         if (Input.GetKeyDown(KeyCode.G))
@@ -71,6 +95,29 @@ public class MapManager : MonoBehaviour
         nodeToMoveTo.GetComponent<MapNode>().SelectNode();
         _playerLocation.GetComponent<MapNode>().UnselectNode();
         _playerLocation = nodeToMoveTo;
+        _cameraManager.MoveCamToNode(nodeToMoveTo);
+    }
+
+    void LockAllNodes()
+    {
+        GameObject[] nodes = GameObject.FindGameObjectsWithTag("Map Node");
+        foreach (GameObject node in nodes)
+        {
+            if (ReferenceEquals(node, _bossRoom)) continue;
+            node.GetComponent<MapNode>().LockNode();
+        }
+    }
+
+    void RecursiveUnlock(GameObject node, bool firstCall)
+    {
+        MapNode curNode = node.GetComponent<MapNode>();
+        if (ReferenceEquals(curNode, _bossRoom)) return;
+        if (!firstCall) curNode.UnselectNode();
+        foreach (GameObject nextNode in curNode._nextNodes)
+        {
+            if (!nextNode || nextNode.GetComponent<MapNode>().IsLockedByBlocker()) continue;
+            RecursiveUnlock(nextNode, false);
+        }
     }
 
     void RaycastTarget()
@@ -80,15 +127,28 @@ public class MapManager : MonoBehaviour
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))
         {
             // Get the MapNode Component
-            GameObject curNode = hit.transform.gameObject;
+            GameObject targetNode = hit.transform.gameObject;
             foreach (GameObject nextNode in _playerLocation.GetComponent<MapNode>()._nextNodes)
             {
-                if (ReferenceEquals(curNode, nextNode))
+                if (ReferenceEquals(targetNode, nextNode))
                 {
-                    MovePlayerTo(curNode);
+                    if (targetNode.GetComponent<MapNode>().IsLockedByBlocker()) return;
+                    MovePlayerTo(targetNode);
+                    LockAllNodes();
+                    RecursiveUnlock(_playerLocation, true);
                     break;
                 }
             }
+        }
+    }
+
+    void MoveCloud()
+    {
+        RaycastHit hit;
+        // Use a Raycast to get the map node that was targeted
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))
+        {
+            _radioactiveCloud.GetComponent<GreenCloud>().MoveCloudTo(hit.transform.position);
         }
     }
 
@@ -96,7 +156,7 @@ public class MapManager : MonoBehaviour
     {
         Transform mapObj = GameObject.FindGameObjectsWithTag("Map Node Parent")[0].transform;
 
-        int spaceBetweenNodes = 5;
+        int spaceBetweenNodes = 8;
 
         for (int i = 0; i < _mapSizeX; i++)
         {
@@ -105,8 +165,13 @@ public class MapManager : MonoBehaviour
             {
                 GameObject obj = Instantiate(MAP_NODE);
                 _mapGrid[i].Add(obj);
+                obj.GetComponent<MapNode>()._nextNodes = new GameObject[NUMBER_OF_PATH];
                 obj.transform.SetParent(mapObj, false);
                 obj.transform.localPosition = new Vector3(i * spaceBetweenNodes, 4, j * spaceBetweenNodes);
+                float moveAmplitude = 3f;
+                int rotAmplitude = 45;
+                obj.transform.position += new Vector3(Random.Range(-moveAmplitude, moveAmplitude + .1f), 0, 0);
+                obj.transform.rotation = Quaternion.AngleAxis(Random.Range(-rotAmplitude, rotAmplitude + 1), Vector3.up);
             }
         }
 
@@ -114,6 +179,7 @@ public class MapManager : MonoBehaviour
         _bossRoom.transform.SetParent(mapObj, false);
         _bossRoom.transform.localPosition = new Vector3(_mapSizeX/2 * spaceBetweenNodes, 4, (_mapSizeY+1) * spaceBetweenNodes);
         _bossRoom.transform.localScale *= 2;
+        _bossRoom.GetComponent<MapNode>().SetRoomTypeTo(RoomType.Boss);
     }
 
     void GenerateMap()
@@ -129,88 +195,256 @@ public class MapManager : MonoBehaviour
             _mapGrid[i][0].GetComponent<MapNode>()._startingXCoord = i;
             freeNodelist.Add(_mapGrid[i][0]);
         }
-        for (int y = 0; y < 4; y++)
+        for (int pathNb = 0; pathNb < NUMBER_OF_PATH; pathNb++)
         {
             int newStartCoordIndex = Random.Range(0, freeNodelist.Count);
             GameObject startingNode = freeNodelist[newStartCoordIndex];
             startingNode.GetComponent<MapNode>()._isStartingNode = true;
             startingNode.name = "Starting Node";
-            _playerLocation.GetComponent<MapNode>()._nextNodes.Add(startingNode);
+            _playerLocation.GetComponent<MapNode>()._nextNodes[pathNb] = startingNode;
+            startingNode.GetComponent<MapNode>().IsSelectable(true);
             _startingNodes.Add(startingNode);
             freeNodelist.RemoveAt(newStartCoordIndex);
         }
 
-        // Flag just for putting a "Rest" room at the end of the first path
-        //bool isFirstPath = true;
         // Generating paths between each node
-        foreach (GameObject startingNode in _startingNodes)
+
+        int blockerToPlace = 2;
+        for (int nodeNb=0; nodeNb < _startingNodes.Count; nodeNb++)
         {
-            int x = startingNode.GetComponent<MapNode>()._startingXCoord;
+            // Flag for placing only 1 blocker per path
+            bool blockerWasPlaced = false;
+            int x = _startingNodes[nodeNb].GetComponent<MapNode>()._startingXCoord;
             for (int floorNb = 0; floorNb < _mapSizeY-1; floorNb++)
             {
-                int nextNodeXIndex = Random.Range(Mathf.Clamp(x - 1, 0, _mapSizeX - 1), Mathf.Clamp(x + 2, 0, _mapSizeX - 1));
-                nextNodeXIndex = ArePathsCrossing(x, floorNb, nextNodeXIndex);
-
+                int nextNodeXIndex;
+                if (floorNb == 0)
+                {
+                    nextNodeXIndex = x;
+                }
+                else
+                {
+                    List<int> availableX = new List<int>() { x };
+                    if (AvailableDirection(x, floorNb, x + 1, nodeNb))
+                    {
+                        availableX.Add(x + 1);
+                    }
+                    if (AvailableDirection(x, floorNb, x - 1, nodeNb))
+                    {
+                        availableX.Add(x - 1);
+                    }
+                    nextNodeXIndex = availableX[Random.Range(0, availableX.Count)];
+                }
                 GameObject nextNode = _mapGrid[nextNodeXIndex][floorNb + 1];
-                _mapGrid[x][floorNb].GetComponent<MapNode>()._nextNodes.Add(nextNode);
-
+                
+                _mapGrid[x][floorNb].GetComponent<MapNode>().AddNextNode(nodeNb, nextNode);
 
                 // WIP placing paths between nodes
-                CreatePathBetween(_mapGrid[x][floorNb], nextNode);
+                GameObject newPath = CreatePathBetween(_mapGrid[x][floorNb], nextNode);
+                if (_mapGrid[x][floorNb].GetComponent<MapNode>().UniqueNextNode >= 2 && blockerToPlace > 0 && !blockerWasPlaced)
+                {
+                    blockerToPlace--;
+                    blockerWasPlaced = true;
+                    //nextNode.GetComponent<MapNode>()._blocker = GenerateBlocker(newPath).GetComponent<MapBlocker>();
+                }
 
                 // Saving the x coordinate of the next node for the next iteration of the loop
                 x = nextNodeXIndex;
                 if (floorNb == _mapSizeY - 2)
                 {
-                    nextNode.GetComponent<MapNode>()._nextNodes.Add(_bossRoom);
+                    nextNode.GetComponent<MapNode>().AddNextNode(nodeNb, _bossRoom);
                     CreatePathBetween(nextNode, _bossRoom);
                 }
             }
-            //isFirstPath = false;
         }
 
-        // Disabling path-less nodes to make them invisible
+        // Destroying path-less nodes
         for (int i = 0; i < _mapSizeX; i++)
         {
             for (int j = 0; j < _mapSizeY; j++)
             {
-                if (_mapGrid[i][j].GetComponent<MapNode>()._nextNodes.Count == 0)
-                {
-                    _mapGrid[i][j].SetActive(false);
-                }
+                if (_mapGrid[i][j].GetComponent<MapNode>().UniqueNextNode == 0)
+                    Destroy(_mapGrid[i][j]);
             }
         }
+
+        // Setting the position of the camera to the "center".
+        Vector3 centerPos = new Vector3(0, 0, 0);
+        foreach (GameObject node in _startingNodes)
+        {
+            centerPos += node.transform.position;
+        }
+        centerPos = centerPos / _startingNodes.Count;
+
+        _playerLocation.transform.position = centerPos;
+        _cameraManager.SetCamPos(centerPos, true);
+
+        GiveTypeToRooms();
     }
 
-    void CreatePathBetween(GameObject node1, GameObject node2)
+    GameObject CreatePathBetween(GameObject node1, GameObject node2)
     {
         GameObject newPath = Instantiate(MAP_PATH);
         newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
-        newPath.GetComponent<MapPathScript>().SetPathPoints(node1, node2);
+
+        newPath.GetComponent<MeshRenderer>().material.color = Color.black;
+        Vector3 direction = node2.transform.position - node1.transform.position;
+
+        newPath.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+
+        float newZ = Vector3.Distance(node1.transform.position, node2.transform.position);
+        newPath.transform.localScale = new Vector3(.3f, .3f, newZ);
+
+        Vector3 pos1 = node1.transform.position;
+        Vector3 pos2 = node2.transform.position;
+
+        newPath.transform.position = new Vector3((pos1.x + pos2.x) / 2, (pos1.y + pos2.y) / 2, (pos1.z + pos2.z) / 2);
+        return newPath;
     }
 
-    int ArePathsCrossing(int x, int floor, int nextX)
+    void GiveTypeToRooms()
     {
-        if (x == nextX) return nextX;
-
-        List<int> correctedX = new List<int> { x };
-
-        foreach (GameObject node in _mapGrid[nextX][floor].GetComponent<MapNode>()._nextNodes)
+        // Elite: 1-2/Zone
+        int eliteToPlace = (Random.Range(0, 100) >= 50 ? 1 : 2);
+        //print(eliteToPlace);
+        
+        for (int pathNb = 0; pathNb < _startingNodes.Count; pathNb++)
         {
-            if (ReferenceEquals(node, _mapGrid[x][floor+1]))
+            bool needToPlaceElite = true;
+            //print("======================== Next Path ========================");
+            // Stores every rooms in this path, which will then be randomly placed along the path.
+            List<RoomType> rooms = new List<RoomType>();
+            // Rules: every path start with a Fight, at least 1 path has a Rest right before the Boss, then fill with the following ratios:
+            // Shop: 1/path
+            int shopToPlace = 1;
+            // Rest: 75% -> 1/path + 25% -> 1/path
+            int restToPlace = 1;// + (Random.Range(0, 100) >= 25 ? 0 : 1);
+            // remaining nodes are 50/50 Fights or Events
+            int roomsToPlace = 0;
+            // Current percentage to place a Fight room
+            int fightPerc = 50;
+            MapNode curRoom = _startingNodes[pathNb].GetComponent<MapNode>()._nextNodes[pathNb].GetComponent<MapNode>();
+            while (curRoom.RoomType != RoomType.Boss)
             {
-                correctedX.Add(nextX + 2 * (x < nextX ? -1 : 1));
-                if (Mathf.Round(correctedX[1] - x) > 1)
+                switch (curRoom.RoomType)
                 {
-                    return x;
+                    case RoomType.Shop:
+                        shopToPlace--;
+                        break;
+                    case RoomType.Rest:
+                        restToPlace--;
+                        break;
+                    case RoomType.Elite:
+                        roomsToPlace--;
+                        break;
+                    case RoomType.Combat:
+                        roomsToPlace--;
+                        break;
+                    case RoomType.Event:
+                        roomsToPlace--;
+                        break;
                 }
+                curRoom = curRoom._nextNodes[pathNb].GetComponent<MapNode>();
+                roomsToPlace++;
             }
+            /*print("roomsToPlace: " + roomsToPlace);
+            print("shopToPlace: " + shopToPlace);
+            print("restToPlace: " + restToPlace);
+            print("eliteToPlace: " + eliteToPlace);*/
+            int fightEventToPlace = roomsToPlace - Mathf.Clamp(shopToPlace, 0, 1) - Mathf.Clamp(restToPlace, 0, 1);
+
+            while (shopToPlace > 0)
+            {
+                rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Shop);
+                shopToPlace--;
+            }
+            while (restToPlace > 0)
+            {
+                rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Rest);
+                restToPlace--;
+            }
+            while (fightEventToPlace > 0)
+            {
+                if (Random.Range(0, 100) <= fightPerc)
+                {
+                    if (needToPlaceElite && eliteToPlace > 0)
+                    {
+                        rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Elite);
+                        eliteToPlace--;
+                        needToPlaceElite = false;
+                    }
+                    else
+                    {
+                        rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Combat);
+                        fightPerc -= 15;
+                    }
+                }
+                else
+                {
+                    rooms.Insert(Random.Range(0, rooms.Count + 1), RoomType.Event);
+                    fightPerc += 15;
+                }
+                fightEventToPlace--;
+            }
+
+            /*foreach (var item in rooms)
+            {
+                print("Room type: " + item);
+            }*/
+
+            // Place a Fight on the first room
+            _startingNodes[pathNb].GetComponent<MapNode>().SetRoomTypeTo(RoomType.Combat);
+            curRoom = _startingNodes[pathNb].GetComponent<MapNode>()._nextNodes[pathNb].GetComponent<MapNode>();
+
+            while (curRoom.RoomType != RoomType.Boss)
+            {
+                if (curRoom.RoomType == RoomType.None)
+                {
+                    curRoom.SetRoomTypeTo(rooms[0]);
+                    rooms.RemoveAt(0);
+                }
+                curRoom = curRoom._nextNodes[pathNb].GetComponent<MapNode>();
+            }
+            //print("Remaining rooms: "+rooms.Count);
+        }
+    }
+
+    bool AvailableDirection(int x, int floor, int nextX, int pathNb)
+    {
+        if (nextX >= _mapSizeX || nextX < 0)
+        {
+            return false;
         }
 
-        if (correctedX.Count == 1)
+        GameObject[] temp = _mapGrid[nextX][floor].GetComponent<MapNode>()._nextNodes;
+        foreach (GameObject item in temp)
         {
-            return nextX;
+            if (ReferenceEquals(item, _mapGrid[x][floor+1])) return false;
         }
-        return correctedX[Random.Range(0, 2)];
+
+        return true;
     }
+
+    /*GameObject GenerateBlocker(GameObject newPath)
+    {
+        //print("Added a blocker");
+        GameObject blocker = Instantiate(BLOCKER);
+        blocker.transform.SetParent(GameObject.FindGameObjectWithTag("Map Door Parent").transform, false);
+        Vector3 pos = newPath.transform.position;
+
+        Vector3 point1 = newPath.GetComponent<MapPathScript>()._spline[0].Position;
+        Vector3 point2 = newPath.GetComponent<MapPathScript>()._spline[1].Position;
+        Vector3 midpoint = (point1 + point2) / 2.0f;
+
+        float3 posE;
+        float3 tanE;
+        float3 upE;
+        if (newPath.GetComponent<MapPathScript>()._spline.Evaluate(0.5f, out posE, out tanE, out upE))
+        {
+            blocker.transform.position = pos + midpoint;
+            blocker.transform.rotation = Quaternion.LookRotation(new Vector3(tanE.x, tanE.y, tanE.z), new Vector3(upE.x, upE.y, upE.z));
+        }
+
+        return blocker;
+    }*/
 }

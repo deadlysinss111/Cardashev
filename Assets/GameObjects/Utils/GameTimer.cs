@@ -15,6 +15,11 @@ public class GameTimer : MonoBehaviour
         _timePassed = 0;
     }
 
+    private void OnDestroy()
+    {
+        GlobalInformations._gameTimer += _timePassed;
+    }
+
     void Update()
     {
         if (GameOverManager.Instance._inGameOver || _winScreen.GetComponent<WinManager>()._onWinScreen) return;
