@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[DefaultExecutionOrder(-9999)]
 public class GlobalStats : MonoBehaviour
 {
     UnityEvent Test;
 
-    private static Dictionary<string, UnityEvent> _eventCallers = new();
+    private readonly static Dictionary<string, UnityEvent> _eventCallers = new();
 
-    private static Dictionary<string, int> _statsInt = new();
+    private readonly static Dictionary<string, int> _statsInt = new();
 
     // Start is called before the first frame update
     void Start()
