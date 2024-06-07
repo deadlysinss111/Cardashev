@@ -25,6 +25,8 @@ public class MapManager : MonoBehaviour
     GameObject MAP_NODE;
     GameObject MAP_PATH;
     GameObject BLOCKER;
+    GameObject RADIOACTIVE_CLOUD;
+    [SerializeField] GameObject _radioactiveCloud;
     
     // For map navigation
     List<List<GameObject>> _mapGrid;
@@ -43,7 +45,6 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
-        NUMBER_OF_PATH = 4;
         _mapGrid = GlobalInformations._mapNodes;
 
         if (_mapGrid != null)
@@ -51,8 +52,9 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        _mapSizeX = 7;
-        _mapSizeY = 6; // Number of floors
+        NUMBER_OF_PATH = 6;
+        _mapSizeX = 8;
+        _mapSizeY = 10; // Number of floors
 
         _mapGrid = new List<List<GameObject>>(_mapSizeX);
         _startingNodes = new List<GameObject>();
@@ -60,6 +62,7 @@ public class MapManager : MonoBehaviour
         MAP_NODE = (GameObject)Resources.Load("Map Node");
         MAP_PATH = (GameObject)Resources.Load("Map Path");
         BLOCKER  = (GameObject)Resources.Load("TimerDoor");
+        RADIOACTIVE_CLOUD = (GameObject)Resources.Load("Radioactive Cloud");
         // Generate an invisible starting node
         _playerLocation = Instantiate(MAP_NODE);
         _playerLocation.GetComponent<MapNode>()._nextNodes = new GameObject[NUMBER_OF_PATH];
@@ -74,6 +77,11 @@ public class MapManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             RaycastTarget();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            MoveCloud();
         }
 
         if (Input.GetKeyDown(KeyCode.G))
@@ -131,6 +139,16 @@ public class MapManager : MonoBehaviour
                     break;
                 }
             }
+        }
+    }
+
+    void MoveCloud()
+    {
+        RaycastHit hit;
+        // Use a Raycast to get the map node that was targeted
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))
+        {
+            _radioactiveCloud.GetComponent<GreenCloud>().MoveCloudTo(hit.transform.position);
         }
     }
 
@@ -227,7 +245,7 @@ public class MapManager : MonoBehaviour
                 {
                     blockerToPlace--;
                     blockerWasPlaced = true;
-                    nextNode.GetComponent<MapNode>()._blocker = GenerateBlocker(newPath).GetComponent<MapBlocker>();
+                    //nextNode.GetComponent<MapNode>()._blocker = GenerateBlocker(newPath).GetComponent<MapBlocker>();
                 }
 
                 // Saving the x coordinate of the next node for the next iteration of the loop
@@ -268,7 +286,19 @@ public class MapManager : MonoBehaviour
     {
         GameObject newPath = Instantiate(MAP_PATH);
         newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
-        newPath.GetComponent<MapPathScript>().SetPathPoints(node1, node2);
+
+        newPath.GetComponent<MeshRenderer>().material.color = Color.black;
+        Vector3 direction = node2.transform.position - node1.transform.position;
+
+        newPath.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+
+        float newZ = Vector3.Distance(node1.transform.position, node2.transform.position);
+        newPath.transform.localScale = new Vector3(.3f, .3f, newZ);
+
+        Vector3 pos1 = node1.transform.position;
+        Vector3 pos2 = node2.transform.position;
+
+        newPath.transform.position = new Vector3((pos1.x + pos2.x) / 2, (pos1.y + pos2.y) / 2, (pos1.z + pos2.z) / 2);
         return newPath;
     }
 
@@ -395,7 +425,7 @@ public class MapManager : MonoBehaviour
         return true;
     }
 
-    GameObject GenerateBlocker(GameObject newPath)
+    /*GameObject GenerateBlocker(GameObject newPath)
     {
         //print("Added a blocker");
         GameObject blocker = Instantiate(BLOCKER);
@@ -416,5 +446,5 @@ public class MapManager : MonoBehaviour
         }
 
         return blocker;
-    }
+    }*/
 }

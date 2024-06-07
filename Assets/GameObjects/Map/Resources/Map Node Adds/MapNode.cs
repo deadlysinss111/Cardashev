@@ -62,7 +62,7 @@ public class MapNode : MonoBehaviour
         int emptyCheck = 0;
         foreach (GameObject item in _nextNodes)
             if (item == null) emptyCheck++;
-        if (emptyCheck == 4) _uniqueNextNode++;
+        if (emptyCheck == _nextNodes.Length) _uniqueNextNode++;
 
         _nextNodes[index] = node;
 
