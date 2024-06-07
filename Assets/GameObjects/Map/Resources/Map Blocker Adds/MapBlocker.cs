@@ -36,7 +36,7 @@ public class MapBlocker : MonoBehaviour
             return;
         }
 
-        scale = new(Mathf.Clamp01(GlobalInformations._gameTimer / _time)*_limit, 1, 1);
+        scale = new(Mathf.Clamp01(GI._gameTimer / _time)*_limit, 1, 1);
 
         _door1.transform.localScale = scale;
         _door2.transform.localScale = scale;

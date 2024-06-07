@@ -28,7 +28,7 @@ public class MapNode : MonoBehaviour
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
-    //string _linkedScene = "large empty area";
+    string _linkedScene = "large empty area";
     bool _playerCameThrough;
 
     Color _defaultColor;
@@ -126,8 +126,8 @@ public class MapNode : MonoBehaviour
             if (node.GetComponent<MapNode>().IsLockedByBlocker()) continue;
             node.GetComponent<MapNode>().IsSelectable(true);
         }
-        //GlobalInformations._prefabToLoadOnRoomEnter = _linkedScene;
-        //SceneManager.LoadScene("TestLvl");
+        GI._prefabToLoad = _linkedScene;
+        SceneManager.LoadScene("TestLvl");
     }
 
     public void UnselectNode()

@@ -27,7 +27,7 @@ public class MapManager : MonoBehaviour
     GameObject BLOCKER;
     GameObject RADIOACTIVE_CLOUD;
     [SerializeField] GameObject _radioactiveCloud;
-    
+
     // For map navigation
     List<List<GameObject>> _mapGrid;
     GameObject _playerLocation; // TODO auto create this one and make it invisible at Start()
@@ -61,7 +61,7 @@ public class MapManager : MonoBehaviour
 
         MAP_NODE = (GameObject)Resources.Load("Map Node");
         MAP_PATH = (GameObject)Resources.Load("Map Path");
-        BLOCKER  = (GameObject)Resources.Load("TimerDoor");
+        BLOCKER = (GameObject)Resources.Load("TimerDoor");
         RADIOACTIVE_CLOUD = (GameObject)Resources.Load("Radioactive Cloud");
         // Generate an invisible starting node
         _playerLocation = Instantiate(MAP_NODE);
@@ -177,7 +177,7 @@ public class MapManager : MonoBehaviour
 
         _bossRoom = Instantiate(MAP_NODE);
         _bossRoom.transform.SetParent(mapObj, false);
-        _bossRoom.transform.localPosition = new Vector3(_mapSizeX/2 * spaceBetweenNodes, 4, (_mapSizeY+1) * spaceBetweenNodes);
+        _bossRoom.transform.localPosition = new Vector3(_mapSizeX / 2 * spaceBetweenNodes, 4, (_mapSizeY + 1) * spaceBetweenNodes);
         _bossRoom.transform.localScale *= 2;
         _bossRoom.GetComponent<MapNode>().SetRoomTypeTo(RoomType.Boss);
     }
@@ -190,7 +190,7 @@ public class MapManager : MonoBehaviour
 
         // Starting nodes attribution
         List<GameObject> freeNodelist = new List<GameObject>();
-        for (int i = 1; i < _mapSizeX-1; i++)
+        for (int i = 1; i < _mapSizeX - 1; i++)
         {
             _mapGrid[i][0].GetComponent<MapNode>()._startingXCoord = i;
             freeNodelist.Add(_mapGrid[i][0]);
@@ -210,12 +210,12 @@ public class MapManager : MonoBehaviour
         // Generating paths between each node
 
         int blockerToPlace = 2;
-        for (int nodeNb=0; nodeNb < _startingNodes.Count; nodeNb++)
+        for (int nodeNb = 0; nodeNb < _startingNodes.Count; nodeNb++)
         {
             // Flag for placing only 1 blocker per path
             bool blockerWasPlaced = false;
             int x = _startingNodes[nodeNb].GetComponent<MapNode>()._startingXCoord;
-            for (int floorNb = 0; floorNb < _mapSizeY-1; floorNb++)
+            for (int floorNb = 0; floorNb < _mapSizeY - 1; floorNb++)
             {
                 int nextNodeXIndex;
                 if (floorNb == 0)
@@ -236,7 +236,7 @@ public class MapManager : MonoBehaviour
                     nextNodeXIndex = availableX[Random.Range(0, availableX.Count)];
                 }
                 GameObject nextNode = _mapGrid[nextNodeXIndex][floorNb + 1];
-                
+
                 _mapGrid[x][floorNb].GetComponent<MapNode>().AddNextNode(nodeNb, nextNode);
 
                 // WIP placing paths between nodes
@@ -307,7 +307,7 @@ public class MapManager : MonoBehaviour
         // Elite: 1-2/Zone
         int eliteToPlace = (Random.Range(0, 100) >= 50 ? 1 : 2);
         //print(eliteToPlace);
-        
+
         for (int pathNb = 0; pathNb < _startingNodes.Count; pathNb++)
         {
             bool needToPlaceElite = true;
@@ -419,7 +419,7 @@ public class MapManager : MonoBehaviour
         GameObject[] temp = _mapGrid[nextX][floor].GetComponent<MapNode>()._nextNodes;
         foreach (GameObject item in temp)
         {
-            if (ReferenceEquals(item, _mapGrid[x][floor+1])) return false;
+            if (ReferenceEquals(item, _mapGrid[x][floor + 1])) return false;
         }
 
         return true;

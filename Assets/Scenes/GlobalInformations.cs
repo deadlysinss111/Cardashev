@@ -10,6 +10,8 @@ static public class GI
 {
     [SerializeField] public static GameObject _mapPrefab;
 
+    static public float _gameTimer;
+
     // Misc stuff to avoid afternoons of "WHY ? WHY ? WHYYYYYY ? oh that's why."
     // When adding elements, never put any `=` anywhere or this will break the below array
     public enum PersistentSceneContainer
