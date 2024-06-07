@@ -11596,10 +11596,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1465837509893341099}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc270069adf68024aa328d45d9bc50b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 119fe8c67e7b1364b8ccb8bd201849fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _healthDanger: 30
+  _healthDanger: 20
+  _swipeZone: {fileID: 9203003672801310520, guid: 77995b837d8565040ab2b6a1602f163a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

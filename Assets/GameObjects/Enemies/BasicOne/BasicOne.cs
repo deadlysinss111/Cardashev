@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class BasicOne : Enemy
 {
+    [SerializeField] protected int _healthDanger;
+
     override protected void Act()
     {
         int rdm = Random.Range(0, 2);

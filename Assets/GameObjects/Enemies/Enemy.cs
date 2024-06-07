@@ -6,36 +6,42 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    // Could probably be used later
     protected GameObject _player;
 
     protected BasicEnemyHandler _enemyHandler;
-    [SerializeField] protected int _healthDanger;
 
     protected NavMeshAgent _agent;
     protected EnemyDeckManager _enemyDeckManager;
 
     protected float _queueTimer;
 
-    void Start()
+    protected GameObject _target;
+
+    protected bool _isMoving;
+
+    protected void Start()
     {
         _player = GameObject.Find("Player");
         _enemyHandler = GetComponent<BasicEnemyHandler>();
         _agent = GetComponent<NavMeshAgent>();
         _enemyDeckManager = GetComponent<EnemyDeckManager>();
+        _target = _player;
 
         _enemyHandler._virtualPos = _agent.transform.position;
     }
 
     void Update()
     {
+        CheckPlayerDistance();
+        // We update the timer, then if there is no action in progress, the enemy will decide to do something
         _queueTimer -= Time.deltaTime;
-        if(_queueTimer <= 0)
+        if (_queueTimer <= 0)
         {
             Act();
         }
     }
 
+    // Pick a random reachable position
     public Vector3 RandomNavmeshLocation(float radius, Vector3 pos)
     {
         Vector3 randomDirection = Random.insideUnitSphere * radius;
@@ -67,4 +73,17 @@ public class Enemy : MonoBehaviour
 
     // Act is the location of the behaviour three
     protected virtual void Act() { }
+
+    protected virtual void Move() { }
+
+    void CheckPlayerDistance()
+    {
+        // If the enemy is too close to the player, he will stop to move
+        if( _isMoving && Vector3.Magnitude(_target.transform.position - transform.position) < 2)
+        {
+            _agent.destination = transform.position;
+            _queueTimer = 0;
+            print("break");
+        }
+    }
 }
