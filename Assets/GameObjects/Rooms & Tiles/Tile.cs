@@ -21,4 +21,9 @@ public class Tile : MonoBehaviour
     {
         GetComponent<MeshRenderer>().material.color = _startcolor;
     }
+
+    public Vector3 GetDistanceFromPlayer()
+    {
+        return GameObject.Find("Player").transform.position - transform.position;
+    }
 }
