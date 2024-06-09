@@ -24,6 +24,12 @@ public class Spit : MonoBehaviour
                     manager._health -= 10;
                 }
             }
+            else // /!\ need to confirm if target is in topology 
+            {
+                RaycastHit hit;
+                Physics.Raycast(transform.position, Vector3.down, out hit);
+                Instantiate(Resources.Load("Debug Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, 0.6f, 0), Quaternion.identity);
+            }
         }
         Destroy(gameObject);
     }
