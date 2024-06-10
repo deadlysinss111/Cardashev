@@ -43,7 +43,7 @@ public class Ebouillantueur : Enemy
         }
         GameObject bullet = (GameObject)Instantiate(_bullet);
         bullet.transform.position = transform.position + new Vector3(0, 1, 0);
-        Vector3 velocity= TrailCalculator.BellCurveInititialVelocity(transform.position + new Vector3(0, 1, 0), _target.transform.position, 4);
+        Vector3 velocity= TrailCalculator.BellCurveInitialVelocity(transform.position + new Vector3(0, 1, 0), _target.transform.position, 4);
         bullet.GetComponent<Rigidbody>().velocity = velocity;
     }
 

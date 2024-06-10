@@ -88,7 +88,7 @@ public class Murlock : Enemy
         }
         // ANIM HERE
 
-        Vector3 velocity = TrailCalculator.BellCurveInititialVelocity(transform.position, _target.transform.position, 7);
+        Vector3 velocity = TrailCalculator.BellCurveInitialVelocity(transform.position, _target.transform.position, 7);
         gameObject.GetComponent<Rigidbody>().velocity = velocity;
 
         // Calculate the curve for the jump

@@ -304,9 +304,8 @@ public static class TrailCalculator
         }
     }
 
-    static public Vector3 BellCurveInititialVelocity(Vector3 startPoint, Vector3 endPoint, float apex)
+    static public Vector3 BellCurveInitialVelocity(Vector3 startPoint, Vector3 endPoint, float apex)
     {
-        float maxHeight = apex;
         float gravity = Physics.gravity.magnitude;
 
         // Calculate distance and direction
@@ -314,7 +313,7 @@ public static class TrailCalculator
         float horizontalDistance = new Vector3(direction.x, 0, direction.z).magnitude;
 
         // Calculate the initial vertical velocity to reach the desired max height
-        float vy0 = Mathf.Sqrt(2 * gravity * maxHeight);
+        float vy0 = Mathf.Sqrt(2 * gravity * apex);
 
         // Calculate the total time of flight (up and down)
         float timeToApex = vy0 / gravity;
@@ -328,5 +327,4 @@ public static class TrailCalculator
 
         return initialVelocity;
     }
-
 }

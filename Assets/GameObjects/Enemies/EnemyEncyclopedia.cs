@@ -39,7 +39,7 @@ static public class EnemyEncyclopedia
             Vector3 pos = target.transform.position;
             pos.y += 0.5f;
             grenade.GetComponent<Rigidbody>().transform.position = pos;
-            grenade.GetComponent<Rigidbody>().velocity = TrailCalculator.BellCurveInititialVelocity(grenade.GetComponent<Rigidbody>().transform.position, GameObject.Find("Player").transform.position, 5);
+            grenade.GetComponent<Rigidbody>().velocity = TrailCalculator.BellCurveInitialVelocity(grenade.GetComponent<Rigidbody>().transform.position, GameObject.Find("Player").transform.position, 5);
             return true;
         }, 2) },
     };
