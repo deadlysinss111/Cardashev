@@ -8,6 +8,11 @@ public class TirSimple : Card
 {
     byte _id;
 
+    // Temporary debug feature
+    List<Vector3> debugRayStart = new List<Vector3>();
+    List<Vector3> debugRayDir = new List<Vector3>();
+    List<Color> debugRayColor = new List<Color>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +24,14 @@ public class TirSimple : Card
     // Update is called once per frame
     void Update()
     {
-        
+        // Temporary debug feature
+        if (debugRayStart.Count > 0 && (debugRayStart.Count == debugRayDir.Count))
+        {
+            for (int i = 0; i < debugRayStart.Count; i++)
+            {
+                Debug.DrawRay(debugRayStart[i], debugRayDir[i], debugRayColor[i]);
+            }
+        }
     }
 
     void EnterAimState()
@@ -43,6 +55,7 @@ public class TirSimple : Card
 
     void SetGroundColor(Color color)
     {
+        print("Yeh");
         List<GameObject> floorTiles = GameObject.FindGameObjectsWithTag("TMTopology").ToList();
         foreach (GameObject topology in floorTiles)
         {
@@ -56,11 +69,44 @@ public class TirSimple : Card
 
     void FindSurrondingTiles(GameObject obj, int radius)
     {
-        GameObject floorTiles = GameObject.FindGameObjectsWithTag("TMTopology").ToList()[0];
+        print("FindSurrondingTiles");
+        /*GameObject floorTiles = GameObject.FindGameObjectsWithTag("TMTopology").ToList()[0];
         for (int i = 0; i < floorTiles.transform.childCount; i++)
         {
             GameObject tile = floorTiles.transform.GetChild(i).gameObject;
             //tile.GetComponent<Tile>().
+        }*/
+
+        Vector3[] dirs = {
+            Vector3.forward,
+            Vector3.back,
+            Vector3.right,
+            Vector3.left
+        };
+
+        // Add one to accomodates for the tile on the player feet
+        for (int i = 0; i <= radius; i++)
+        {
+            foreach (Vector3 dir in dirs)
+            {
+                Vector3 origin = GameObject.Find("Player").transform.position + dir * (i);
+
+                //print("Radius check - " + i);
+                RaycastHit hit;
+                if (Physics.Raycast(origin, Vector3.down, out hit))
+                {
+                    //Debug.DrawRay(origin, Vector3.down * hit.distance, Color.yellow);
+                    debugRayStart.Add(origin); debugRayDir.Add(Vector3.down * 1000); debugRayColor.Add(Color.yellow);
+                    Debug.Log("Did Hit " + hit.transform.gameObject.name);
+                    //hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 0, 1f);
+                }
+                else
+                {
+                    debugRayStart.Add(origin); debugRayDir.Add(Vector3.down * 1000); debugRayColor.Add(Color.red);
+                    //Debug.DrawRay(origin, Vector3.down * 1000, Color.red);
+                    Debug.Log("Did Hitn't");
+                }
+            }
         }
     }
 }
