@@ -195,6 +195,7 @@ public class PlayerController : MonoBehaviour
      public void ClearPath()
     {
         _lineRenderer.positionCount = 0;
+        _previewLineRenderer.positionCount = 0;
     }
 
     // Enable input actions
