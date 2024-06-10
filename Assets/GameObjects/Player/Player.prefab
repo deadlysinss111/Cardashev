@@ -2765,6 +2765,7 @@ GameObject:
   - component: {fileID: 543623654442305885}
   - component: {fileID: 8313256407998957317}
   - component: {fileID: 604694692948147374}
+  - component: {fileID: 6464739106140320865}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2991,6 +2992,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38c4f916bbfb3d347a6944a68dd18c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _goldAmount: 0
   _clickableLayers:
     serializedVersion: 2
     m_Bits: 1
@@ -3009,6 +3011,7 @@ MonoBehaviour:
   _health: 100
   _moveSpeed: 0
   _attack: 0
+  _armor: 0
 --- !u!136 &604694692948147374
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3024,14 +3027,41 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 0.5
+  m_Height: 1.8094412
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0.25}
+  m_Center: {x: 0, y: 0.9622944, z: 0.25}
+--- !u!54 &6464739106140320865
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004618558294402036}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &8040844273275877930
 GameObject:
   m_ObjectHideFlags: 0

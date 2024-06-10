@@ -1,14 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
-public class LaunchGrenade : Card
+public class JumpAndShockwave : Card
 {
     CustomActions _input;
     [SerializeField] LayerMask _clickableLayers;
@@ -16,9 +12,10 @@ public class LaunchGrenade : Card
 
     LineRenderer _lineRenderer;
 
-    Vector3 _grenadeInitVelocity;
+    Vector3 _initVelocity;
 
     GameObject _previwRadius;
+    Vector3 _lastDest;
 
     byte _id;
 
@@ -31,18 +28,19 @@ public class LaunchGrenade : Card
         _pathPoints = new List<Vector3>();
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         _id = 0;
-        while (manager.AddState("grenade"+_id.ToString(), EnterGrenadeState, ExitState) == false) _id++;
-        UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
+        while (manager.AddState("jumpAndShockwave" + _id.ToString(), EnterJumpShockwaveState, ExitState) == false) _id++;
+        UnityEngine.Object RADIUS = Resources.Load("RadiusJumpPreview");
         _previwRadius = (GameObject)Instantiate(RADIUS);
         _previwRadius.SetActive(false);
         _goldValue = 60;
+        _duration = 2;
     }
 
-    void EnterGrenadeState()
+    void EnterJumpShockwaveState()
     {
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
-        manager.SetLeftClickTo(FireGrenade);
-        manager.SetRightClickTo(()=> { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        manager.SetLeftClickTo(TriggerJump);
+        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(Preview);
         _previwRadius.SetActive(true);
     }
@@ -55,17 +53,24 @@ public class LaunchGrenade : Card
 
     public override void Effect()
     {
-        UnityEngine.Object GRENADE = Resources.Load("Grenade");
-        GameObject grenade = (GameObject)Instantiate(GRENADE);
-        grenade.GetComponent<Rigidbody>().transform.position = GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos + new Vector3(0, 1, 0);
-        grenade.GetComponent<Rigidbody>().velocity = _grenadeInitVelocity;
+        GameObject player = GameObject.Find("Player");
+
+        // We need to disable the agent and setting the RigidBody to movable (not kinematik) in order to be able to manipulate rigidbody's velocity
+        player.GetComponent<NavMeshAgent>().enabled = false;
+        player.GetComponent<Rigidbody>().isKinematic = false;
+
+        // The velocity is the last calcaulated one from the preview
+        player.GetComponent<Rigidbody>().velocity = _initVelocity;
+
+        // We need to set back the player to its normal state once it landed;
+        player.AddComponent<AgentBackAndShockwaveOnLanding>();
 
         base.Effect();
     }
 
     public override void ClickEvent()
     {
-        GameObject.Find("Player").GetComponent<PlayerManager>().SetToState("grenade" + _id.ToString());
+        GameObject.Find("Player").GetComponent<PlayerManager>().SetToState("jumpAndShockwave" + _id.ToString());
     }
 
     private void Preview()
@@ -76,15 +81,17 @@ public class LaunchGrenade : Card
         alteredPos.y += 0.5f;
 
         _previwRadius.transform.position = alteredPos;
+        _lastDest = alteredPos;
 
         Vector3 playerPos = manager._virtualPos;
-        _grenadeInitVelocity = TrailCalculator.BellCurveInitialVelocity(playerPos, alteredPos, 10.0f);
-        TrailCalculator.BellCurve(playerPos, _grenadeInitVelocity, ref _lineRenderer, out _pathPoints);
+        _initVelocity = TrailCalculator.BellCurveInitialVelocity(playerPos, alteredPos, 5.0f);
+        TrailCalculator.BellCurve(playerPos, _initVelocity, ref _lineRenderer, out _pathPoints);
     }
 
-    protected void FireGrenade()
+    protected void TriggerJump()
     {
         ClearPath();
+        GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _lastDest;
         GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
         // Trigger the card play event
         base.ClickEvent();
@@ -111,5 +118,4 @@ public class LaunchGrenade : Card
     {
         base.OnUpgrade();
     }
-
 }

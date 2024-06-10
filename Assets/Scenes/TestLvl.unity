@@ -2112,6 +2112,10 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 0.7299006
       objectReference: {fileID: 0}
+    - target: {fileID: 3148833222586391748, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7232163658981407054, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -7460,7 +7464,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1407585045}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d68f1e3cc49251c48a2f90c8403876b5, type: 3}
   m_Name: 

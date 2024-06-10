@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -189,7 +190,7 @@ public class PlayerManager : MonoBehaviour
         List<string> deck = new List<string>();
         for(int i=0; i < 4; i++) 
         {
-            deck.Add("LaunchGrenadeModel");
+            deck.Add("JumpModel");
         }
         return deck;
     }
