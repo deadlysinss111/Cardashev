@@ -134,12 +134,13 @@ public class Room : MonoBehaviour
     // Genric methods to get a parent recusively by name. Gift of ChatGPT
     public GameObject FindParentdRecursively(string ARGchildName)
     {
-        return INTERNALFindParentRec(this.transform, ARGchildName);
+        return INTERNALFindParentRec(transform, ARGchildName);
     }
 
     private GameObject INTERNALFindParentRec(Transform child, string ARGchildName)
     {
-        foreach (Transform parent in child)
+        Transform parent = child.parent;
+        if (parent != null)
         {
             if (parent.name == ARGchildName)
                 return parent.gameObject;
