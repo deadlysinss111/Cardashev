@@ -190,7 +190,7 @@ public class PlayerManager : MonoBehaviour
         List<string> deck = new List<string>();
         for(int i=0; i < 4; i++) 
         {
-            deck.Add("JumpModel");
+            deck.Add("LaunchGrenadeModel");
         }
         return deck;
     }
