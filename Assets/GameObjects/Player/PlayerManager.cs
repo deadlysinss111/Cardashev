@@ -14,7 +14,6 @@ public class PlayerManager : MonoBehaviour
     // In game visible fields
 
     [NonSerialized] public StatManager _health;
-<<<<<<< HEAD
     byte _ultimateProgression;
     public int _goldAmount;
 
@@ -22,14 +21,10 @@ public class PlayerManager : MonoBehaviour
 
 
     // Functional fields
-=======
-    private byte _ultimateProgression;
->>>>>>> A--Rebind
 
     [NonSerialized] public Vector3 _virtualPos;
     private PlayerInput _pInput;
 
-<<<<<<< HEAD
     string _currentState;
     string _lastState;
     Action _currentAction;
@@ -43,22 +38,16 @@ public class PlayerManager : MonoBehaviour
     [NonSerialized] public RaycastHit _lastHit;
     [SerializeField] LayerMask _clickableLayers;
 
-    PlayerManager() 
-=======
+    // Artifact from Amaury's branch
     [NonSerialized] public Coroutine _waitForConfirmationCoroutine;
-
-    private string _currentState;
-    private Action _currentAction;
-    private Dictionary<string, Action> _states;
-    [NonSerialized] public string _defaultState;
-
     private Func<UltiContext, bool> _ultimate;
-    private Action _mouseHover;
-    private Action _leftClick;
-    private Action _rightClick;
 
-    public PlayerManager()
->>>>>>> A--Rebind
+
+    /*
+     METHODS
+    */
+
+    PlayerManager() 
     {
         _states = new Dictionary<string, Action[]>();
         _defaultState = "movement";

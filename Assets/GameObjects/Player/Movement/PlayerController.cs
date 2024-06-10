@@ -17,50 +17,29 @@ public class PlayerController : MonoBehaviour
 {
     private CustomActions _input;
 
-<<<<<<< HEAD
      NavMeshAgent _agent;
      Animator _animator;
      LineRenderer _lineRenderer;
      LineRenderer _previewLineRenderer;
-=======
-    private NavMeshAgent _agent;
-    private Animator _animator;
-    private LineRenderer _lineRenderer;
->>>>>>> A--Rebind
 
     [Header("Movement")]
     [SerializeField] private ParticleSystem _clickEffect;
 
     [SerializeField] private LayerMask _clickableLayers;
 
-<<<<<<< HEAD
     float _lookRotationSpeed = 8f;
     List<Vector3> _pathPoints;
-=======
-    private float _lookRotationSpeed = 8f;
-    private List<Vector3> _pathPoints;
->>>>>>> A--Rebind
 
     private float _lastCalculatedWalkTime;
 
-<<<<<<< HEAD
     bool _movementEnabled;
     Vector3 _virtualDestination;
-=======
-    private bool _movementEnabled;
-
-    private Vector3 _virtualDestination;
->>>>>>> A--Rebind
 
     List<List<Vector3>> _paths;
     Vector3[] _previewPath;
 
     // Initialization
-<<<<<<< HEAD
     void Awake()
-=======
-    private void Awake()
->>>>>>> A--Rebind
     {
         // Loads in the fields useful data and references
         _agent = GetComponent<NavMeshAgent>();
@@ -85,7 +64,6 @@ public class PlayerController : MonoBehaviour
         manager.SetHoverTo(Preview);
     }
 
-<<<<<<< HEAD
     void ExitState()
     {
         ClearPath();
@@ -93,10 +71,6 @@ public class PlayerController : MonoBehaviour
 
      // Handle click to visualize the path
      void Preview()
-=======
-    // Handle click to visualize the path
-    private void Preview()
->>>>>>> A--Rebind
     {
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         // Crop the destination to the center of the target tile
@@ -152,7 +126,6 @@ public class PlayerController : MonoBehaviour
     }
 
     // Coroutine to wait for confirmation input
-<<<<<<< HEAD
      void ApplyMovement()
      {
         // We keep trail of the preview
@@ -162,11 +135,6 @@ public class PlayerController : MonoBehaviour
         TrailCalculator.DrawPath(_paths, ref _lineRenderer);
 
         //ClearPath();
-=======
-    private void ApplyMovement()
-    {
-        ClearPath();
->>>>>>> A--Rebind
 
         GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _virtualDestination;
 
@@ -210,20 +178,12 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("error in movement card generation");
         }
-<<<<<<< HEAD
      }
     
 
     // Coroutine to update the path as the agent moves
      IEnumerator UpdatePath(List<Vector3> path)
      {
-=======
-    }
-
-    // Coroutine to update the path as the agent moves
-    private IEnumerator UpdatePath()
-    {
->>>>>>> A--Rebind
         // Wait for the agent to reach the destination
         while (path.Count > 1)
         {
@@ -239,13 +199,8 @@ public class PlayerController : MonoBehaviour
      }
 
     // Get the time to traverse the path
-<<<<<<< HEAD
      float GetPathTime(NavMeshPath path)
      {
-=======
-    private float GetPathTime(NavMeshPath path)
-    {
->>>>>>> A--Rebind
         // Calculate the time to traverse the path
         float time = 0;
         for (int i = 0; i < path.corners.Length - 1; i++)
