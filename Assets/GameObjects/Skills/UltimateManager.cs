@@ -6,24 +6,33 @@ public class UltimateManager : MonoBehaviour
 {
     public Image _cooldown;
     public float _cooldownTime;
-    bool _isCooldown;
+    private bool _isCooldown;
 
-    CustomActions _controls;
+    [SerializeField]
+    private PlayerInput _pInput;
 
     private void Awake()
     {
-        _controls = new CustomActions();
-        _controls.Main.Ultimate.performed += ctx => UseUltimate();
+        
+        _pInput = GetComponent<PlayerInput>();
     }
 
     private void OnEnable()
     {
-        _controls.Enable();
+        
+        _pInput.actions["Ultimate"].performed += OnUltimatePerformed;
     }
 
     private void OnDisable()
     {
-        _controls.Disable();
+        
+        _pInput.actions["Ultimate"].performed -= OnUltimatePerformed;
+    }
+
+    private void OnUltimatePerformed(InputAction.CallbackContext context)
+    {
+        
+        UseUltimate();
     }
 
     public void UseUltimate()
@@ -40,6 +49,7 @@ public class UltimateManager : MonoBehaviour
     {
         if (_isCooldown)
         {
+            
             _cooldown.fillAmount += 1 / _cooldownTime * Time.deltaTime;
             if (_cooldown.fillAmount >= 1)
             {

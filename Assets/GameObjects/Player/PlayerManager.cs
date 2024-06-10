@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviour
     // In game visible fields
 
     [NonSerialized] public StatManager _health;
+<<<<<<< HEAD
     byte _ultimateProgression;
     public int _goldAmount;
 
@@ -21,10 +22,14 @@ public class PlayerManager : MonoBehaviour
 
 
     // Functional fields
+=======
+    private byte _ultimateProgression;
+>>>>>>> A--Rebind
 
     [NonSerialized] public Vector3 _virtualPos;
-    CustomActions _input;
+    private PlayerInput _pInput;
 
+<<<<<<< HEAD
     string _currentState;
     string _lastState;
     Action _currentAction;
@@ -39,16 +44,31 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] LayerMask _clickableLayers;
 
     PlayerManager() 
+=======
+    [NonSerialized] public Coroutine _waitForConfirmationCoroutine;
+
+    private string _currentState;
+    private Action _currentAction;
+    private Dictionary<string, Action> _states;
+    [NonSerialized] public string _defaultState;
+
+    private Func<UltiContext, bool> _ultimate;
+    private Action _mouseHover;
+    private Action _leftClick;
+    private Action _rightClick;
+
+    public PlayerManager()
+>>>>>>> A--Rebind
     {
         _states = new Dictionary<string, Action[]>();
         _defaultState = "movement";
         _currentState = "movement";
         _lastState = "movement";
     }
+
     private void Awake()
     {
-        _input = new CustomActions();
-        _input.Enable();
+        _pInput = GetComponent<PlayerInput>();
         _health = GetComponent<StatManager>();
         _deck = new List<Card>();
 
@@ -56,9 +76,14 @@ public class PlayerManager : MonoBehaviour
         _goldAmount = 100;
 
         _rightClick = () => { };
+<<<<<<< HEAD
         _input.Main.LeftClick.performed += LeftClickMiddleware;
         _input.Main.RightClick.performed += RightClickMiddleware;
     }
+=======
+        _pInput.actions["LeftClick"].performed += ctx => LeftClickMiddleware();
+        _pInput.actions["RightClick"].performed += ctx => _rightClick();
+>>>>>>> A--Rebind
 
     private void OnDestroy()
     {
@@ -71,17 +96,56 @@ public class PlayerManager : MonoBehaviour
         StartCoroutine(StartSimulation());
     }
 
+<<<<<<< HEAD
     //This state change function disable the previous control listener state and enable the new one
+=======
+    private void OnEnable()
+    {
+        // Enable the input actions when the object is enabled
+        _pInput.actions["Ultimate"].performed += OnUltimatePerformed;
+        _pInput.actions["LeftClick"].performed += OnLeftClickPerformed;
+        _pInput.actions["RightClick"].performed += OnRightClickPerformed;
+    }
+
+    private void OnDisable()
+    {
+        // Disable the input actions when the object is disabled
+        _pInput.actions["Ultimate"].performed -= OnUltimatePerformed;
+        _pInput.actions["LeftClick"].performed -= OnLeftClickPerformed;
+        _pInput.actions["RightClick"].performed -= OnRightClickPerformed;
+    }
+
+    private void OnUltimatePerformed(InputAction.CallbackContext context)
+    {
+        UseUltimate();
+    }
+
+    private void OnMouseHoverPerformed(InputAction.CallbackContext context)
+    {
+        _mouseHover();
+    }
+
+    private void OnLeftClickPerformed(InputAction.CallbackContext context)
+    {
+        LeftClickMiddleware();
+    }
+
+    private void OnRightClickPerformed(InputAction.CallbackContext context)
+    {
+        _rightClick();
+    }
+
+>>>>>>> A--Rebind
     public void SetLeftClickTo(Action target)
     {
         _leftClick = target;
     }
-    
+
     public void SetHoverTo(Action target)
     {
         _mouseHover = target;
     }
-    
+
     public void SetRightClickTo(Action target)
     {
         _rightClick = target;
@@ -120,7 +184,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool AddState(string name, Action enter, Action exit)
     {
-        if(_states.ContainsKey(name) == false)
+        if (_states.ContainsKey(name) == false)
         {
             Action[] buffer = new Action[2];
             buffer[0] = enter;
@@ -133,8 +197,12 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
+<<<<<<< HEAD
         Action[] func;
         if(_states.TryGetValue(name, out func))
+=======
+        if (_states.TryGetValue(name, out var func))
+>>>>>>> A--Rebind
         {
             _lastState = _currentState;
             Action[] exit;
@@ -147,21 +215,29 @@ public class PlayerManager : MonoBehaviour
         return false;
     }
 
+<<<<<<< HEAD
     public void SetToLastState()
     {
         SetToState(_lastState);
     }
 
+=======
+>>>>>>> A--Rebind
     public void SetToDefault()
     {
         SetToState(_defaultState);
     }
 
-    // We wait for every states to be added to the state machine and we set the default state
-    IEnumerator StartSimulation()
+    // We wait for every state to be added to the state machine and we set the default state
+    private IEnumerator StartSimulation()
     {
+<<<<<<< HEAD
         int offset = 3;
         while(offset-- == 0)
+=======
+        int offset = 2;
+        while (offset-- > 0)
+>>>>>>> A--Rebind
         {
             yield return null;
         }
@@ -170,7 +246,7 @@ public class PlayerManager : MonoBehaviour
 
     public void UseUltimate()
     {
-        if(_ultimateProgression >= 100)
+        if (_ultimateProgression >= 100)
         {
             Idealist._ultimate();
             _ultimateProgression = 0;
@@ -187,7 +263,7 @@ public class PlayerManager : MonoBehaviour
     public List<string> GetDeck()
     {
         List<string> deck = new List<string>();
-        for(int i=0; i < 4; i++) 
+        for (int i = 0; i < 4; i++)
         {
             deck.Add("LaunchGrenadeModel");
         }
