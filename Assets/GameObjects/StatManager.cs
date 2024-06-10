@@ -46,7 +46,7 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
-        _health = 1;
+        _health = 100;
         _baseHealth = _health;
         _moveSpeed = 1.5f;
         _baseMoveSpeed = _moveSpeed;
@@ -108,6 +108,7 @@ public class StatManager : MonoBehaviour
     public void TakeDamage(int amount)
     {
         _health -= amount;
+        print(_health);
     }
 
     public void Heal(int amount)

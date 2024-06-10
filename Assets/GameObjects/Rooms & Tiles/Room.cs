@@ -81,6 +81,8 @@ public class Room : MonoBehaviour
                     else
                         modelPath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/" + model.name;
                     //Debug.Log("Attempt to load the prefab " + modelPath);
+
+                    // We use the MODEL to get the local position of the object, and the model for the global transform
                     GameObject MODEL = (GameObject)Resources.Load(modelPath);
                     Instantiate(MODEL, model.transform.position + MODEL.transform.position , model.transform.rotation, newTilemap.transform);
                 }
@@ -123,6 +125,26 @@ public class Room : MonoBehaviour
                 return child.gameObject;
 
             GameObject result = INTERNALFindChildRec(child, ARGchildName);
+            if (result != null)
+                return result;
+        }
+        return null;
+    }
+
+    // Genric methods to get a parent recusively by name. Gift of ChatGPT
+    public GameObject FindParentdRecursively(string ARGchildName)
+    {
+        return INTERNALFindParentRec(this.transform, ARGchildName);
+    }
+
+    private GameObject INTERNALFindParentRec(Transform child, string ARGchildName)
+    {
+        foreach (Transform parent in child)
+        {
+            if (parent.name == ARGchildName)
+                return parent.gameObject;
+
+            GameObject result = INTERNALFindParentRec(parent, ARGchildName);
             if (result != null)
                 return result;
         }

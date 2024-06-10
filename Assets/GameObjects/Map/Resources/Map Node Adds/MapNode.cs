@@ -126,8 +126,11 @@ public class MapNode : MonoBehaviour
             if (node.GetComponent<MapNode>().IsLockedByBlocker()) continue;
             node.GetComponent<MapNode>().IsSelectable(true);
         }
-        GI._prefabToLoad = _linkedScene;
-        SceneManager.LoadScene("TestLvl");
+        if(gameObject.name != "Original Node")
+        {
+            GI._prefabToLoad = _linkedScene;
+            SceneManager.LoadScene("TestLvl");
+        }
     }
 
     public void UnselectNode()

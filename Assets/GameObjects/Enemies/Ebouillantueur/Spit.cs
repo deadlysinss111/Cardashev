@@ -24,7 +24,7 @@ public class Spit : MonoBehaviour
                     manager._health -= 10;
                 }
             }
-            else // /!\ need to confirm if target is in topology 
+            else if(FindParentdRecursively(c.gameObject.transform, "Topology") != null)
             {
                 RaycastHit hit;
                 Physics.Raycast(transform.position, Vector3.down, out hit);
@@ -32,5 +32,26 @@ public class Spit : MonoBehaviour
             }
         }
         Destroy(gameObject);
+    }
+
+    // Genric methods to get a parent recusively by name. Gift of ChatGPT
+    public GameObject FindParentdRecursively(Transform target,string ARGchildName)
+    {
+        return INTERNALFindParentRec(target, ARGchildName);
+    }
+
+    private GameObject INTERNALFindParentRec(Transform child, string ARGchildName)
+    {
+        Transform parent = child.parent;
+        if (parent != null)
+        {
+            if (parent.name == ARGchildName)
+                return parent.gameObject;
+
+            GameObject result = INTERNALFindParentRec(parent, ARGchildName);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 }

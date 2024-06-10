@@ -24,7 +24,7 @@ public struct UnlockCondition
     public bool IsComplete()
     {
         //GlobalStats _stats = GameObject.FindGameObjectWithTag("Player").GetComponent<GlobalStats>();
-        Debug.Log($"Checking if {_stat} ({GlobalStats.GetStat(_stat)}) is equal to {_successValue}...");
+        //Debug.Log($"Checking if {_stat} ({GlobalStats.GetStat(_stat)}) is equal to {_successValue}...");
         bool cond = GlobalStats.GetStat(_stat) >= _successValue;
         if (_reverse)
             cond = !cond;
@@ -61,7 +61,7 @@ public class UnlockWatcher : MonoBehaviour
         foreach (var cond in tuple.Item2)
         {
             GlobalStats.ListenToStat(cond._stat, () => {
-                Debug.Log("Listener Function");
+                //Debug.Log("Listener Function");
                 if (AreCondComplete(tuple.Item1) && Collection.IsUnlocked(tuple.Item1) == false)
                 {
                     Debug.Log($"Unlockable {tuple.Item1} get!");
@@ -69,7 +69,7 @@ public class UnlockWatcher : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("You got NOTHING! You LOSE! GOOD DAY SIR!");
+                    //Debug.Log("You got NOTHING! You LOSE! GOOD DAY SIR!");
                 }
             });
             if (unlockables.ContainsKey(tuple.Item1) == false)
