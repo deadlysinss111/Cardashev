@@ -31,6 +31,7 @@ public class StatManager : MonoBehaviour
     private float _baseMoveSpeed;
     public float _attack;
     private float _baseAttack;
+    public int _armor;
 
     bool _wasJustModified;
 
@@ -102,5 +103,22 @@ public class StatManager : MonoBehaviour
         }
 
         _wasJustModified = false;
+    }
+
+    public void TakeDamage(int amount)
+    {
+        _health -= amount;
+    }
+
+    public void Heal(int amount)
+    {
+        if(_health+amount > _baseHealth)
+        {
+            _health = _baseHealth;
+        }
+        else
+        {
+            _health += amount;
+        }
     }
 }

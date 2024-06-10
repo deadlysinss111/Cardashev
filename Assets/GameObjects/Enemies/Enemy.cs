@@ -4,69 +4,44 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    // Could probably be used later
-    GameObject _player;
+    protected GameObject _player;
 
-    BasicEnemyHandler _enemyHandler;
-    [SerializeField] int _healthDanger;
+    protected BasicEnemyHandler _enemyHandler;
 
-    NavMeshAgent _agent;
-    EnemyDeckManager _enemyDeckManager;
+    protected NavMeshAgent _agent;
+    protected EnemyDeckManager _enemyDeckManager;
 
-    float _queueTimer;
+    protected float _queueTimer;
 
-    void Start()
+    protected GameObject _target;
+
+    protected bool _isMoving;
+
+    protected void Start()
     {
         _player = GameObject.Find("Player");
         _enemyHandler = GetComponent<BasicEnemyHandler>();
         _agent = GetComponent<NavMeshAgent>();
         _enemyDeckManager = GetComponent<EnemyDeckManager>();
+        _target = _player;
 
         _enemyHandler._virtualPos = _agent.transform.position;
     }
 
     void Update()
     {
+        CheckPlayerDistance();
+        // We update the timer, then if there is no action in progress, the enemy will decide to do something
         _queueTimer -= Time.deltaTime;
-        if(_queueTimer <= 0)
+        if (_queueTimer <= 0)
         {
-            int rdm = Random.Range(0, 2);
-            if (rdm == 0)
-            {
-                _queueTimer = DecidePath();
-            }
-            else if (rdm == 1)
-            {
-                _queueTimer = _enemyDeckManager.Play();
-            }
+            Act();
         }
     }
 
-    float DecidePath()
-    {
-        Vector3 towardPlayer = _player.transform.position - transform.position;
-        
-
-        Vector3 dest;
-        if (_enemyHandler.Health <  _healthDanger)
-        {
-            Vector3 awayPlayer = transform.position - towardPlayer;
-            dest = RandomNavmeshLocation(4f, awayPlayer);
-            dest -= awayPlayer/2;
-        }
-        else
-        {
-            dest = RandomNavmeshLocation(4f, towardPlayer);
-            dest -= towardPlayer/2;
-        }
-        NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
-        _agent.SetDestination(dest);
-        return GetPathTime(path);
-    }
-
+    // Pick a random reachable position
     public Vector3 RandomNavmeshLocation(float radius, Vector3 pos)
     {
         Vector3 randomDirection = Random.insideUnitSphere * radius;
@@ -80,7 +55,7 @@ public class EnemyController : MonoBehaviour
         return finalPosition;
     }
 
-    float GetPathTime(NavMeshPath path)
+    protected float GetPathTime(NavMeshPath path)
     {
         // Calculate the time to traverse the path
         float time = 0;
@@ -94,5 +69,21 @@ public class EnemyController : MonoBehaviour
             time += Vector3.Distance(start, end) / _agent.speed;
         }
         return time;
+    }
+
+    // Act is the location of the behaviour three
+    protected virtual void Act() { }
+
+    protected virtual void Move() { }
+
+    void CheckPlayerDistance()
+    {
+        // If the enemy is too close to the player, he will stop to move
+        if( _isMoving && Vector3.Magnitude(_target.transform.position - transform.position) < 2)
+        {
+            _agent.destination = transform.position;
+            _queueTimer = 0;
+            print("break");
+        }
     }
 }
