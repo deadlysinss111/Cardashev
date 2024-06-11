@@ -4,48 +4,48 @@ using UnityEngine;
 
 public class SelectableArea : MonoBehaviour
 {
-    public List<string> ignoreLayerList = new() { 
+    public List<string> _ignoreLayerList = new() { 
         "Player",
         "Interactable",
         "Enemy"
     };
 
-    List<GameObject> selectableTiles;
+    List<GameObject> _selectableTiles;
 
-    List<Vector3> debugRayStart;
-    List<Vector3> debugRayDir;
-    List<Color> debugRayColor;
+    List<Vector3> _debugRayStart;
+    List<Vector3> _debugRayDir;
+    List<Color> _debugRayColor;
 
     // Start is called before the first frame update
     void Start()
     {
-        selectableTiles = new List<GameObject>();
+        _selectableTiles = new List<GameObject>();
 
-        debugRayStart = new List<Vector3>();
-        debugRayDir = new List<Vector3>();
-        debugRayColor = new List<Color>();
+        _debugRayStart = new List<Vector3>();
+        _debugRayDir = new List<Vector3>();
+        _debugRayColor = new List<Color>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (debugRayStart.Count > 0 && (debugRayStart.Count == debugRayDir.Count))
+        if (_debugRayStart.Count > 0 && (_debugRayStart.Count == _debugRayDir.Count))
         {
-            for (int i = 0; i < debugRayStart.Count; i++)
+            for (int i = 0; i < _debugRayStart.Count; i++)
             {
-                Debug.DrawRay(debugRayStart[i], debugRayDir[i], debugRayColor[i]);
+                Debug.DrawRay(_debugRayStart[i], _debugRayDir[i], _debugRayColor[i]);
             }
         }
 
         ResetDebugRay();
 
-        foreach (var tile in selectableTiles)
+        foreach (var tile in _selectableTiles)
         {
             Vector3 pos = tile.transform.position;
             pos.y += 5;
 
             int layerMask = 0;
-            foreach (var layer in ignoreLayerList)
+            foreach (var layer in _ignoreLayerList)
             {
                 if (layer == "Player") continue;
                 layerMask |= 1 << LayerMask.NameToLayer(layer);
@@ -75,7 +75,7 @@ public class SelectableArea : MonoBehaviour
         ResetSelectable();
 
         int layerMask = 0;
-        foreach (var layer in ignoreLayerList)
+        foreach (var layer in _ignoreLayerList)
         {
             if (layer == "Interactable" && ignore_interactable) continue;
             layerMask |= 1 << LayerMask.NameToLayer(layer);
@@ -108,7 +108,7 @@ public class SelectableArea : MonoBehaviour
 
                     DebugRay(origin, Vector3.down * hit.distance, Color.yellow);
                     Debug.Log("Did Hit " + hit.transform.gameObject.name);
-                    selectableTiles.Add(hit.transform.gameObject);
+                    _selectableTiles.Add(hit.transform.gameObject);
                     try
                     {
                         hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 0, 1f);
@@ -127,7 +127,7 @@ public class SelectableArea : MonoBehaviour
                 }
             }
         }
-        return selectableTiles;
+        return _selectableTiles;
     }
 
     public List<GameObject> FindSelectableArea(GameObject obj, int radius, bool ignore_interactable = false)
@@ -135,7 +135,7 @@ public class SelectableArea : MonoBehaviour
         ResetSelectable();
 
         int layerMask = 0;
-        foreach (var layer in ignoreLayerList)
+        foreach (var layer in _ignoreLayerList)
         {
             if (layer == "Interactable" && ignore_interactable) continue;
             layerMask |= 1 << LayerMask.NameToLayer(layer);
@@ -163,7 +163,7 @@ public class SelectableArea : MonoBehaviour
 
                     DebugRay(origin, Vector3.down * hit.distance, Color.yellow);
                     Debug.Log("Did Hit " + hit.transform.gameObject.name);
-                    selectableTiles.Add(hit.transform.gameObject);
+                    _selectableTiles.Add(hit.transform.gameObject);
                     try
                     {
                         hit.transform.gameObject.GetComponent<Tile>()._selectable = true;
@@ -182,41 +182,41 @@ public class SelectableArea : MonoBehaviour
                 }
             }
         }
-        return selectableTiles;
+        return _selectableTiles;
     }
 
     public List<GameObject> GetSelectableTiles()
     {
-        return selectableTiles;
+        return _selectableTiles;
     }
 
     void ResetSelectable()
     {
         ResetDebugRay();
 
-        foreach (var tile in selectableTiles)
+        foreach (var tile in _selectableTiles)
         {
             tile.GetComponent<Tile>()._selectable = false;
         }
-        selectableTiles.Clear();
+        _selectableTiles.Clear();
     }
     void ResetDebugRay()
     {
-        debugRayStart.Clear();
-        debugRayDir.Clear();
-        debugRayColor.Clear();
+        _debugRayStart.Clear();
+        _debugRayDir.Clear();
+        _debugRayColor.Clear();
     }
 
     void DebugRay(Vector3 origin, Vector3 direction)
     {
-        debugRayStart.Add(origin);
-        debugRayDir.Add(direction);
-        debugRayColor.Add(Color.white);
+        _debugRayStart.Add(origin);
+        _debugRayDir.Add(direction);
+        _debugRayColor.Add(Color.white);
     }
     void DebugRay(Vector3 origin, Vector3 direction, Color color)
     {
-        debugRayStart.Add(origin);
-        debugRayDir.Add(direction);
-        debugRayColor.Add(color);
+        _debugRayStart.Add(origin);
+        _debugRayDir.Add(direction);
+        _debugRayColor.Add(color);
     }
 }
