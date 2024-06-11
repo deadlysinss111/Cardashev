@@ -2533,7 +2533,7 @@ GameObject:
   - component: {fileID: 1407585055}
   m_Layer: 8
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2550,6 +2550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 119fe8c67e7b1364b8ccb8bd201849fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _selectable: 0
   _swipeZone: {fileID: 9203003672801310520, guid: 77995b837d8565040ab2b6a1602f163a, type: 3}
 --- !u!195 &1407585047
 NavMeshAgent:
@@ -7465,6 +7466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d68f1e3cc49251c48a2f90c8403876b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _selectable: 0
   _bullet: {fileID: 3204624112210869285, guid: d763c541be426c146bd0681da929da78, type: 3}
 --- !u!1 &1438130189
 GameObject:

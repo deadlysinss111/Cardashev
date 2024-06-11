@@ -19,6 +19,8 @@ public class Enemy : MonoBehaviour
 
     protected bool _isMoving;
 
+    public bool _selectable = false;
+
     protected void Start()
     {
         _player = GameObject.Find("Player");
@@ -39,6 +41,8 @@ public class Enemy : MonoBehaviour
         {
             Act();
         }
+
+        CheckSelectable();
     }
 
     // Pick a random reachable position
@@ -84,6 +88,30 @@ public class Enemy : MonoBehaviour
             _agent.destination = transform.position;
             _queueTimer = 0;
             print("break");
+        }
+    }
+
+    void CheckSelectable()
+    {
+        _selectable = false;
+        transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.white;
+
+        if (SelectableArea.EnemyAreaCheck == false) return;
+
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10) == false) return;
+
+        GameObject hitObj = hit.transform.gameObject;
+        if (hitObj.TryGetComponent(out Tile tile) == false) return;
+
+        if (tile._selectable == false) return;
+
+        _selectable = true;
+
+
+        if (_selectable)
+        {
+            print($"Enemy {gameObject.name} is selectable!");
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.red;
         }
     }
 }

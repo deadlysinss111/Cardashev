@@ -17,10 +17,15 @@ public class SelectableArea : MonoBehaviour
     List<Color> _debugRayColor;
 
     [SerializeField] bool _allowSelectEnemy = true;
-    [SerializeField] bool _allowSelectInteractable = false;
+    [SerializeField] bool _allowSelectInteractable = true;
     [SerializeField] bool _allowSelectPlayer = false;
 
-    [SerializeField] int _rayCastMaxDistance = 20;
+    //[SerializeField] int _rayCastMaxDistance = 20;
+
+    static bool _enemyAreaCheck = false;
+    public static bool EnemyAreaCheck {  get { return _enemyAreaCheck; } }
+    static bool _interactableAreaCheck = false;
+    public static bool InteractableAreaCheck { get { return _interactableAreaCheck; } }
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +51,7 @@ public class SelectableArea : MonoBehaviour
         ResetDebugRay();
 
         // This is so unoptimized lmao
-        foreach (var tile in _selectableTiles)
+        /*foreach (var tile in _selectableTiles)
         {
             Vector3 pos = tile.transform.position;
             pos.y += 10;
@@ -57,10 +62,10 @@ public class SelectableArea : MonoBehaviour
             Vector3[] posList =
             {
                 new Vector3(pos.x, pos.y, pos.z),
-                new Vector3(pos.x + scale.x / 4, pos.y, pos.z - scale.z / 4),
-                new Vector3(pos.x - scale.x / 4, pos.y, pos.z + scale.z / 4),
-                new Vector3(pos.x + scale.x / 4, pos.y, pos.z + scale.z / 4),
-                new Vector3(pos.x - scale.x / 4, pos.y, pos.z - scale.z / 4),
+                //new Vector3(pos.x + scale.x / 4, pos.y, pos.z - scale.z / 4),
+                //new Vector3(pos.x - scale.x / 4, pos.y, pos.z + scale.z / 4),
+                //new Vector3(pos.x + scale.x / 4, pos.y, pos.z + scale.z / 4),
+                //new Vector3(pos.x - scale.x / 4, pos.y, pos.z - scale.z / 4),
             };
 
             int layerMask = 0;
@@ -92,7 +97,7 @@ public class SelectableArea : MonoBehaviour
                 }
                 
             }
-        }
+        }*/
     }
 
     public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius, bool ignore_interactable=false)
@@ -152,6 +157,11 @@ public class SelectableArea : MonoBehaviour
                 }
             }
         }
+        if (_selectableTiles.Count > 0)
+        {
+            _enemyAreaCheck = _allowSelectEnemy;
+            _interactableAreaCheck = _allowSelectInteractable;
+        }
         return _selectableTiles;
     }
 
@@ -207,6 +217,11 @@ public class SelectableArea : MonoBehaviour
                 }
             }
         }
+        if (_selectableTiles.Count > 0)
+        {
+            _enemyAreaCheck = _allowSelectEnemy;
+            _interactableAreaCheck = _allowSelectInteractable;
+        }
         return _selectableTiles;
     }
 
@@ -224,6 +239,9 @@ public class SelectableArea : MonoBehaviour
             tile.GetComponent<Tile>()._selectable = false;
         }
         _selectableTiles.Clear();
+
+        _enemyAreaCheck = false;
+        _interactableAreaCheck = false;
     }
 
     public void SetSelectableEntites(bool allowPlayer = false, bool allowInteractables = false, bool allowEnemies = true)
@@ -231,6 +249,12 @@ public class SelectableArea : MonoBehaviour
         _allowSelectPlayer = allowPlayer;
         _allowSelectInteractable = allowInteractables;
         _allowSelectEnemy = allowEnemies;
+
+        // If the enemies and/or the interactables can't be selected anymore but are currently raycasting, tell them to stop
+        if (_allowSelectEnemy == false && _enemyAreaCheck)
+            _enemyAreaCheck = false;
+        if (_allowSelectInteractable == false && _interactableAreaCheck)
+            _interactableAreaCheck = false;
     }
 
     void ResetDebugRay()
