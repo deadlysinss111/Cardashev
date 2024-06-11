@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -8385629782037469278}
   m_Layer: 0
   m_Name: Flat Tile
-  m_TagString: Untagged
+  m_TagString: TMTopology
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

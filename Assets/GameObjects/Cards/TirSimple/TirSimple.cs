@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class TirSimple : Card
 {
@@ -12,6 +13,8 @@ public class TirSimple : Card
     List<Vector3> debugRayStart = new List<Vector3>();
     List<Vector3> debugRayDir = new List<Vector3>();
     List<Color> debugRayColor = new List<Color>();
+
+    List<GameObject> selectableTiles = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -32,13 +35,31 @@ public class TirSimple : Card
                 Debug.DrawRay(debugRayStart[i], debugRayDir[i], debugRayColor[i]);
             }
         }
+
+        foreach (var tile in selectableTiles)
+        {
+            Vector3 pos = tile.transform.position;
+            pos.y += 5;
+
+            int layerMask = 1 << LayerMask.NameToLayer("Player");
+            layerMask = ~layerMask;
+
+            if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMask))
+            {
+                if (hit.transform.gameObject != tile)
+                {
+                    print($"Detected {hit.transform.gameObject.name} at pos [{pos.x}, {pos.z}]");
+                }
+            }
+        }
     }
 
     void EnterAimState()
     {
         PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
-        FindSurrondingTiles(GameObject.FindGameObjectWithTag("Player"), 7);
+        selectableTiles = FindSurrondingTiles(GameObject.FindGameObjectWithTag("Player"), 4, 0, false);
+        manager.SetLeftClickTo(() => { });
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(() => { });
     }
@@ -67,15 +88,9 @@ public class TirSimple : Card
         }
     }
 
-    void FindSurrondingTiles(GameObject obj, int radius)
+    List<GameObject> FindSurrondingTiles(GameObject obj, int radius, int inner_radius=0, bool ignore_interactable=true)
     {
         print("FindSurrondingTiles");
-        /*GameObject floorTiles = GameObject.FindGameObjectsWithTag("TMTopology").ToList()[0];
-        for (int i = 0; i < floorTiles.transform.childCount; i++)
-        {
-            GameObject tile = floorTiles.transform.GetChild(i).gameObject;
-            //tile.GetComponent<Tile>().
-        }*/
 
         Vector3[] dirs = {
             Vector3.forward,
@@ -84,29 +99,59 @@ public class TirSimple : Card
             Vector3.left
         };
 
-        // Add one to accomodates for the tile on the player feet
-        for (int i = 0; i <= radius; i++)
+        List<GameObject> list = new();
+
+        int layerMask = 1 << LayerMask.NameToLayer("Player");
+        if (ignore_interactable)
         {
-            foreach (Vector3 dir in dirs)
-            {
-                Vector3 origin = GameObject.Find("Player").transform.position + dir * (i);
+            layerMask |= (1 << LayerMask.NameToLayer("Interactable"));
+        }
+        layerMask = ~layerMask;
+
+        for (int i = -radius; i <= radius; i++)
+        {
+            for (int j = -radius; j <= radius; j++)
+            { 
+                if (Mathf.Abs(i) <= inner_radius && Mathf.Abs(j) <= inner_radius)
+                {
+                    continue;
+                }
+
+                Vector3 pos = obj.transform.position;
+                pos.y += 5;
+
+                Vector3 origin = pos + new Vector3(i*1f, 0, j*1f);
 
                 //print("Radius check - " + i);
                 RaycastHit hit;
-                if (Physics.Raycast(origin, Vector3.down, out hit))
+                if (Physics.Raycast(origin, Vector3.down, out hit, Mathf.Infinity, layerMask))
                 {
-                    //Debug.DrawRay(origin, Vector3.down * hit.distance, Color.yellow);
-                    debugRayStart.Add(origin); debugRayDir.Add(Vector3.down * 1000); debugRayColor.Add(Color.yellow);
+                    if (hit.transform.gameObject.CompareTag("TMTopology") == false)
+                    {
+                        debugRayStart.Add(origin); debugRayDir.Add(Vector3.down * hit.distance); debugRayColor.Add(Color.blue);
+                        continue;
+                    }
+
+                    debugRayStart.Add(origin); debugRayDir.Add(Vector3.down * hit.distance); debugRayColor.Add(Color.yellow);
                     Debug.Log("Did Hit " + hit.transform.gameObject.name);
-                    //hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 0, 1f);
+                    list.Add(hit.transform.gameObject);
+                    try
+                    {
+                        hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 0, 1f);
+                    } catch (MissingComponentException e)
+                    {
+                        Debug.LogError($"An error occured when hitting {hit.transform.gameObject.name}: {e.ToString()}");
+                    }
                 }
                 else
                 {
-                    debugRayStart.Add(origin); debugRayDir.Add(Vector3.down * 1000); debugRayColor.Add(Color.red);
+                    debugRayStart.Add(origin); debugRayDir.Add(Vector3.down * 100); debugRayColor.Add(Color.red);
                     //Debug.DrawRay(origin, Vector3.down * 1000, Color.red);
                     Debug.Log("Did Hitn't");
+                    //break;
                 }
             }
         }
+        return list;
     }
 }
