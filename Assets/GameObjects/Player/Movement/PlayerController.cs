@@ -104,42 +104,11 @@ public class PlayerController : MonoBehaviour
     // Coroutine to wait for confirmation input
      void ApplyMovement()
      {
-        // We keep trail of the preview
-        NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, _virtualDestination, NavMesh.AllAreas, path);
-        _paths.Add(path.corners.ToList());
-        TrailCalculator.DrawPath(_paths, ref _lineRenderer);
-
-        //ClearPath();
-
-        GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _virtualDestination;
-
-        // We stock the information so that the closure knows what to take
+        // Data duplication so that the closure takes the right data
         Vector3 vect = _virtualDestination;
 
+        // We need to dynamically create a card in order to subscribe it to the Queue
         List<Vector3> slicedPath = new List<Vector3>();
-        
-        for(int i =0; i<path.corners.Length-1; i++)
-        {
-            Vector3 start = path.corners[i];
-            Vector3 end = path.corners[i+1];
-            int segments = Mathf.CeilToInt(Vector3.Distance(start, end) / 0.1f); // Adjust segment length as needed
-
-            for (int j = 0; j <= segments; j++)
-            {
-                // Calculate the point along the segment
-                float t = (float)j / segments;
-
-                // Add the point to the path points
-                Vector3 point = Vector3.Lerp(start, end, t);
-
-                // Project the point onto the NavMesh surface
-                slicedPath.Add(point);
-            }
-        }
-        slicedPath.Reverse();
-
-        // We need to dynamically create a card in order to subscribe it to the stack
         Card moveCard = new Card();
         moveCard._trigger += () =>
         {
@@ -148,9 +117,38 @@ public class PlayerController : MonoBehaviour
         };
         moveCard._duration = _lastCalculatedWalkTime;
 
-        if (false == GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(moveCard))
+        // Check if the card's duration fit in the Queue
+        if (GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(moveCard))
         {
-            Debug.Log("error in movement card generation");
+            // The movment fits in and so it's validated. Let's make sure the preview gets updated accordingly
+            // We keep the previous preview so we can draw it
+            NavMeshPath path = new NavMeshPath();
+            NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, _virtualDestination, NavMesh.AllAreas, path);
+            _paths.Add(path.corners.ToList());
+            TrailCalculator.DrawPath(_paths, ref _lineRenderer);
+
+            // Updating Player's virtual pos for the next preview
+            GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _virtualDestination;
+
+            for (int i = 0; i < path.corners.Length - 1; i++)
+            {
+                Vector3 start = path.corners[i];
+                Vector3 end = path.corners[i + 1];
+                int segments = Mathf.CeilToInt(Vector3.Distance(start, end) / 0.1f); // Adjust segment length as needed
+
+                for (int j = 0; j <= segments; j++)
+                {
+                    // Calculate the point along the segment
+                    float t = (float)j / segments;
+
+                    // Add the point to the path points
+                    Vector3 point = Vector3.Lerp(start, end, t);
+
+                    // Project the point onto the NavMesh surface
+                    slicedPath.Add(point);
+                }
+            }
+            slicedPath.Reverse();
         }
      }
     

@@ -71,7 +71,7 @@ public class PlayerManager : MonoBehaviour
         StartCoroutine(StartSimulation());
     }
 
-    //This state change function disable the previous control listener state and enable the new one
+    // This state change function disable the previous control listener state and enable the new one
     public void SetLeftClickTo(Action target)
     {
         _leftClick = target;

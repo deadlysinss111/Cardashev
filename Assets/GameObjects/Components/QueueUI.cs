@@ -7,13 +7,11 @@ using UnityEngine.UI;
 
 public class QueueUI : MonoBehaviour
 {
-    // TODO: Get that from the player instead
     private QueueComponent _queue;
 
     Image _secsBar;
     TMP_Text _secsText;
     float _barScale;
-    float _barMax = 10f;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +28,7 @@ public class QueueUI : MonoBehaviour
     {
         // Sets the scale of the bar based on the queue's total time
         Vector3 scale = _secsBar.transform.localScale;
-        scale.x = (_queue.TotalQueueTime() / _barMax) * _barScale;
+        scale.x = (_queue.TotalQueueTime() / _queue._MaxTimeBuffer) * _barScale;
         _secsBar.transform.localScale = scale;
         // Rounds the time and sets the text
         _secsText.text = Math.Round(_queue.TotalQueueTime(), 1) + "s";

@@ -216,12 +216,13 @@ public static class TrailCalculator
         lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
     }
 
+
+    //
     // --  DrawPath overloads above --
+    //
 
 
-
-
-    // Project a point onto the NavMesh surface
+    // Project a point onto the NavMesh surface. This is called for every point of the preview, and so gets called a lot
     static public Vector3 ProjectToNavMeshSurface(Vector3 point)
     {
         // Project the point onto the NavMesh surface
@@ -260,7 +261,7 @@ public static class TrailCalculator
             // Overlap our rays by small margin to ensure we never miss a surface
             overlap = Vector3.Distance(virtualPos, nextPos) * 1.1f;
 
-            //When hitting a surface we want to show the surface marker and stop updating our line
+            // When hitting a surface we want to show the surface marker and stop updating our line
             if (Physics.Raycast(virtualPos, velocity.normalized, out RaycastHit hit, overlap))
             {
                 break;
