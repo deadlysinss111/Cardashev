@@ -11,6 +11,9 @@ TagManager:
   - Map Path Parent
   - InteractibleObject
   - Map Door Parent
+  - TMTopology
+  - TMInteractibles
+  - TMDecorations
   layers:
   - Default
   - TransparentFX
@@ -18,9 +21,9 @@ TagManager:
   - Map Node
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Player
+  - Interactable
+  - Enemy
   - 
   - 
   - 

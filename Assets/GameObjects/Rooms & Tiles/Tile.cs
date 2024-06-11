@@ -7,6 +7,8 @@ public class Tile : MonoBehaviour
     Color _startcolor;
     PlayerManager _playerManager;
 
+    public bool _selectable = false;
+
     private void Awake()
     {
         _playerManager = GameObject.Find("Player").GetComponent<PlayerManager>();
