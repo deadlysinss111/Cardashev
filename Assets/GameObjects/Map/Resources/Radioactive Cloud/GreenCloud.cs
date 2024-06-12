@@ -5,7 +5,6 @@ using UnityEngine;
 public class GreenCloud : MonoBehaviour
 {
     // Particles to indicate movement
-    [SerializeField] ParticleSystem _particleSystem;
     public AnimationCurve _moveCurve;
     float _animationTime;
 
@@ -25,7 +24,6 @@ public class GreenCloud : MonoBehaviour
         _cloudMoving = false;
         _animationTime = 0f;
         _cloudSpeed = .5f;
-        _particleSystem.Stop();
     }
 
     void Update()
@@ -58,7 +56,7 @@ public class GreenCloud : MonoBehaviour
 
         foreach (var item in nodes)
         {
-            item.GetComponent<MeshRenderer>().material.color = Color.black;
+            //item.GetComponent<MeshRenderer>().material.color = Color.black;
         }
     }
 }
