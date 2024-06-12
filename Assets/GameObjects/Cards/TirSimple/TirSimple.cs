@@ -38,12 +38,13 @@ public class TirSimple : Card
             throw new MissingComponentException($"The object {obj.name} ({obj.GetType()}) the card aimed at does not have a Enemy script.");
         }
         enemy.TakeDamage(_stats[0]);
-        base.ClickEvent();
+        base.ClickEvent(); // Calls this function to add the card to the queue
         GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
     }
 
     void EnterAimState()
     {
+        // Sets up the settings for the area
         AreaSelector.SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
         AreaSelector.SetSelectableEntites(false, false, true, false);
         _selectableTiles = AreaSelector.FindSelectableArea(GameObject.Find("Player"), 4);
