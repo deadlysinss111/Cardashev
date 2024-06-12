@@ -51,13 +51,15 @@ Material:
     m_Ints: []
     m_Floats:
     - _Alpha: 1
-    - _Metallic: 0
+    - _Metallic: 1
+    - _Noise_Height: 0.002
     - _Noise_Scale: 10
-    - _Noise_Speed: 0
+    - _Noise_Speed: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Smoothness: 0
     m_Colors:
-    - _Base_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Base_Color: {r: 0.254717, g: 0.22227661, b: 0.22227661, a: 1}
+    - _Noise_Color: {r: 0.09803922, g: 0.10234762, b: 0.11372549, a: 1}
     - _Rotate_Projection: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
