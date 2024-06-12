@@ -1,15 +1,21 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 using UnityEngine.AI;
 
-public static class TrailCalculator
+public static class TrajectoryToolbox
 {
+    /*
+      ----------------------------------------
+       DrawPath overloads below.
+       This method draws a LOT of small segments representing either :
+          - The preview of a move
+          - The path the player is taking
+      ----------------------------------------
+    */
 
-    // -- DrawPath overloads below --
-    // Draw the path using line renderer
     static public void DrawPath(NavMeshPath path, ref LineRenderer lineRenderer)
     {
         List<Vector3> pathPoints = new List<Vector3>();
@@ -216,7 +222,7 @@ public static class TrailCalculator
         lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
     }
 
-    // --  DrawPath overloads above --
+    // \_ ↑ DrawPath overloads above ↑ _/
 
 
 
@@ -238,6 +244,17 @@ public static class TrailCalculator
             return point;
         }
     }
+
+
+    /*
+      ----------------------------------------
+       BellCurve overloads below.
+       This method either :
+          - Returns the points of the curve and draws the curve
+          - Returns the points of the curve
+          - Draw the curve only
+      ----------------------------------------
+    */
 
     static public void BellCurve(Vector3 origin, Vector3 velocity, ref LineRenderer lineRenderer, out List<Vector3> pathPoints)
     {
@@ -303,6 +320,35 @@ public static class TrailCalculator
             virtualPos = nextPos;
         }
     }
+
+    static public void BellCurve(Vector3 origin, Vector3 velocity, ref LineRenderer lineRenderer)
+    {
+        // We initialize base values
+        float step = 0.01f;
+        //Vector3 virtualPos = GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos;
+        Vector3 virtualPos = origin;
+        Vector3 nextPos;
+        float overlap;
+
+        // This loop will calculate next position, check if we hit something and add point to draw in prediction each iteration 
+        for (int i = 1; i < 500; i++)
+        {
+            nextPos = virtualPos + velocity * step;
+            velocity += Physics.gravity * step;
+
+            // Overlap our rays by small margin to ensure we never miss a surface
+            overlap = Vector3.Distance(virtualPos, nextPos) * 1.1f;
+
+            //When hitting a surface we want to show the surface marker and stop updating our line
+            if (Physics.Raycast(virtualPos, velocity.normalized, out RaycastHit hit, overlap))
+            {
+                break;
+            }
+
+            virtualPos = nextPos;
+        }
+    }
+
 
     static public Vector3 BellCurveInitialVelocity(Vector3 startPoint, Vector3 endPoint, float apex)
     {

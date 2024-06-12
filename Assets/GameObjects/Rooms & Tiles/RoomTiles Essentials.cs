@@ -12,15 +12,12 @@ public enum TileType
 {
     Nothing = 0,
     Flat,
-    SlopeNtS,
-    SlopeStN,
-    SlopeWtE,
-    SlopeEtW
+    Slope,
 }
 
 /*
  ! Only useful for when we'll want to compose a room of multiple prefabs
- • Contains essential data for loading prefeb of rooms both in the scene and in the Tileset class
+ • Contains essential data for loading prefab of rooms both in the scene and in the Tileset class
 */
 public struct RoomPrefabDesc
 {

@@ -8,18 +8,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
-/*
- • Interactible's base abstract class, containing virtual effects TBD in actual classes, but every functionnality to trigger Interactbiles
-*/
+// Interactible's base abstract class, containing virtual effects TBD in actual classes, but every functionnality to trigger Interactbiles
 public abstract class Interactible : MonoBehaviour
 {
     /*
      FIELDS 
     */
-    // Yes, there is one ! This is useful to quickly determine the distance of the Interactible to the player
     protected static GameObject _playerRef;
     protected static PlayerManager _playerManager;
-    [SerializeField] bool _isHiglightable = true;
+    [SerializeField] bool _isHiglightable = true;   // TODO: Make it also handle if it is clickable at all or not
 
     /* 
      PROPERTIES
@@ -28,7 +25,6 @@ public abstract class Interactible : MonoBehaviour
     // RaycastHit is useless outisde of this class, but the destructible flag isn't (so its `get` is public)
     protected float _RaycastHitDist { get; set; }
     public bool _IsDestructible { get; protected set; }
-    // Any extra properties are in their respective sub-classes
 
 
     /* 
@@ -40,6 +36,57 @@ public abstract class Interactible : MonoBehaviour
     /* 
      METHODS
     */
+    // ------
+    // INITIALIZATION
+    // ------
+
+    protected void Awake()
+    {
+        // Field setup
+        _playerRef = GameObject.Find("Player").gameObject;
+        _playerManager = _playerRef.GetComponent<PlayerManager>();
+        _RaycastHitDist = 10.0f;
+
+        // Event subscribing
+        _UeOnRaycastHit.AddListener(OnRaycastHit);
+
+        // Non combined mesh scenario
+        if (transform.childCount == 0) return;
+
+        // Mesh Combining
+        List<MeshFilter> meshFilters = new List<MeshFilter>();
+        List<CombineInstance> combine = new List<CombineInstance>();
+
+        foreach (Transform child in this.transform)
+            if (child.GetComponent<MeshFilter>() != null)
+                meshFilters.Add(child.GetComponent<MeshFilter>());
+
+        for (int i = 0; i < meshFilters.Count; ++i)
+        {
+            // Stored current meshFilter data since we need to read it a bunch
+            MeshFilter curMeshFilter = meshFilters[i];
+            Transform curMFTransfrom = curMeshFilter.transform;
+
+            // Filling out a temp combineInstance and adding it to the combine List
+            CombineInstance combInstTemp = new CombineInstance();
+            combInstTemp.mesh = curMeshFilter.sharedMesh;
+            combInstTemp.transform = Matrix4x4.TRS(curMFTransfrom.localPosition, curMFTransfrom.localRotation, curMFTransfrom.localScale);
+            combine.Add(combInstTemp);
+        }
+
+        // Combining meshes together, and activating it
+        Mesh combinedMesh = new Mesh();
+        combinedMesh.CombineMeshes(combine.ToArray());
+        transform.GetComponent<MeshFilter>().sharedMesh = combinedMesh;
+        transform.GetComponent<MeshCollider>().sharedMesh = combinedMesh;
+        gameObject.SetActive(true);
+    }
+
+
+    // ------
+    // INTERACTIONS CALLBACKS
+    // ------
+
     virtual protected void OnTriggerEnter(Collider ARGcollider)
     {
         switch (ARGcollider.gameObject.tag)
@@ -123,52 +170,5 @@ public abstract class Interactible : MonoBehaviour
             // Restores the previous state
             _playerManager.SetToLastState();
         }
-    }
-
-
-    // ------
-    // INITIALIZATION
-    // ------
-
-    protected void Awake()
-    {
-        // Field setup
-        _playerRef = GameObject.Find("Player").gameObject;
-        _playerManager = _playerRef.GetComponent<PlayerManager>();
-        _RaycastHitDist = 10.0f;
-
-        // Event subscribing
-        _UeOnRaycastHit.AddListener(OnRaycastHit);
-
-        // Non combined mesh scenario
-        if (transform.childCount == 0) return;
-
-        // Mesh Combining
-        List<MeshFilter> meshFilters = new List<MeshFilter>();
-        List<CombineInstance> combine = new List<CombineInstance>();
-
-        foreach (Transform child in this.transform)
-            if (child.GetComponent<MeshFilter>() != null)
-                meshFilters.Add(child.GetComponent<MeshFilter>());
-
-        for (int i = 0;  i < meshFilters.Count ; ++i)
-        {
-            // Stored current meshFilter data since we need to read it a bunch
-            MeshFilter curMeshFilter = meshFilters[i];
-            Transform curMFTransfrom = curMeshFilter.transform;
-
-            // Filling out a temp combineInstance and adding it to the combine List
-            CombineInstance combInstTemp = new CombineInstance();
-            combInstTemp.mesh = curMeshFilter.sharedMesh;
-            combInstTemp.transform = Matrix4x4.TRS(curMFTransfrom.localPosition, curMFTransfrom.localRotation, curMFTransfrom.localScale);
-            combine.Add(combInstTemp);
-        }
-
-        // Combining meshes together, and activating it
-        Mesh combinedMesh = new Mesh();
-        combinedMesh.CombineMeshes(combine.ToArray());
-        transform.GetComponent<MeshFilter>().sharedMesh = combinedMesh;
-        transform.GetComponent<MeshCollider>().sharedMesh = combinedMesh;
-        gameObject.SetActive(true);
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Spit : MonoBehaviour
 {
+    // TODO: Change function for OnTriggerEnter ?
     private void OnCollisionEnter(Collision other)
     {
         StatManager manager;
@@ -15,20 +16,26 @@ public class Spit : MonoBehaviour
         {
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
             {
+                // Buffs a fish if the projectile lands on it
                 if(c.gameObject.GetComponent<Murlock>() != null)
                 {
                     c.gameObject.GetComponent<Murlock>().AcideBuff();
                 }
+
+                // Deals damage if it lands on anything else than fish and bouilloir
                 else if(c.gameObject.GetComponent<Ebouillantueur>() == null)
                 {
                     manager._health -= 10;
                 }
             }
+
+            // Summons an Interactible if it hits the ground
             else if(FindParentdRecursively(c.gameObject.transform, "Topology") != null)
             {
                 RaycastHit hit;
                 Physics.Raycast(transform.position, Vector3.down, out hit);
                 Instantiate(Resources.Load("Debug Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, 0.6f, 0), Quaternion.identity);
+                break;
             }
         }
         Destroy(gameObject);

@@ -8,8 +8,8 @@ public class KeybindManager : MonoBehaviour
 {
     public PlayerInput playerInput;
     public InputActionAsset inputActions;
-    public GameObject keybindUIContainer; // A parent GameObject containing the UI elements
-    public GameObject keybindUIPrefab; // A prefab for each keybinding UI element
+    public GameObject keybindUIContainer;   // A parent GameObject containing the UI elements
+    public GameObject keybindUIPrefab;      // A prefab for each keybinding UI element
 
     private Dictionary<string, Text> actionNameToTextMap;
 

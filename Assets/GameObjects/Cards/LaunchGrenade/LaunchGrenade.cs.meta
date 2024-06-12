@@ -3,7 +3,8 @@ guid: 2b717a81974accb46a552fb65cb0b252
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _grenadePrefab: {fileID: 6209375908151478680, guid: 3dadfc14ac0c7314c8d5285426e2952b, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

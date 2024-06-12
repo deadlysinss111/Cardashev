@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -12,42 +13,44 @@ using static UnityEditorInternal.VersionControl.ListControl;
 
 public class PlayerManager : MonoBehaviour
 {
-    // In game visible fields
-
-    [NonSerialized] public StatManager _health;
+    [NonSerialized] public Vector3 _virtualPos;
+    private PlayerInput _pInput;
+    /*
+     FIELDS 
+    */
+    // Fields that will appear in the Room UI
+    [NonSerialized] public StatManager _statManagerRef;
     byte _ultimateProgression;
     public int _goldAmount;
 
-    static public List<Card> _deck;
+    static public List<Card> _deck = new();
 
 
-    // Functional fields
-
-    [NonSerialized] public Vector3 _virtualPos;
-    private PlayerInput _pInput;
-
+    // State related
     string _currentState;
     string _lastState;
-    Action _currentAction;
     Dictionary<string, Action[]> _states;
     [NonSerialized] public string _defaultState;
 
+    // These actions are the changing code actually executed by the middlewares
     Action _mouseHover;
     Action _leftClick;
     Action _rightClick;
 
     [NonSerialized] public RaycastHit _lastHit;
-    [SerializeField] LayerMask _clickableLayers;
+    [SerializeField] LayerMask _clickableLayers;    // TODO: Implement that
 
-    // Artifact from Amaury's branch
-    [NonSerialized] public Coroutine _waitForConfirmationCoroutine;
-    private Func<UltiContext, bool> _ultimate;
+
+    /*
+     EVENTS
+    */
+    public UnityEvent _UeOnDefeat;
 
 
     /*
      METHODS
     */
-
+    // Pre-Awake constructor
     PlayerManager() 
     {
         _states = new Dictionary<string, Action[]>();
@@ -58,27 +61,25 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
+        // Event Subscribing
+        _UeOnDefeat.AddListener(PlayerDeath);
+
+        // Fetching some refs
         _pInput = GetComponent<PlayerInput>();
-        _health = GetComponent<StatManager>();
-        _deck = new List<Card>();
+        _statManagerRef = GetComponent<StatManager>();
 
         _ultimateProgression = 0;
         _goldAmount = 100;
 
-        _rightClick = () => { };
-<<<<<<< HEAD
-        _input.Main.LeftClick.performed += LeftClickMiddleware;
-        _input.Main.RightClick.performed += RightClickMiddleware;
+        // No Hover since it does not need any key presses
+        _pInput.actions["LeftClick"].performed += LeftClickMiddleware;
+        _pInput.actions["RightClick"].performed += RightClickMiddleware;
     }
-=======
-        _pInput.actions["LeftClick"].performed += ctx => LeftClickMiddleware();
-        _pInput.actions["RightClick"].performed += ctx => _rightClick();
->>>>>>> A--Rebind
 
     private void OnDestroy()
     {
-        _input.Main.LeftClick.performed -= LeftClickMiddleware;
-        _input.Main.RightClick.performed -= RightClickMiddleware;
+        _pInput.actions["LeftClick"].performed -= LeftClickMiddleware;
+        _pInput.actions["RightClick"].performed -= RightClickMiddleware;
     }
 
     private void Start()
@@ -86,12 +87,10 @@ public class PlayerManager : MonoBehaviour
         StartCoroutine(StartSimulation());
     }
 
-<<<<<<< HEAD
     //This state change function disable the previous control listener state and enable the new one
-=======
     private void OnEnable()
     {
-        // Enable the input actions when the object is enabled
+        // Subscribe the input actions when the object is enabled
         _pInput.actions["Ultimate"].performed += OnUltimatePerformed;
         _pInput.actions["LeftClick"].performed += OnLeftClickPerformed;
         _pInput.actions["RightClick"].performed += OnRightClickPerformed;
@@ -99,48 +98,34 @@ public class PlayerManager : MonoBehaviour
 
     private void OnDisable()
     {
-        // Disable the input actions when the object is disabled
+        // Unsubscribe the input actions when the object is disabled
         _pInput.actions["Ultimate"].performed -= OnUltimatePerformed;
         _pInput.actions["LeftClick"].performed -= OnLeftClickPerformed;
         _pInput.actions["RightClick"].performed -= OnRightClickPerformed;
     }
 
+
+    // ------
+    // MIDDLEWARE FEST
+    // ------
+
+    // These 3 are meant to be bound to player's inputs
     private void OnUltimatePerformed(InputAction.CallbackContext context)
     {
         UseUltimate();
     }
 
-    private void OnMouseHoverPerformed(InputAction.CallbackContext context)
-    {
-        _mouseHover();
-    }
-
     private void OnLeftClickPerformed(InputAction.CallbackContext context)
     {
-        LeftClickMiddleware();
+        LeftClickMiddleware(context);
     }
 
     private void OnRightClickPerformed(InputAction.CallbackContext context)
     {
-        _rightClick();
+        RightClickMiddleware(context);
     }
 
->>>>>>> A--Rebind
-    public void SetLeftClickTo(Action target)
-    {
-        _leftClick = target;
-    }
-
-    public void SetHoverTo(Action target)
-    {
-        _mouseHover = target;
-    }
-
-    public void SetRightClickTo(Action target)
-    {
-        _rightClick = target;
-    }
-
+    // These 2 middlewares need a context to be compatible with input remaping (CustomInput package)
     private void RightClickMiddleware(InputAction.CallbackContext context)
     {
         _rightClick();
@@ -162,7 +147,8 @@ public class PlayerManager : MonoBehaviour
         }
         _leftClick();
     }
-    
+
+    // Doesn't need context since it's not a key press
     private void MouseHoverMiddleware()
     {
         //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100, _clickableLayers))
@@ -172,6 +158,30 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+
+    // ------
+    // ACTIONS SETTERS
+    // ------
+
+    public void SetLeftClickTo(Action target)
+    {
+        _leftClick = target;
+    }
+
+    public void SetHoverTo(Action target)
+    {
+        _mouseHover = target;
+    }
+
+    public void SetRightClickTo(Action target)
+    {
+        _rightClick = target;
+    }
+
+
+    // ------
+    // METHODS TO ADD OR SWITCH THE STATE
+    // ------
     public bool AddState(string name, Action enter, Action exit)
     {
         if (_states.ContainsKey(name) == false)
@@ -187,12 +197,8 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
-<<<<<<< HEAD
         Action[] func;
         if(_states.TryGetValue(name, out func))
-=======
-        if (_states.TryGetValue(name, out var func))
->>>>>>> A--Rebind
         {
             _lastState = _currentState;
             Action[] exit;
@@ -205,32 +211,26 @@ public class PlayerManager : MonoBehaviour
         return false;
     }
 
-<<<<<<< HEAD
     public void SetToLastState()
     {
         SetToState(_lastState);
     }
 
-=======
->>>>>>> A--Rebind
     public void SetToDefault()
     {
         SetToState(_defaultState);
     }
 
-    // We wait for every state to be added to the state machine and we set the default state
+    // Set the state to Default on Simulation Start
     private IEnumerator StartSimulation()
     {
-<<<<<<< HEAD
-        int offset = 3;
+        // We wait to be sure every stsate have been added
+        byte offset = 3;
         while(offset-- == 0)
-=======
-        int offset = 2;
-        while (offset-- > 0)
->>>>>>> A--Rebind
         {
             yield return null;
         }
+
         SetToDefault();
     }
 
@@ -250,6 +250,7 @@ public class PlayerManager : MonoBehaviour
         MouseHoverMiddleware();
     }
 
+    // TODO: Make it an actual getter, n'est ce pas Valentin
     public List<string> GetDeck()
     {
         List<string> deck = new List<string>();
@@ -258,5 +259,10 @@ public class PlayerManager : MonoBehaviour
             deck.Add("LaunchGrenadeModel");
         }
         return deck;
+    }
+
+    private void PlayerDeath()
+    {
+        throw new NotImplementedException();
     }
 }

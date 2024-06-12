@@ -36,14 +36,16 @@ public class Ebouillantueur : Enemy
         {
             //GameObject target
         }
-        _queueTimer = 2.5f;
-        while( _queueTimer < 1.5 )
+        _timeBeforeDecision = 2.5f;
+        while( _timeBeforeDecision < 1.5f )
         {
             yield return null;
         }
-        GameObject bullet = (GameObject)Instantiate(_bullet);
+
+        // Fires a projectile
+        GameObject bullet = Instantiate(_bullet);
         bullet.transform.position = transform.position + new Vector3(0, 1, 0);
-        Vector3 velocity= TrailCalculator.BellCurveInitialVelocity(transform.position + new Vector3(0, 1, 0), _target.transform.position, 4);
+        Vector3 velocity= TrajectoryToolbox.BellCurveInitialVelocity(transform.position + new Vector3(0, 1, 0), _target.transform.position, 4);
         bullet.GetComponent<Rigidbody>().velocity = velocity;
     }
 
@@ -56,6 +58,6 @@ public class Ebouillantueur : Enemy
         _agent.SetDestination(dest);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
-        _queueTimer = GetPathTime(path);
+        _timeBeforeDecision = GetPathTime(path);
     }
 }

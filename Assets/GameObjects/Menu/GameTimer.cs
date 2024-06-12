@@ -6,9 +6,8 @@ public class GameTimer : MonoBehaviour
 {
     public float _timePassed;
 
-    [SerializeField] private GameObject _timerText;
-
-    [SerializeField] private GameObject _winScreen;
+    [SerializeField] GameObject _timerText;
+    [SerializeField] GameObject _winScreen;
 
     void Start()
     {
@@ -22,15 +21,17 @@ public class GameTimer : MonoBehaviour
 
     void Update()
     {
-        if (GameOverManager.Instance._inGameOver || _winScreen.GetComponent<WinManager>()._onWinScreen) return;
+        // Stops updating if we are on the end screen
+        if (GameOverManager._instance._inGameOver || _winScreen.GetComponent<RoomClear>()._roomClearScreen) return;
 
+        // Updates the time passed in the current run
         _timePassed += Time.deltaTime;
-
         _timerText.GetComponent<TMPro.TextMeshProUGUI>().text = GetFormattedTime();
 
+        // Debug trigger of the GameOver and Win screen
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
         {
-            GameOverManager.Instance.StartGameOver();
+            GameOverManager._instance.StartGameOver();
         }
         else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
         {

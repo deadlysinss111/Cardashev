@@ -5,7 +5,7 @@ public class RoomManager : MonoBehaviour
 {
     public static RoomManager _Instance;
 
-    private Dictionary<string, float> _roomTimes = new Dictionary<string, float>();
+    Dictionary<string, float> _roomTimes = new Dictionary<string, float>();
 
     private void Awake()
     {

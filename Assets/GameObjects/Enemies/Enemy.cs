@@ -1,50 +1,71 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour
 {
-    protected GameObject _player;
-
-    protected BasicEnemyHandler _enemyHandler;
-
+    /*
+     FIELDS
+    */
+    // Ennemy action related
     protected NavMeshAgent _agent;
-    protected EnemyDeckManager _enemyDeckManager;
-
-    protected float _queueTimer;
-
     protected GameObject _target;
-
+    protected float _timeBeforeDecision;
     protected bool _isMoving;
+
+    // Death related
+    protected bool _waitForDestroy;
+    protected ParticleSystem _particleSystem;
+
+    // Allows the call of the death animation in place of the usual Act()
+    Action _eff;
+
+    /*
+     EVENTS
+    */
+    public UnityEvent _UeOnDefeat;
+
+
+    /*
+     METHODS
+    */
+    private void Awake()
+    {
+        // Event subscribing
+        _UeOnDefeat.AddListener(Defeat);
+    }
 
     protected void Start()
     {
-        _player = GameObject.Find("Player");
-        _enemyHandler = GetComponent<BasicEnemyHandler>();
         _agent = GetComponent<NavMeshAgent>();
-        _enemyDeckManager = GetComponent<EnemyDeckManager>();
-        _target = _player;
+        _target = GI._PlayerFetcher();
+        _timeBeforeDecision = 0.0f;
 
-        _enemyHandler._virtualPos = _agent.transform.position;
+        _particleSystem = GetComponent<ParticleSystem>();
+        _waitForDestroy = false;
+
+        _eff = Act;
     }
 
     void Update()
     {
         CheckPlayerDistance();
         // We update the timer, then if there is no action in progress, the enemy will decide to do something
-        _queueTimer -= Time.deltaTime;
-        if (_queueTimer <= 0)
+        _timeBeforeDecision -= Time.deltaTime;
+        if (_timeBeforeDecision <= 0)
         {
-            Act();
+            _eff();
         }
     }
 
     // Pick a random reachable position
     public Vector3 RandomNavmeshLocation(float radius, Vector3 pos)
     {
-        Vector3 randomDirection = Random.insideUnitSphere * radius;
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * radius;
         randomDirection += pos;
         NavMeshHit hit;
         Vector3 finalPosition = Vector3.zero;
@@ -82,8 +103,31 @@ public class Enemy : MonoBehaviour
         if( _isMoving && Vector3.Magnitude(_target.transform.position - transform.position) < 2)
         {
             _agent.destination = transform.position;
-            _queueTimer = 0;
-            print("break");
+            _timeBeforeDecision = 0;
+        }
+    }
+
+    private void Defeat()
+    {
+        _particleSystem.Play();
+        _eff = ParticleHandle;
+
+        // Ensures the animation plays out entirely
+        _timeBeforeDecision = 0;
+    }
+
+    // Needs to be called every frame after defeat so that the GO is detroyed correctly after the animation
+    private void ParticleHandle()
+    {
+        if (_particleSystem.isEmitting == false)
+        {
+            Color c = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
+            c.a = c.a - (1.0f * Time.deltaTime);
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = c;
+        }
+        if (_particleSystem.isStopped)
+        {
+            Destroy(gameObject);
         }
     }
 }

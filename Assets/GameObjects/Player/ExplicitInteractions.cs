@@ -7,30 +7,17 @@ public class ExplicitInteractions : MonoBehaviour
     /*
      FIELDS 
     */
+    // Interactible the player selects
     GameObject _currentInteractible;
     PlayerManager _manager;
-    Color _baseColor;
-
-    /*
-     PROPERTIES
-    */
-    // Nothing for now
-
-    /*
-     EVENTS
-    */
-    // Nothing for now
 
     /*
      METHODS
     */
-
-
-    // Initialization
     private void Awake()
     {
         // Loading in PlayerManager a new state and its Action to change what the controls will do
-        _manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        _manager = GI._PManFetcher();
         _manager.AddState("InteractibleTargeting", OnEnterState, OnExitState);
     }
 
@@ -40,38 +27,10 @@ public class ExplicitInteractions : MonoBehaviour
         // Sets up the functions for the controls
         _manager.SetLeftClickTo(RaycastResponseCaller);
         _manager.SetHoverTo( () => { } );
-        _manager.SetRightClickTo(MouseOverPreview);
+        _manager.SetRightClickTo( () => { } );
     }
     private void OnExitState() { }
 
-
-    // • Finds the root parent of the Interactible's prefab and highlight it
-    // ! Changing hte materail color is a very bad idea, this need to change TODO
-    public void MouseOverPreview()
-    {
-        // Raycast from the mouse, storing the hit if it succeeded
-        RaycastHit raycastHit;
-        if (false == Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out raycastHit))
-            return;
-
-        // If it finds the GameObject's parent prefab, changes the GameManager's state and highlight the prefab
-        GameObject raycastTarget = FindPrefabOriginRecur(raycastHit.transform.gameObject);
-        if (raycastTarget != null)
-        {
-            // Restores the old material color if any Interactible was previously highlighted
-            if (_currentInteractible != null)
-                _currentInteractible.GetComponent<MeshRenderer>().material.color = _baseColor;
-
-            // Updates the selected Interactible and saves its current material color
-            _currentInteractible = raycastTarget;
-            //_baseColor = _currentInteractible.GetComponent<MeshRenderer>().material.color;
-            foreach (GameObject obj in _currentInteractible.GetComponentsInChildren<GameObject>())
-            {
-                _baseColor = obj.GetComponent<MeshRenderer>().material.color;
-                obj.GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.0f, 0.5f, 1.0f);
-            }
-        }
-    }
 
     // Calls the response to a raycast hit event of the Interactbile target
     public void RaycastResponseCaller()
@@ -89,7 +48,7 @@ public class ExplicitInteractions : MonoBehaviour
     // UTILITIY METHODS
     // ------
 
-    // ! Might be deprecated, since now the parent-most object is the only one to possess a Collider
+    // ! Might be deprecated, since now the parent-most object is the only one to possesses a Collider
     //   Recursively looks for the root prefab of a GameObject
     public GameObject FindPrefabOriginRecur(GameObject ARGprefabChild)
     {
@@ -106,10 +65,4 @@ public class ExplicitInteractions : MonoBehaviour
 
         return result;
     }
-
-    // Start is called before the first frame update
-    void Start() { }
-
-    // Update is called once per frame
-    void Update() { }
 }

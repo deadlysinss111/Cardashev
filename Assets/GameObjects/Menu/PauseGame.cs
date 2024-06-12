@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// Debug class to stop simulation
 public class PauseGame : MonoBehaviour
 {
-    [SerializeField]
-    private InputAction _pauseButton;
+    [SerializeField] InputAction _pauseButton;
 
     [SerializeField]
     private Canvas _canvas;

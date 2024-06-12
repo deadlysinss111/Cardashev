@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[DefaultExecutionOrder(-9999)]
+[DefaultExecutionOrder(-999)]
 public class GlobalStats : MonoBehaviour
 {
-    UnityEvent Test;
+    /*
+     FIELDS
+    */
+    // Constructor to inititalize the Dicts (in fine, using a save file)
+    // TODO
+    readonly static Dictionary<string, UnityEvent> _eventCallers = new();
+    readonly static Dictionary<string, int> _statsInt = new(); // Envisager un Dict<string, Union> ?
 
-    private readonly static Dictionary<string, UnityEvent> _eventCallers = new();
 
-    private readonly static Dictionary<string, int> _statsInt = new();
-
-    // Start is called before the first frame update
+    /*
+     METHODS
+    */
     void Start()
     {
-        Test = new UnityEvent();
         //DontDestroyOnLoad(gameObject);
-        Test.AddListener(Ping);
 
         CreateStat("mouvements", 0);
         CreateStat("jumps", 0);
@@ -38,7 +41,7 @@ public class GlobalStats : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            Test.Invoke();
+            Debug.Log("Supposed to call a Ue");
         }
     }
 

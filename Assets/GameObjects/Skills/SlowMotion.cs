@@ -4,23 +4,23 @@ using UnityEngine.InputSystem;
 
 public class SlowMotionWithProgressBar : MonoBehaviour
 {
-    // Slow motion variables
-    public float _slowdownFactor;
-    public float _slowdownLength; // Maximum duration the slow motion can last
+    // Slow motion Fields
+    [SerializeField] float _slowdownFactor;
+    [SerializeField] float _slowdownDuration;   // Maximum duration the slow motion can last
 
-    // Focus bar variables
-    public GameObject _focusBar;
+    // Focus bar Fields
+    [SerializeField] GameObject _focusBar;
 
-    private bool _isActive;
-    private PlayerInput _pInput; // Changed from CustomActions to PlayerInput
+    bool _isActive;
+    PlayerInput _pInput;
 
-    // Circular progress bar variables
-    private bool _progressBarIsActive;
-    private bool _isRefilling;
-    private float _indicatorTimer;
-    private float _maxIndicatorTimer;
-    private Image _radialProgressBar;
-    private float _lerpSpeed = 3f; // Speed of interpolation
+    // Circular progress bar Fields
+    bool _progressBarIsActive;
+    bool _isRefilling;
+    float _indicatorTimer;
+    float _maxIndicatorTimer;
+    Image _radialProgressBar;
+    float _lerpSpeed = 3f;  // Speed of interpolation
 
     private void Awake()
     {
@@ -28,6 +28,52 @@ public class SlowMotionWithProgressBar : MonoBehaviour
 
         // Initialize the radial progress bar
         _radialProgressBar = _focusBar.transform.Find("RadialProgressBar").GetComponent<Image>();
+    }
+
+    private void Update()
+    {
+        if (_isActive)
+        {
+            DecreaseTimer();
+            if (_slowdownDuration <= 0)
+            {
+                StopSlowMotion();
+            }
+        }
+
+        if (_progressBarIsActive)
+        {
+            if (_isRefilling)
+            {
+
+                _indicatorTimer += Time.unscaledDeltaTime / 4;
+                _radialProgressBar.fillAmount = Mathf.Lerp(_radialProgressBar.fillAmount, _indicatorTimer / _maxIndicatorTimer, _lerpSpeed * Time.unscaledDeltaTime);
+
+                IncreaseTimer();
+
+
+                if (_indicatorTimer >= _maxIndicatorTimer)
+                {
+                    _isRefilling = false;
+                    _indicatorTimer = _maxIndicatorTimer;
+                    _radialProgressBar.fillAmount = 1f;
+                    _slowdownDuration = _maxIndicatorTimer;
+
+
+                    StopCountdown();
+                }
+            }
+            else
+            {
+                _indicatorTimer -= Time.unscaledDeltaTime;
+                _radialProgressBar.fillAmount = _indicatorTimer / _maxIndicatorTimer;
+
+                if (_indicatorTimer <= 0)
+                {
+                    StopCountdown();
+                }
+            }
+        }
     }
 
     private void OnEnable()
@@ -66,7 +112,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
         _isRefilling = false;
 
         _focusBar.SetActive(true);
-        ActivateCountdown(_slowdownLength);
+        ActivateCountdown(_slowdownDuration);
     }
 
     public void StopSlowMotion()
@@ -82,12 +128,12 @@ public class SlowMotionWithProgressBar : MonoBehaviour
 
     public void DecreaseTimer()
     {
-        _slowdownLength -= Time.unscaledDeltaTime;
+        _slowdownDuration -= Time.unscaledDeltaTime;
     }
 
     public void IncreaseTimer()
     {
-        _slowdownLength += Time.unscaledDeltaTime / 4;
+        _slowdownDuration += Time.unscaledDeltaTime / 4;
     }
 
     public void StartRefill()
@@ -105,51 +151,5 @@ public class SlowMotionWithProgressBar : MonoBehaviour
     public void StopCountdown()
     {
         _progressBarIsActive = false;
-    }
-
-    private void Update()
-    {
-        if (_isActive)
-        {
-            DecreaseTimer();
-            if (_slowdownLength <= 0)
-            {
-                StopSlowMotion();
-            }
-        }
-
-        if (_progressBarIsActive)
-        {
-            if (_isRefilling)
-            {
-                
-                _indicatorTimer += Time.unscaledDeltaTime / 4; 
-                _radialProgressBar.fillAmount = Mathf.Lerp(_radialProgressBar.fillAmount, _indicatorTimer / _maxIndicatorTimer, _lerpSpeed * Time.unscaledDeltaTime);
-
-                IncreaseTimer(); 
-
-                
-                if (_indicatorTimer >= _maxIndicatorTimer)
-                {
-                    _isRefilling = false;
-                    _indicatorTimer = _maxIndicatorTimer; 
-                    _radialProgressBar.fillAmount = 1f; 
-                    _slowdownLength = _maxIndicatorTimer; 
-
-                    
-                    StopCountdown();
-                }
-            }
-            else
-            {
-                _indicatorTimer -= Time.unscaledDeltaTime; 
-                _radialProgressBar.fillAmount = _indicatorTimer / _maxIndicatorTimer;
-
-                if (_indicatorTimer <= 0)
-                {
-                    StopCountdown();
-                }
-            }
-        }
     }
 }

@@ -196,98 +196,6 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""Camera"",
-            ""id"": ""7e17df8c-bc0c-45d1-9288-b7d542dc3d78"",
-            ""actions"": [
-                {
-                    ""name"": ""Move"",
-                    ""type"": ""Value"",
-                    ""id"": ""6a6d74cc-e531-4c6a-9ed2-78d98436a44a"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""SpaceBar"",
-                    ""type"": ""Button"",
-                    ""id"": ""54f5fedb-9728-444d-a034-fb27b4c9e5fa"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": ""Movements"",
-                    ""id"": ""d4da2ff8-2dbb-45ed-81bb-d70f73f4a825"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""dfd629bd-44bb-4155-947e-626a92e1c8f6"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""a06b64b5-41ba-4e53-8503-34b5ab579d8f"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""27560b2c-7c12-44c3-8075-85c547e3b0c0"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""658948af-f30c-4a09-a48c-17e678e80c39"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3ba385e0-da65-42d3-a5d7-ec51ee02beb8"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SpaceBar"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
             ""name"": ""CameraControls"",
             ""id"": ""9c9317c0-d7e1-498c-8325-27f790de6603"",
             ""actions"": [
@@ -346,10 +254,6 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         m_Main_Ultimate = m_Main.FindAction("Ultimate", throwIfNotFound: true);
         m_Main_CameraMode = m_Main.FindAction("CameraMode", throwIfNotFound: true);
         m_Main_CameraMove = m_Main.FindAction("CameraMove", throwIfNotFound: true);
-        // Camera
-        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
-        m_Camera_Move = m_Camera.FindAction("Move", throwIfNotFound: true);
-        m_Camera_SpaceBar = m_Camera.FindAction("SpaceBar", throwIfNotFound: true);
         // CameraControls
         m_CameraControls = asset.FindActionMap("CameraControls", throwIfNotFound: true);
         m_CameraControls_RotateToLeft = m_CameraControls.FindAction("RotateToLeft", throwIfNotFound: true);
@@ -498,60 +402,6 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
     }
     public MainActions @Main => new MainActions(this);
 
-    // Camera
-    private readonly InputActionMap m_Camera;
-    private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
-    private readonly InputAction m_Camera_Move;
-    private readonly InputAction m_Camera_SpaceBar;
-    public struct CameraActions
-    {
-        private @CustomActions m_Wrapper;
-        public CameraActions(@CustomActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Camera_Move;
-        public InputAction @SpaceBar => m_Wrapper.m_Camera_SpaceBar;
-        public InputActionMap Get() { return m_Wrapper.m_Camera; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
-        public void AddCallbacks(ICameraActions instance)
-        {
-            if (instance == null || m_Wrapper.m_CameraActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_CameraActionsCallbackInterfaces.Add(instance);
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
-            @SpaceBar.started += instance.OnSpaceBar;
-            @SpaceBar.performed += instance.OnSpaceBar;
-            @SpaceBar.canceled += instance.OnSpaceBar;
-        }
-
-        private void UnregisterCallbacks(ICameraActions instance)
-        {
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
-            @SpaceBar.started -= instance.OnSpaceBar;
-            @SpaceBar.performed -= instance.OnSpaceBar;
-            @SpaceBar.canceled -= instance.OnSpaceBar;
-        }
-
-        public void RemoveCallbacks(ICameraActions instance)
-        {
-            if (m_Wrapper.m_CameraActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(ICameraActions instance)
-        {
-            foreach (var item in m_Wrapper.m_CameraActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_CameraActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public CameraActions @Camera => new CameraActions(this);
-
     // CameraControls
     private readonly InputActionMap m_CameraControls;
     private List<ICameraControlsActions> m_CameraControlsActionsCallbackInterfaces = new List<ICameraControlsActions>();
@@ -613,11 +463,6 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
         void OnUltimate(InputAction.CallbackContext context);
         void OnCameraMode(InputAction.CallbackContext context);
         void OnCameraMove(InputAction.CallbackContext context);
-    }
-    public interface ICameraActions
-    {
-        void OnMove(InputAction.CallbackContext context);
-        void OnSpaceBar(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {

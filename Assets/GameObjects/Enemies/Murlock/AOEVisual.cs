@@ -23,7 +23,6 @@ public class AOEVisual : MonoBehaviour
         if(collider.gameObject.TryGetComponent<StatManager>(out target))
         {
             target.TakeDamage(_dmg);
-            print("ye");
         }
     }
 }

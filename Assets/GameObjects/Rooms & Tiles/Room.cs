@@ -8,9 +8,6 @@ using UnityEngine.Tilemaps;
 
 // TODO: Optimize the code by using Resources.Load() only once per kind-of tile rather than for every instances of tile
 
-/* 
- • Room class, that will be linked to an in-scene object. The position of said object will be used for the origin of the room
-*/
 public class Room : MonoBehaviour
 {
     /* 
@@ -35,12 +32,6 @@ public class Room : MonoBehaviour
      PROPERTIES
     */
     public ZoneType _ZoneType { get; set; }
-
-
-    /*
-     EVENTS
-    */
-    // Nothing yet
 
 
     /*
@@ -97,11 +88,6 @@ public class Room : MonoBehaviour
         // TODO: Places Entities (ennemies and the like)
     }
 
-    public void ExitRoom()
-    {
-        // Nothing until retrospective
-    }
-
     // Generic method to get a child by name
     public GameObject FindChild(string ARGchildName)
     {
@@ -111,7 +97,7 @@ public class Room : MonoBehaviour
         return null;
     }
 
-    // Genric methods to get a child recusively by name. Gift of ChatGPT
+    // Generic methods to get a child recusively by name. Gift of ChatGPT
     public GameObject FindChildRecursively(string ARGchildName)
     {
         return INTERNALFindChildRec(this.transform, ARGchildName);
@@ -131,7 +117,7 @@ public class Room : MonoBehaviour
         return null;
     }
 
-    // Genric methods to get a parent recusively by name. Gift of ChatGPT
+    // Generic methods to get a parent recusively by name. Gift of ChatGPT
     public GameObject FindParentdRecursively(string ARGchildName)
     {
         return INTERNALFindParentRec(transform, ARGchildName);
@@ -155,23 +141,9 @@ public class Room : MonoBehaviour
 
     void Awake()
     {
-        /* Old way of creating the Encyclopedias
-        Dictionary<ZoneType, string> ZoneFolderName = new Dictionary<ZoneType, string>
-        {
-            { ZoneType.Debug, "Debug"}
-        };
-
-        Dictionary<string, RoomPrefabDesc> RoomBook = new Dictionary<string, RoomPrefabDesc>();
-
-        ROOM_ENCYCLOPEDIA = new RoomPrefabEncyclopedia(ZoneFolderName, RoomBook);
-        */
-
         // Loads the room the player entered and bakes its surface
         EnterRoom();
         NavMeshSurface surface = GameObject.Find("RoomAnchor").AddComponent<NavMeshSurface>();
         surface.BuildNavMesh();
     }
-
-
-    // CODE TO BE MOVED IN THE REWARD CLASS
 }

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class QueueUI : MonoBehaviour
 {
     // TODO: Get that from the player instead
-    private QueueComponent _queue;
+    QueueComponent _queue;
 
     Image _secsBar;
     TMP_Text _secsText;
@@ -18,7 +18,7 @@ public class QueueUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _queue = GameObject.Find("Player").GetComponent<QueueComponent>();
+        _queue = GI._PlayerFetcher().GetComponent<QueueComponent>();
 
         _secsBar = transform.Find("Foreground").GetComponent<Image>();
         _barScale = _secsBar.transform.localScale.x;

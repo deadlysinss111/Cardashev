@@ -10,7 +10,6 @@ public class CameraManager : MonoBehaviour
     float _transitionSpeed;
     GameObject _targetNode;
 
-    // Start is called before the first frame update
     void Start()
     {
         _transitionSpeed = 2f;
@@ -18,11 +17,12 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
+        // Transition the camera's position if the target node is valid
         if (_targetNode != null)
             _camera.transform.position = Vector3.Lerp(_camera.transform.position, _targetNode.transform.position + new Vector3(0, 10, -10), _transitionSpeed * Time.deltaTime);
     }
 
-    public void MoveCamToNode(GameObject node)
+    public void UpdateNodeTarget(GameObject node)
     {
         _targetNode = node;
     }

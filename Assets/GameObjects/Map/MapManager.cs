@@ -95,7 +95,7 @@ public class MapManager : MonoBehaviour
         nodeToMoveTo.GetComponent<MapNode>().SelectNode();
         _playerLocation.GetComponent<MapNode>().UnselectNode();
         _playerLocation = nodeToMoveTo;
-        _cameraManager.MoveCamToNode(nodeToMoveTo);
+        _cameraManager.UpdateNodeTarget(nodeToMoveTo);
     }
 
     void LockAllNodes()

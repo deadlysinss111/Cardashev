@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class RebindSaveLoad : MonoBehaviour
+public class RebindingLoader : MonoBehaviour
 {
     public InputActionAsset _inputActions;
 

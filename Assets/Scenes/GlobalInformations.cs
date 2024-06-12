@@ -1,15 +1,38 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.Build;
-using Unity.Mathematics;
 
 // GI stands for GlobalInformations
 static public class GI
 {
-    [SerializeField] public static GameObject _mapPrefab;
+    // Components needed by a LOT of MonoBehaviours
+    static public PlayerManager _playerManager;
+    static public GameObject _player;
 
+    // Super cool Funcs to treat the above Components as a Singleton, limiting calls of GameObject.Find() everywhere :D
+    static public Func<PlayerManager> _PManFetcher = () => {
+        _playerManager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        if (_playerManager != null)
+        {
+            _PManFetcher = () => { return _playerManager; };
+            return _playerManager;
+        }
+        Debug.LogError("It's so sad PManFetcher died of ligma");
+        return null;
+    };
+    static public Func<GameObject> _PlayerFetcher = () => {
+        _player = GameObject.Find("Player");
+        if (_player != null)
+        {
+            _PlayerFetcher = () => { return _player; };
+            return _player;
+        }
+        Debug.LogError("Me when the PlayerFetcher is bad at the game ong ō_ō");
+        return null;
+    };
+
+    static public GameObject _mapPrefab; // maybe not correctly written (should be an array ?)
     static public float _gameTimer;
 
     // Misc stuff to avoid afternoons of "WHY ? WHY ? WHYYYYYY ? oh that's why."
@@ -70,6 +93,7 @@ static public class GI
     // Instantiates and saves a persistent scene container GameObject
     static public void InstantiateAndCull(string ARGsceneContainerName)
     {
+        // Pointer to the array's cell corresponding to the persistent scene. This avoids doing the big ass array access below 3 times
         GameObject sceneContainer = _persistentSceneContainers[ (int) SceneNametoEnum(ARGsceneContainerName) ];
         
         switch (ARGsceneContainerName)
@@ -82,7 +106,7 @@ static public class GI
                 break;
 
             default:
-                Debug.Log("how TF did you get an error in there ? �_�");
+                Debug.Log("how TF did you get an error in there ? õ_Ô");
                 break;
         }
     }

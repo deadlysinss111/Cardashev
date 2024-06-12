@@ -1,20 +1,20 @@
 using System;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
     public Transform _target;
     public float _smoothSpeed = 8f;
-<<<<<<< HEAD
-    Vector3 _offset;
-    Quaternion _rotation;
+
+    Vector3 _curOffset;
+    Quaternion _curRotation;
     Action _currentMode;
-    CustomActions _input;
-=======
-    private InputActionRebindingExtensions.RebindingOperation _rebindingOperation;
->>>>>>> A--Rebind
+
+    // New input system's fields
+    PlayerInput _pInput;
+    Vector2 _moveInput;
+    InputActionRebindingExtensions.RebindingOperation _rebindingOperation;
 
     // Clockwise positions around player starting behind him
     Vector3[] _offsetPositions;
@@ -22,24 +22,19 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
+        // New input system's awakening
         _currentMode = LockedMode;
-<<<<<<< HEAD
-        _input = new CustomActions();
-        _input.Enable();
-        _input.Main.SpaceBar.performed += ctx => ChangeMode();
-        _input.CameraControls.RotateToLeft.performed += ctx => RotateToLeft();
-        _input.CameraControls.RotateToRight.performed += ctx => RotateToRight();
-        _rotation = transform.rotation;
+        _pInput = GameObject.Find("Player").GetComponent<PlayerInput>();
+
+        // Pre-dertermined camera angles
+        _curRotation = transform.rotation;
         _offsetPositions = new Vector3[4];
         _offsetPositions[0] = new Vector3(0, 15, -10);
         _offsetPositions[1] = new Vector3(10, 15, 0);
         _offsetPositions[2] = new Vector3(0, 15, 10);
         _offsetPositions[3] = new Vector3(-10, 15, 0);
         _offsetID = 0;
-        _offset = _offsetPositions[0];
-=======
-        _pInput = GameObject.Find("Player").GetComponent<PlayerInput>();
->>>>>>> A--Rebind
+        _curOffset = _offsetPositions[0];
     }
 
     private void OnEnable()
@@ -67,10 +62,10 @@ public class CameraController : MonoBehaviour
 
     private void LockedMode()
     {
-        Vector3 desiredPosition = _target.position + _offset;
+        Vector3 desiredPosition = _target.position + _curOffset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, _smoothSpeed * Time.deltaTime);
         transform.position = smoothedPosition;
-        Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, _rotation, _smoothSpeed * Time.deltaTime);
+        Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, _curRotation, _smoothSpeed * Time.deltaTime);
         transform.rotation = smoothedRotation;
     }
 
@@ -92,7 +87,6 @@ public class CameraController : MonoBehaviour
         }
     }
 
-<<<<<<< HEAD
     private void RotateToLeft()
     {
         if(_offsetID == 0)
@@ -103,12 +97,12 @@ public class CameraController : MonoBehaviour
         {
             --_offsetID;
         }
-        _offset = _offsetPositions[_offsetID];
+        _curOffset = _offsetPositions[_offsetID];
 
         // Rotation transformations
-        _rotation *= Quaternion.AngleAxis(-45, Vector3.right);
-        _rotation *= Quaternion.AngleAxis(90, Vector3.up);
-        _rotation *= Quaternion.AngleAxis(45, Vector3.right);
+        _curRotation *= Quaternion.AngleAxis(-45, Vector3.right);
+        _curRotation *= Quaternion.AngleAxis(90, Vector3.up);
+        _curRotation *= Quaternion.AngleAxis(45, Vector3.right);
     }
     private void RotateToRight()
     {
@@ -120,12 +114,12 @@ public class CameraController : MonoBehaviour
         {
             ++_offsetID;
         }
-        _offset = _offsetPositions[_offsetID];
+        _curOffset = _offsetPositions[_offsetID];
 
         // Rotation transformations
-        _rotation *= Quaternion.AngleAxis(-45, Vector3.right);
-        _rotation *= Quaternion.AngleAxis(-90, Vector3.up);
-        _rotation *= Quaternion.AngleAxis(45, Vector3.right);
+        _curRotation *= Quaternion.AngleAxis(-45, Vector3.right);
+        _curRotation *= Quaternion.AngleAxis(-90, Vector3.up);
+        _curRotation *= Quaternion.AngleAxis(45, Vector3.right);
     }
 
 
@@ -160,7 +154,6 @@ public class CameraController : MonoBehaviour
         _rotation *= Quaternion.AngleAxis(45, Vector3.right);
     }
     */
-=======
     private void OnChangeModePerformed(InputAction.CallbackContext context)
     {
         ChangeMode();
@@ -222,5 +215,4 @@ public class CameraController : MonoBehaviour
 
         return action.GetBindingDisplayString();
     }
->>>>>>> A--Rebind
 }

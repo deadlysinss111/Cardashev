@@ -35,13 +35,10 @@ public class GreenCloud : MonoBehaviour
             _animationTime += Time.deltaTime;
             transform.position = Vector3.Lerp(transform.position, _targetPosition, _moveCurve.Evaluate(_animationTime) * _cloudSpeed * Time.deltaTime);
         }
-        else
+        else if (_cloudMoving)
         {
-            if (_cloudMoving)
-            {
-                _cloudMoving = false;
-                ContaminateNodes();
-            }
+            _cloudMoving = false;
+            ContaminateNodes();
         }
     }
 

@@ -455,7 +455,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &293872503
 RectTransform:
   m_ObjectHideFlags: 0
@@ -522,7 +522,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 355395223}
-  - component: {fileID: 355395224}
   m_Layer: 5
   m_Name: FocusEffect
   m_TagString: Untagged
@@ -550,20 +549,6 @@ RectTransform:
   m_AnchoredPosition: {x: -835, y: 446.14}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &355395224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 355395222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78d88c5e8531af446914ea93e50ab97a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cooldown: {fileID: 281907142}
-  _cooldownTime: 30
 --- !u!1 &386421760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1989,6 +1974,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f1739301dea984694d485bb8746fd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shopInterface: {fileID: 293872502}
 --- !u!1 &1225737235
 GameObject:
   m_ObjectHideFlags: 0
@@ -2112,9 +2098,29 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 0.7299006
       objectReference: {fileID: 0}
+    - target: {fileID: 2746248711619431092, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _focusBar
+      value: 
+      objectReference: {fileID: 1087574744}
+    - target: {fileID: 2746248711619431092, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _slowdownFactor
+      value: 7410
+      objectReference: {fileID: 0}
+    - target: {fileID: 2746248711619431092, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _slowdownLength
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3148833222586391748, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
       propertyPath: m_UseGravity
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6497200372588378017, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _cooldown
+      value: 
+      objectReference: {fileID: 281907142}
+    - target: {fileID: 6497200372588378017, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _cooldownTime
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7232163658981407054, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2163,16 +2169,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8004618558294402036, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1310540725}
-    - targetCorrespondingSourceObject: {fileID: 8004618558294402036, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1310540726}
-    - targetCorrespondingSourceObject: {fileID: 8004618558294402036, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1310540727}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
 --- !u!4 &1310540722 stripped
 Transform:
@@ -2184,51 +2181,10 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8115398100823143788, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
   m_PrefabInstance: {fileID: 1310540721}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310540724}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ced8d5d0a47789498a90ba684efebca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &1310540724 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8004618558294402036, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
-  m_PrefabInstance: {fileID: 1310540721}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1310540725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310540724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51f31e2bfe99afc4e97ec7ad6780f9cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1310540726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310540724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4894805bd63cb554b90605bbff64a40c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1310540727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310540724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcb55a7b881ed1c4dacb71a50160377e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1367346379
@@ -2554,7 +2510,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 119fe8c67e7b1364b8ccb8bd201849fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _swipeZone: {fileID: 9203003672801310520, guid: 77995b837d8565040ab2b6a1602f163a, type: 3}
+  _UeOnDefeat:
+    m_PersistentCalls:
+      m_Calls: []
+  _swipeHitbox: {fileID: 0}
 --- !u!195 &1407585047
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -7469,6 +7428,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d68f1e3cc49251c48a2f90c8403876b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UeOnDefeat:
+    m_PersistentCalls:
+      m_Calls: []
   _bullet: {fileID: 3204624112210869285, guid: d763c541be426c146bd0681da929da78, type: 3}
 --- !u!1 &1438130189
 GameObject:
@@ -7481,7 +7443,7 @@ GameObject:
   - component: {fileID: 1438130190}
   - component: {fileID: 1438130191}
   m_Layer: 5
-  m_Name: WinScreen
+  m_Name: RoomClearScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7519,7 +7481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d50b631168732d4cabd54839a04156c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _onWinScreen: 0
+  _roomClearScreen: 0
 --- !u!1 &1463444439
 GameObject:
   m_ObjectHideFlags: 0

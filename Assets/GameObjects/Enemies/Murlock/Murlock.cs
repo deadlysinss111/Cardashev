@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class Murlock : Enemy
 {
-    [SerializeField] GameObject _swipeZone;
+    [SerializeField] GameObject _swipeHitbox;
     int _dmg;
 
     private new void Start()
@@ -50,23 +50,23 @@ public class Murlock : Enemy
     // Melee attack
     private IEnumerator Swipe()
     {
-        _queueTimer = 3;
+        _timeBeforeDecision = 3;
         // ANIM HERE
-        while(_queueTimer > 1)
+        while(_timeBeforeDecision > 1)
         {
             yield return null;
         }
         Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
-        Instantiate(_swipeZone, transform.position + dir * _swipeZone.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<AOEVisual>()._dmg = _dmg;
+        Instantiate(_swipeHitbox, transform.position + dir * _swipeHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<AOEVisual>()._dmg = _dmg;
     }
 
     // Gain armor
     private IEnumerator ArmoreUp()
     {
         print("armoring up");
-        _queueTimer = 3;
+        _timeBeforeDecision = 3;
         // ANIM HERE
-        while (_queueTimer > 1)
+        while (_timeBeforeDecision > 1)
         {
             yield return null;
         }
@@ -76,24 +76,24 @@ public class Murlock : Enemy
     // Jump up to 8 tiles in target's direction
     private IEnumerator Jump()
     {
-        _queueTimer = 3;
+        _timeBeforeDecision = 3;
 
         // We need to disable the agent in order to be able to manipulate rigidbody's velocity
         _agent.enabled = false;
 
         // ANIM HERE
-        while (_queueTimer > 3)
+        while (_timeBeforeDecision > 3)
         {
             yield return null;
         }
         // ANIM HERE
 
-        Vector3 velocity = TrailCalculator.BellCurveInitialVelocity(transform.position, _target.transform.position, 7);
+        Vector3 velocity = TrajectoryToolbox.BellCurveInitialVelocity(transform.position, _target.transform.position, 7);
         gameObject.GetComponent<Rigidbody>().velocity = velocity;
 
         // Calculate the curve for the jump
         List<Vector3> curve;
-        TrailCalculator.BellCurve(transform.position, Vector3.ClampMagnitude(_target.transform.position, 8), out curve);
+        TrajectoryToolbox.BellCurve(transform.position, Vector3.ClampMagnitude(_target.transform.position, 8), out curve);
 
         
         // Calculate the time to traverse the path
@@ -109,14 +109,14 @@ public class Murlock : Enemy
             time += Vector3.Distance(start, end) / speed;
         }
 
-        _queueTimer += time;
+        _timeBeforeDecision += time;
         
         StartCoroutine(SetBackAgent());
     }
 
     IEnumerator SetBackAgent()
     {
-        while(_queueTimer > 0.1f)
+        while(_timeBeforeDecision > 0.1f)
         {
             yield return null;
         }
@@ -133,15 +133,16 @@ public class Murlock : Enemy
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _agent.SetDestination(dest);
 
-        _queueTimer = GetPathTime(path);
+        _timeBeforeDecision = GetPathTime(path);
 
         // Once the half of the movement done, we want the enemy to refresh his destination to match target's movments
-        StartCoroutine(reOrient(_queueTimer / 2));
+        // TODO: Decide of a tile to snap too, to ensure we don't stop in the middle of the board
+        StartCoroutine(reOrient(_timeBeforeDecision / 2));
     }
 
     private IEnumerator reOrient(float time)
     {
-        while( _queueTimer > time)
+        while( _timeBeforeDecision > time)
         {
             yield return null;
         }

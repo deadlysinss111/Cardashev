@@ -17,8 +17,10 @@ public class DeckManager : MonoBehaviour
     {
         _hand = new List<Card>();
         _discardPile = new List<Card>();
-        List<string>toLoad = GameObject.Find("Player").GetComponent<PlayerManager>().GetDeck();
         _remainsInDeck = new List<Card>();
+
+        // Loads every card in the deck
+        List<string>toLoad = GI._PManFetcher().GetDeck();
         foreach (string name in toLoad)
         {
             GameObject CARD = (GameObject)Resources.Load(name);
@@ -31,33 +33,24 @@ public class DeckManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.L))
-        {
-            _remainsInDeck[Random.Range(0, _remainsInDeck.Count - 1)].Upgrade();
-        }
-    }
-
-    // called when the player draws a card
     public void Draw()
     {
-        // if the deck is empty, we shuffle the discard pile into it
+        // If the deck is empty, we shuffle the discard pile into it
         if (_remainsInDeck.Count == 0)
         {
             _remainsInDeck = _discardPile;
             _discardPile = new List<Card> { };
         }
 
-        // we draw a random card
+        // We draw a random card
         int rdm = Random.Range(0, _remainsInDeck.Count);
 
-        // we need to duplicate the card's game object so that we can display it an destroy it later easily
+        // We need to duplicate the card's game object so that we can display it an destroy it later easily
         Card obj = _remainsInDeck[rdm];
         obj.gameObject.SetActive(true);
         _hand.Add(obj);
 
-        // since we drew it, we remove the card from the deck
+        // Since we drew it, we remove the card from the deck
         _remainsInDeck.RemoveAt(rdm);
 
         DisplayHand();
@@ -66,9 +59,7 @@ public class DeckManager : MonoBehaviour
     void Discard(Card target)
     {
         _hand.Remove(target);
-
         _discardPile.Add(target);
-        
         target.gameObject.SetActive(false);
 
         DisplayHand();
@@ -76,23 +67,18 @@ public class DeckManager : MonoBehaviour
 
     public void Play(Card target)
     {
-        if (GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(target) == true)
+        if (GI._PlayerFetcher().GetComponent<QueueComponent>().AddToQueue(target) == true)
         {
             Discard(target);
         }
     }
 
-    // handling positions in order to have a good looking displaying
+    // Handling positions in order to have a good looking displaying
     private void DisplayHand()
     {
         for(byte i =0; i< _hand.Count; i++)
         {
             _hand[i].transform.localPosition = new Vector3(-400 + 150 * i, -200, 0);
         }
-    }
-
-    public void ShowDeck()
-    {
-
     }
 }

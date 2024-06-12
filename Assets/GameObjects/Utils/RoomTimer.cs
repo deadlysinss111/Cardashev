@@ -4,13 +4,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class RoomTimer : MonoBehaviour
 {
-    private float _timeSpentInRoom = 0f;
-    private bool _isPlayerInRoom = false;
-    [SerializeField] private Vector3 _roomSize;
-    [SerializeField] private string _roomID = "-1"; // Unique identifier for the room
+    float _timeSpentInRoom = 0f;
+    bool _isPlayerInRoom = false;
+    [SerializeField] Vector3 _roomSize;
+    [SerializeField] string _roomID = "-1"; // Unique identifier for the room
 
-    private BoxCollider _box;
-    private Rigidbody _rb;
+    BoxCollider _box;
+    Rigidbody _rb;
 
     private void Awake()
     {

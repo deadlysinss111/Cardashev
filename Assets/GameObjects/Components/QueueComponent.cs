@@ -5,19 +5,11 @@ using UnityEngine;
 
 public class QueueComponent : MonoBehaviour
 {
-
-    private Queue<Card> _queue = new Queue<Card>();
-    private Card _activeCard;
+    Queue<Card> _queue = new Queue<Card>();
+    Card _activeCard;
 
     void Update()
     {
-        // If N is pressed, create a test card and try to add it to the queue
-        /*if (Input.GetKeyDown(KeyCode.N))
-        {
-            //Card c = new("Sword of Light", "A huge and heavy railgun made for spatial airships. As of now, only a robot has managed to weild it... And you, for some reason.", 2f);
-            AddToQueue(c);
-        }*/
-
         // Handle making a card from the queue the "active" one
         if (IsCurrentCardEmpty() && _queue.Count > 0)
         {
@@ -34,11 +26,6 @@ public class QueueComponent : MonoBehaviour
             // It has been used so reset the current card
             _activeCard = null;
         }
-        else
-        {
-            
-        }
-
     }
 
     /// <summary>

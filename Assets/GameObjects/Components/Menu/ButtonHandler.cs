@@ -9,7 +9,6 @@ public class ButtonHandler : MonoBehaviour
 
     Vector3 default_scales;
 
-    // Start is called before the first frame update
     void Start()
     {
         default_scales = transform.localScale;
@@ -29,6 +28,7 @@ public class ButtonHandler : MonoBehaviour
     private void Update()
     {
         Vector3 scale = transform.localScale;
+
         if (mouse_on)
         {
             float select_mult = GetComponentInParent<MainMenuManager>()._buttonsSelectMult;

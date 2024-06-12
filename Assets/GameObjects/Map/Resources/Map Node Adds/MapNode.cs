@@ -112,7 +112,7 @@ public class MapNode : MonoBehaviour
     }
     public bool IsLockedByBlocker()
     {
-        return _blocker && _blocker.IsLocked;
+        return _blocker && _blocker._IsLocked;
     }
 
     public void SelectNode()

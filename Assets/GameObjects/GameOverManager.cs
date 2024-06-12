@@ -9,18 +9,19 @@ using UnityEngine.UI;
 
 public class GameOverManager : MonoBehaviour
 {
-    public static GameOverManager Instance;
+    // Logic Fields
+    public static GameOverManager _instance;
     [NonSerialized] public bool _inGameOver;
 
+    // UI & Canvas Fields
     private GameObject _gameOverPanel;
     private List<Button> _buttonList;
     private TMP_Text _text;
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        Instance = this;
+        _instance = this;
         _inGameOver = false;
 
         _gameOverPanel = GameObject.Find("Panel");

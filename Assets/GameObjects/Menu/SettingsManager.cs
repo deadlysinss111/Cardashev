@@ -6,15 +6,16 @@ using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
-    public AudioMixer _audioMixer;
-    public Dropdown _resolutionDropdown;
-    public Dropdown _qualityDropdown;
-    public Dropdown _textureDropdown;
-    public Dropdown _aaDropdown;
-    public Slider _volumeSlider;
-    public Slider _musicSlider;
-    private float _currentVolume;
-    private Resolution[] _resolutions;
+    [SerializeField] AudioMixer _audioMixer;
+    [SerializeField] Dropdown _resolutionDropdown;
+    [SerializeField] Dropdown _qualityDropdown;
+    [SerializeField] Dropdown _textureDropdown;
+    [SerializeField] Dropdown _aaDropdown;
+    [SerializeField] Slider _volumeSlider;
+    [SerializeField] Slider _musicSlider;
+
+    float _currentVolume;
+    Resolution[] _resolutions;
 
     private void Start()
     {

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WinManager : MonoBehaviour
+public class RoomClear : MonoBehaviour
 {
-    public bool _onWinScreen = false;
+    public bool _roomClearScreen = false;
 
     private void Start()
     {
@@ -14,6 +14,6 @@ public class WinManager : MonoBehaviour
     private void OnEnable()
     {
         //if (gameObject.activeInHierarchy == false)
-        _onWinScreen=true;
+        _roomClearScreen = true;
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class StatManager : MonoBehaviour
@@ -25,12 +26,13 @@ public class StatManager : MonoBehaviour
         }
     }
 
-    public float _health;
-    private float _baseHealth;
+    int _baseHealth;
+    float _baseMoveSpeed;
+    float _baseAttack;
+
+    public int _health;
     public float _moveSpeed;
-    private float _baseMoveSpeed;
     public float _attack;
-    private float _baseAttack;
     public int _armor;
 
     bool _wasJustModified;
@@ -96,8 +98,9 @@ public class StatManager : MonoBehaviour
                 case Modifier.ModifierType.Speed:
                     _moveSpeed += _baseMoveSpeed * mod._value;
                     break;
+                // TODO: Look at it with Arthus
                 case Modifier.ModifierType.Health:
-                    _health += _baseHealth * mod._value;
+                    _health += (int)math.floor(_baseHealth * mod._value);
                     break;
             }
         }
@@ -108,18 +111,23 @@ public class StatManager : MonoBehaviour
     public void TakeDamage(int amount)
     {
         _health -= amount;
-        print(_health);
+
+        if( _health <= 0)
+        {
+            Enemy enemy;
+            if (gameObject.TryGetComponent<Enemy>(out enemy))
+            {
+                enemy._UeOnDefeat.Invoke();
+                return;
+            }
+            PlayerManager manager;
+            if (gameObject.TryGetComponent<PlayerManager>(out manager))
+                manager._UeOnDefeat.Invoke();
+        }
     }
 
     public void Heal(int amount)
     {
-        if(_health+amount > _baseHealth)
-        {
-            _health = _baseHealth;
-        }
-        else
-        {
-            _health += amount;
-        }
+        _health = math.clamp(_health + amount, 0, _baseHealth);
     }
 }

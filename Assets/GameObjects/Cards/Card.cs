@@ -1,42 +1,72 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer.Internal;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Windows;
 
 public class Card : MonoBehaviour
 {
+    /*
+     FIELDS
+    */
+    // Card identity
+    // TODO make them into protected with properties
     public string _name;
     public string _description;
     public float _duration;
-    public float _endingTime;
     public int[] _stats;
     public int _goldValue;
-    public Action _onDiscard;
-    public Action _trigger;
-    public Action _clickEffect;
 
+    // Utilities
+    public float _cardEndTimestamp;
+    public byte _id = 0;
+
+    // Actions
+    public Action _onDiscard;       // Called when the card's duration reached 0 after activation
+    public Action _trigger;         // Called when the Queue sets it to be active
+    public Action _clickEffect;     // Called when the card is clicked in the HUD
+
+    // Level related
     public int _currLv = 1;
     public int _maxLv = 3;
 
+
+    /*
+     METHODS
+    */
+    // Constructor
     public Card()
     {
-        _trigger += ()=>Effect();
+        _trigger += () => Effect();
         _clickEffect = ClickEvent;
     }
 
+    // ~~~(> GETTERS
+    public float GetRemainingTime()
+    {
+        return _cardEndTimestamp - Time.time;
+    }
+
+    // In shop & rewards behaviour
+    // TODO => move it to its own, new class
+    public void SetToCollectible(Func<bool> func)
+    {
+        _clickEffect = () => { if (func()) PlayerManager._deck.Add(this); };
+    }
+
+
+    // -----
+    // ACTIONS, FUNCS AND CALLBACKS
+    // -----
     public virtual void Effect()
     {
-        _endingTime = Time.time + _duration;
+        _cardEndTimestamp = Time.time + _duration;
     }
     public virtual void Effect(GameObject go)
     {
         Effect();
-    }
-
-    public float GetRemainingTime()
-    {
-        return _endingTime - Time.time;
     }
 
     private void OnMouseDown()
@@ -46,17 +76,16 @@ public class Card : MonoBehaviour
 
     public virtual void ClickEvent()
     {
-        GameObject.Find("Player").GetComponent<DeckManager>().Play(this);
+        GI._PlayerFetcher().GetComponent<DeckManager>().Play(this);
     }
 
-    public void SetToCollectible(Func<bool> func)
-    {
-        _clickEffect = ()=> { if (func()) { PlayerManager._deck.Add(this); } };
-    }
 
+    // ------
+    // UPGRADE METHODS
+    // ------
     public virtual void OnUpgrade()
     {
-        for (int i=0; i< _stats.Length; i++)
+        for (int i = 0; i < _stats.Length; i++)
         {
             _stats[i] += 2 * _currLv;
         }

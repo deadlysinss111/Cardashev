@@ -10,13 +10,15 @@ using UnityEngine.SceneManagement;
 public class MainMenuManager : MonoBehaviour
 {
     // By how much buttons will scale up when hovering them
-    public float _buttonsSelectMult = 1.2f;
+    public float _buttonsSelectMult;
+
     public List<GameObject> _menuObjects;
     Dictionary<string, GameObject> _menus;
     string _currentMenu;
 
     private void Start()
     {
+        _buttonsSelectMult = 1.2f;
         _menuObjects = new();
         _currentMenu = string.Empty;
         _menus = new();
@@ -33,7 +35,6 @@ public class MainMenuManager : MonoBehaviour
         //BetterDebug.LogDict<string, GameObject>(_menus);
 
         SetMenu(_menuObjects[0].name);
-
     }
 
     /// <summary>
@@ -114,9 +115,11 @@ public class MainMenuManager : MonoBehaviour
 
     public void SelectCharacter(string name)
     {
+        /*
         Action init;
         ClassFactory._classesBook.TryGetValue(name, out init);
         init();
         SceneManager.LoadScene("MapNavigation");
+        */
     }
 }

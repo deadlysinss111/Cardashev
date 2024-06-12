@@ -6,18 +6,6 @@ using UnityEngine.SceneManagement;
 public class Loader : MonoBehaviour
 {
     /* 
-     FIELDS
-    */
-    // Nothing yet
-
-
-    /* 
-     PROPERTIES
-    */
-    // Nothing yet
-
-
-    /* 
      EVENTS
     */
     // Event that takes both scene container's names concerned by the scene change
@@ -58,28 +46,4 @@ public class Loader : MonoBehaviour
         // Loads the first scene
         _UeSceneChange.Invoke("", "Map", LoadSceneMode.Single);
     }
-
-
-
-    // ~~~~~~
-    // Old code to load the map only
-    /*
-    [SerializeField] GameObject _map;
-
-    void Start()
-    {
-        if (GlobalInformations._map == null)
-        {
-            GlobalInformations._map = Instantiate(_map);
-            DontDestroyOnLoad(GlobalInformations._map);
-        }
-        else
-        {
-            GlobalInformations._map.SetActive(true);
-        }
-    }
-
-    // Old code to load the map only
-    // ~~~~~~
-    */
 }

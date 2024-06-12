@@ -8,13 +8,13 @@ using UnityEngine;
 /// </summary>
 public struct UnlockCondition
 {
-    public string _stat;
+    public string _statName;
     int _successValue;
     bool _reverse;
 
     public UnlockCondition(string stat, int successValue, bool reverse=false)
     {
-        _stat = stat;
+        _statName = stat;
         _successValue = successValue;
         _reverse = reverse;
 
@@ -25,7 +25,7 @@ public struct UnlockCondition
     {
         //GlobalStats _stats = GameObject.FindGameObjectWithTag("Player").GetComponent<GlobalStats>();
         //Debug.Log($"Checking if {_stat} ({GlobalStats.GetStat(_stat)}) is equal to {_successValue}...");
-        bool cond = GlobalStats.GetStat(_stat) >= _successValue;
+        bool cond = GlobalStats.GetStat(_statName) >= _successValue;
         if (_reverse)
             cond = !cond;
         return cond;
@@ -37,12 +37,12 @@ public struct UnlockCondition
 /// </summary>
 public class UnlockWatcher : MonoBehaviour
 {
-    private static Dictionary<string, List<UnlockCondition>> unlockables;
+    private static Dictionary<string, List<UnlockCondition>> _unlockables;
     //GlobalStats _stats = GameObject.FindGameObjectWithTag("Player").GetComponent<GlobalStats>();
 
     private void Start()
     {
-        unlockables = new();
+        _unlockables = new();
         foreach (var cardList in Collection._locked)
         {
             foreach(var card in cardList.Value)
@@ -58,9 +58,9 @@ public class UnlockWatcher : MonoBehaviour
     /// <param name="tuple">The unlockable to define a listener for</param>
     static void AddUnlockable(Tuple<string, List<UnlockCondition>> tuple)
     {
-        foreach (var cond in tuple.Item2)
+        foreach (UnlockCondition cond in tuple.Item2)
         {
-            GlobalStats.ListenToStat(cond._stat, () => {
+            GlobalStats.ListenToStat(cond._statName, () => {
                 //Debug.Log("Listener Function");
                 if (AreCondComplete(tuple.Item1) && Collection.IsUnlocked(tuple.Item1) == false)
                 {
@@ -72,19 +72,19 @@ public class UnlockWatcher : MonoBehaviour
                     //Debug.Log("You got NOTHING! You LOSE! GOOD DAY SIR!");
                 }
             });
-            if (unlockables.ContainsKey(tuple.Item1) == false)
+            if (false == _unlockables.ContainsKey(tuple.Item1))
             {
-                unlockables.Add(tuple.Item1, new List<UnlockCondition>());
+                _unlockables.Add(tuple.Item1, new List<UnlockCondition>());
             }
-            unlockables[tuple.Item1].Add(cond);
+            _unlockables[tuple.Item1].Add(cond);
         }
     }
 
     public static bool AreCondComplete(string card)
     {
-        foreach (var cond in unlockables[card])
+        foreach (var cond in _unlockables[card])
         {
-            if (cond.IsComplete() == false)
+            if (false == cond.IsComplete())
                 return false;
         }
         return true;
