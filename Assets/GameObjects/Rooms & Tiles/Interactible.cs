@@ -185,8 +185,10 @@ public abstract class Interactible : MonoBehaviour
 
         if (SelectableArea.InteractableAreaCheck == false) return;
 
-        //TODO: LayerMash Interact Enemy Player
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10) == false) return;
+        int layerMask = (1 << LayerMask.NameToLayer("Player"));
+        layerMask |= (1 << LayerMask.NameToLayer("Enemy"));
+        layerMask = ~layerMask;
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10, layerMask) == false) return;
 
         GameObject hitObj = hit.transform.gameObject;
         if (hitObj.TryGetComponent(out Tile tile) == false) return;

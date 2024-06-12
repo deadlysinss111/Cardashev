@@ -7,7 +7,7 @@ public class TirSimple : Card
 {
     byte _id;
 
-    List<GameObject> selectableTiles = new List<GameObject>();
+    List<GameObject> _selectableTiles = new List<GameObject>();
 
     SelectableArea AreaSelector;
     PlayerManager Manager;
@@ -15,7 +15,9 @@ public class TirSimple : Card
     // Start is called before the first frame update
     void Start()
     {
+        _duration = 1f;
         _id = 0;
+        _stats = new int[1] { 13 };
         Manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         while (Manager.AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
@@ -28,36 +30,44 @@ public class TirSimple : Card
     {
     }
 
+    public override void Effect(GameObject obj)
+    {
+        base.Effect();
+        if (obj.TryGetComponent(out Enemy enemy) == false)
+        {
+            throw new MissingComponentException($"The object {obj.name} ({obj.GetType()}) the card aimed at does not have a Enemy script.");
+        }
+        enemy.TakeDamage(_stats[0]);
+        base.ClickEvent();
+        GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+    }
+
     void EnterAimState()
     {
-        SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
-        selectableTiles = AreaSelector.FindSelectableArea(GameObject.Find("Player"), 7);
-        Manager.SetLeftClickTo(() => { });
+        AreaSelector.SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
+        AreaSelector.SetSelectableEntites(false, false, true, false);
+        _selectableTiles = AreaSelector.FindSelectableArea(GameObject.Find("Player"), 4);
+
+        Manager.SetLeftClickTo(() => {
+            if (AreaSelector.CastLeftClick(out GameObject obj))
+            {
+                print("You got hit by a smooth " + obj.name);
+                Effect(obj);
+            }
+            else
+                print("R u ok?");
+        });
         Manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         Manager.SetHoverTo(() => { });
     }
 
     void ExitState()
     {
-        SetGroundColor(Color.white);
+        AreaSelector.SetGroundColor(Color.white);
     }
 
     public override void ClickEvent()
     {
         GameObject.Find("Player").GetComponent<PlayerManager>().SetToState("shoot" + _id.ToString());
-    }
-
-    void SetGroundColor(Color color)
-    {
-        print("Yeh");
-        List<GameObject> floorTiles = GameObject.FindGameObjectsWithTag("TMTopology").ToList();
-        foreach (GameObject topology in floorTiles)
-        {
-            for (int i = 0; i < topology.transform.childCount; i++)
-            {
-                GameObject tile = topology.transform.GetChild(i).gameObject;
-                tile.GetComponent<MeshRenderer>().material.color = color;
-            }
-        }
     }
 }

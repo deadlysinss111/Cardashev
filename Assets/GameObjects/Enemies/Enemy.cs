@@ -80,6 +80,11 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Move() { }
 
+    public virtual void TakeDamage(int amount)
+    {
+        _enemyHandler._stats.TakeDamage(amount);
+    }
+
     void CheckPlayerDistance()
     {
         // If the enemy is too close to the player, he will stop to move
@@ -98,7 +103,10 @@ public class Enemy : MonoBehaviour
 
         if (SelectableArea.EnemyAreaCheck == false) return;
 
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10) == false) return;
+        int layerMask = (1 << LayerMask.NameToLayer("Player"));
+        layerMask |= (1 << LayerMask.NameToLayer("Interactable"));
+        layerMask = ~layerMask;
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10, layerMask) == false) return;
 
         GameObject hitObj = hit.transform.gameObject;
         if (hitObj.TryGetComponent(out Tile tile) == false) return;

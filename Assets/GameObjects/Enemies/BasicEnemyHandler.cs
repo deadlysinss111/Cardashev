@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BasicEnemyHandler : MonoBehaviour
 {
-    StatManager _stats;
+    public StatManager _stats;
     bool _waitForDestroy;
 
     [NonSerialized] public Vector3 _virtualPos;

@@ -23,4 +23,19 @@ public class Tile : MonoBehaviour
     {
         GetComponent<MeshRenderer>().material.color = _startcolor;
     }
+    private void Update()
+    {
+        Outline outline;
+        if (_selectable && TryGetComponent<Outline>(out outline) == false)
+        {
+            outline = gameObject.AddComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineAll;
+            outline.OutlineColor = Color.cyan;
+            outline.OutlineWidth = 4.7f;
+        }
+        else if (_selectable == false && TryGetComponent<Outline>(out outline))
+        {
+            Destroy(outline);
+        }
+    }
 }

@@ -141,3 +141,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9c0726b68b669a43972079219740c30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ignoreLayerList:
+  - Player
+  - Interactable
+  - Enemy
+  _allowSelectEnemy: 1
+  _allowSelectInteractable: 1
+  _allowSelectPlayer: 0
