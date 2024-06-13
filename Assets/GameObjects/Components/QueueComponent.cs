@@ -5,8 +5,20 @@ using UnityEngine;
 
 public class QueueComponent : MonoBehaviour
 {
-    Queue<Card> _queue = new Queue<Card>();
-    Card _activeCard;
+    /*
+     FIELDS 
+    */
+    private Queue<Card> _queue = new Queue<Card>();
+    private Card _activeCard;
+    readonly private float _maxTimeBuffer = 15.0f;
+
+    /*
+     PROPERTIES
+    */
+    public float _MaxTimeBuffer
+    {
+        get { return _maxTimeBuffer; }
+    }
 
     void Update()
     {
@@ -80,7 +92,7 @@ public class QueueComponent : MonoBehaviour
     /// <returns></returns>
     bool IsQueueFull()
     {
-        return TotalQueueTime() >= 10f;
+        return TotalQueueTime() >= _maxTimeBuffer;
     }
 
     /// <summary>
@@ -90,6 +102,6 @@ public class QueueComponent : MonoBehaviour
     /// <returns></returns>
     bool AllowCard(Card c)
     {
-        return !IsQueueFull() && TotalQueueTime() + c._duration <= 10f;
+        return !IsQueueFull() && TotalQueueTime() + c._duration <= _maxTimeBuffer;
     }
 }
