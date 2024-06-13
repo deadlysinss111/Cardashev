@@ -321,6 +321,8 @@ public static class TrajectoryToolbox
 
     static public void BellCurve(Vector3 origin, Vector3 velocity, ref LineRenderer lineRenderer)
     {
+        List<Vector3> pathPoints = new List<Vector3>();
+
         // We initialize base values
         float step = 0.01f;
         //Vector3 virtualPos = GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos;
@@ -333,7 +335,7 @@ public static class TrajectoryToolbox
         {
             nextPos = virtualPos + velocity * step;
             velocity += Physics.gravity * step;
-
+            pathPoints.Add(virtualPos);
             // Overlap our rays by small margin to ensure we never miss a surface
             overlap = Vector3.Distance(virtualPos, nextPos) * 1.1f;
 
@@ -345,6 +347,9 @@ public static class TrajectoryToolbox
 
             virtualPos = nextPos;
         }
+        // Set positions for the line renderer
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
     }
 
 

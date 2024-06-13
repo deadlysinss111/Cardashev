@@ -34,6 +34,11 @@ public class LaunchGrenade : Card
         _previwRadius.SetActive(false);
     }
 
+    private void OnDestroy()
+    {
+        Destroy(_grenadePrefab);
+    }
+
     void EnterGrenadeState()
     {
         PlayerManager manager = GI._PManFetcher();
@@ -73,8 +78,8 @@ public class LaunchGrenade : Card
         _previwRadius.transform.position = alteredPos;
 
         Vector3 playerPos = manager._virtualPos;
-        _grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(playerPos, alteredPos, 10.0f);
-        TrajectoryToolbox.BellCurve(playerPos, _grenadeInitVelocity, ref _lineRenderer);
+        _grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(playerPos + new Vector3(0, 1, 0), alteredPos, 10.0f);
+        TrajectoryToolbox.BellCurve(playerPos + new Vector3(0, 1, 0), _grenadeInitVelocity, ref _lineRenderer);
     }
 
     protected void FireGrenade()
