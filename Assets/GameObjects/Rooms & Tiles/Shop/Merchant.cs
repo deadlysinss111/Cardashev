@@ -25,7 +25,7 @@ public class Merchant : Interactible
     {
         _interface.SetActive(true);
         List<string> pool;
-        Collection._unlocked.TryGetValue(Idealist._name, out pool);
+        Collection._unlocked.TryGetValue(Idealist._instance._name, out pool);
         int x = -300;
 
         for (int i = 0; i < 6; i++)

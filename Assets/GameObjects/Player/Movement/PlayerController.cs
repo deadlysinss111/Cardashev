@@ -177,7 +177,7 @@ public class PlayerController : MonoBehaviour
         // Wait for the agent to reach the destination
         while (path.Count > 1)
         {
-            if (Vector3.Magnitude(path[path.Count - 1] - GameObject.Find("Player").transform.position) > 0.1)
+            if (Vector3.Magnitude(path[path.Count - 1] - GI._PlayerFetcher().transform.position) > 0.1)
             {
                 path.RemoveAt(path.Count - 1);
                 _paths[0] = path;

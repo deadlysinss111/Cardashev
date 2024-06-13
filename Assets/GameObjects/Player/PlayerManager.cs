@@ -236,7 +236,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (_ultimateProgression >= 100)
         {
-            Idealist._ultimate();
+            Idealist._instance.Ultimate();
             _ultimateProgression = 0;
         }
     }

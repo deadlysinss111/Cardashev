@@ -115,11 +115,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void SelectCharacter(string name)
     {
-        /*
-        Action init;
-        ClassFactory._classesBook.TryGetValue(name, out init);
-        init();
+        Idealist.StartWith(name);
         SceneManager.LoadScene("MapNavigation");
-        */
     }
 }

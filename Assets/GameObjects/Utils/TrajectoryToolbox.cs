@@ -6,6 +6,7 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.LowLevel;
 using static UnityEngine.UI.Image;
+using System.IO;
 
 public static class TrajectoryToolbox
 {
@@ -20,38 +21,77 @@ public static class TrajectoryToolbox
 
     static public void DrawPath(List<List<Vector3>> paths, ref LineRenderer lineRenderer)
     {
+        List<Vector3> pathPoints = new List<Vector3>();
         foreach (List<Vector3> path in paths)
         {
-            DrawPath(path, ref lineRenderer);
+            List<Vector3> listToPoints = DrawPathBody(path.ToArray());
+            foreach (Vector3 point in listToPoints)
+            {
+                pathPoints.Add(point);
+            }
         }
+
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
     }
 
     static public void DrawPath(List<Vector3[]> paths, ref LineRenderer lineRenderer)
     {
+        List<Vector3> pathPoints = new List<Vector3>();
         foreach (Vector3[] path in paths)
         {
-            DrawPath(path, ref lineRenderer);
+            List<Vector3> listToPoints = DrawPathBody(path);
+            foreach (Vector3 point in listToPoints)
+            {
+                pathPoints.Add(point);
+            }
         }
+
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
     }
     static public void DrawPath(List<NavMeshPath> paths, ref LineRenderer lineRenderer)
     {
-        foreach (var path in paths)
+        List<Vector3> pathPoints = new List<Vector3>();
+        foreach (NavMeshPath path in paths)
         {
-            DrawPath(path, ref lineRenderer);
+            List<Vector3> listToPoints = DrawPathBody(path.corners);
+            foreach(Vector3 point in listToPoints)
+            {
+                pathPoints.Add(point);
+            }
         }
+
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
     }
 
     static public void DrawPath(NavMeshPath path, ref LineRenderer lineRenderer)
     {
-        DrawPath(path.corners, ref lineRenderer);
+        List<Vector3> pathPoints = DrawPathBody(path.corners);
+
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
     }
 
     static public void DrawPath(List<Vector3> path, ref LineRenderer lineRenderer)
     {
-        DrawPath(path.ToArray(), ref lineRenderer);
+        List<Vector3> pathPoints = DrawPathBody(path.ToArray());
+
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
     }
 
     static public void DrawPath(Vector3[] path, ref LineRenderer lineRenderer)
+    {
+        List<Vector3> pathPoints = DrawPathBody(path);
+
+        // Set positions for the line renderer
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
+    }
+
+    static private List<Vector3> DrawPathBody(Vector3[] path)
     {
         List<Vector3> pathPoints = new List<Vector3>();
 
@@ -77,9 +117,7 @@ public static class TrajectoryToolbox
             }
         }
 
-        // Set positions for the line renderer
-        lineRenderer.positionCount = pathPoints.Count;
-        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
+        return pathPoints;
     }
 
     // \_ ↑ DrawPath overloads above ↑ _/
