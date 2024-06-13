@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
-public class Enemy : MonoBehaviour
+abstract public class Enemy : MonoBehaviour
 {
     /*
      FIELDS
@@ -93,9 +93,9 @@ public class Enemy : MonoBehaviour
     }
 
     // Act is the location of the behaviour three
-    protected virtual void Act() { }
+    protected abstract void Act();
 
-    protected virtual void Move() { }
+    protected abstract void Move();
 
     void CheckPlayerDistance()
     {

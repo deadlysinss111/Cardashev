@@ -91,57 +91,6 @@ public class Room : MonoBehaviour
         // TODO: Places Entities (ennemies and the like)
     }
 
-    // Generic method to get a child by name
-    public GameObject FindChild(string ARGchildName)
-    {
-        foreach (Transform child in this.transform)
-            if (child.name == ARGchildName)
-                return child.gameObject;
-        return null;
-    }
-
-    // Generic methods to get a child recusively by name. Gift of ChatGPT
-    public GameObject FindChildRecursively(string ARGchildName)
-    {
-        return INTERNALFindChildRec(this.transform, ARGchildName);
-    }
-
-    private GameObject INTERNALFindChildRec(Transform parent, string ARGchildName)
-    {
-        foreach (Transform child in parent)
-        {
-            if (child.name == ARGchildName)
-                return child.gameObject;
-
-            GameObject result = INTERNALFindChildRec(child, ARGchildName);
-            if (result != null)
-                return result;
-        }
-        return null;
-    }
-
-    // Generic methods to get a parent recusively by name. Gift of ChatGPT
-    public GameObject FindParentdRecursively(string ARGchildName)
-    {
-        return INTERNALFindParentRec(transform, ARGchildName);
-    }
-
-    private GameObject INTERNALFindParentRec(Transform child, string ARGchildName)
-    {
-        Transform parent = child.parent;
-        if (parent != null)
-        {
-            if (parent.name == ARGchildName)
-                return parent.gameObject;
-
-            GameObject result = INTERNALFindParentRec(parent, ARGchildName);
-            if (result != null)
-                return result;
-        }
-        return null;
-    }
-
-
     void Awake()
     {
         // Loads the room the player entered and bakes its surface
