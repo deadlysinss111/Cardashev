@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour
             NavMeshPath path = new NavMeshPath();
             NavMesh.CalculatePath(GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos, _virtualDestination, NavMesh.AllAreas, path);
             _paths.Add(path.corners.ToList());
-            TrailCalculator.DrawPath(_paths, ref _lineRenderer);
+            TrajectoryToolbox.DrawPath(_paths, ref _lineRenderer);
 
             // Updating Player's virtual pos for the next preview
             GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _virtualDestination;
