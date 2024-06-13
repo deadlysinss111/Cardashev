@@ -77,7 +77,7 @@ public class Room : MonoBehaviour
                     GameObject MODEL = (GameObject)Resources.Load(modelPath);
 
                     // I cannot understand the reason of it but if we dont offset the MODEL.trnsform by a vector that goes down, the preview become bugged...
-                    Vector3 buf = new Vector3(0, -1, 0) + MODEL.transform.position;
+                    Vector3 buf = new Vector3(0, 0, 0) + MODEL.transform.position;
                     Instantiate(MODEL, model.transform.position + buf , model.transform.rotation, newTilemap.transform);
                 }
             }

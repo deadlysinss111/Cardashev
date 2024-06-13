@@ -70,16 +70,6 @@ public class PlayerManager : MonoBehaviour
 
         _ultimateProgression = 0;
         _goldAmount = 100;
-
-        // No Hover since it does not need any key presses
-        _pInput.actions["LeftClick"].performed += LeftClickMiddleware;
-        _pInput.actions["RightClick"].performed += RightClickMiddleware;
-    }
-
-    private void OnDestroy()
-    {
-        _pInput.actions["LeftClick"].performed -= LeftClickMiddleware;
-        _pInput.actions["RightClick"].performed -= RightClickMiddleware;
     }
 
     private void Start()
@@ -99,6 +89,14 @@ public class PlayerManager : MonoBehaviour
     private void OnDisable()
     {
         // Unsubscribe the input actions when the object is disabled
+        _pInput.actions["Ultimate"].performed -= OnUltimatePerformed;
+        _pInput.actions["LeftClick"].performed -= OnLeftClickPerformed;
+        _pInput.actions["RightClick"].performed -= OnRightClickPerformed;
+    }
+    
+    private void OnDestroy()
+    {
+        // Unsubscribe the input actions when the object is destroyed
         _pInput.actions["Ultimate"].performed -= OnUltimatePerformed;
         _pInput.actions["LeftClick"].performed -= OnLeftClickPerformed;
         _pInput.actions["RightClick"].performed -= OnRightClickPerformed;
