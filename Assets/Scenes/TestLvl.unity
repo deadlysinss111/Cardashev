@@ -564,6 +564,94 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cooldown: {fileID: 281907142}
   _cooldownTime: 30
+--- !u!1 &378827892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 378827893}
+  - component: {fileID: 378827896}
+  - component: {fileID: 378827895}
+  - component: {fileID: 378827894}
+  m_Layer: 5
+  m_Name: CriticalBuff
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &378827893
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378827892}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 16, y: 0.15, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1093230676}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 347.2, y: -437.7905}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0, y: 0.5}
+--- !u!114 &378827894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378827892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e897babac2cdc3646ac87545cfde6eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &378827895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378827892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 064b1ac2a86bccc4eb741b0850919069, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 0
+  m_FillAmount: 0.725
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &378827896
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378827892}
+  m_CullTransparentMesh: 1
 --- !u!1 &386421760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1970,6 +2058,7 @@ RectTransform:
   - {fileID: 1438130190}
   - {fileID: 594266541}
   - {fileID: 293872503}
+  - {fileID: 378827893}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2112,6 +2201,10 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 0.7299006
       objectReference: {fileID: 0}
+    - target: {fileID: 5720873998326652374, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _buffBar
+      value: 
+      objectReference: {fileID: 378827892}
     - target: {fileID: 7232163658981407054, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2156,7 +2249,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8313256407998957317, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _criticalBar
+      value: 
+      objectReference: {fileID: 378827894}
+    m_RemovedComponents:
+    - {fileID: 5720873998326652374, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -7399,6 +7497,7 @@ MonoBehaviour:
   _moveSpeed: 0
   _attack: 0
   _armor: 0
+  _criticalBar: {fileID: 0}
 --- !u!114 &1407585052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7411,6 +7510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 436403c5600f7194ebfdf3c79b89a293, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _stats: {fileID: 0}
 --- !u!54 &1407585053
 Rigidbody:
   m_ObjectHideFlags: 0

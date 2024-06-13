@@ -189,10 +189,15 @@ public class PlayerManager : MonoBehaviour
         List<string> deck = new List<string>();
         for(int i=0; i < 4; i++) 
         {
-            if (i%2 == 0)
+            // It's getting worse
+            if (i % 4 == 1)
                 deck.Add("LaunchGrenadeModel");
-            else
+            else if (i % 4 == 2)
                 deck.Add("TirSimple");
+            else if (i % 4 == 3)
+                deck.Add("PiercingShot");
+            else
+                deck.Add("Overdrive");
         }
         return deck;
     }

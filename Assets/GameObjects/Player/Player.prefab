@@ -2992,6 +2992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _goldAmount: 0
+  _critMode: 0
   _clickableLayers:
     serializedVersion: 2
     m_Bits: 1

@@ -82,6 +82,7 @@ public class Enemy : MonoBehaviour
 
     public virtual void TakeDamage(int amount)
     {
+        print($"Took {amount} damages!");
         _enemyHandler._stats.TakeDamage(amount);
     }
 
