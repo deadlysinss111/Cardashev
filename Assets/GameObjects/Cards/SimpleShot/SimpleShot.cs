@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class TirSimple : Card
+public class SimpleShot : Card
 {
     byte _id;
 
-    List<GameObject> _selectableTiles = new List<GameObject>();
+    List<GameObject> _selectableTiles = new();
 
     SelectableArea AreaSelector;
     PlayerManager Manager;

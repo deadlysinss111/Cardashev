@@ -193,7 +193,7 @@ public class PlayerManager : MonoBehaviour
             if (i % 4 == 1)
                 deck.Add("LaunchGrenadeModel");
             else if (i % 4 == 2)
-                deck.Add("TirSimple");
+                deck.Add("SimpleShot");
             else if (i % 4 == 3)
                 deck.Add("PiercingShot");
             else
