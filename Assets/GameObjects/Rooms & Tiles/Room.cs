@@ -75,7 +75,10 @@ public class Room : MonoBehaviour
 
                     // We use the MODEL to get the local position of the object, and the model for the global transform
                     GameObject MODEL = (GameObject)Resources.Load(modelPath);
-                    Instantiate(MODEL, model.transform.position + MODEL.transform.position , model.transform.rotation, newTilemap.transform);
+
+                    // I cannot understand the reason of it but if we dont offset the MODEL.trnsform by a vector that goes down, the preview become bugged...
+                    Vector3 buf = new Vector3(0, -1, 0) + MODEL.transform.position;
+                    Instantiate(MODEL, model.transform.position + buf , model.transform.rotation, newTilemap.transform);
                 }
             }
             heightLevel++;
