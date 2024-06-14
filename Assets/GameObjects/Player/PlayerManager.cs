@@ -13,8 +13,6 @@ using static UnityEditorInternal.VersionControl.ListControl;
 
 public class PlayerManager : MonoBehaviour
 {
-    [NonSerialized] public Vector3 _virtualPos;
-    private PlayerInput _pInput;
     /*
      FIELDS 
     */
@@ -23,8 +21,9 @@ public class PlayerManager : MonoBehaviour
     byte _ultimateProgression;
     public int _goldAmount;
 
-    static public List<Card> _deck = new();
-
+    // Deck related (serves as storage for DeckManager to prepare itself for a room)
+    static int _deckMaxCapacity;
+    static List<Card> _deck = new();
 
     // State related
     string _currentState;
@@ -37,6 +36,8 @@ public class PlayerManager : MonoBehaviour
     Action _leftClick;
     Action _rightClick;
 
+    PlayerInput _pInput;
+    [NonSerialized] public Vector3 _virtualPos;
     [NonSerialized] public RaycastHit _lastHit;
     [SerializeField] LayerMask _clickableLayers;    // TODO: Implement that
 
@@ -67,6 +68,9 @@ public class PlayerManager : MonoBehaviour
         // Fetching some refs
         _pInput = GetComponent<PlayerInput>();
         _statManagerRef = GetComponent<StatManager>();
+
+        // Deck initialization
+        _deckMaxCapacity = 80;
 
         _ultimateProgression = 0;
         _goldAmount = 100;
@@ -264,5 +268,21 @@ public class PlayerManager : MonoBehaviour
     private void PlayerDeath()
     {
         throw new NotImplementedException();
+    }
+
+
+    // ------
+    // DECK BS
+    // ------
+    public void AddCardsToDeck(List<Card> ARGIncomingCards)
+    {
+        // Ensures the deck isn't too large
+        if (ARGIncomingCards.Count > _deckMaxCapacity)
+            Debug.LogError("_Deck was passed with a List too large ! ALL CARDS REFUSED");
+
+        // Cards fit in the deck, so we had them all
+        else
+            foreach (Card card in ARGIncomingCards)
+                _deck.Add(card);
     }
 }

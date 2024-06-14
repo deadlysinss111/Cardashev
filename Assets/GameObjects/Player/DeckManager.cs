@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using static UnityEngine.GraphicsBuffer;
 
+// This class does not control logic yet, and only implements in-room functionnalities
 public class DeckManager : MonoBehaviour
 {
     protected List<Card> _hand;
