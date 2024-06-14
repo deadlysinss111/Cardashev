@@ -76,9 +76,10 @@ public class StatManager : MonoBehaviour
     public void AddModifier(Modifier modifier)
     {
         if (modifier == null) return;
+        // If there's already a critical buff on, remove it
         if (modifier._type == Modifier.ModifierType.Critical && HasCritical())
         {
-            Modifier mod = GetCriticalModifier();
+            Modifier mod = GetModifier(Modifier.ModifierType.Critical);
             _modifiers.Remove(mod);
         }
 
@@ -135,23 +136,45 @@ public class StatManager : MonoBehaviour
         }
     }
 
-    public bool HasCritical()
-    {
-        return GetCriticalModifier() is not null;
-    }
-    public bool HasCritical(out Modifier critMod)
-    {
-        critMod = GetCriticalModifier();
-        return critMod is not null;
-    }
+    // Not sure how useful rn that is but it sounds like it could be at some point
 
-    Modifier GetCriticalModifier()
+    /// <summary>
+    /// Returns the first found modifier of type type
+    /// </summary>
+    /// <param name="type">The type of the modifier to look for</param>
+    /// <returns></returns>
+    public Modifier GetModifier(Modifier.ModifierType type)
     {
         foreach (Modifier mod in _modifiers)
         {
-            if (mod._type == Modifier.ModifierType.Critical)
+            if (mod._type == type)
                 return mod;
         }
         return null;
+    }
+    /// <summary>
+    /// Returns a list of all modifiers of type type
+    /// </summary>
+    /// <param name="type">The type of the modifier to look for</param>
+    /// <returns></returns>
+    public List<Modifier> GetModifiers(Modifier.ModifierType type)
+    {
+        List<Modifier> mods = new();
+        foreach (Modifier mod in _modifiers)
+        {
+            if (mod._type == type)
+                mods.Add(mod);
+        }
+        return mods;
+    }
+
+    public bool HasCritical()
+    {
+        return GetModifier(Modifier.ModifierType.Critical) is not null;
+    }
+    public bool HasCritical(out Modifier critMod)
+    {
+        critMod = GetModifier(Modifier.ModifierType.Critical);
+        return critMod is not null;
     }
 }

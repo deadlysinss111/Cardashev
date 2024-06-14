@@ -30,6 +30,10 @@ public class CriticalBar : MonoBehaviour
         _bar.fillAmount = Mathf.Clamp01(_totalTime/_maxTime);
     }
 
+    /// <summary>
+    /// Sets a duration for the UI bar
+    /// </summary>
+    /// <param name="time">Time is seconds it'll take for the bar to empty itself</param>
     public void ActivateBuff(float time)
     {
         _totalTime = time;
