@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine;
 public class SelectableArea : MonoBehaviour
 {
     // The layers that can be used in the LayerMask. Shouldn't have a reason to change unless we rename those layers
-    List<string> _ignoreLayerList = new() { 
+    readonly List<string> _ignoreLayerList = new() { 
         "Player",
         "Interactable",
         "Enemy"
@@ -14,6 +14,9 @@ public class SelectableArea : MonoBehaviour
 
     // Currently unused (actually not)
     List<GameObject> _selectableTiles;
+
+    RaycastHit[] _hitBuffer;
+    RaycastHit[] _innerHitBuffer;
 
     // Used to draw the raincast
     List<Vector3> _debugRayStart;
@@ -44,10 +47,14 @@ public class SelectableArea : MonoBehaviour
 
         _enemyAreaCheck = false;
         _interactableAreaCheck = false;
+
+        _hitBuffer = new RaycastHit[200];
+        _innerHitBuffer = new RaycastHit[200];
     }
 
     void Update()
     {
+        // Le RainCast
         if (_debugRayStart.Count > 0 && (_debugRayStart.Count == _debugRayDir.Count))
         {
             for (int i = 0; i < _debugRayStart.Count; i++)
@@ -106,7 +113,7 @@ public class SelectableArea : MonoBehaviour
         }*/
     }
 
-    // TODO FindSelectableArea: A fucking circle
+    // TODO FindSelectableArea: Fix inner radius
 
     /// <summary>
     /// Sets up an area of a defined radius around obj where objects can be selected
@@ -118,6 +125,10 @@ public class SelectableArea : MonoBehaviour
     /// <returns>A list of tiles that are part of the selectable area</returns>
     public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius, bool ignore_interactable=false)
     {
+        if (inner_radius >= radius)
+        {
+            throw new ArgumentException($"[SelectableArea] The inner radius ({inner_radius}) should not be equal or bigger than the radius ({radius})!");
+        }
         ResetSelectable();
 
         // Prevents players, interactables (if decided so) and enemies to be counted in the raycast
@@ -129,7 +140,7 @@ public class SelectableArea : MonoBehaviour
         }
         layerMask = ~layerMask;
 
-        for (int i = -radius; i <= radius; i++)
+        /*for (int i = -radius; i <= radius; i++)
         {
             for (int j = -radius; j <= radius; j++)
             {
@@ -176,7 +187,60 @@ public class SelectableArea : MonoBehaviour
                     //break;
                 }
             }
+        }*/
+
+        int count;
+        int count_inner;
+        try
+        {
+            count = Physics.SphereCastNonAlloc(obj.transform.position, radius, Vector3.down, _hitBuffer, radius, layerMask);
+            count_inner = Physics.SphereCastNonAlloc(obj.transform.position, inner_radius, Vector3.down, _innerHitBuffer, inner_radius, layerMask);
+            Debug.Log(count + count_inner);
         }
+        catch (Exception e)
+        {
+            throw new ArgumentOutOfRangeException("[SelectableArea] The numbers of selected tiles is superior to the size of the buffer! (" + e + ")");
+        }
+        BetterDebug.Log(_hitBuffer.Length, count);
+
+        for (int i = 0; i < count; i++)
+        {
+            RaycastHit hit = _hitBuffer[i];
+
+            if (i < count_inner)
+            {
+                RaycastHit inner_hit = _innerHitBuffer[i];
+
+                BetterDebug.Log(hit, inner_hit, count + i);
+
+                if (hit.transform.position == inner_hit.transform.position || hit.transform.gameObject == inner_hit.transform.gameObject)
+                {
+                    continue;
+                }
+            }
+
+            if (hit.transform.gameObject.CompareTag("TMTopology") == false)
+            {
+                Debug.Log("Did Hit Non-Tile " + hit.transform.gameObject.name);
+                continue;
+            }
+            Debug.Log("Did Hit " + hit.transform.gameObject.name);
+
+            _selectableTiles.Add(hit.transform.gameObject);
+            try
+            {
+                hit.transform.gameObject.GetComponent<Tile>()._selectable = true;
+                hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 0, 1f);
+            }
+            catch (MissingComponentException e)
+            {
+                Debug.LogError($"An error occured when hitting {hit.transform.gameObject.name}: {e}");
+            }
+        }
+
+        // Clear out the buffer for future use
+        Array.Clear(_hitBuffer, 0, count);
+
         // If there's an actual area set, activate enemies and interactables' raycasting if allowed
         if (_selectableTiles.Count > 0)
         {
@@ -206,7 +270,7 @@ public class SelectableArea : MonoBehaviour
         }
         layerMask = ~layerMask;
 
-        for (int i = -radius; i <= radius; i++)
+        /*for (int i = -radius; i <= radius; i++)
         {
             for (int j = -radius; j <= radius; j++)
             {
@@ -247,7 +311,92 @@ public class SelectableArea : MonoBehaviour
                     //break;
                 }
             }
+        }*/
+
+        /*float pointsPerUnitLength = 1.0f;
+        float circumference = 2 * Mathf.PI * radius;
+        int numberOfPoints = Mathf.CeilToInt(circumference * pointsPerUnitLength);
+        float angle_gap = 360f / numberOfPoints;
+
+        for (float angle = 0; angle < 360; angle += angle_gap)
+        {
+            float rad = Mathf.Deg2Rad * angle;
+
+            float circleX = Mathf.Cos(rad) * radius;
+            float circleZ = Mathf.Sin(rad) * radius;
+
+            Vector3 pos = obj.transform.position;
+            Vector3 castPoint = new(pos.x + circleX, pos.y + 5f, pos.z + circleZ);
+
+            if (Physics.Raycast(castPoint, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMask)) // If it hits something...
+            {
+                Debug.Log("Did Hit");
+
+                // If it's something but not a tile, leave it be
+                if (hit.transform.gameObject.CompareTag("TMTopology") == false)
+                {
+                    DebugRay(castPoint, Vector3.down * hit.distance, Color.blue);
+                    continue;
+                }
+
+                DebugRay(castPoint, Vector3.down * hit.distance, Color.yellow);
+                _selectableTiles.Add(hit.transform.gameObject);
+                try
+                {
+                    hit.transform.gameObject.GetComponent<Tile>()._selectable = true;
+                    hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 0, 1f);
+                }
+                catch (MissingComponentException e)
+                {
+                    Debug.LogError($"An error occured when hitting {hit.transform.gameObject.name}: {e}");
+                }
+            }
+            else
+            {
+                Debug.Log("Did Hitn't");
+                DebugRay(castPoint, Vector3.down * 100, Color.red);
+            }
         }
+
+        castAxis(obj.transform.position, layerMask);*/
+
+        int count;
+        try
+        {
+            count = Physics.SphereCastNonAlloc(obj.transform.position, radius, Vector3.down, _hitBuffer, radius, layerMask);
+        }
+        catch (Exception e)
+        {
+            throw new ArgumentOutOfRangeException("[SelectableArea] The numbers of selected tiles is superior to the size of the buffer! ("+e+")");
+        }
+        BetterDebug.Log(_hitBuffer.Length, count);
+
+        for (int i = 0; i < count; i++)
+        {
+            RaycastHit hit = _hitBuffer[i];
+
+            if (hit.transform.gameObject.CompareTag("TMTopology") == false)
+            {
+                Debug.Log("Did Hit Non-Tile " + hit.transform.gameObject.name);
+                continue;
+            }
+            Debug.Log("Did Hit " + hit.transform.gameObject.name);
+
+            _selectableTiles.Add(hit.transform.gameObject);
+            try
+            {
+                hit.transform.gameObject.GetComponent<Tile>()._selectable = true;
+                hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 0, 1f);
+            }
+            catch (MissingComponentException e)
+            {
+                Debug.LogError($"An error occured when hitting {hit.transform.gameObject.name}: {e}");
+            }
+        }
+
+        // Clear out the buffer for future use
+        Array.Clear(_hitBuffer, 0, count);
+
         // If there's an actual area set, activate enemies and interactables' raycasting if allowed
         if (_selectableTiles.Count > 0)
         {
@@ -256,6 +405,15 @@ public class SelectableArea : MonoBehaviour
         }
         return _selectableTiles;
     }
+
+    /*void castAxis(Vector3 pos, int mask=0)
+    {
+        pos.y += 5f;
+        if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit, Mathf.Infinity, mask))
+        {
+
+        }
+    }*/
 
     public List<GameObject> GetSelectableTiles()
     {
