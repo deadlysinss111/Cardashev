@@ -29,6 +29,6 @@ public class CameraManager : MonoBehaviour
 
     public void SetCamPos(Vector3 pos, bool addOffset)
     {
-        _camera.transform.position = pos + (addOffset ? new Vector3(0, 20, -20) : new Vector3());
+        _camera.transform.position = pos + (addOffset ? new Vector3(0, 15, -20) : new Vector3());
     }
 }
