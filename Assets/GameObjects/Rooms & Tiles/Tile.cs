@@ -5,6 +5,7 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     Color _startcolor;  // DEPRECATED !!! Must be highlighted differently in the future, since we shouldn't touch the material
+    public bool _selectable = false;
 
     void OnMouseEnter()
     {

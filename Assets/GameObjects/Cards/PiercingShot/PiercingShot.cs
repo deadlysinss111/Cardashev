@@ -10,7 +10,6 @@ public class PiercingShot : Card
     List<GameObject> _selectableTiles = new List<GameObject>();
 
     SelectableArea AreaSelector;
-    PlayerManager Manager;
 
     // Start is called before the first frame update
     void Start()
@@ -18,8 +17,7 @@ public class PiercingShot : Card
         _duration = 4f;
         _id = 0;
         _stats = new int[2] { 6, 24 };
-        Manager = GameObject.Find("Player").GetComponent<PlayerManager>();
-        while (Manager.AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
+        while (GI._PManFetcher().AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
         if (TryGetComponent(out AreaSelector) == false)
             AreaSelector = gameObject.AddComponent<SelectableArea>();
@@ -37,9 +35,9 @@ public class PiercingShot : Card
         {
             throw new MissingComponentException($"The object {obj.name} ({obj.GetType()}) the card aimed at does not have a Enemy script.");
         }
-        enemy.TakeDamage(_stats[Manager._health.HasCritical() ? 1 : 0]);
+        enemy.TakeDamage(_stats[GI._PlayerFetcher().GetComponent<StatManager>().HasCritical() ? 1 : 0]);
         base.ClickEvent(); // Calls this function to add the card to the queue
-        Manager.SetToDefault();
+        GI._PManFetcher().SetToDefault();
     }
 
     void EnterAimState()
@@ -49,7 +47,8 @@ public class PiercingShot : Card
         AreaSelector.SetSelectableEntites(false, false, true, false);
         _selectableTiles = AreaSelector.FindSelectableArea(GameObject.Find("Player"), 7);
 
-        Manager.SetLeftClickTo(() => {
+        PlayerManager manager = GI._PManFetcher();
+        manager.SetLeftClickTo(() => {
             if (AreaSelector.CastLeftClick(out GameObject obj))
             {
                 print("You got hit by a smooth " + obj.name);
@@ -58,8 +57,8 @@ public class PiercingShot : Card
             else
                 print("R u ok?");
         });
-        Manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
-        Manager.SetHoverTo(() => { });
+        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        manager.SetHoverTo(() => { });
     }
 
     void ExitState()

@@ -103,7 +103,7 @@ abstract public class Enemy : MonoBehaviour
     public virtual void TakeDamage(int amount)
     {
         print($"Took {amount} damages!");
-        _enemyHandler._stats.TakeDamage(amount);
+        gameObject.GetComponent<StatManager>().TakeDamage(amount);
     }
 
     void CheckPlayerDistance()
@@ -143,6 +143,7 @@ abstract public class Enemy : MonoBehaviour
     /// <summary>
     /// Checks if the enemy is inside a set SelectableArea
     /// </summary>
+    // TODO: giga opti => avoid chack at update; make tiles check on changestate and set a OnCollisionEnter or smth
     void CheckSelectable()
     {
         _selectable = false;

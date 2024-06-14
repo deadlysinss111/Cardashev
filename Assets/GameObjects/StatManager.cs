@@ -112,7 +112,6 @@ public class StatManager : MonoBehaviour
                 case Modifier.ModifierType.Critical:
                     _attack += _baseAttack * mod._value;
                     _moveSpeed += _baseMoveSpeed * mod._value;
-                    _health += _baseHealth * mod._value;
                     _criticalBar.ActivateBuff(mod._duration);
                     break;
             }

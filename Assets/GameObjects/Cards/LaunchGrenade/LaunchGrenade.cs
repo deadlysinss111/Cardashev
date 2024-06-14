@@ -34,11 +34,6 @@ public class LaunchGrenade : Card
         _previwRadius.SetActive(false);
     }
 
-    private void OnDestroy()
-    {
-        Destroy(_grenadePrefab);
-    }
-
     void EnterGrenadeState()
     {
         PlayerManager manager = GI._PManFetcher();
