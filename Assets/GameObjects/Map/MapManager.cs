@@ -14,12 +14,11 @@ using Random = UnityEngine.Random;
 
 public class MapManager : MonoBehaviour
 {
-    int _mapSizeX;
-    int _mapSizeY;
-
     // For map generation
     List<GameObject> _startingNodes;
-    int NUMBER_OF_PATH;
+    [SerializeField] int MAP_SIZE_X = 8; // Number of columns
+    [SerializeField] int MAP_SIZE_Y = 10; // Number of floors
+    [SerializeField] int NUMBER_OF_PATH = 6; // It's in the name dumbass
 
     // PREFABS
     GameObject MAP_NODE;
@@ -52,11 +51,8 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        NUMBER_OF_PATH = 6;
-        _mapSizeX = 8;
-        _mapSizeY = 10; // Number of floors
 
-        _mapGrid = new List<List<GameObject>>(_mapSizeX);
+        _mapGrid = new List<List<GameObject>>(MAP_SIZE_X);
         _startingNodes = new List<GameObject>();
 
         MAP_NODE = (GameObject)Resources.Load("Map Node");
@@ -148,7 +144,7 @@ public class MapManager : MonoBehaviour
         // Use a Raycast to get the map node that was targeted
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))
         {
-            _radioactiveCloud.GetComponent<GreenCloud>().MoveCloudTo(hit.transform.position);
+            _radioactiveCloud.GetComponent<ToxicTornado>().MoveCloudTo(hit.transform.position);
         }
     }
 
@@ -158,10 +154,10 @@ public class MapManager : MonoBehaviour
 
         int spaceBetweenNodes = 8;
 
-        for (int i = 0; i < _mapSizeX; i++)
+        for (int i = 0; i < MAP_SIZE_X; i++)
         {
-            _mapGrid.Add(new List<GameObject>(_mapSizeY));
-            for (int j = 0; j < _mapSizeY; j++)
+            _mapGrid.Add(new List<GameObject>(MAP_SIZE_Y));
+            for (int j = 0; j < MAP_SIZE_Y; j++)
             {
                 GameObject obj = Instantiate(MAP_NODE);
                 _mapGrid[i].Add(obj);
@@ -177,7 +173,7 @@ public class MapManager : MonoBehaviour
 
         _bossRoom = Instantiate(MAP_NODE);
         _bossRoom.transform.SetParent(mapObj, false);
-        _bossRoom.transform.localPosition = new Vector3(_mapSizeX / 2 * spaceBetweenNodes, 4, (_mapSizeY + 1) * spaceBetweenNodes);
+        _bossRoom.transform.localPosition = new Vector3(MAP_SIZE_X / 2 * spaceBetweenNodes, 4, (MAP_SIZE_Y + 1) * spaceBetweenNodes);
         _bossRoom.transform.localScale *= 2;
         _bossRoom.GetComponent<MapNode>().SetRoomTypeTo(RoomType.Boss);
     }
@@ -190,7 +186,7 @@ public class MapManager : MonoBehaviour
 
         // Starting nodes attribution
         List<GameObject> freeNodelist = new List<GameObject>();
-        for (int i = 1; i < _mapSizeX - 1; i++)
+        for (int i = 1; i < MAP_SIZE_X - 1; i++)
         {
             _mapGrid[i][0].GetComponent<MapNode>()._startingXCoord = i;
             freeNodelist.Add(_mapGrid[i][0]);
@@ -215,7 +211,7 @@ public class MapManager : MonoBehaviour
             // Flag for placing only 1 blocker per path
             bool blockerWasPlaced = false;
             int x = _startingNodes[nodeNb].GetComponent<MapNode>()._startingXCoord;
-            for (int floorNb = 0; floorNb < _mapSizeY - 1; floorNb++)
+            for (int floorNb = 0; floorNb < MAP_SIZE_Y - 1; floorNb++)
             {
                 int nextNodeXIndex;
                 if (floorNb == 0)
@@ -250,7 +246,7 @@ public class MapManager : MonoBehaviour
 
                 // Saving the x coordinate of the next node for the next iteration of the loop
                 x = nextNodeXIndex;
-                if (floorNb == _mapSizeY - 2)
+                if (floorNb == MAP_SIZE_Y - 2)
                 {
                     nextNode.GetComponent<MapNode>().AddNextNode(nodeNb, _bossRoom);
                     CreatePathBetween(nextNode, _bossRoom);
@@ -259,9 +255,9 @@ public class MapManager : MonoBehaviour
         }
 
         // Destroying path-less nodes
-        for (int i = 0; i < _mapSizeX; i++)
+        for (int i = 0; i < MAP_SIZE_X; i++)
         {
-            for (int j = 0; j < _mapSizeY; j++)
+            for (int j = 0; j < MAP_SIZE_Y; j++)
             {
                 if (_mapGrid[i][j].GetComponent<MapNode>().UniqueNextNode == 0)
                     Destroy(_mapGrid[i][j]);
@@ -411,7 +407,7 @@ public class MapManager : MonoBehaviour
 
     bool AvailableDirection(int x, int floor, int nextX, int pathNb)
     {
-        if (nextX >= _mapSizeX || nextX < 0)
+        if (nextX >= MAP_SIZE_X || nextX < 0)
         {
             return false;
         }
