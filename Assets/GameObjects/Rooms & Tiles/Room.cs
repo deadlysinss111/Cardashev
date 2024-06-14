@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
@@ -96,6 +97,7 @@ public class Room : MonoBehaviour
         // Loads the room the player entered and bakes its surface
         EnterRoom();
         NavMeshSurface surface = GameObject.Find("RoomAnchor").AddComponent<NavMeshSurface>();
+        surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
         surface.BuildNavMesh();
     }
 }
