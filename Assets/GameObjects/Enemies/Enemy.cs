@@ -11,6 +11,8 @@ abstract public class Enemy : MonoBehaviour
     /*
      FIELDS
     */
+    protected string _name;
+
     // Ennemy action related
     protected NavMeshAgent _agent;
     protected GameObject _target;
@@ -22,7 +24,7 @@ abstract public class Enemy : MonoBehaviour
     protected ParticleSystem _particleSystem;
 
     // Allows the call of the death animation in place of the usual Act()
-    Action _eff;
+    protected Action _eff;
 
     /*
      EVENTS
@@ -33,7 +35,7 @@ abstract public class Enemy : MonoBehaviour
     /*
      METHODS
     */
-    private void Awake()
+    protected void Awake()
     {
         // Event subscribing
         _UeOnDefeat.AddListener(Defeat);
@@ -52,7 +54,7 @@ abstract public class Enemy : MonoBehaviour
         _eff = Act;
     }
 
-    void Update()
+    protected void Update()
     {
         CheckPlayerDistance();
         // We update the timer, then if there is no action in progress, the enemy will decide to do something
@@ -100,13 +102,13 @@ abstract public class Enemy : MonoBehaviour
 
     protected abstract void Move();
 
-    public virtual void TakeDamage(int amount)
+    public void TakeDamage(int amount)
     {
         print($"Took {amount} damages!");
         gameObject.GetComponent<StatManager>().TakeDamage(amount);
     }
 
-    void CheckPlayerDistance()
+    protected void CheckPlayerDistance()
     {
         // If the enemy is too close to the player, he will stop to move
         if( _isMoving && Vector3.Magnitude(_target.transform.position - transform.position) < 2)
@@ -116,18 +118,22 @@ abstract public class Enemy : MonoBehaviour
         }
     }
 
-    private void Defeat()
+    protected void Defeat()
     {
-        _particleSystem.Play();
+        //TODO: ue there
+        GameObject.Find("ExitTile(Clone)").GetComponent<EscapeTile>().TriggerCondition(_name);
+        //_particleSystem.Play();
         _eff = ParticleHandle;
+        print(gameObject.name);
 
         // Ensures the animation plays out entirely
         _timeBeforeDecision = 0;
     }
 
     // Needs to be called every frame after defeat so that the GO is detroyed correctly after the animation
-    private void ParticleHandle()
+    protected void ParticleHandle()
     {
+        print("I do handle");
         if (_particleSystem.isEmitting == false)
         {
             Color c = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
@@ -144,7 +150,7 @@ abstract public class Enemy : MonoBehaviour
     /// Checks if the enemy is inside a set SelectableArea
     /// </summary>
     // TODO: giga opti => avoid chack at update; make tiles check on changestate and set a OnCollisionEnter or smth
-    void CheckSelectable()
+    protected void CheckSelectable()
     {
         _selectable = false;
         transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.white; //Temp: Add an overlay or something later

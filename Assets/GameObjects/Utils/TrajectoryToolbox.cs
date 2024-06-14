@@ -113,7 +113,8 @@ public static class TrajectoryToolbox
                 Vector3 point = Vector3.Lerp(start, end, t);
 
                 // Project the point onto the NavMesh surface
-                pathPoints.Add(ProjectToNavMeshSurface(point));
+                if(false == float.IsNaN(point.x))
+                    pathPoints.Add(ProjectToNavMeshSurface(point));
             }
         }
 

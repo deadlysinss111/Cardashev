@@ -19,7 +19,14 @@ public class GrenadeScript : MonoBehaviour
         {
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
             {
-                manager._health -= 10;
+                manager.TakeDamage(10);
+            }
+            else if(c.transform.parent != null)
+            {
+                if (c.transform.parent.gameObject.TryGetComponent<StatManager>(out manager))
+                {
+                    manager.TakeDamage(10);
+                }
             }
         }
         Destroy(gameObject);

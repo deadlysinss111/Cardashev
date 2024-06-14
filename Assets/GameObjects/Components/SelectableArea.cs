@@ -228,7 +228,7 @@ public class SelectableArea : MonoBehaviour
                     }
 
                     DebugRay(origin, Vector3.down * hit.distance, Color.yellow);
-                    Debug.Log("Did Hit " + hit.transform.gameObject.name);
+                    //Debug.Log("Did Hit " + hit.transform.gameObject.name);
                     _selectableTiles.Add(hit.transform.gameObject);
                     try
                     {
@@ -237,13 +237,13 @@ public class SelectableArea : MonoBehaviour
                     }
                     catch (MissingComponentException e)
                     {
-                        Debug.LogError($"An error occured when hitting {hit.transform.gameObject.name}: {e}");
+                        //Debug.LogError($"An error occured when hitting {hit.transform.gameObject.name}: {e}");
                     }
                 }
                 else // If there's nothing...
                 {
                     DebugRay(origin, Vector3.down * 100, Color.red);
-                    Debug.Log("Did Hitn't");
+                    //Debug.Log("Did Hitn't");
                     //break;
                 }
             }
@@ -347,7 +347,7 @@ public class SelectableArea : MonoBehaviour
     // Temporary: to replace with an overlay or something similar
     public void SetGroundColor(Color color)
     {
-        print("Yeh");
+        //print("Yeh");
         List<GameObject> floorTiles = GameObject.FindGameObjectsWithTag("TMTopology").ToList();
         foreach (GameObject tile in floorTiles)
         {

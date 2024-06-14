@@ -50,7 +50,7 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
-        _health = 100;
+        _health = 10;
         _baseHealth = _health;
         _moveSpeed = 1.5f;
         _baseMoveSpeed = _moveSpeed;
@@ -126,15 +126,16 @@ public class StatManager : MonoBehaviour
 
         if( _health <= 0)
         {
+            print(gameObject.name + " : " +_health);
             Enemy enemy;
             if (gameObject.TryGetComponent<Enemy>(out enemy))
             {
                 enemy._UeOnDefeat.Invoke();
                 return;
             }
-            PlayerManager manager;
-            if (gameObject.TryGetComponent<PlayerManager>(out manager))
-                manager._UeOnDefeat.Invoke();
+            PlayerManager player;
+            if (gameObject.TryGetComponent<PlayerManager>(out player))
+                player._UeOnDefeat.Invoke();
         }
     }
 

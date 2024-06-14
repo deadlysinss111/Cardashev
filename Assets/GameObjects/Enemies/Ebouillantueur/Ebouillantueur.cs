@@ -11,8 +11,10 @@ public class Ebouillantueur : Enemy
     private new void Start()
     {
         base.Start();
+        _name = "Ebouillantueur";
         _agent.speed = 3f;
     }
+
 
     // Enemy's decision
     override protected void Act()

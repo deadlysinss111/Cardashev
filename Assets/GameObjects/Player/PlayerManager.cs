@@ -269,6 +269,6 @@ public class PlayerManager : MonoBehaviour
 
     private void PlayerDeath()
     {
-        throw new NotImplementedException();
+        print("u dead");
     }
 }
