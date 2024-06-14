@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class SimpleShot : Card
 {
-    byte _id;
-
     List<GameObject> _selectableTiles = new();
 
     SelectableArea AreaSelector;
@@ -16,7 +14,6 @@ public class SimpleShot : Card
     void Start()
     {
         _duration = 1f;
-        _id = 0;
         _stats = new int[1] { 13 };
         Manager = GameObject.Find("Player").GetComponent<PlayerManager>();
         while (Manager.AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
