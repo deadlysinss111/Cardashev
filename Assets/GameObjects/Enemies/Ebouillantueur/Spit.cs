@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Spit : MonoBehaviour
 {
-    // TODO: Change function for OnTriggerEnter ?
     private void OnCollisionEnter(Collision other)
     {
+        // TODO: this is a big band-aid, we'd like to find a better way to do that
         StatManager manager;
         if (GetComponent<Rigidbody>().velocity.y > 0)
             return;
@@ -30,7 +30,7 @@ public class Spit : MonoBehaviour
             }
 
             // Summons an Interactible if it hits the ground
-            else if(FindParentdRecursively(c.gameObject.transform, "Topology") != null)
+            else if(HierarchySearcher.FindParentdRecursively(c.gameObject.transform, "Topology") != null)
             {
                 RaycastHit hit;
                 Physics.Raycast(transform.position, Vector3.down, out hit);
@@ -41,24 +41,29 @@ public class Spit : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // Genric methods to get a parent recusively by name. Gift of ChatGPT
-    public GameObject FindParentdRecursively(Transform target,string ARGchildName)
+    private void OnTriggerEnter(Collider other)
     {
-        return INTERNALFindParentRec(target, ARGchildName);
-    }
+        // TODO: this is a big band-aid, we'd like to find a better way to do that
+        StatManager manager;
 
-    private GameObject INTERNALFindParentRec(Transform child, string ARGchildName)
-    {
-        Transform parent = child.parent;
-        if (parent != null)
+        Collider[] hits = Physics.OverlapSphere(transform.position, 2);
+        foreach (Collider c in hits)
         {
-            if (parent.name == ARGchildName)
-                return parent.gameObject;
+            if (c.gameObject.TryGetComponent<StatManager>(out manager))
+            {
+                // Buffs a fish if the projectile lands on it
+                if (c.gameObject.GetComponent<Murlock>() != null)
+                {
+                    c.gameObject.GetComponent<Murlock>().AcideBuff();
+                }
 
-            GameObject result = INTERNALFindParentRec(parent, ARGchildName);
-            if (result != null)
-                return result;
+                // Deals damage if it lands on anything else than fish and bouilloir
+                else if (c.gameObject.GetComponent<Ebouillantueur>() == null)
+                {
+                    manager._health -= 10;
+                }
+            }
         }
-        return null;
+        Destroy(gameObject);
     }
 }

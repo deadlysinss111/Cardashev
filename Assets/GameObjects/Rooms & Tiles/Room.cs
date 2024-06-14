@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
@@ -75,7 +76,7 @@ public class Room : MonoBehaviour
                     GameObject MODEL = (GameObject)Resources.Load(modelPath);
 
                     // I cannot understand the reason of it but if we dont offset the MODEL.trnsform by a vector that goes down, the preview become bugged...
-                    Vector3 buf = new Vector3(0, -1, 0) + MODEL.transform.position;
+                    Vector3 buf = new Vector3(0, 0, 0) + MODEL.transform.position;
                     Instantiate(MODEL, model.transform.position + buf , model.transform.rotation, newTilemap.transform);
                 }
             }
@@ -89,62 +90,12 @@ public class Room : MonoBehaviour
         // TODO: Places Entities (ennemies and the like)
     }
 
-    // Generic method to get a child by name
-    public GameObject FindChild(string ARGchildName)
-    {
-        foreach (Transform child in this.transform)
-            if (child.name == ARGchildName)
-                return child.gameObject;
-        return null;
-    }
-
-    // Generic methods to get a child recusively by name. Gift of ChatGPT
-    public GameObject FindChildRecursively(string ARGchildName)
-    {
-        return INTERNALFindChildRec(this.transform, ARGchildName);
-    }
-
-    private GameObject INTERNALFindChildRec(Transform parent, string ARGchildName)
-    {
-        foreach (Transform child in parent)
-        {
-            if (child.name == ARGchildName)
-                return child.gameObject;
-
-            GameObject result = INTERNALFindChildRec(child, ARGchildName);
-            if (result != null)
-                return result;
-        }
-        return null;
-    }
-
-    // Generic methods to get a parent recusively by name. Gift of ChatGPT
-    public GameObject FindParentdRecursively(string ARGchildName)
-    {
-        return INTERNALFindParentRec(transform, ARGchildName);
-    }
-
-    private GameObject INTERNALFindParentRec(Transform child, string ARGchildName)
-    {
-        Transform parent = child.parent;
-        if (parent != null)
-        {
-            if (parent.name == ARGchildName)
-                return parent.gameObject;
-
-            GameObject result = INTERNALFindParentRec(parent, ARGchildName);
-            if (result != null)
-                return result;
-        }
-        return null;
-    }
-
-
     void Awake()
     {
         // Loads the room the player entered and bakes its surface
         EnterRoom();
         NavMeshSurface surface = GameObject.Find("RoomAnchor").AddComponent<NavMeshSurface>();
+        surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
         surface.BuildNavMesh();
     }
 }

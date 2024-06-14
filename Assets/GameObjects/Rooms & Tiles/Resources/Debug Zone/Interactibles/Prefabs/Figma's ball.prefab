@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7112792914818745359}
   - component: {fileID: 5504547310294664975}
   - component: {fileID: 590946744956240987}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Holy Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7887349312770862682}
   - component: {fileID: 681496750486443346}
   - component: {fileID: 4308808809062434729}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Figma's ball
   m_TagString: InteractibleObject
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 6123986513002109744}
   - component: {fileID: 1787605907255369965}
   - component: {fileID: 5637632222067386830}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pedestal
   m_TagString: Untagged
   m_Icon: {fileID: 0}

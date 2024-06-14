@@ -12,6 +12,7 @@ public class StatManager : MonoBehaviour
             Speed,
             Attack,
             Health,
+            Critical
         }
 
         public ModifierType _type;
@@ -39,6 +40,7 @@ public class StatManager : MonoBehaviour
 
     List<Modifier> _modifiers;
     PlayerManager _manager;
+    [SerializeField] CriticalBar _criticalBar;
 
     private void Awake()
     {
@@ -76,6 +78,11 @@ public class StatManager : MonoBehaviour
     public void AddModifier(Modifier modifier)
     {
         if (modifier == null) return;
+        if (modifier._type == Modifier.ModifierType.Critical && HasCritical())
+        {
+            Modifier mod = GetCriticalModifier();
+            _modifiers.Remove(mod);
+        }
 
         _modifiers.Add(modifier);
         _wasJustModified = true;
@@ -101,6 +108,11 @@ public class StatManager : MonoBehaviour
                 // TODO: Look at it with Arthus
                 case Modifier.ModifierType.Health:
                     _health += (int)math.floor(_baseHealth * mod._value);
+                    break;
+                case Modifier.ModifierType.Critical:
+                    _attack += _baseAttack * mod._value;
+                    _moveSpeed += _baseMoveSpeed * mod._value;
+                    _criticalBar.ActivateBuff(mod._duration);
                     break;
             }
         }
@@ -129,5 +141,25 @@ public class StatManager : MonoBehaviour
     public void Heal(int amount)
     {
         _health = math.clamp(_health + amount, 0, _baseHealth);
+    }
+
+    public bool HasCritical()
+    {
+        return GetCriticalModifier() is not null;
+    }
+    public bool HasCritical(out Modifier critMod)
+    {
+        critMod = GetCriticalModifier();
+        return critMod is not null;
+    }
+
+    Modifier GetCriticalModifier()
+    {
+        foreach (Modifier mod in _modifiers)
+        {
+            if (mod._type == Modifier.ModifierType.Critical)
+                return mod;
+        }
+        return null;
     }
 }

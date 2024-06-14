@@ -16,7 +16,8 @@ public abstract class Interactible : MonoBehaviour
     */
     protected static GameObject _playerRef;
     protected static PlayerManager _playerManager;
-    [SerializeField] bool _isHiglightable = true;   // TODO: Make it also handle if it is clickable at all or not
+    [SerializeField] bool _isHiglightable = true;
+    public bool _selectable = false;
 
     /* 
      PROPERTIES
@@ -169,6 +170,41 @@ public abstract class Interactible : MonoBehaviour
 
             // Restores the previous state
             _playerManager.SetToLastState();
+        }
+    }
+
+
+    
+
+    void Update()
+    {
+        CheckSelectable();
+    }
+
+    void CheckSelectable()
+    {
+        _selectable = false;
+        //transform.GetChild(1).GetComponent<MeshRenderer>().material.color = Color.white;
+
+        if (SelectableArea.InteractableAreaCheck == false) return;
+
+        int layerMask = (1 << LayerMask.NameToLayer("Player"));
+        layerMask |= (1 << LayerMask.NameToLayer("Enemy"));
+        layerMask = ~layerMask;
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10, layerMask) == false) return;
+
+        GameObject hitObj = hit.transform.gameObject;
+        if (hitObj.TryGetComponent(out Tile tile) == false) return;
+
+        if (tile._selectable == false) return;
+
+        _selectable = true;
+
+
+        if (_selectable)
+        {
+            //print($"Enemy {gameObject.name} is selectable!");
+            transform.GetChild(1).GetComponent<MeshRenderer>().material.color = Color.red;
         }
     }
 }

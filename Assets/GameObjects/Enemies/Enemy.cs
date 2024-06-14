@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
-public class Enemy : MonoBehaviour
+abstract public class Enemy : MonoBehaviour
 {
     /*
      FIELDS
@@ -38,6 +38,7 @@ public class Enemy : MonoBehaviour
         // Event subscribing
         _UeOnDefeat.AddListener(Defeat);
     }
+    public bool _selectable = false;
 
     protected void Start()
     {
@@ -60,6 +61,8 @@ public class Enemy : MonoBehaviour
         {
             _eff();
         }
+
+        CheckSelectable();
     }
 
     // Pick a random reachable position
@@ -93,9 +96,15 @@ public class Enemy : MonoBehaviour
     }
 
     // Act is the location of the behaviour three
-    protected virtual void Act() { }
+    protected abstract void Act();
 
-    protected virtual void Move() { }
+    protected abstract void Move();
+
+    public virtual void TakeDamage(int amount)
+    {
+        print($"Took {amount} damages!");
+        gameObject.GetComponent<StatManager>().TakeDamage(amount);
+    }
 
     void CheckPlayerDistance()
     {
@@ -128,6 +137,40 @@ public class Enemy : MonoBehaviour
         if (_particleSystem.isStopped)
         {
             Destroy(gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the enemy is inside a set SelectableArea
+    /// </summary>
+    // TODO: giga opti => avoid chack at update; make tiles check on changestate and set a OnCollisionEnter or smth
+    void CheckSelectable()
+    {
+        _selectable = false;
+        transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.white; //Temp: Add an overlay or something later
+
+        // If we aren't looking to select enemies, return
+        if (SelectableArea.EnemyAreaCheck == false) return;
+
+        // Filter out the player and the interactables from the Raycast
+        int layerMask = (1 << LayerMask.NameToLayer("Player"));
+        layerMask |= (1 << LayerMask.NameToLayer("Interactable"));
+        layerMask = ~layerMask;
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10, layerMask) == false) return;
+
+        GameObject hitObj = hit.transform.gameObject;
+        if (hitObj.TryGetComponent(out Tile tile) == false) return;
+
+        //If the tile isn't among the selectable area, return
+        if (tile._selectable == false) return;
+
+        _selectable = true;
+
+
+        if (_selectable)
+        {
+            print($"Enemy {gameObject.name} is selectable!");
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.red; //Temp
         }
     }
 }
