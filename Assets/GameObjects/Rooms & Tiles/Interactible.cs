@@ -16,7 +16,8 @@ public abstract class Interactible : MonoBehaviour
     */
     protected static GameObject _playerRef;
     protected static PlayerManager _playerManager;
-    [SerializeField] bool _isHiglightable = true;   // TODO: Make it also handle if it is clickable at all or not
+    [SerializeField] bool _isHiglightable = true;
+    public bool _selectable = false;
 
     /* 
      PROPERTIES
@@ -169,6 +170,85 @@ public abstract class Interactible : MonoBehaviour
 
             // Restores the previous state
             _playerManager.SetToLastState();
+        }
+    }
+
+
+    // ------
+    // INITIALIZATION
+    // ------
+
+    protected void Awake()
+    {
+        // Field setup
+        _playerRef = GameObject.Find("Player").gameObject;
+        _playerManager = _playerRef.GetComponent<PlayerManager>();
+        _RaycastHitDist = 10.0f;
+
+        // Event subscribing
+        _UeOnRaycastHit.AddListener(OnRaycastHit);
+
+        // Non combined mesh scenario
+        if (transform.childCount == 0) return;
+
+        // Mesh Combining
+        List<MeshFilter> meshFilters = new List<MeshFilter>();
+        List<CombineInstance> combine = new List<CombineInstance>();
+
+        foreach (Transform child in this.transform)
+            if (child.GetComponent<MeshFilter>() != null)
+                meshFilters.Add(child.GetComponent<MeshFilter>());
+
+        for (int i = 0;  i < meshFilters.Count ; ++i)
+        {
+            // Stored current meshFilter data since we need to read it a bunch
+            MeshFilter curMeshFilter = meshFilters[i];
+            Transform curMFTransfrom = curMeshFilter.transform;
+
+            // Filling out a temp combineInstance and adding it to the combine List
+            CombineInstance combInstTemp = new CombineInstance();
+            combInstTemp.mesh = curMeshFilter.sharedMesh;
+            combInstTemp.transform = Matrix4x4.TRS(curMFTransfrom.localPosition, curMFTransfrom.localRotation, curMFTransfrom.localScale);
+            combine.Add(combInstTemp);
+        }
+
+        // Combining meshes together, and activating it
+        Mesh combinedMesh = new Mesh();
+        combinedMesh.CombineMeshes(combine.ToArray());
+        transform.GetComponent<MeshFilter>().sharedMesh = combinedMesh;
+        transform.GetComponent<MeshCollider>().sharedMesh = combinedMesh;
+        gameObject.SetActive(true);
+    }
+
+    void Update()
+    {
+        CheckSelectable();
+    }
+
+    void CheckSelectable()
+    {
+        _selectable = false;
+        transform.GetChild(1).GetComponent<MeshRenderer>().material.color = Color.white;
+
+        if (SelectableArea.InteractableAreaCheck == false) return;
+
+        int layerMask = (1 << LayerMask.NameToLayer("Player"));
+        layerMask |= (1 << LayerMask.NameToLayer("Enemy"));
+        layerMask = ~layerMask;
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10, layerMask) == false) return;
+
+        GameObject hitObj = hit.transform.gameObject;
+        if (hitObj.TryGetComponent(out Tile tile) == false) return;
+
+        if (tile._selectable == false) return;
+
+        _selectable = true;
+
+
+        if (_selectable)
+        {
+            print($"Enemy {gameObject.name} is selectable!");
+            transform.GetChild(1).GetComponent<MeshRenderer>().material.color = Color.red;
         }
     }
 }

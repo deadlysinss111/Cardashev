@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6959527034630702259
+--- !u!1 &4984098909471649992
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6865436900811316657}
-  - component: {fileID: 6758840178058624963}
-  - component: {fileID: 7678431666921866782}
-  - component: {fileID: 9099410370513784297}
-  - component: {fileID: -8385629782037469278}
+  - component: {fileID: 4332805941341913268}
+  - component: {fileID: 1440428773648523995}
+  - component: {fileID: -1460868305599606527}
+  - component: {fileID: -1000178190773513854}
+  - component: {fileID: -4827280923402448760}
+  - component: {fileID: 7174756930278330644}
   m_Layer: 0
-  m_Name: Flat Tile
-  m_TagString: TMTopology
+  m_Name: SimpleShot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6865436900811316657
+--- !u!4 &4332805941341913268
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6959527034630702259}
+  m_GameObject: {fileID: 4984098909471649992}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6758840178058624963
+  m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
+--- !u!33 &1440428773648523995
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6959527034630702259}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7678431666921866782
+  m_GameObject: {fileID: 4984098909471649992}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &-1460868305599606527
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6959527034630702259}
+  m_GameObject: {fileID: 4984098909471649992}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -63,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -7805457775891230367, guid: 1aa83896d4f8bd249ab46449ea0fd2ea, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -85,13 +86,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &9099410370513784297
-BoxCollider:
+--- !u!64 &-1000178190773513854
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6959527034630702259}
+  m_GameObject: {fileID: 4984098909471649992}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -103,18 +104,43 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-8385629782037469278
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &-4827280923402448760
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6959527034630702259}
+  m_GameObject: {fileID: 4984098909471649992}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6658a6fa1b63724eb432663c0676927, type: 3}
+  m_Script: {fileID: 11500000, guid: aefb0440f325e504d8af6a17922669b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _name: Simple Shot
+  _description: Aim your weapon at an enemy within a radius of 4 cases and shoots
+  _duration: 1
+  _endingTime: 0
+  _stats: 
+  _goldValue: 0
+  _currLv: 1
+  _maxLv: 4
+--- !u!114 &7174756930278330644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4984098909471649992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9c0726b68b669a43972079219740c30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _allowSelectEnemy: 1
+  _allowSelectInteractable: 1
+  _allowSelectPlayer: 0
+  _allowSelectTiles: 0

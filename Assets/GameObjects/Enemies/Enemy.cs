@@ -38,6 +38,7 @@ abstract public class Enemy : MonoBehaviour
         // Event subscribing
         _UeOnDefeat.AddListener(Defeat);
     }
+    public bool _selectable = false;
 
     protected void Start()
     {
@@ -60,6 +61,8 @@ abstract public class Enemy : MonoBehaviour
         {
             _eff();
         }
+
+        CheckSelectable();
     }
 
     // Pick a random reachable position
@@ -97,6 +100,12 @@ abstract public class Enemy : MonoBehaviour
 
     protected abstract void Move();
 
+    public virtual void TakeDamage(int amount)
+    {
+        print($"Took {amount} damages!");
+        _enemyHandler._stats.TakeDamage(amount);
+    }
+
     void CheckPlayerDistance()
     {
         // If the enemy is too close to the player, he will stop to move
@@ -128,6 +137,39 @@ abstract public class Enemy : MonoBehaviour
         if (_particleSystem.isStopped)
         {
             Destroy(gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the enemy is inside a set SelectableArea
+    /// </summary>
+    void CheckSelectable()
+    {
+        _selectable = false;
+        transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.white; //Temp: Add an overlay or something later
+
+        // If we aren't looking to select enemies, return
+        if (SelectableArea.EnemyAreaCheck == false) return;
+
+        // Filter out the player and the interactables from the Raycast
+        int layerMask = (1 << LayerMask.NameToLayer("Player"));
+        layerMask |= (1 << LayerMask.NameToLayer("Interactable"));
+        layerMask = ~layerMask;
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10, layerMask) == false) return;
+
+        GameObject hitObj = hit.transform.gameObject;
+        if (hitObj.TryGetComponent(out Tile tile) == false) return;
+
+        //If the tile isn't among the selectable area, return
+        if (tile._selectable == false) return;
+
+        _selectable = true;
+
+
+        if (_selectable)
+        {
+            print($"Enemy {gameObject.name} is selectable!");
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.red; //Temp
         }
     }
 }

@@ -254,7 +254,15 @@ public class PlayerManager : MonoBehaviour
         List<string> deck = new List<string>();
         for (int i = 0; i < 4; i++)
         {
-            deck.Add("LaunchGrenadeModel");
+            // It's getting worse
+            if (i % 4 == 1)
+                deck.Add("LaunchGrenadeModel");
+            else if (i % 4 == 2)
+                deck.Add("SimpleShot");
+            else if (i % 4 == 3)
+                deck.Add("PiercingShot");
+            else
+                deck.Add("Overdrive");
         }
         return deck;
     }
