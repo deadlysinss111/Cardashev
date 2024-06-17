@@ -21,7 +21,8 @@ public class Outline : MonoBehaviour {
     OutlineVisible,
     OutlineHidden,
     OutlineAndSilhouette,
-    SilhouetteOnly
+    SilhouetteOnly,
+    OutlineFuckAround
   }
 
   public Mode OutlineMode {
@@ -304,6 +305,12 @@ public class Outline : MonoBehaviour {
         outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Greater);
         outlineFillMaterial.SetFloat("_OutlineWidth", 0f);
         break;
-    }
+
+       case Mode.OutlineFuckAround:
+         outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.LessEqual);
+         outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.LessEqual);
+         outlineFillMaterial.SetFloat("_OutlineWidth", outlineWidth);
+         break;
+     }
   }
 }
