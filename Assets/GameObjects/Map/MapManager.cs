@@ -144,7 +144,7 @@ public class MapManager : MonoBehaviour
         // Use a Raycast to get the map node that was targeted
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))
         {
-            _radioactiveCloud.GetComponent<ToxicTornado>().MoveCloudTo(hit.transform.position);
+            _radioactiveCloud.GetComponent<ToxicTornado>().UpdTarget(hit.transform.position);
         }
     }
 

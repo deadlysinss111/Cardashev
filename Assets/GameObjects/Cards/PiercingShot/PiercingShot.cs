@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PiercingShot : Card
 {
-    byte _id;
 
     List<GameObject> _selectableTiles = new List<GameObject>();
 
@@ -15,7 +14,6 @@ public class PiercingShot : Card
     void Start()
     {
         _duration = 4f;
-        _id = 0;
         _stats = new int[2] { 6, 24 };
         while (GI._PManFetcher().AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
