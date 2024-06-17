@@ -6,7 +6,7 @@ using UnityEngine;
 public class SelectableArea : MonoBehaviour
 {
     // The layers that can be used in the LayerMask. Shouldn't have a reason to change unless we rename those layers
-    readonly List<string> _ignoreLayerList = new() { 
+    readonly List<string> _ignoreLayerList = new() {
         "Player",
         "Interactable",
         "Enemy"
@@ -33,7 +33,7 @@ public class SelectableArea : MonoBehaviour
 
     // Static variables used to tell the enemies and interactables to start raycasting
     static bool _enemyAreaCheck;
-    public static bool EnemyAreaCheck {  get { return _enemyAreaCheck; } }
+    public static bool EnemyAreaCheck { get { return _enemyAreaCheck; } }
     static bool _interactableAreaCheck;
     public static bool InteractableAreaCheck { get { return _interactableAreaCheck; } }
 
@@ -123,7 +123,7 @@ public class SelectableArea : MonoBehaviour
     /// <param name="inner_radius">How many cases from inside should be excluded. DO NOT COUNT THE RADIUS</param>
     /// <param name="ignore_interactable">Whether the area should include the tiles below interactables or not</param>
     /// <returns>A list of tiles that are part of the selectable area</returns>
-    public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius, bool ignore_interactable=false)
+    public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius, bool ignore_interactable = false)
     {
         if (inner_radius >= radius)
         {
@@ -193,8 +193,23 @@ public class SelectableArea : MonoBehaviour
         int count_inner;
         try
         {
-            count = Physics.SphereCastNonAlloc(obj.transform.position, radius, Vector3.down, _hitBuffer, radius, layerMask);
+            // May look ugly but currently the most efficiant method I have compared to loops in loops in if conditions (22ms vs 66ms on r=7, ir=4)
+            int i;
             count_inner = Physics.SphereCastNonAlloc(obj.transform.position, inner_radius, Vector3.down, _innerHitBuffer, inner_radius, layerMask);
+            LayerMask[] origLayer = new LayerMask[count_inner];
+            for (i = 0; i < count_inner; i++)
+            {
+                RaycastHit hit = _innerHitBuffer[i];
+                origLayer[i] = hit.transform.gameObject.layer;
+                hit.transform.gameObject.layer = LayerMask.NameToLayer("TempLayer");
+            }
+            layerMask &= ~(1 << LayerMask.NameToLayer("TempLayer"));
+            count = Physics.SphereCastNonAlloc(obj.transform.position, radius, Vector3.down, _hitBuffer, radius, layerMask);
+            for (i = 0; i < count_inner; i++)
+            {
+                RaycastHit hit = _innerHitBuffer[i];
+                hit.transform.gameObject.layer = origLayer[i];
+            }
             Debug.Log(count + count_inner);
         }
         catch (Exception e)
@@ -206,18 +221,6 @@ public class SelectableArea : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             RaycastHit hit = _hitBuffer[i];
-
-            if (i < count_inner)
-            {
-                RaycastHit inner_hit = _innerHitBuffer[i];
-
-                BetterDebug.Log(hit, inner_hit, count + i);
-
-                if (hit.transform.position == inner_hit.transform.position || hit.transform.gameObject == inner_hit.transform.gameObject)
-                {
-                    continue;
-                }
-            }
 
             if (hit.transform.gameObject.CompareTag("TMTopology") == false)
             {
@@ -367,7 +370,7 @@ public class SelectableArea : MonoBehaviour
         }
         catch (Exception e)
         {
-            throw new ArgumentOutOfRangeException("[SelectableArea] The numbers of selected tiles is superior to the size of the buffer! ("+e+")");
+            throw new ArgumentOutOfRangeException("[SelectableArea] The numbers of selected tiles is superior to the size of the buffer! (" + e + ")");
         }
         BetterDebug.Log(_hitBuffer.Length, count);
 
@@ -466,7 +469,7 @@ public class SelectableArea : MonoBehaviour
     /// <param name="obj">The object the mouse selected</param>
     /// <param name="removeSelectable">If true, the area will be removed if an object is returned</param>
     /// <returns></returns>
-    public bool CastLeftClick(out GameObject obj, bool removeSelectable=true)
+    public bool CastLeftClick(out GameObject obj, bool removeSelectable = true)
     {
         obj = null;
 
