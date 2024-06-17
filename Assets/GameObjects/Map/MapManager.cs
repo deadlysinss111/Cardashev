@@ -168,6 +168,7 @@ public class MapManager : MonoBehaviour
         _bossRoom = Instantiate(MAP_NODE);
         _bossRoom.transform.SetParent(mapObj, false);
         _bossRoom.transform.localPosition = new Vector3(MAP_SIZE_X / 2 * spaceBetweenNodes, 4, (MAP_SIZE_Y + 1) * spaceBetweenNodes);
+        _bossRoom.transform.position = new Vector3(8, 52, 155);
         _bossRoom.transform.localScale *= 2;
         _bossRoom.GetComponent<MapNode>().SetRoomTypeTo(RoomType.Boss, resources);
     }

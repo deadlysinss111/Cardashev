@@ -65,7 +65,7 @@ Material:
     - _Wobble_Height: 0.2
     - _Wobble_Speed: 1
     m_Colors:
-    - _BaseColor: {r: 0.3420971, g: 0.8679245, b: 0.1514774, a: 1}
+    - _BaseColor: {r: 1.1794517, g: 2.9960783, b: 0.5287197, a: 1}
     - _NormalsSpeed: {r: 0, g: 0.2, b: 0, a: 0}
     - _VoronoiColor: {r: 3.0382352, g: 3.9911342, b: 0, a: 1}
     - _VoronoiSpeed: {r: 0, g: 0.1, b: 0, a: 0}
