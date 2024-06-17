@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PiercingShot : Card
 {
-
     List<GameObject> _selectableTiles = new List<GameObject>();
 
     SelectableArea AreaSelector;

@@ -1,10 +1,12 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class StatManager : MonoBehaviour
 {
+    /*  ---> INTERNAL CLASS <---  */
     public class Modifier
     {
         public enum ModifierType
@@ -27,6 +29,9 @@ public class StatManager : MonoBehaviour
         }
     }
 
+    /*
+     FIELDS
+    */
     int _baseHealth;
     float _baseMoveSpeed;
     float _baseAttack;
@@ -39,13 +44,24 @@ public class StatManager : MonoBehaviour
     bool _wasJustModified;
 
     List<Modifier> _modifiers;
-    PlayerManager _manager;
     [SerializeField] CriticalBar _criticalBar;
 
+
+    /*
+     EVENTS
+    */
+    UnityEvent _UeDebuffListChange;
+
+
+    /*
+     METHODS
+    */
     private void Awake()
     {
-        _manager = GetComponent<PlayerManager>();
-        _modifiers = new List<Modifier>();
+        // Event subscribing
+        _UeDebuffListChange.AddListener(ApplyModifiers);
+
+        _modifiers = new List<Modifier>();  // ←- should this go into Start() ?
     }
 
     void Start()
@@ -61,6 +77,7 @@ public class StatManager : MonoBehaviour
 
     void Update()
     {
+        // Updates the timer of each stat modifiers that are currently being applied
         foreach (Modifier debuff in _modifiers)
         {
             debuff._duration -= Time.deltaTime;
@@ -69,11 +86,11 @@ public class StatManager : MonoBehaviour
             {
                 _modifiers.Remove(debuff);
                 _wasJustModified = true;
+                _UeDebuffListChange.Invoke();
             }
         }
-
-        ApplyModifiers();
     }
+
 
     public void AddModifier(Modifier modifier)
     {
@@ -87,11 +104,14 @@ public class StatManager : MonoBehaviour
 
         _modifiers.Add(modifier);
         _wasJustModified = true;
+        _UeDebuffListChange.Invoke();
     }
 
+    // Calculate every modifiers again
+    // Should be renamed ReapplyModifiers, ModifierCalculator, ApplyModifierRAZ ?
     void ApplyModifiers()
     {
-        if (!_wasJustModified) return;
+        //if (!_wasJustModified) return;
 
         _health = _baseHealth;
         _moveSpeed = _baseMoveSpeed;
