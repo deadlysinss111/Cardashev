@@ -69,9 +69,9 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.19970384, g: 0.9716981, b: 0.09625311, a: 1}
     - _Base_Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Deep_Color: {r: 0.34117648, g: 0.8666667, b: 0.15294118, a: 1}
+    - _Deep_Color: {r: 1.1794517, g: 2.9960783, b: 0.5287197, a: 1}
     - _Shallow_Color: {r: 0.8666667, g: 0.15294117, b: 0.8174136, a: 1}
     - _VoronoiColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Voronoi_Color: {r: 1.0678763, g: 1.1486983, b: 0, a: 1}
+    - _Voronoi_Color: {r: 11.141103, g: 11.984315, b: 0, a: 1}
     - _Wave_Direction: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

@@ -12,10 +12,10 @@ public class MeshGenerator : MonoBehaviour
     int[] triangles;
     Color[] colors;
 
+    public float verticesSize = .5f;
+    //public Vector2 dimensions = new Vector2();
     public int xSize = 20;
     public int zSize = 20;
-
-    public float verticesSize = .5f;
 
     public Gradient gradient;
 
@@ -99,6 +99,26 @@ public class MeshGenerator : MonoBehaviour
 
                 i++;
             }
+        }
+    }
+
+    float FindClosestColor(float value)
+    {
+        if (value < 0.25f)
+        {
+            return 0.25f;
+        }
+        else if (value < 0.5f)
+        {
+            return 0.5f;
+        }
+        else if (value < 0.75f)
+        {
+            return 0.75f;
+        }
+        else
+        {
+            return 1f;
         }
     }
 

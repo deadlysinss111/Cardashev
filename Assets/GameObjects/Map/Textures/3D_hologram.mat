@@ -41,13 +41,27 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Ambient_Occlusion: 0
+    - _Dessolve_Amount: 0
+    - _Dessolve_Noise_Density: 200
+    - _Dessolve_Noise_Speed: 0.1
+    - _Flickering_Frequency: 0
+    - _Flickering_Intensity: 0
+    - _Fresnel_Power: 1
+    - _Glitch_Amount: 0
+    - _Glitch_Frequency: 20
+    - _Glitch_Speed: 10
+    - _Glitch_Strength: 0.01
     - _Hologram_Density: 10
     - _Hologram_Speed: -0.2
+    - _Metallic: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Smoothness: 0
     m_Colors:
-    - _Base_Color: {r: 0.1084016, g: 0.7335275, b: 0.7924528, a: 1}
-    - _Fresnel_Color: {r: 0, g: 0.026238972, b: 0.20069483, a: 0}
+    - _Base_Color: {r: 0.10980394, g: 0.38477045, b: 0.7921569, a: 1}
+    - _Fresnel_Color: {r: 0, g: 0.13984467, b: 1.018868, a: 0}
+    - _Hologram_Color: {r: 0, g: 0.2510171, b: 0.7264151, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &963343007607708207
 MonoBehaviour:
