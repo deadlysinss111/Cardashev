@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13d5f3204e91e1844b15dfdc81b3a9b0, type: 3}
   m_Name: DB
   m_EditorClassIdentifier: 
-  _character: []
+  _character:
+  - _characterName: Todd
+    _characterSprite: {fileID: 21300000, guid: 49614661d00cd9947a523c4f68970327, type: 3}
+  - _characterName: Vol
+    _characterSprite: {fileID: 21300000, guid: 1ad3d6163c6c110448ca24c0bfeb08c3, type: 3}
+  - _characterName: Vel
+    _characterSprite: {fileID: 21300000, guid: 3fd3116e15752e1499f321ac2840b99d, type: 3}

@@ -2736,8 +2736,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 6611612d83390744d8f63e06257b63bd, type: 3}
     - target: {fileID: 8955636708951313999, guid: a54fc177a3c1f554aa41eb4b6fe05611, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8955636708951313999, guid: a54fc177a3c1f554aa41eb4b6fe05611, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 817265442}
+    - target: {fileID: 8955636708951313999, guid: a54fc177a3c1f554aa41eb4b6fe05611, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
+      objectReference: {fileID: 1456604487}
+    - target: {fileID: 8955636708951313999, guid: a54fc177a3c1f554aa41eb4b6fe05611, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToMain
+      objectReference: {fileID: 0}
+    - target: {fileID: 8955636708951313999, guid: a54fc177a3c1f554aa41eb4b6fe05611, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DisplayCollection
+      objectReference: {fileID: 0}
+    - target: {fileID: 8955636708951313999, guid: a54fc177a3c1f554aa41eb4b6fe05611, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: CollectionMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6174888858760605867, guid: a54fc177a3c1f554aa41eb4b6fe05611, type: 3}
@@ -3576,8 +3596,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa0a3ede8665d7b4ebf03820cbed6d30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardRowPrefab: {fileID: 2942458434446659606, guid: ab0923f7ac9c4d14390cae4a3e155b69, type: 3}
-  _cardPrefab: {fileID: 6024833425137067414, guid: 2b1cf1d84e1e7b440b0ecc3dd3a06954, type: 3}
+  _cardRowPrefab: {fileID: 6024833425137067414, guid: 2b1cf1d84e1e7b440b0ecc3dd3a06954, type: 3}
+  _cardPrefab: {fileID: 2942458434446659606, guid: ab0923f7ac9c4d14390cae4a3e155b69, type: 3}
   _cardManager: {fileID: 817265443}
 --- !u!1 &1479078800
 GameObject:
