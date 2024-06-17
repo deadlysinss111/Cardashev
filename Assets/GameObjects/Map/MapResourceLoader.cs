@@ -3,20 +3,20 @@ using UnityEngine;
 public class MapResourceLoader : MonoBehaviour
 {
     // ICONS
-    [SerializeField] private Sprite _bossIcon;
-    public Sprite BOSS_ICON { get => _bossIcon; }
+    [SerializeField] private Mesh _bossIcon;
+    public Mesh BOSS_ICON { get => _bossIcon; }
 
-    [SerializeField] private Sprite _combatIcon;
-    public Sprite COMBAT_ICON { get => _combatIcon; }
+    [SerializeField] private Mesh _combatIcon;
+    public Mesh COMBAT_ICON { get => _combatIcon; }
 
-    [SerializeField] private Sprite _eliteIcon;
-    public Sprite ELITE_ICON { get => _eliteIcon; }
+    [SerializeField] private Mesh _eliteIcon;
+    public Mesh ELITE_ICON { get => _eliteIcon; }
 
-    [SerializeField] private Sprite _eventIcon;
-    public Sprite EVENT_ICON { get => _eventIcon; }
+    [SerializeField] private Mesh _eventIcon;
+    public Mesh EVENT_ICON { get => _eventIcon; }
 
-    [SerializeField] private Sprite _shopIcon;
-    public Sprite SHOP_ICON { get => _shopIcon; }
+    [SerializeField] private Mesh _shopIcon;
+    public Mesh SHOP_ICON { get => _shopIcon; }
 
     /*void Start()
     {

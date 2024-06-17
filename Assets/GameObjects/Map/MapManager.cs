@@ -1,15 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Burst.CompilerServices;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Splines;
-using UnityEngine.U2D;
-using UnityEngine.XR;
-using static UnityEngine.GraphicsBuffer;
 using Random = UnityEngine.Random;
 
 public class MapManager : MonoBehaviour
@@ -237,6 +228,9 @@ public class MapManager : MonoBehaviour
                 GameObject nextNode = _mapGrid[nextNodeXIndex][floorNb + 1];
 
                 _mapGrid[x][floorNb].GetComponent<MapNode>().AddNextNode(nodeNb, nextNode);
+                Material currentMat = _mapGrid[x][floorNb].GetComponent<MapNode>()._RoomIcon3D.GetComponent<MeshRenderer>().materials[0];
+                currentMat.SetVector("_General_Offset", new Vector4(x, floorNb));
+                currentMat.SetFloat("_Hologram_Density", 16);
 
                 // WIP placing paths between nodes
                 GameObject newPath = CreatePathBetween(_mapGrid[x][floorNb], nextNode);
