@@ -20,7 +20,7 @@ public abstract class Interactible : MonoBehaviour
     protected static GameObject _playerRef;
     protected static PlayerManager _playerManager;
     [SerializeField] bool _isHiglightable = true;
-    public bool _selectable = false;
+    bool _selectable = false;
 
     /* 
      PROPERTIES
@@ -29,6 +29,7 @@ public abstract class Interactible : MonoBehaviour
     // RaycastHit is useless outisde of this class, but the destructible flag isn't (so its `get` is public)
     protected float _RaycastHitDist { get; set; }
     public bool _IsDestructible { get; protected set; }
+    public bool IsSelectable { get { return _selectable; } }
     // Any extra properties are in their respective sub-classes
 
 
@@ -193,15 +194,27 @@ public abstract class Interactible : MonoBehaviour
         GameObject hitObj = hit.transform.gameObject;
         if (hitObj.TryGetComponent(out Tile tile) == false) return;
 
-        if (tile._selectable == false) return;
+        if (tile.IsSelectable == false) return;
 
-        _selectable = true;
+        SetSelected(true);
+    }
 
+    public void SetSelected(bool value)
+    {
+        print($"Interactable {gameObject.name} is selectable!");
+        _selectable = value;
 
-        if (_selectable)
+        Outline outline;
+        if (_selectable && TryGetComponent<Outline>(out _) == false)
         {
-            print($"Enemy {gameObject.name} is selectable!");
-            transform.GetChild(1).GetComponent<MeshRenderer>().material.color = Color.red;
+            outline = gameObject.AddComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineVisible;
+            outline.OutlineColor = Color.red;
+            outline.OutlineWidth = 7.7f;
+        }
+        else if (_selectable == false && TryGetComponent<Outline>(out outline))
+        {
+            Destroy(outline);
         }
     }
 }

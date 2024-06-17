@@ -48,8 +48,8 @@ public class SelectableArea : MonoBehaviour
         _enemyAreaCheck = false;
         _interactableAreaCheck = false;
 
-        _hitBuffer = new RaycastHit[200];
-        _innerHitBuffer = new RaycastHit[200];
+        _hitBuffer = new RaycastHit[255];
+        _innerHitBuffer = new RaycastHit[255];
     }
 
     void Update()
@@ -123,7 +123,7 @@ public class SelectableArea : MonoBehaviour
     /// <param name="inner_radius">How many cases from inside should be excluded. DO NOT COUNT THE RADIUS</param>
     /// <param name="ignore_interactable">Whether the area should include the tiles below interactables or not</param>
     /// <returns>A list of tiles that are part of the selectable area</returns>
-    public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius, bool ignore_interactable = false)
+    public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius)
     {
         if (inner_radius >= radius)
         {
@@ -135,7 +135,6 @@ public class SelectableArea : MonoBehaviour
         int layerMask = 0;
         foreach (var layer in _ignoreLayerList)
         {
-            if (layer == "Interactable" && ignore_interactable) continue;
             layerMask |= 1 << LayerMask.NameToLayer(layer);
         }
         layerMask = ~layerMask;
@@ -232,8 +231,7 @@ public class SelectableArea : MonoBehaviour
             _selectableTiles.Add(hit.transform.gameObject);
             try
             {
-                hit.transform.gameObject.GetComponent<Tile>()._selectable = true;
-                hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 0, 1f);
+                hit.transform.gameObject.GetComponent<Tile>().SetSelected(true);
             }
             catch (MissingComponentException e)
             {
@@ -243,6 +241,7 @@ public class SelectableArea : MonoBehaviour
 
         // Clear out the buffer for future use
         Array.Clear(_hitBuffer, 0, count);
+        Array.Clear(_innerHitBuffer, 0, count_inner);
 
         // If there's an actual area set, activate enemies and interactables' raycasting if allowed
         if (_selectableTiles.Count > 0)
@@ -260,7 +259,7 @@ public class SelectableArea : MonoBehaviour
     /// <param name="radius">The radius of the area</param>
     /// <param name="ignore_interactable">Whether the area should include the tiles below interactables or not</param>
     /// <returns>A list of tiles that are part of the selectable area</returns>
-    public List<GameObject> FindSelectableArea(GameObject obj, int radius, bool ignore_interactable = false)
+    public List<GameObject> FindSelectableArea(GameObject obj, int radius)
     {
         ResetSelectable();
 
@@ -268,7 +267,6 @@ public class SelectableArea : MonoBehaviour
         int layerMask = 0;
         foreach (var layer in _ignoreLayerList)
         {
-            if (layer == "Interactable" && ignore_interactable) continue;
             layerMask |= 1 << LayerMask.NameToLayer(layer);
         }
         layerMask = ~layerMask;
@@ -388,8 +386,7 @@ public class SelectableArea : MonoBehaviour
             _selectableTiles.Add(hit.transform.gameObject);
             try
             {
-                hit.transform.gameObject.GetComponent<Tile>()._selectable = true;
-                hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 0, 1f);
+                hit.transform.gameObject.GetComponent<Tile>().SetSelected(true);
             }
             catch (MissingComponentException e)
             {
@@ -432,7 +429,7 @@ public class SelectableArea : MonoBehaviour
 
         foreach (var tile in _selectableTiles)
         {
-            tile.GetComponent<Tile>()._selectable = false;
+            tile.GetComponent<Tile>().SetSelected(false);
         }
         _selectableTiles.Clear();
 
@@ -492,9 +489,9 @@ public class SelectableArea : MonoBehaviour
 
         // If the object hit by the raycast is one specific type of object we're looking for, set it as the out object
         if (
-            (objHit.TryGetComponent(out Tile tile) && tile._selectable && _allowSelectTiles) ||
-            (objHit.TryGetComponent(out Enemy enemy) && enemy._selectable) ||
-            (objHit.TryGetComponent(out Interactible interact) && interact._selectable)
+            (objHit.TryGetComponent(out Tile tile) && tile.IsSelectable && _allowSelectTiles) ||
+            (objHit.TryGetComponent(out Enemy enemy) && enemy.IsSelectable) ||
+            (objHit.TryGetComponent(out Interactible interact) && interact.IsSelectable)
             )
         {
             obj = objHit;

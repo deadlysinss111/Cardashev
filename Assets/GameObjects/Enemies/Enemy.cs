@@ -19,7 +19,8 @@ public class Enemy : MonoBehaviour
 
     protected bool _isMoving;
 
-    public bool _selectable = false;
+    bool _selectable = false;
+    public bool IsSelectable { get { return _selectable; } }
 
     protected void Start()
     {
@@ -118,15 +119,26 @@ public class Enemy : MonoBehaviour
         if (hitObj.TryGetComponent(out Tile tile) == false) return;
 
         //If the tile isn't among the selectable area, return
-        if (tile._selectable == false) return;
+        if (tile.IsSelectable == false) return;
 
-        _selectable = true;
+        SetSelected(true);
+    }
 
+    public void SetSelected(bool value)
+    {
+        _selectable = value;
 
-        if (_selectable)
+        Outline outline;
+        if (_selectable && TryGetComponent<Outline>(out _) == false)
         {
-            print($"Enemy {gameObject.name} is selectable!");
-            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.red; //Temp
+            outline = gameObject.AddComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineVisible;
+            outline.OutlineColor = Color.red;
+            outline.OutlineWidth = 7.7f;
+        }
+        else if (_selectable == false && TryGetComponent<Outline>(out outline))
+        {
+            Destroy(outline);
         }
     }
 }
