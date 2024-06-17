@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 
 public class StatManager : MonoBehaviour
 {
@@ -42,6 +45,8 @@ public class StatManager : MonoBehaviour
     PlayerManager _manager;
     [SerializeField] CriticalBar _criticalBar;
 
+    public Type _type;
+
     private void Awake()
     {
         _manager = GetComponent<PlayerManager>();
@@ -50,7 +55,7 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
-        _health = 100;
+        _health = 10;
         _baseHealth = _health;
         _moveSpeed = 1.5f;
         _baseMoveSpeed = _moveSpeed;
@@ -123,13 +128,19 @@ public class StatManager : MonoBehaviour
     public void TakeDamage(int amount)
     {
         _health -= amount;
+        print(_health);
 
         if( _health <= 0)
         {
             Enemy enemy;
             if (gameObject.TryGetComponent<Enemy>(out enemy))
             {
-                enemy._UeOnDefeat.Invoke();
+                //enemy._UeOnDefeat.Invoke();
+                Type childType = typeof(Ebouillantueur);
+                print(childType.IsInstanceOfType(enemy));
+                var ratilo = Convert.ChangeType(enemy, _type);
+                print(ratilo.GetType().Name);
+                enemy.Defeat();
                 return;
             }
             PlayerManager manager;

@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class Ebouillantueur : Enemy
 {
@@ -12,6 +14,9 @@ public class Ebouillantueur : Enemy
     {
         base.Start();
         _agent.speed = 3f;
+        Type = this.GetType();
+        print(GetType().Name);
+        gameObject.GetComponent<StatManager>()._type = Type;
     }
 
     // Enemy's decision
@@ -19,7 +24,7 @@ public class Ebouillantueur : Enemy
     {
         _isMoving = false;
 
-        if(Random.Range(0, 3)  == 0 )
+        if(UnityEngine.Random.Range(0, 3)  == 0 )
         {
             Move();
         }
@@ -32,7 +37,7 @@ public class Ebouillantueur : Enemy
 
     IEnumerator Shoot()
     {
-        if( Random.Range(0, 2) == 0 )
+        if(UnityEngine.Random.Range(0, 2) == 0 )
         {
             //GameObject target
         }
