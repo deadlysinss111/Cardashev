@@ -96,6 +96,10 @@ public class MainMenuManager : MonoBehaviour
         SetMenu("Options");
     }
 
+    public void GoToCollection()
+    {
+        SetMenu("Collection");
+    }
     public void QuitGame()
     {
         #if UNITY_EDITOR
