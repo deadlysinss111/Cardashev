@@ -61,7 +61,7 @@ public class PiercingShot : Card
 
     void ExitState()
     {
-        AreaSelector.SetGroundColor(Color.white);
+        AreaSelector.ResetSelectable();
     }
 
     public override void ClickEvent()

@@ -423,7 +423,7 @@ public class SelectableArea : MonoBehaviour
     /// <summary>
     /// Removes the currently set selectable area, reset the color of the tiles (temp) and deactivates enemies and interactables raycasting
     /// </summary>
-    void ResetSelectable()
+    public void ResetSelectable()
     {
         ResetDebugRay();
 
@@ -500,6 +500,27 @@ public class SelectableArea : MonoBehaviour
         if (removeSelectable && obj != null)
             ResetSelectable();
         return obj != null;
+    }
+
+    public bool CheckForSelectableTile(Vector3 pos, int y_offset=5)
+    {
+        pos.y += y_offset;
+
+        // Filter out any entities' layer that isn't allowed to be selected
+        int layerMask = 0;
+        foreach (var layer in _ignoreLayerList)
+        {
+            layerMask |= (1 << LayerMask.NameToLayer(layer));
+        }
+        layerMask = ~layerMask;
+
+        if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMask) == false) return false;
+        print("Raycast pass");
+
+        if (hit.transform.gameObject.TryGetComponent(out Tile tile) == false) return false;
+        print("Tile pass and it's "+tile.IsSelectable);
+
+        return tile.IsSelectable;
     }
 
     // Temporary: to replace with an overlay or something similar
