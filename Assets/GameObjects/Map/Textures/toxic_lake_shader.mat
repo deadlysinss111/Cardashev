@@ -57,7 +57,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Smoothness: 1
-    - _Transparancy: 0.8
+    - _Transparancy: 0.5
     - _VoronoiDensity: 4
     - _VoronoiSpeed: 2
     - _Voronoi_Density: 40

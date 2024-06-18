@@ -73,11 +73,6 @@ public class MapManager : MonoBehaviour
         {
             MoveCloud();
         }
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            GenerateMap();
-        }
     }
 
     void MovePlayerTo(GameObject nodeToMoveTo)
@@ -102,7 +97,7 @@ public class MapManager : MonoBehaviour
     {
         MapNode curNode = node.GetComponent<MapNode>();
         if (ReferenceEquals(curNode, _bossRoom)) return;
-        if (!firstCall) curNode.UnselectNode();
+        if (!firstCall) curNode.UnlockNode();
         foreach (GameObject nextNode in curNode._nextNodes)
         {
             if (!nextNode || nextNode.GetComponent<MapNode>().IsLockedByBlocker()) continue;

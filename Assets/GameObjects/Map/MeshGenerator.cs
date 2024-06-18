@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 public class MeshGenerator : MonoBehaviour
 {
     Mesh mesh;
+
+    // Prefabs
+    GameObject TREE;
+    [SerializeField] LayerMask treeLayer;
 
     Vector3[] vertices;
     int[] triangles;
@@ -31,16 +36,18 @@ public class MeshGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        TREE = (GameObject)Resources.Load("dead_tree");
+
         offSetX = Random.Range(0f, 9999f);
         offSetY = Random.Range(0f, 9999f);
 
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+        CreateShape();
     }
 
     private void Update()
     {
-        CreateShape();
         UpdateMesh();
     }
 
@@ -54,6 +61,25 @@ public class MeshGenerator : MonoBehaviour
             for (int x = 0; x <= xSize; x++)
             {
                 float y = GetPerlinNoise(x, z);
+                if (y > 0.65 && (x > 20 && x < 30 || x > 170 && x < 180) && z < 200)
+                {
+                    bool canBuildTree = true;
+                    GameObject[] trees = GameObject.FindGameObjectsWithTag("Map Tree");
+                    foreach (GameObject curTree in trees)
+                    {
+                        float distance = Vector3.Distance(curTree.transform.localPosition, new Vector3(x * verticesSize, y, z * verticesSize));
+                        if (distance < 2f)
+                            canBuildTree = false;
+                    }
+                    if (canBuildTree)
+                    {
+                        GameObject newTree = Instantiate(TREE);
+                        newTree.transform.position = new Vector3(x * verticesSize, y, z * verticesSize);
+                        newTree.transform.rotation = Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up);
+                        newTree.transform.localScale *= 6;
+                        newTree.transform.SetParent(transform, false);
+                    }
+                }
                 vertices[i] = new Vector3(x * verticesSize, y, z * verticesSize);
 
                 if (y > maxTerrainHeight)

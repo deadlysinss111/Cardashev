@@ -15,6 +15,9 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.mouseScrollDelta.y != 0)
+            ScrollCamera();
+
         if (_targetNode != null)
             _camera.transform.position = Vector3.Lerp(_camera.transform.position, _targetNode.transform.position + new Vector3(0, 10, -10), _transitionSpeed * Time.deltaTime);
     }
@@ -22,6 +25,12 @@ public class CameraManager : MonoBehaviour
     public void MoveCamToNode(GameObject node)
     {
         _targetNode = node;
+    }
+    void ScrollCamera()
+    {
+        Vector3 pos = _camera.transform.position;
+        if (Input.mouseScrollDelta.y < 0 && pos.z > -4.2f || Input.mouseScrollDelta.y > 0 && pos.z < 127.8f)
+            _camera.transform.position = new Vector3(pos.x, pos.y, pos.z + Input.mouseScrollDelta.y * 2);
     }
 
     public void SetCamPos(Vector3 pos, bool addOffset)

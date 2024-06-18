@@ -27,8 +27,11 @@ public class MapNode : MonoBehaviour
     [NonSerialized] public int _startingXCoord;
     //string _linkedScene = "large empty area";
     bool _playerCameThrough;
+    bool _isLocked;
 
     Color _defaultColor;
+    Color _defaultHoloColor;
+    Color _defaultFresnelColor;
     public RoomType _roomType;
     public RoomType RoomType
     {
@@ -52,6 +55,7 @@ public class MapNode : MonoBehaviour
         _mapNode = GetComponent<GameObject>();
         _isStartingNode = false;
         _playerCameThrough = false;
+        _isLocked = false;
     }
 
     public void AddNextNode(int index, GameObject node)
@@ -146,6 +150,8 @@ public class MapNode : MonoBehaviour
     { 
         _roomType = roomType;
         _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = Quaternion.identity;
+        _defaultHoloColor = new Color(0, 0.52f, 1.498f);
+        _defaultFresnelColor = new Color(0f, 0.411f, 2.996f);
         switch (roomType)
         {
             case RoomType.Shop:
@@ -154,6 +160,8 @@ public class MapNode : MonoBehaviour
                     Transform temp = _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform;
                     temp.localScale *= 2;
                     SetDefaultColorTo(Color.yellow);
+                    _defaultHoloColor = new Color(0, 0.52f, 1.498f);
+                    _defaultFresnelColor = new Color(0f, 0.411f, 2.996f);
                     break;
                 }
             case RoomType.Boss:
@@ -168,13 +176,15 @@ public class MapNode : MonoBehaviour
                 }
             case RoomType.Rest:
                 {
-                    //_RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.REST_ICON;
+                    _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.REST_ICON;
                     SetDefaultColorTo(Color.white);
                     break;
                 }
             case RoomType.Event:
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.EVENT_ICON;
+                    _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
+                    _RoomIcon3D.transform.localScale *= 0.3f;
                     SetDefaultColorTo(Color.green);
                     break;
                 }
@@ -187,11 +197,17 @@ public class MapNode : MonoBehaviour
             case RoomType.Elite:
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.ELITE_ICON;
+                    _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
+                    _RoomIcon3D.transform.localScale *= 0.3f;
+                    _RoomIcon3D.transform.position += Vector3.up * 2;
                     SetDefaultColorTo(Color.magenta);
                     break;
                 }
 
         }
+
+        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Primary_Color", _defaultHoloColor);
+        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Fresnel_Color", _defaultFresnelColor);
     }
 
     public void IsSelectable(bool value)
@@ -208,18 +224,32 @@ public class MapNode : MonoBehaviour
     public void LockNode()
     {
         if (_playerCameThrough) return;
+        _isLocked = true;
         GetComponent<MeshRenderer>().material.color = Color.grey;
-        _RoomIcon3D.GetComponent<MeshRenderer>().enabled = false;
+        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Primary_Color", new Color(0.114f, 0.114f, 0.114f));
+        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Fresnel_Color", new Color(0.114f, 0.114f, 0.114f));
+    }
+
+    public void UnlockNode()
+    {
+        _isLocked = false;
+        GetComponent<MeshRenderer>().material.color = _defaultColor;
+        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Primary_Color", _defaultHoloColor);
+        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Fresnel_Color", _defaultFresnelColor);
     }
 
     private void OnMouseEnter()
     {
+        if (_isLocked)
+            return;
         if (!_animator.GetBool("MouseHover"))
             _animator.SetBool("MouseHover", true);
     }
 
     private void OnMouseExit()
     {
+        if (_isLocked)
+            return;
         _animator.SetBool("MouseHover", false);
     }
 }

@@ -18,6 +18,9 @@ public class MapResourceLoader : MonoBehaviour
     [SerializeField] private Mesh _shopIcon;
     public Mesh SHOP_ICON { get => _shopIcon; }
 
+    [SerializeField] private Mesh _restIcon;
+    public Mesh REST_ICON { get => _restIcon; }
+
     /*void Start()
     {
         // ICONS
