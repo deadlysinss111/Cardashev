@@ -18,6 +18,8 @@ public class LaunchGrenade : Card
 
     GameObject _grenadePrefab;
 
+    SelectableArea _selectableArea;
+
     private void Awake()
     {
         _maxLv = 2;
@@ -32,11 +34,17 @@ public class LaunchGrenade : Card
         UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
         _previwRadius = (GameObject)Instantiate(RADIUS);
         _previwRadius.SetActive(false);
+
+        if (TryGetComponent(out _selectableArea) == false)
+            _selectableArea = gameObject.AddComponent<SelectableArea>();
     }
 
     void EnterGrenadeState()
     {
         PlayerManager manager = GI._PManFetcher();
+        _selectableArea.SetSelectableEntites(false, true, true, true);
+        _selectableArea.FindSelectableArea(GI._PlayerFetcher(), 15, 8);
+
         manager.SetLeftClickTo(FireGrenade);
         manager.SetRightClickTo(()=> { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(Preview);
@@ -46,6 +54,7 @@ public class LaunchGrenade : Card
     void ExitState()
     {
         _previwRadius.SetActive(false);
+        _selectableArea.ResetSelectable();
         ClearPath();
     }
 
@@ -69,6 +78,13 @@ public class LaunchGrenade : Card
         // Crop the destination to the center of the target tile
         Vector3 alteredPos = manager._lastHit.transform.position;
         alteredPos.y += 0.5f;
+        if (_selectableArea.CheckForSelectableTile(alteredPos) == false)
+        {
+            ClearPath();
+            _previwRadius.SetActive(false);
+            return;
+        }
+        _previwRadius.SetActive(true);
 
         _previwRadius.transform.position = alteredPos;
 
@@ -80,6 +96,7 @@ public class LaunchGrenade : Card
     protected void FireGrenade()
     {
         ClearPath();
+        _selectableArea.ResetSelectable();
         GI._PManFetcher().SetToDefault();
         // Trigger the card play event
         base.ClickEvent();
