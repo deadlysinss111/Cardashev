@@ -14,9 +14,6 @@ public class Ebouillantueur : Enemy
     {
         base.Start();
         _agent.speed = 3f;
-        Type = this.GetType();
-        print(GetType().Name);
-        gameObject.GetComponent<StatManager>()._type = Type;
     }
 
     // Enemy's decision
@@ -64,5 +61,10 @@ public class Ebouillantueur : Enemy
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _timeBeforeDecision = GetPathTime(path);
+    }
+
+    public override void Defeat()
+    {
+        _eff = () => { ParticleHandle(); print("Ebouillantueur deadge"); };
     }
 }

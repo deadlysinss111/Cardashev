@@ -118,7 +118,7 @@ abstract public class Enemy : MonoBehaviour
         }
     }
 
-    public void Defeat()
+    public virtual void Defeat()
     {
         //_particleSystem.Play();
         _eff = ParticleHandle;

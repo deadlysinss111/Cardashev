@@ -1,6 +1,8 @@
+using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -46,6 +48,8 @@ public class StatManager : MonoBehaviour
     [SerializeField] CriticalBar _criticalBar;
 
     public Type _type;
+
+    static Type[] _typeList = { Type.GetType("Ebouillantueur"), Type.GetType("Murlock") };
 
     private void Awake()
     {
@@ -136,10 +140,8 @@ public class StatManager : MonoBehaviour
             if (gameObject.TryGetComponent<Enemy>(out enemy))
             {
                 //enemy._UeOnDefeat.Invoke();
-                Type childType = typeof(Ebouillantueur);
-                print(childType.IsInstanceOfType(enemy));
-                var ratilo = Convert.ChangeType(enemy, _type);
-                print(ratilo.GetType().Name);
+                var ratilo = enemy.GetType().GetField("Defeat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                print("ratilo there : "+ enemy.GetType() );
                 enemy.Defeat();
                 return;
             }
