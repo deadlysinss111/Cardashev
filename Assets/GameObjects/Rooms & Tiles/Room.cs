@@ -20,12 +20,10 @@ public class Room : MonoBehaviour
     // Essential struct
     private static RoomPrefabEncyclopedia ROOM_ENCYCLOPEDIA = new RoomPrefabEncyclopedia
     (
-        new Dictionary<ZoneType, string>
-        {
-            { ZoneType.Debug, "Debug" }
-        },
-        new Dictionary<string, RoomPrefabDesc>
-        { }
+        new Dictionary<ZoneType, string> {
+            { ZoneType.Debug, "Debug" }},
+
+        new Dictionary<string, RoomPrefabDesc> { }
     );
 
 

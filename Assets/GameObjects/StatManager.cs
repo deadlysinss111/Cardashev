@@ -1,7 +1,12 @@
+using Palmmedia.ReportGenerator.Core.Parser.Analysis;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 
 public class StatManager : MonoBehaviour
 {
@@ -41,6 +46,10 @@ public class StatManager : MonoBehaviour
     List<Modifier> _modifiers;
     PlayerManager _manager;
     [SerializeField] CriticalBar _criticalBar;
+
+    public Type _type;
+
+    static Type[] _typeList = { Type.GetType("Ebouillantueur"), Type.GetType("Murlock") };
 
     private void Awake()
     {
@@ -123,6 +132,7 @@ public class StatManager : MonoBehaviour
     public void TakeDamage(int amount)
     {
         _health -= amount;
+        print(_health);
 
         if( _health <= 0)
         {
@@ -130,7 +140,10 @@ public class StatManager : MonoBehaviour
             Enemy enemy;
             if (gameObject.TryGetComponent<Enemy>(out enemy))
             {
-                enemy._UeOnDefeat.Invoke();
+                //enemy._UeOnDefeat.Invoke();
+                var ratilo = enemy.GetType().GetField("Defeat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                print("ratilo there : "+ enemy.GetType() );
+                enemy.Defeat();
                 return;
             }
             PlayerManager player;

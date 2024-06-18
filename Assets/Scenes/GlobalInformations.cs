@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 // GI stands for GlobalInformations
 static public class GI
 {
+    // ------
+    // COMMON FETCHERS
+    // ------
+
     // Components needed by a LOT of MonoBehaviours
     static public PlayerManager _playerManager;
     static public GameObject _player;
@@ -32,23 +37,45 @@ static public class GI
         return null;
     };
 
-    static public GameObject _mapPrefab; // maybe not correctly written (should be an array ?)
-    static public float _gameTimer;
 
-    // Misc stuff to avoid afternoons of "WHY ? WHY ? WHYYYYYY ? oh that's why."
-    // When adding elements, never put any `=` anywhere or this will break the below array
+    // ------
+    // PERSISTENT SCENES
+    // ------
+
+    // Misc stuff to avoid afternoons of "WHY ? WHY ? WHYYYYYY ? oh that's why.". Never add any `=`, or the array WILL break
     public enum PersistentSceneContainer
     {
         NON_PERSISTENT = -1,
         Map,
     }
 
-    // Array that stores persistent GameObjects. Its size automatically fits the Enum size
+    // Array that stores persistent GameObjects. Its size automatically fits the Enum's size
     public static GameObject[] _persistentSceneContainers = new GameObject[Enum.GetNames(typeof(PersistentSceneContainer)).Length - 1];
 
     // Data needed for scene transition (Map --> Room)
     static public string _prefabToLoad;
     static public List<List<GameObject>> _mapNodes; // TODO check for removal
+
+
+    // ------
+    // SCENE LOADING UTILS
+    // ------
+
+    // Dict to chnage in one place if a fcking scene undergoes name change
+    static public Dictionary<string, string> _SceneNameEncyclopedia = new Dictionary<string, string>{
+        { "Map", "MapNavigation" },
+        { "Room", "TestLvl" },
+        { "MainMenu", "MenuScene"}};
+
+    // UnityEvents on scene load
+    static public UnityEngine.Events.UnityEvent _UeOnMapSceneLoad = new();
+    static public List<UnityEngine.Events.UnityEvent> _SceneLoadUEventList = new List<UnityEngine.Events.UnityEvent> { _UeOnMapSceneLoad };
+
+
+    // <~~[ UNSURE ]~~>
+
+    static public GameObject _mapPrefab; // maybe not correctly written (should be an array ?)
+    static public float _gameTimer;
 
 
     /*
@@ -85,7 +112,7 @@ static public class GI
                 return PersistentSceneContainer.Map;
 
             default:
-                Debug.Log("SceneNametoEnum() found object to be NON_PERSISTENT. Maybe the switch case is incomplete ?");
+                Debug.LogWarning("SceneNametoEnum() found object to be NON_PERSISTENT.\nMaybe the switch case is incomplete ?");
                 return PersistentSceneContainer.NON_PERSISTENT;
         }
     }
@@ -106,7 +133,7 @@ static public class GI
                 break;
 
             default:
-                Debug.Log("how TF did you get an error in there ? õ_Ô");
+                Debug.LogError("how TF did you get an error in there ? õ_Ô");
                 break;
         }
     }

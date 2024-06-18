@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ToxicTornado : MonoBehaviour
+public class ToxicTornado : DynamicMapObj
 {
+    /*
+     FIELDS
+    */
     // Particles to indicate movement
     public AnimationCurve _moveCurve;
     float _animationTime;
@@ -11,7 +14,6 @@ public class ToxicTornado : MonoBehaviour
     // Movement of the cloud
     public Vector3 _targetPosition;
     float _cloudSpeed;
-    bool _cloudMoving;
 
     // After movement
     [SerializeField] LayerMask _layerMask;
@@ -19,31 +21,46 @@ public class ToxicTornado : MonoBehaviour
     [SerializeField] GameObject _inerCloud;
     [SerializeField] GameObject _centerCloud;
 
-    private void Start()
+    /*
+     METHODS
+    */
+    private new void Awake()
     {
-        _cloudMoving = false;
-        _animationTime = 0f;
+        // Essential event subscribing to update
+        base.Awake();
+
+        _animationTime = 0.0f;
         _cloudSpeed = .5f;
     }
 
-    void Update()
+
+    // GreenCloud's update on Map load
+    protected override void UpdDynamicMapObj()
     {
-        if (Vector3.Distance(transform.position, _targetPosition) > 3)
+        StartCoroutine(MoveCloudTo());
+    }
+
+    IEnumerator MoveCloudTo()
+    {
+        // While the cloud hasn't arrived, move it towards the target
+        while (Vector3.Distance(this.transform.position, _targetPosition) > 3)
         {
             _animationTime += Time.deltaTime;
             transform.position = Vector3.Lerp(transform.position, _targetPosition, _moveCurve.Evaluate(_animationTime) * _cloudSpeed * Time.deltaTime);
+            yield return null;
         }
-        else if (_cloudMoving)
-        {
-            _cloudMoving = false;
-            ContaminateNodes();
-        }
+
+        // Once we arrived, contaminate nodes
+        ContaminateNodes();
     }
 
-    public void MoveCloudTo(Vector3 targetPosition)
+    // ------
+    // GREENCLOUD SPECIFIC EFFECTS
+    // ------
+
+    public void UpdTarget(Vector3 targetPosition)
     {
-        _animationTime = 0;
-        _cloudMoving = true;
+        _animationTime = 0.0f;
         _targetPosition = targetPosition;
     }
 

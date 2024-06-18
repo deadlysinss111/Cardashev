@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -22,14 +23,12 @@ abstract public class Enemy : MonoBehaviour
     // Death related
     protected bool _waitForDestroy;
     protected ParticleSystem _particleSystem;
+    protected string _name;
+    private Type _type;
+    public Type Type { get { return _type; } set { _type = value; } }
 
     // Allows the call of the death animation in place of the usual Act()
     protected Action _eff;
-
-    /*
-     EVENTS
-    */
-    public UnityEvent _UeOnDefeat;
 
 
     /*
@@ -38,7 +37,7 @@ abstract public class Enemy : MonoBehaviour
     protected void Awake()
     {
         // Event subscribing
-        _UeOnDefeat.AddListener(Defeat);
+        //_UeOnDefeat.AddListener(Defeat);
     }
     public bool _selectable = false;
 
@@ -105,7 +104,10 @@ abstract public class Enemy : MonoBehaviour
     public void TakeDamage(int amount)
     {
         print($"Took {amount} damages!");
-        gameObject.GetComponent<StatManager>().TakeDamage(amount);
+        StatManager manager = gameObject.GetComponent<StatManager>();
+        manager.TakeDamage(amount);
+        if (manager._health <= 0)
+            Defeat();
     }
 
     protected void CheckPlayerDistance()
@@ -118,10 +120,11 @@ abstract public class Enemy : MonoBehaviour
         }
     }
 
-    protected void Defeat()
+    public virtual void Defeat()
     {
         //TODO: ue there
         GameObject.Find("ExitTile(Clone)").GetComponent<EscapeTile>().TriggerCondition(_name);
+        
         //_particleSystem.Play();
         _eff = ParticleHandle;
         print(gameObject.name);

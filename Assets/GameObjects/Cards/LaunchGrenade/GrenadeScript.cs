@@ -20,13 +20,12 @@ public class GrenadeScript : MonoBehaviour
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
             {
                 manager.TakeDamage(10);
+                break;
             }
-            else if(c.transform.parent != null)
+            GameObject target = HierarchySearcher.FindParentdRecursively(c.transform, "Body");
+            if (target != null)
             {
-                if (c.transform.parent.gameObject.TryGetComponent<StatManager>(out manager))
-                {
-                    manager.TakeDamage(10);
-                }
+                target.transform.parent.gameObject.GetComponent<Ebouillantueur>().TakeDamage(10);
             }
         }
         Destroy(gameObject);
