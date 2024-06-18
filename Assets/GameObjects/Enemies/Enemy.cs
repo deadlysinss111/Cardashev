@@ -12,8 +12,6 @@ abstract public class Enemy : MonoBehaviour
     /*
      FIELDS
     */
-    protected string _name;
-
     // Ennemy action related
     protected NavMeshAgent _agent;
     protected GameObject _target;
@@ -123,11 +121,11 @@ abstract public class Enemy : MonoBehaviour
     public virtual void Defeat()
     {
         //TODO: ue there
+        print(_name);
         GameObject.Find("ExitTile(Clone)").GetComponent<EscapeTile>().TriggerCondition(_name);
         
         //_particleSystem.Play();
         _eff = ParticleHandle;
-        print(gameObject.name);
 
         // Ensures the animation plays out entirely
         _timeBeforeDecision = 0;
@@ -136,7 +134,6 @@ abstract public class Enemy : MonoBehaviour
     // Needs to be called every frame after defeat so that the GO is detroyed correctly after the animation
     protected void ParticleHandle()
     {
-        print("I do handle");
         if (_particleSystem.isEmitting == false)
         {
             Color c = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;

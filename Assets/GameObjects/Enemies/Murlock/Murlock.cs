@@ -17,30 +17,6 @@ public class Murlock : Enemy
         _dmg = 15;
     }
 
-    //protected new void Update()
-    //{
-    //    CheckPlayerDistance();
-    //    // We update the timer, then if there is no action in progress, the enemy will decide to do something
-    //    _timeBeforeDecision -= Time.deltaTime;
-    //    if (_timeBeforeDecision <= 0)
-    //    {
-    //        _eff();
-    //    }
-
-    //    CheckSelectable();
-    //}
-
-    //protected new void Defeat()
-    //{
-    //    //TODO: ue there
-    //    GameObject.Find("ExitTile(Clone)").GetComponent<EscapeTile>().TriggerCondition(_name);
-    //    //_particleSystem.Play();
-    //    _eff = ParticleHandle;
-
-    //    // Ensures the animation plays out entirely
-    //    _timeBeforeDecision = 0;
-    //}
-
     // Enemy's decision
     override protected void Act()
     {

@@ -54,10 +54,9 @@ public class Merchant : Interactible
             // We set the card as a collectible with a price
             cardComp.SetToCollectible(() =>
             {
-                PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
-                if (manager._goldAmount >= amount)
+                if (CurrentRunInformations._goldAmount >= amount)
                 {
-                    manager._goldAmount -= amount;
+                    CurrentRunInformations._goldAmount -= amount;
                     Destroy(cardObj);
                     Destroy(priceObj);
                     return true;

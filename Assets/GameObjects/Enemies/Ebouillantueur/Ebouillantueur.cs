@@ -64,9 +64,4 @@ public class Ebouillantueur : Enemy
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _timeBeforeDecision = GetPathTime(path);
     }
-
-    public override void Defeat()
-    {
-        _eff = () => { ParticleHandle(); print("Ebouillantueur deadge"); };
-    }
 }

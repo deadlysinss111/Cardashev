@@ -527,9 +527,8 @@ GameObject:
   - component: {fileID: 328538240}
   - component: {fileID: 328538239}
   - component: {fileID: 328538237}
-  - component: {fileID: 328538235}
-  - component: {fileID: 328538245}
   - component: {fileID: 328538246}
+  - component: {fileID: 328538247}
   m_Layer: 0
   m_Name: Enemy (1)
   m_TagString: Untagged
@@ -537,23 +536,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &328538235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 328538234}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d68f1e3cc49251c48a2f90c8403876b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _UeOnDefeat:
-    m_PersistentCalls:
-      m_Calls: []
-  _selectable: 0
-  _bullet: {fileID: 3204624112210869285, guid: d763c541be426c146bd0681da929da78, type: 3}
 --- !u!195 &328538237
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5433,23 +5415,6 @@ Transform:
   - {fileID: 1665363127}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &328538245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 328538234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 119fe8c67e7b1364b8ccb8bd201849fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _UeOnDefeat:
-    m_PersistentCalls:
-      m_Calls: []
-  _selectable: 0
-  _swipeHitbox: {fileID: 9203003672801310520, guid: 77995b837d8565040ab2b6a1602f163a, type: 3}
 --- !u!64 &328538246
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5472,6 +5437,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &328538247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328538234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 119fe8c67e7b1364b8ccb8bd201849fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _selectable: 0
+  _swipeHitbox: {fileID: 9203003672801310520, guid: 77995b837d8565040ab2b6a1602f163a, type: 3}
 --- !u!1 &355395222
 GameObject:
   m_ObjectHideFlags: 0
@@ -6262,7 +6241,6 @@ GameObject:
   m_Component:
   - component: {fileID: 839073926}
   - component: {fileID: 839073927}
-  - component: {fileID: 839073928}
   - component: {fileID: 839073929}
   - component: {fileID: 839073930}
   m_Layer: 0
@@ -6299,20 +6277,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b26602351a6474aab3196d2897755e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &839073928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839073924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 321b5a2ebb06628408254786eb9b891f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _winScreen: {fileID: 1438130189}
-  _cardBG: {fileID: 594266540}
 --- !u!120 &839073929
 LineRenderer:
   serializedVersion: 2
@@ -6430,7 +6394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _winConditions:
-  - Murloock
+  - Ebouillantueur
   - Ebouillantueur
 --- !u!1 &879772511
 GameObject:
@@ -7487,7 +7451,6 @@ GameObject:
   - component: {fileID: 1407585050}
   - component: {fileID: 1407585049}
   - component: {fileID: 1407585047}
-  - component: {fileID: 1407585046}
   - component: {fileID: 1407585056}
   m_Layer: 0
   m_Name: Enemy
@@ -7496,23 +7459,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1407585046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1407585045}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 119fe8c67e7b1364b8ccb8bd201849fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _UeOnDefeat:
-    m_PersistentCalls:
-      m_Calls: []
-  _selectable: 0
-  _swipeHitbox: {fileID: 0}
 --- !u!195 &1407585047
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -12404,9 +12350,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d68f1e3cc49251c48a2f90c8403876b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _UeOnDefeat:
-    m_PersistentCalls:
-      m_Calls: []
   _selectable: 0
   _bullet: {fileID: 3204624112210869285, guid: d763c541be426c146bd0681da929da78, type: 3}
 --- !u!64 &1407585056

@@ -9,7 +9,7 @@ public class EscapeTile : Interactible
     // Contains name of the condition (such as enemy name) and amount of time this condition must be resolved to clear the room
     [SerializeField] Dictionary<string, byte> _conditions = new();
 
-    Action OnWalk = () => { };
+    Action OnWalk = () => { print("locked"); };
 
     protected override void OnTriggerEnter(Collider other)
     {
@@ -34,16 +34,15 @@ public class EscapeTile : Interactible
             if (_conditions.ContainsKey(name))
             {
                 _conditions[(name)] -= 1;
-
-                foreach (byte amount in _conditions.Values)
-                {
-                    if (amount != 0)
-                        return;
-                }
-
-                LevelCleared();
             }
         }
+        foreach (byte amount in _conditions.Values)
+        {
+            if (amount > 0)
+                return;
+        }
+
+        LevelCleared();
     }
 
     // Whene all conditions are resolved
@@ -51,6 +50,7 @@ public class EscapeTile : Interactible
     {
         // TODO: change sprite or smth
         // & trigger rewards
-        OnWalk = ()=> { SceneManager.LoadScene("MapNavigation"); };
+        Reward._content = new Reward.Content(10, 20, 0);
+        OnWalk = ()=> { GI._loader.LoadScene("Reward", "Reward"); };
     }
 }
