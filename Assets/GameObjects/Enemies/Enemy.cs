@@ -23,7 +23,7 @@ abstract public class Enemy : MonoBehaviour
 
     // Selection related
     bool _selectable = false;
-    public bool IsSelectable { get { return _selectable; } }
+    public bool IsSelectable { get { CheckSelectable(); return _selectable; } }
 
     // Allows the call of the death animation in place of the usual Act()
     Action _eff;
@@ -66,6 +66,7 @@ abstract public class Enemy : MonoBehaviour
         }
 
         CheckSelectable();
+        print("Enemy is selectable: "+_selectable);
     }
 
     // Pick a random reachable position
@@ -121,7 +122,7 @@ abstract public class Enemy : MonoBehaviour
 
     private void Defeat()
     {
-        _particleSystem.Play();
+        //_particleSystem.Play();
         _eff = ParticleHandle;
 
         // Ensures the animation plays out entirely
