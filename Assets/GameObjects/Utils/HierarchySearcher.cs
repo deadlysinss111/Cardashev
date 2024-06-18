@@ -7,6 +7,8 @@ static public class HierarchySearcher
     // Genric methods to get a parent recusively by name. Gift of ChatGPT
     static public GameObject FindParentdRecursively(Transform target, string ARGchildName)
     {
+        if(target.name == ARGchildName)
+            return target.gameObject;
         return INTERNALFindParentRec(target, ARGchildName);
     }
 
@@ -28,6 +30,8 @@ static public class HierarchySearcher
     // Generic methods to get a child recusively by name. Gift of ChatGPT
     static public GameObject FindChildRecursively(Transform target, string ARGchildName)
     {
+        if (target.name == ARGchildName)
+            return target.gameObject;
         return INTERNALFindChildRec(target.transform, ARGchildName);
     }
 

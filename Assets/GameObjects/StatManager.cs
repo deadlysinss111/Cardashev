@@ -1,8 +1,13 @@
-﻿using System.Collections;
+using Palmmedia.ReportGenerator.Core.Parser.Analysis;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 
 public class StatManager : MonoBehaviour
 {
@@ -56,6 +61,10 @@ public class StatManager : MonoBehaviour
     /*
      METHODS
     */
+    public Type _type;
+
+    static Type[] _typeList = { Type.GetType("Ebouillantueur"), Type.GetType("Murlock") };
+
     private void Awake()
     {
         // Event subscribing
@@ -66,7 +75,7 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
-        _health = 100;
+        _health = 10;
         _baseHealth = _health;
         _moveSpeed = 1.5f;
         _baseMoveSpeed = _moveSpeed;
@@ -144,18 +153,23 @@ public class StatManager : MonoBehaviour
     public void TakeDamage(int amount)
     {
         _health -= amount;
+        print(_health);
 
         if( _health <= 0)
         {
+            print(gameObject.name + " : " +_health);
             Enemy enemy;
             if (gameObject.TryGetComponent<Enemy>(out enemy))
             {
-                enemy._UeOnDefeat.Invoke();
+                //enemy._UeOnDefeat.Invoke();
+                var ratilo = enemy.GetType().GetField("Defeat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                print("ratilo there : "+ enemy.GetType() );
+                enemy.Defeat();
                 return;
             }
-            PlayerManager manager;
-            if (gameObject.TryGetComponent<PlayerManager>(out manager))
-                manager._UeOnDefeat.Invoke();
+            PlayerManager player;
+            if (gameObject.TryGetComponent<PlayerManager>(out player))
+                player._UeOnDefeat.Invoke();
         }
     }
 

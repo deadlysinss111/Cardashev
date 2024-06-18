@@ -53,7 +53,7 @@ public class Card : MonoBehaviour
     // TODO => move it to its own, new class
     public void SetToCollectible(Func<bool> func)
     {
-        _clickEffect = () => { if (func()) GI._PManFetcher().AddCardsToDeck(new List<Card> { this }); };
+        _clickEffect = () => { if (func()) CurrentRunInformations.AddCardsToDeck(new List<Card> { this }); };
     }
 
 

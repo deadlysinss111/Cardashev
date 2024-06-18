@@ -9,17 +9,16 @@ using UnityEngine.Windows.Speech;
 public class Loader : MonoBehaviour
 {
     // Use the keys to act on .unity files. Make sure the associated values are up-to-date with the in-project file names !
-    private Dictionary<string, string> _sceneEncylopedia = new Dictionary<string, string> {
-        { "Map", "MapNavigation" },
-        { "Room", "TestLvl" },
-        { "MainMenu", "MenuScene" }};
+    //private Dictionary<string, string> _sceneEncylopedia = new Dictionary<string, string> {
+    //    { "", "" },
+    //    { "Map", "MapNavigation" },
+    //    { "Room", "TestLvl" },
+    //    { "MainMenu", "MenuScene" }};
 
 
     /* 
      EVENTS
     */
-    // Event that takes both scene container's names concerned by the scene change
-    public UnityEvent<string, string, LoadSceneMode> _UeSceneChange;
 
 
     /* 
@@ -27,35 +26,38 @@ public class Loader : MonoBehaviour
     */
     public void Awake()
     {
-        // Event subscribing
-        _UeSceneChange.AddListener(LoadScene);
-
         // Ensure the object is always there
         DontDestroyOnLoad(this);
+
+        // Give its reference to GI
+        GI._loader = this;
     }
 
     public void Start()
     {
         // Loads the first scene
-        _UeSceneChange.Invoke("", _sceneEncylopedia["Map"], LoadSceneMode.Single);
+        LoadScene("", "Map");
     }
 
 
     // Scene loader
-    public void LoadScene(string ARGcurScene, string ARGtargetScene, LoadSceneMode ARGloadMode)
+    public void LoadScene(string ARGcurScene, string ARGtargetScene, LoadSceneMode ARGloadMode = LoadSceneMode.Single)
     {
+        string curScene = GI._SceneNameEncyclopedia[ARGcurScene];
+        string targetScene = GI._SceneNameEncyclopedia[ARGtargetScene];
+
         // Check if the scene we are leaving is persistent (if it is, we need to do more work)
-        if (true == GI.IsSceneContainerPersistent(ARGcurScene) && ARGloadMode == LoadSceneMode.Single)
+        if (true == GI.IsSceneContainerPersistent(curScene) && ARGloadMode == LoadSceneMode.Single)
         {
             // Check if the persistent scene was never "saved" before, and saves it if not
-            if (true == GI.IsPersistentSceneContainerNull(ARGcurScene))
-                GI.InstantiateAndCull(ARGcurScene);
+            if (true == GI.IsPersistentSceneContainerNull(curScene))
+                GI.InstantiateAndCull(curScene);
             else
-                GI._persistentSceneContainers[ (int) GI.SceneNametoEnum(ARGcurScene) ].SetActive(false);
+                GI._persistentSceneContainers[ (int) GI.SceneNametoEnum(curScene) ].SetActive(false);
         }
 
         // By this points, everything should be saved or culled, so let's change the scene :3
-        SceneManager.LoadScene(ARGtargetScene, ARGloadMode);
+        SceneManager.LoadScene(targetScene, ARGloadMode);
 
         // This coroutine will Invoke events related to Load Scene, waiting for all Awake() of the loaded scene to resolve
         StartCoroutine(SceneLoadInvoker());

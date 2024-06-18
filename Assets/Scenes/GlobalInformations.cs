@@ -12,8 +12,9 @@ static public class GI
     // ------
 
     // Components needed by a LOT of MonoBehaviours
-    static public PlayerManager _playerManager;
-    static public GameObject _player;
+    static PlayerManager _playerManager;
+    static GameObject _player;
+    static public Loader _loader;
 
     // Super cool Funcs to treat the above Components as a Singleton, limiting calls of GameObject.Find() everywhere :D
     static public Func<PlayerManager> _PManFetcher = () => {
@@ -63,8 +64,10 @@ static public class GI
 
     // Dict to chnage in one place if a fcking scene undergoes name change
     static public Dictionary<string, string> _SceneNameEncyclopedia = new Dictionary<string, string>{
+        { "", "" },
         { "Map", "MapNavigation" },
         { "Room", "TestLvl" },
+        { "Reward", "RewardScene" },
         { "MainMenu", "MenuScene"}};
 
     // UnityEvents on scene load

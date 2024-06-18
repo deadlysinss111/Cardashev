@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: 119fe8c67e7b1364b8ccb8bd201849fc
+guid: 7d7670c0d6da13b42a6d86b157b1a39b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - _swipeHitbox: {fileID: 9203003672801310520, guid: 77995b837d8565040ab2b6a1602f163a, type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

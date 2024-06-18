@@ -1,14 +1,33 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
+
+
 public class Reward : MonoBehaviour
 {
-    PlayerManager _manager;
+    public struct Content
+    {
+        internal int[] _goldRange;
+        internal byte _rewardLvl;
+
+        public Content(int low, int high, byte rewardLvl)
+        {
+            _goldRange = new int[2];
+            _goldRange[0] = low;
+            _goldRange[1] = high;
+            _rewardLvl = rewardLvl;
+
+        }
+    }
+
+
     List<GameObject> _buttons;
     GameObject _leaveButton;
     bool _left = false;
@@ -16,19 +35,23 @@ public class Reward : MonoBehaviour
     [SerializeField] GameObject _winScreen;
     [SerializeField] GameObject _cardBG;
 
+    static public Content _content = new Content(0, 0, 0);
+
 
     private void Awake()
     {
         _buttons = new List<GameObject>();
-        _manager = GameObject.Find("Player").GetComponent<PlayerManager>();
     }
-    private void Update()
+
+    private void Start()
     {
-        if (Input.GetKey(KeyCode.M))
-        {
-            _winScreen.SetActive(true);
-            StartCoroutine(DisplayScreen());
-        }
+        StartCoroutine(DisplayScreen());
+    }
+
+    public void TriggerRewards()
+    {
+        _winScreen.SetActive(true);
+        StartCoroutine(DisplayScreen());
     }
 
     // Displays the rewards screen
@@ -44,9 +67,7 @@ public class Reward : MonoBehaviour
         _leaveButton = GenerateItem(false);
         _leaveButton.transform.localPosition = new Vector3(0, -300, 0);
         _leaveButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Leave");
-        _leaveButton.GetComponent<Button>().onClick.AddListener( () =>
-            { Loader loaderScript = GameObject.Find("Loader").GetComponent<Loader>();
-              loaderScript._UeSceneChange.Invoke("Room", "Map", LoadSceneMode.Single); });
+        _leaveButton.GetComponent<Button>().onClick.AddListener( () =>{ GI._loader.LoadScene("Room", "Map", LoadSceneMode.Single); });
     }
 
     void GenerateRewards()
@@ -76,8 +97,8 @@ public class Reward : MonoBehaviour
     void GenerateGolds()
     {
         GameObject button = GenerateItem(true);
-        int amount = UnityEngine.Random.Range(10, 20);
-        button.GetComponent<Button>().onClick.AddListener(() => { _manager._goldAmount = amount; });
+        int amount = UnityEngine.Random.Range(_content._goldRange[0], _content._goldRange[1]);
+        button.GetComponent<Button>().onClick.AddListener(() => { CurrentRunInformations._goldAmount += amount; });
         button.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText(amount.ToString());
     }
 
