@@ -13,13 +13,13 @@ static public class GI
 
     // Components needed by a LOT of MonoBehaviours
     static PlayerManager _playerManager;
+    static StatManager _playerStat;
     static GameObject _player;
     static public Loader _loader;
 
     // Super cool Funcs to treat the above Components as a Singleton, limiting calls of GameObject.Find() everywhere :D
     static public Func<PlayerManager> _PManFetcher = () => {
-        _playerManager = GameObject.Find("Player").GetComponent<PlayerManager>();
-        if (_playerManager != null)
+        if (GameObject.Find("Player").TryGetComponent(out _playerManager))
         {
             _PManFetcher = () => { return _playerManager; };
             return _playerManager;
@@ -35,6 +35,15 @@ static public class GI
             return _player;
         }
         Debug.LogError("Me when the PlayerFetcher is bad at the game ong ō_ō");
+        return null;
+    };
+    static public Func<StatManager> _PStatFetcher = () => {
+        if (GameObject.Find("Player").TryGetComponent(out _playerStat))
+        {
+            _PStatFetcher = () => { return _playerStat; };
+            return _playerStat;
+        }
+        Debug.LogError("Bro is PStatFetcherless :skullemoji:");
         return null;
     };
 
