@@ -68,6 +68,7 @@ public class StatManager : MonoBehaviour
     private void Awake()
     {
         // Event subscribing
+        _UeDebuffListChange = new();
         _UeDebuffListChange.AddListener(ApplyModifiers);
 
         _modifiers = new List<Modifier>();  // ←- should this go into Start() ?

@@ -53,11 +53,12 @@ public class Murlock : Enemy
     {
         _timeBeforeDecision = 3;
         // ANIM HERE
-        while(_timeBeforeDecision > 1)
+        Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
+        LookInDirectionTarget(dir, 8f);
+        while (_timeBeforeDecision > 1)
         {
             yield return null;
         }
-        Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
         Instantiate(_swipeHitbox, transform.position + dir * _swipeHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<AOEVisual>()._dmg = _dmg;
     }
 
@@ -79,6 +80,10 @@ public class Murlock : Enemy
     {
         _timeBeforeDecision = 3;
 
+        Vector3 velocity = TrajectoryToolbox.BellCurveInitialVelocity(transform.position, _target.transform.position, 7);
+
+        LookInDirectionTarget(velocity, 8f);
+
         // We need to disable the agent in order to be able to manipulate rigidbody's velocity
         _agent.enabled = false;
 
@@ -89,8 +94,9 @@ public class Murlock : Enemy
         }
         // ANIM HERE
 
-        Vector3 velocity = TrajectoryToolbox.BellCurveInitialVelocity(transform.position, _target.transform.position, 7);
-        gameObject.GetComponent<Rigidbody>().velocity = velocity;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.velocity = velocity;
 
         // Calculate the curve for the jump
         List<Vector3> curve;
@@ -122,6 +128,7 @@ public class Murlock : Enemy
             yield return null;
         }
         _agent.enabled = true;
+        GetComponent<Rigidbody>().isKinematic = true;
     }
 
     protected override void Move()
@@ -133,6 +140,7 @@ public class Murlock : Enemy
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _agent.SetDestination(dest);
+        LookInDirectionTarget(dest, 8f);
 
         _timeBeforeDecision = GetPathTime(path);
 
@@ -152,6 +160,7 @@ public class Murlock : Enemy
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _agent.SetDestination(dest);
+        LookInDirectionTarget(dest, 8f);
     }
 
     public void AcideBuff()
