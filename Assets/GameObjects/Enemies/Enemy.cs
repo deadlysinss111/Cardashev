@@ -17,6 +17,7 @@ abstract public class Enemy : MonoBehaviour
     protected GameObject _target;
     protected float _timeBeforeDecision;
     protected bool _isMoving;
+    protected Coroutine _lookAtCoroutine;
 
     // Death related
     protected bool _waitForDestroy;
@@ -141,7 +142,7 @@ abstract public class Enemy : MonoBehaviour
         {
             Color c = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
             c.a = c.a - (1.0f * Time.deltaTime);
-            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = c;
+            //transform.GetChild(0).GetComponent<MeshRenderer>().material.color = c;
         }
         if (_particleSystem.isStopped)
         {
@@ -156,7 +157,7 @@ abstract public class Enemy : MonoBehaviour
     protected void CheckSelectable()
     {
         _selectable = false;
-        transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.white; //Temp: Add an overlay or something later
+        //transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.white; //Temp: Add an overlay or something later
 
         // If we aren't looking to select enemies, return
         if (SelectableArea.EnemyAreaCheck == false) return;
@@ -191,6 +192,24 @@ abstract public class Enemy : MonoBehaviour
         else if (_selectable == false && TryGetComponent<Outline>(out outline))
         {
             Destroy(outline);
+        }
+    }
+
+    protected void LookInDirectionTarget(Vector3 target, float speed)
+    {
+        if (_lookAtCoroutine != null)
+            StopCoroutine(_lookAtCoroutine);
+        _lookAtCoroutine = StartCoroutine(LookInDirectionTargetCoroutine(target, speed));
+    }
+
+    private IEnumerator LookInDirectionTargetCoroutine(Vector3 target, float speed)
+    {
+        Quaternion lookRotation = new();
+        while (transform.rotation != lookRotation)
+        {
+            lookRotation = Quaternion.LookRotation(new Vector3(target.x, 0, target.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 8f);
+            yield return null;
         }
     }
 }
