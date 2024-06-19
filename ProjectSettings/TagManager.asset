@@ -15,6 +15,7 @@ TagManager:
   - TMInteractibles
   - TMDecorations
   - Enemy
+  - Map Node
   layers:
   - Default
   - TransparentFX
@@ -47,7 +48,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - TempLayer
   m_SortingLayers:
   - name: Default
     uniqueID: 0

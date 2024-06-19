@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 abstract public class Enemy : MonoBehaviour
 {
@@ -151,10 +152,14 @@ abstract public class Enemy : MonoBehaviour
     void CheckSelectable()
     {
         _selectable = false;
-        transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.white; //Temp: Add an overlay or something later
 
         // If we aren't looking to select enemies, return
-        if (SelectableArea.EnemyAreaCheck == false) return;
+        if (SelectableArea.EnemyAreaCheck == false)
+        {
+            if (TryGetComponent(out Outline outline))
+                Destroy(outline);
+            return;
+        }
 
         // Filter out the player and the interactables from the Raycast
         int layerMask = (1 << LayerMask.NameToLayer("Player"));
@@ -173,6 +178,7 @@ abstract public class Enemy : MonoBehaviour
 
     public void SetSelected(bool value)
     {
+        print($"Enemy {gameObject.name} is selectable!");
         _selectable = value;
 
         Outline outline;
@@ -183,7 +189,7 @@ abstract public class Enemy : MonoBehaviour
             outline.OutlineColor = Color.red;
             outline.OutlineWidth = 7.7f;
         }
-        else if (_selectable == false && TryGetComponent<Outline>(out outline))
+        else if (_selectable == false && TryGetComponent(out outline))
         {
             Destroy(outline);
         }

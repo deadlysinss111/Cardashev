@@ -188,7 +188,12 @@ public abstract class Interactible : MonoBehaviour
         _selectable = false;
         //transform.GetChild(1).GetComponent<MeshRenderer>().material.color = Color.white;
 
-        if (SelectableArea.InteractableAreaCheck == false) return;
+        if (SelectableArea.EnemyAreaCheck == false)
+        {
+            if (TryGetComponent(out Outline outline))
+                Destroy(outline);
+            return;
+        }
 
         int layerMask = (1 << LayerMask.NameToLayer("Player"));
         layerMask |= (1 << LayerMask.NameToLayer("Enemy"));
@@ -216,7 +221,7 @@ public abstract class Interactible : MonoBehaviour
             outline.OutlineColor = Color.red;
             outline.OutlineWidth = 7.7f;
         }
-        else if (_selectable == false && TryGetComponent<Outline>(out outline))
+        else if (_selectable == false && TryGetComponent(out outline))
         {
             Destroy(outline);
         }
