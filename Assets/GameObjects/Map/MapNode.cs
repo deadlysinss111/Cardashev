@@ -158,25 +158,31 @@ public class MapNode : MonoBehaviour
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.SHOP_ICON;
                     Transform temp = _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform;
-                    temp.localScale *= 2;
+                    _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
+                    _RoomIcon3D.transform.localScale *= 0.3f;
+                    _RoomIcon3D.transform.localPosition = new Vector3(0, 1.5f, 0);
+                    _defaultHoloColor = new Color(1.498f, 1.073f, 0f);
+                    _defaultFresnelColor = new Color(2.996f, 2.3f, 0f);
                     SetDefaultColorTo(Color.yellow);
-                    _defaultHoloColor = new Color(0, 0.52f, 1.498f);
-                    _defaultFresnelColor = new Color(0f, 0.411f, 2.996f);
                     break;
                 }
             case RoomType.Boss:
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.BOSS_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().materials[0].SetFloat("_Hologram_Density", 16);
-                    Transform temp = _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform;
-                    temp.localScale *= 2;
-                    temp.localPosition = new Vector3(0, 1f, 0);
+                    _RoomIcon3D.transform.localScale *= 2;
+                    _RoomIcon3D.transform.localPosition = new Vector3(0, 1f, 0);
                     SetDefaultColorTo(Color.black);
                     break;
                 }
             case RoomType.Rest:
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.REST_ICON;
+                    _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
+                    _RoomIcon3D.transform.localScale *= 0.5f;
+                    _RoomIcon3D.transform.localPosition = new Vector3(0, 1.5f, 0);
+                    _defaultHoloColor = new Color(0f, 3f, 0f);
+                    _defaultFresnelColor = new Color(0.092f, 1.5f, 0.43f);
                     SetDefaultColorTo(Color.white);
                     break;
                 }
@@ -197,9 +203,8 @@ public class MapNode : MonoBehaviour
             case RoomType.Elite:
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.ELITE_ICON;
-                    _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
                     _RoomIcon3D.transform.localScale *= 0.3f;
-                    _RoomIcon3D.transform.position += Vector3.up * 2;
+                    _RoomIcon3D.transform.position += Vector3.up;
                     SetDefaultColorTo(Color.magenta);
                     break;
                 }
