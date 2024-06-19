@@ -6,20 +6,14 @@ using static UnityEngine.GraphicsBuffer;
 
 public class JumpAndShockwave : Card
 {
-    [SerializeField] LayerMask _clickableLayers;
-    LineRenderer _lineRenderer;
-
     Vector3 _initVelocity;
     Vector3 _lastDest;
     GameObject _previewRadius;
 
     private void Awake()
     {
-        _maxLv = 2;
-        _goldValue = 60;
-        _duration = 2;
-        _stats = new int[3];
-        _lineRenderer = GetComponent<LineRenderer>();
+        int[] stats = new int[3];
+        base.Init(2, 2, 80, stats);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (GI._PManFetcher().AddState("jumpAndShockwave" + _id.ToString(), EnterJumpShockwaveState, ExitState) == false) _id++;
@@ -88,11 +82,6 @@ public class JumpAndShockwave : Card
         GI._PManFetcher().SetToDefault();
         // Trigger the card play event
         base.ClickEvent();
-    }
-
-    void ClearPath()
-    {
-        _lineRenderer.positionCount = 0;
     }
 
     public override void OnUpgrade()

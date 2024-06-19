@@ -8,15 +8,14 @@ public class SimpleShot : Card
     List<GameObject> _selectableTiles = new();
 
     SelectableArea AreaSelector;
-    PlayerManager Manager;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        _duration = 1f;
-        _stats = new int[1] { 13 };
-        Manager = GameObject.Find("Player").GetComponent<PlayerManager>();
-        while (Manager.AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
+        int[] stats = new int[1] { 13 };
+        base.Init(1, 3, 50, stats);
+
+        while (GI._PManFetcher().AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
         if (TryGetComponent(out AreaSelector) == false)
             AreaSelector = gameObject.AddComponent<SelectableArea>();
@@ -46,7 +45,7 @@ public class SimpleShot : Card
         AreaSelector.SetSelectableEntites(false, false, true, false);
         _selectableTiles = AreaSelector.FindSelectableArea(GameObject.Find("Player"), 4);
 
-        Manager.SetLeftClickTo(() => {
+        GI._PManFetcher().SetLeftClickTo(() => {
             if (AreaSelector.CastLeftClick(out GameObject obj))
             {
                 print("You got hit by a smooth " + obj.name);
@@ -55,8 +54,8 @@ public class SimpleShot : Card
             else
                 print("R u ok?");
         });
-        Manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
-        Manager.SetHoverTo(() => { });
+        GI._PManFetcher().SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        GI._PManFetcher().SetHoverTo(() => { });
     }
 
     void ExitState()

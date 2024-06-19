@@ -14,7 +14,7 @@ public class PiercingShot : Card
     {
         _duration = 4f;
         _stats = new int[2] { 6, 24 };
-        while (GI._PManFetcher().AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
+        while (GI._PManFetcher().AddState("PiercingShoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
         if (TryGetComponent(out AreaSelector) == false)
             AreaSelector = gameObject.AddComponent<SelectableArea>();
