@@ -87,8 +87,9 @@ public class StatManager : MonoBehaviour
     void Update()
     {
         // Updates the timer of each stat modifiers that are currently being applied
-        foreach (Modifier debuff in _modifiers)
+        for (int i = _modifiers.Count; i < 0; i--)
         {
+            Modifier debuff = _modifiers[i];
             debuff._duration -= Time.deltaTime;
 
             if (debuff._duration <= 0)
