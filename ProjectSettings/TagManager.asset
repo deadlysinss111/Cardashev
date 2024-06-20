@@ -16,6 +16,7 @@ TagManager:
   - TMDecorations
   - Enemy
   - Map Node
+  - Map Tree
   layers:
   - Default
   - TransparentFX
