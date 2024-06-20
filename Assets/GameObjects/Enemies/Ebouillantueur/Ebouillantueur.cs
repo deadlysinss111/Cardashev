@@ -40,7 +40,7 @@ public class Ebouillantueur : Enemy
         {
             //GameObject target
         }
-        _timeBeforeDecision = 2.5f;
+        _timeBeforeDecision = 5f;
         while( _timeBeforeDecision < 1.5f )
         {
             yield return null;

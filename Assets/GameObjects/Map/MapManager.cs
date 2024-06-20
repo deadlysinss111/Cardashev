@@ -1,15 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Burst.CompilerServices;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Splines;
-using UnityEngine.U2D;
-using UnityEngine.XR;
-using static UnityEngine.GraphicsBuffer;
 using Random = UnityEngine.Random;
 
 public class MapManager : MonoBehaviour
@@ -27,6 +18,9 @@ public class MapManager : MonoBehaviour
     GameObject RADIOACTIVE_CLOUD;
     [SerializeField] GameObject _radioactiveCloud;
 
+    // Resources
+    [NonSerialized] public MapResourceLoader resources;
+
     // For map navigation
     List<List<GameObject>> _mapGrid;
     GameObject _playerLocation; // TODO auto create this one and make it invisible at Start()
@@ -39,6 +33,7 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
+        resources = GetComponent<MapResourceLoader>();
         _cameraManager = GetComponent<CameraManager>();
     }
 
@@ -50,7 +45,6 @@ public class MapManager : MonoBehaviour
         {
             return;
         }
-
 
         _mapGrid = new List<List<GameObject>>(MAP_SIZE_X);
         _startingNodes = new List<GameObject>();
@@ -79,11 +73,6 @@ public class MapManager : MonoBehaviour
         {
             MoveCloud();
         }
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            GenerateMap();
-        }
     }
 
     void MovePlayerTo(GameObject nodeToMoveTo)
@@ -108,7 +97,7 @@ public class MapManager : MonoBehaviour
     {
         MapNode curNode = node.GetComponent<MapNode>();
         if (ReferenceEquals(curNode, _bossRoom)) return;
-        if (!firstCall) curNode.UnselectNode();
+        if (!firstCall) curNode.UnlockNode();
         foreach (GameObject nextNode in curNode._nextNodes)
         {
             if (!nextNode || nextNode.GetComponent<MapNode>().IsLockedByBlocker()) continue;
@@ -174,8 +163,9 @@ public class MapManager : MonoBehaviour
         _bossRoom = Instantiate(MAP_NODE);
         _bossRoom.transform.SetParent(mapObj, false);
         _bossRoom.transform.localPosition = new Vector3(MAP_SIZE_X / 2 * spaceBetweenNodes, 4, (MAP_SIZE_Y + 1) * spaceBetweenNodes);
+        _bossRoom.transform.position = new Vector3(8, 52, 155);
         _bossRoom.transform.localScale *= 2;
-        _bossRoom.GetComponent<MapNode>().SetRoomTypeTo(RoomType.Boss);
+        _bossRoom.GetComponent<MapNode>().SetRoomTypeTo(RoomType.Boss, resources);
     }
 
     void GenerateMap()
@@ -234,6 +224,9 @@ public class MapManager : MonoBehaviour
                 GameObject nextNode = _mapGrid[nextNodeXIndex][floorNb + 1];
 
                 _mapGrid[x][floorNb].GetComponent<MapNode>().AddNextNode(nodeNb, nextNode);
+                Material currentMat = _mapGrid[x][floorNb].GetComponent<MapNode>()._RoomIcon3D.GetComponent<MeshRenderer>().materials[0];
+                currentMat.SetVector("_General_Offset", new Vector4(x, floorNb));
+                currentMat.SetFloat("_Hologram_Density", 16);
 
                 // WIP placing paths between nodes
                 GameObject newPath = CreatePathBetween(_mapGrid[x][floorNb], nextNode);
@@ -283,7 +276,7 @@ public class MapManager : MonoBehaviour
         GameObject newPath = Instantiate(MAP_PATH);
         newPath.transform.SetParent(GameObject.FindGameObjectWithTag("Map Path Parent").transform, false);
 
-        newPath.GetComponent<MeshRenderer>().material.color = Color.black;
+        newPath.GetComponent<MeshRenderer>().material.color = Color.gray;
         Vector3 direction = node2.transform.position - node1.transform.position;
 
         newPath.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -343,10 +336,7 @@ public class MapManager : MonoBehaviour
                 curRoom = curRoom._nextNodes[pathNb].GetComponent<MapNode>();
                 roomsToPlace++;
             }
-            /*print("roomsToPlace: " + roomsToPlace);
-            print("shopToPlace: " + shopToPlace);
-            print("restToPlace: " + restToPlace);
-            print("eliteToPlace: " + eliteToPlace);*/
+
             int fightEventToPlace = roomsToPlace - Mathf.Clamp(shopToPlace, 0, 1) - Mathf.Clamp(restToPlace, 0, 1);
 
             while (shopToPlace > 0)
@@ -383,25 +373,19 @@ public class MapManager : MonoBehaviour
                 fightEventToPlace--;
             }
 
-            /*foreach (var item in rooms)
-            {
-                print("Room type: " + item);
-            }*/
-
             // Place a Fight on the first room
-            _startingNodes[pathNb].GetComponent<MapNode>().SetRoomTypeTo(RoomType.Combat);
+            _startingNodes[pathNb].GetComponent<MapNode>().SetRoomTypeTo(RoomType.Combat, resources);
             curRoom = _startingNodes[pathNb].GetComponent<MapNode>()._nextNodes[pathNb].GetComponent<MapNode>();
 
             while (curRoom.RoomType != RoomType.Boss)
             {
                 if (curRoom.RoomType == RoomType.None)
                 {
-                    curRoom.SetRoomTypeTo(rooms[0]);
+                    curRoom.SetRoomTypeTo(rooms[0], resources);
                     rooms.RemoveAt(0);
                 }
                 curRoom = curRoom._nextNodes[pathNb].GetComponent<MapNode>();
             }
-            //print("Remaining rooms: "+rooms.Count);
         }
     }
 

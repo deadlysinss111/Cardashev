@@ -13,7 +13,7 @@ public class Murlock : Enemy
     {
         base.Start();
         _name = "Murlock";
-        _agent.speed = 1.5f;
+        _agent.speed = 0.5f;
         _dmg = 15;
     }
 
