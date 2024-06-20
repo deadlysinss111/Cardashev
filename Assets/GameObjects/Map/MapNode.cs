@@ -1,6 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.U2D;
 
 public enum RoomType
 {
@@ -25,7 +29,7 @@ public class MapNode : MonoBehaviour
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
-    //string _linkedScene = "large empty area";
+    string _linkedScene = "large empty area";
     bool _playerCameThrough;
     bool _isLocked;
 
@@ -128,11 +132,11 @@ public class MapNode : MonoBehaviour
             if (node.GetComponent<MapNode>().IsLockedByBlocker()) continue;
             node.GetComponent<MapNode>().IsSelectable(true);
         }
-        /*if(gameObject.name != "Original Node")
+        if(gameObject.name != "Original Node")
         {
             GI._prefabToLoad = _linkedScene;
             SceneManager.LoadScene("TestLvl");
-        }*/
+        }
     }
 
     public void UnselectNode()
