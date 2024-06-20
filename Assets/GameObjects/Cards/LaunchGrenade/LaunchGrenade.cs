@@ -10,26 +10,22 @@ using UnityEngine.UIElements;
 
 public class LaunchGrenade : Card
 {
-    [SerializeField] LayerMask _clickableLayers;
-
-    LineRenderer _lineRenderer;
     Vector3 _grenadeInitVelocity;
     GameObject _previwRadius;
 
     GameObject _grenadePrefab;
 
-    SelectableArea _selectableArea;
-
     private void Awake()
     {
-        _maxLv = 2;
-        _goldValue = 60;
-        _stats = new int[3];
-        _lineRenderer = GetComponent<LineRenderer>();
-        _grenadePrefab = (GameObject)Resources.Load("Grenade");
-
+        // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
+        int[] stats = new int[4];
+        stats[0] = 15;
+        base.Init(2, 2, 60, stats);
+        
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (GI._PManFetcher().AddState("grenade"+_id.ToString(), EnterGrenadeState, ExitState) == false) _id++;
+
+        _grenadePrefab = (GameObject)Resources.Load("Grenade");
 
         UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
         _previwRadius = (GameObject)Instantiate(RADIUS);

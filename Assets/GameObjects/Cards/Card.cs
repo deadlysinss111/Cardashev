@@ -22,6 +22,10 @@ public class Card : MonoBehaviour
     // Utilities
     public float _cardEndTimestamp;
     public byte _id = 0;
+    protected SelectableArea _selectableArea;
+    protected LineRenderer _lineRenderer;
+
+    [SerializeField] protected LayerMask _clickableLayers;
 
     // Actions
     public Action _onDiscard;       // Called when the card's duration reached 0 after activation
@@ -31,16 +35,29 @@ public class Card : MonoBehaviour
     // Level related
     public int _currLv = 1;
     public int _maxLv = 3;
-
+    
 
     /*
      METHODS
     */
-    // Constructor
+    // Constructor & Init
     public Card()
     {
         _trigger += () => Effect();
         _clickEffect = ClickEvent;
+    }
+
+    protected void Init(byte duration, byte maxLvl, int goldValue, int[] stats)
+    {
+        _duration = duration;
+        _maxLv = maxLvl;
+        _goldValue = goldValue;
+        _stats = stats;
+
+        if(TryGetComponent(out LineRenderer renderer))
+            _lineRenderer = renderer;
+        else
+            _lineRenderer = null;
     }
 
     // ~~~(> GETTERS
@@ -77,6 +94,11 @@ public class Card : MonoBehaviour
     public virtual void ClickEvent()
     {
         GI._PlayerFetcher().GetComponent<DeckManager>().Play(this);
+    }
+
+    protected void ClearPath()
+    {
+        _lineRenderer.positionCount = 0;
     }
 
 

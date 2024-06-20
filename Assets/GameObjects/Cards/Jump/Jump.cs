@@ -6,19 +6,13 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Jump : Card
 {
-    [SerializeField] LayerMask _clickableLayers;
-    LineRenderer _lineRenderer;
-
     Vector3 _initVelocity;
     Vector3 _lastDest;
 
     private void Awake()
     {
-        _maxLv = 2;
-        _stats = new int[3];
-        _lineRenderer = GetComponent<LineRenderer>();
-        _goldValue = 60;
-        _duration = 2;
+        int[] stats = new int[3];
+        base.Init(2, 2, 60, stats);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (GI._PManFetcher().AddState("jump" + _id.ToString(), EnterJumpState, ExitState) == false) _id++;
@@ -82,11 +76,6 @@ public class Jump : Card
         manager.SetToDefault();
         // Trigger the card play event
         base.ClickEvent();
-    }
-
-    void ClearPath()
-    {
-        _lineRenderer.positionCount = 0;
     }
 
     public override void OnUpgrade()
