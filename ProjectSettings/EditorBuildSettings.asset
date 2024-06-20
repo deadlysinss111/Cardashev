@@ -8,10 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MapNavigation.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/QueueSampleScene.unity
     guid: 14fde2630ee7aa842bd8ec8115ed1425
   - enabled: 1
     path: Assets/Scenes/TestLvl.unity
     guid: e41643c80e028c04aac758c64e5966b2
+  - enabled: 1
+    path: Assets/Scenes/MenuScene.unity
+    guid: 71b4a55d78b780a4b822618ea65b1d74
   m_configObjects: {}

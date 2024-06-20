@@ -22,6 +22,7 @@ public class Card : MonoBehaviour
     // Utilities
     public float _cardEndTimestamp;
     public byte _id = 0;
+    public Color _actionColor;
 
     // Actions
     public Action _onDiscard;       // Called when the card's duration reached 0 after activation
