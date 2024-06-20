@@ -177,13 +177,17 @@ public class StatManager : MonoBehaviour
         if (HasArmor() && ignore_armor == false)
         {
             print("Hurt armor");
-            _armor -= amount;
+            int diff = _armor - amount;
+            _armor = diff;
+            if (diff >= 0)
+                return;
+            amount -= Math.Abs(diff);
+            
         }
-        else
-        {
-            print("Hurt health");
-            _health -= amount;
-        }
+
+        print("Hurt health");
+        _health -= amount;
+
         BetterDebug.Log(_health, _armor);
 
         if( _health <= 0)
