@@ -28,7 +28,7 @@ public class MapNode : MonoBehaviour
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
-    string _linkedScene = "large empty area";
+    string _linkedScene = "New Room Test";
     bool _playerCameThrough;
 
     Color _defaultColor;

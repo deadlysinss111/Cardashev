@@ -33,16 +33,16 @@ public class Card : MonoBehaviour
     public Action _clickEffect;     // Called when the card is clicked in the HUD
 
     // Level related
-    public int _currLv = 1;
-    public int _maxLv = 3;
-    
+    public int _currLv;
+    public int _maxLv;
 
     /*
      METHODS
     */
-    // Constructor & Init
     public Card()
     {
+        _currLv = 1;
+        _maxLv = 3;
         _trigger += () => Effect();
         _clickEffect = ClickEvent;
     }

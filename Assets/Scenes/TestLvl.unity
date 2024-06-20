@@ -7016,10 +7016,14 @@ PrefabInstance:
       objectReference: {fileID: 1087574744}
     - target: {fileID: 2746248711619431092, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
       propertyPath: _slowdownFactor
-      value: 7410
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 2746248711619431092, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
       propertyPath: _slowdownLength
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2746248711619431092, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _slowdownDuration
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3148833222586391748, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
@@ -7034,6 +7038,10 @@ PrefabInstance:
       propertyPath: _cooldownTime
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 6497200372588378017, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _cooldownSprite
+      value: 
+      objectReference: {fileID: 281907142}
     - target: {fileID: 7232163658981407054, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

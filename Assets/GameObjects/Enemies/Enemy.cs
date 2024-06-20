@@ -67,7 +67,7 @@ abstract public class Enemy : MonoBehaviour
         }
 
         CheckSelectable();
-        print("Enemy is selectable: "+_selectable);
+        //print("Enemy is selectable: "+_selectable);
     }
 
     // Pick a random reachable position
@@ -185,7 +185,6 @@ abstract public class Enemy : MonoBehaviour
 
     public void SetSelected(bool value)
     {
-        print($"Enemy {gameObject.name} is selectable!");
         _selectable = value;
 
         Outline outline;

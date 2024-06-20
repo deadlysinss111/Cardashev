@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -8385629782037469278}
   - component: {fileID: -6709748631891636370}
   m_Layer: 0
-  m_Name: Flat Tile
+  m_Name: Room Wall
   m_TagString: TMTopology
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 96949eda3951b0840a790f8b76c9d9ce, type: 2}
+  - {fileID: 2100000, guid: ccb6827dfd1b64541b295e276fa735c5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

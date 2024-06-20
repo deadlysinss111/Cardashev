@@ -14,18 +14,25 @@ public class DeckManager : MonoBehaviour
     protected List<Card> _remainsInDeck;
     protected List<Card> _discardPile;
 
+    protected float _drawCooldown;
+    protected int _curHandSize;
+
     void Start()
     {
         _hand = new List<Card>();
         _discardPile = new List<Card>();
         _remainsInDeck = new List<Card>();
+        _drawCooldown = 0;
+        _curHandSize = 0;
 
         // Loads every card in the deck
         List<string>toLoad = GI._PManFetcher().GetDeck();
+        GameObject CARD;
+        GameObject card;
         foreach (string name in toLoad)
         {
-            GameObject CARD = (GameObject)Resources.Load(name);
-            GameObject card = Instantiate(CARD);
+            CARD = (GameObject)Resources.Load(name);
+            card = Instantiate(CARD);
             card.layer = LayerMask.NameToLayer("UI");
             card.transform.SetParent(GameObject.Find("Canvas").transform, false);
             card.transform.localScale = new Vector3(10, 1, 10);
@@ -34,11 +41,26 @@ public class DeckManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        _drawCooldown -= Time.deltaTime;
+        if (_drawCooldown  <= 0)
+        {
+            if (_hand.Count < 5)
+            {
+                Draw();
+                _drawCooldown = 3;
+            }
+        }
+    }
+
     public void Draw()
     {
         // If the deck is empty, we shuffle the discard pile into it
         if (_remainsInDeck.Count == 0)
         {
+            if (_discardPile.Count == 0)
+                return;
             _remainsInDeck = _discardPile;
             _discardPile = new List<Card> { };
         }

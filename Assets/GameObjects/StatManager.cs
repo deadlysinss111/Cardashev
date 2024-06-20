@@ -155,17 +155,17 @@ public class StatManager : MonoBehaviour
     public void TakeDamage(int amount)
     {
         _health -= amount;
-        print(_health);
+        //print(_health);
 
         if( _health <= 0)
         {
-            print(gameObject.name + " : " +_health);
+            //print(gameObject.name + " : " +_health);
             Enemy enemy;
             if (gameObject.TryGetComponent<Enemy>(out enemy))
             {
                 //enemy._UeOnDefeat.Invoke();
                 var ratilo = enemy.GetType().GetField("Defeat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                print("ratilo there : "+ enemy.GetType() );
+                //print("ratilo there : "+ enemy.GetType() );
                 enemy.Defeat();
                 return;
             }

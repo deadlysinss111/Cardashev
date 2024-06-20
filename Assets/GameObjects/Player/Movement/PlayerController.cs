@@ -127,7 +127,9 @@ public class PlayerController : MonoBehaviour
 
         // We need to dynamically create a card in order to subscribe it to the Queue
         List<Vector3> slicedPath = new List<Vector3>();
-        Card moveCard = new Card();
+        GameObject moveCardObj = new GameObject();
+        Card moveCard = moveCardObj.AddComponent<Card>();
+        //Card moveCard = new Card();
         moveCard._trigger += () =>
         {
             _agent.destination = vect;

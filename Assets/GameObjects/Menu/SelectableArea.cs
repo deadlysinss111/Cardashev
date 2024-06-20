@@ -381,7 +381,7 @@ public class SelectableArea : MonoBehaviour
                 Debug.Log("Did Hit Non-Tile " + hit.transform.gameObject.name);
                 continue;
             }
-            Debug.Log("Did Hit " + hit.transform.gameObject.name);
+            //Debug.Log("Did Hit " + hit.transform.gameObject.name);
 
             _selectableTiles.Add(hit.transform.gameObject);
             try

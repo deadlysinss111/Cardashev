@@ -27,6 +27,7 @@ static public class GI
         Debug.LogError("It's so sad PManFetcher died of ligma");
         return null;
     };
+
     static public Func<GameObject> _PlayerFetcher = () => {
         _player = GameObject.Find("Player");
         if (_player != null)

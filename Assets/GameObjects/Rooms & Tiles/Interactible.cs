@@ -115,17 +115,17 @@ public abstract class Interactible : MonoBehaviour
         switch (ARGcollider.gameObject.tag)
         {
             case "Player":
-                Debug.Log("Player left contact with " + this.gameObject.name);
+                //Debug.Log("Player left contact with " + this.gameObject.name);
                 break;
 
             case "Enemy":
-                Debug.Log(ARGcollider.gameObject.name + "Enemy left contact with " + this.gameObject.name);
+                //Debug.Log(ARGcollider.gameObject.name + "Enemy left contact with " + this.gameObject.name);
                 break;
 
             // Should be replaced by more case, since this is intended to detect projectiles, attack hitboxes or explosions
             // TODO : add more case when those 3 will be implemented
             default:
-                Debug.Log("Something else left contact with " + this.gameObject.name);
+                //Debug.Log("Something else left contact with " + this.gameObject.name);
                 break;
         }
     }
