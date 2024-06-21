@@ -8,9 +8,9 @@ public class QueueComponent : MonoBehaviour
     /*
      FIELDS 
     */
-    private Queue<Card> _queue = new Queue<Card>();
-    private Card _activeCard;
-    readonly private float _maxTimeBuffer = 15.0f;
+    Queue<Card> _queue = new Queue<Card>();
+    Card _activeCard;
+    readonly float _maxTimeBuffer = 15.0f;
 
     /*
      PROPERTIES

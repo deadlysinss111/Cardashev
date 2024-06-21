@@ -1,155 +1,54 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
 
-public class SlowMotionWithProgressBar : MonoBehaviour
+public class SlowMotion : Ultimate
 {
-    // Slow motion Fields
-    [SerializeField] float _slowdownFactor;
-    [SerializeField] float _slowdownDuration;   // Maximum duration the slow motion can last
+    /*
+     FIELDS
+    */
+    // FS = Factory Reset, useful to quickly change values in the Unity Editor
+    // Could also serve as local default values in case we had a buff/debuff on any of this
+    [SerializeField] int _slowFactorFS;
+    [SerializeField] int _focusLossThresholdFS;
 
-    // Focus bar Fields
-    [SerializeField] GameObject _focusBar;
+    // Dynamic, useful to set their values in StartEffect() to pass to UpdateEffect(), and for UpdateEffect() to tweak them
+    int _slowFactor;
+    [Range(0.0f, 1.0f)] float _focusLossThreshold;
 
-    bool _isActive;
-    PlayerInput _pInput;
 
-    // Circular progress bar Fields
-    bool _progressBarIsActive;
-    bool _isRefilling;
-    float _indicatorTimer;
-    float _maxIndicatorTimer;
-    Image _radialProgressBar;
-    float _lerpSpeed = 3f;  // Speed of interpolation
-
-    private void Awake()
+    /*
+     METHODS
+    */
+    private new void Awake()
     {
-        _pInput = GetComponent<PlayerInput>(); // Ensure PlayerInput component is attached
+        // Base Awake()
+        base.Awake();
 
-        // Initialize the radial progress bar
-        _radialProgressBar = _focusBar.transform.Find("RadialProgressBar").GetComponent<Image>();
+        // Field setup
+        _slowFactor = _slowFactorFS;
+        _focusLossThreshold = _focusLossThresholdFS;
     }
 
-    private void Update()
+    // ------
+    // THE 3 MUSKETEERS
+    // ------
+    protected void StartEffect()
     {
-        if (_isActive)
-        {
-            DecreaseTimer();
-            if (_slowdownDuration <= 0)
-            {
-                StopSlowMotion();
-            }
-        }
+        // Set the game-speed of Unity      /!\ NOT SUSTAINABLE, AS THIS COULD ALSO SLOW THINGS WE WOULD LIKE TO KEEP THE SPEED OF (ANIMATIONS, MUSIC, UI, ETC...)
+        Time.timeScale = _slowFactor;
 
-        if (_progressBarIsActive)
-        {
-            if (_isRefilling)
-            {
-
-                _indicatorTimer += Time.unscaledDeltaTime / 4;
-                _radialProgressBar.fillAmount = Mathf.Lerp(_radialProgressBar.fillAmount, _indicatorTimer / _maxIndicatorTimer, _lerpSpeed * Time.unscaledDeltaTime);
-
-                IncreaseTimer();
-
-
-                if (_indicatorTimer >= _maxIndicatorTimer)
-                {
-                    _isRefilling = false;
-                    _indicatorTimer = _maxIndicatorTimer;
-                    _radialProgressBar.fillAmount = 1f;
-                    _slowdownDuration = _maxIndicatorTimer;
-
-
-                    StopCountdown();
-                }
-            }
-            else
-            {
-                _indicatorTimer -= Time.unscaledDeltaTime;
-                _radialProgressBar.fillAmount = _indicatorTimer / _maxIndicatorTimer;
-
-                if (_indicatorTimer <= 0)
-                {
-                    StopCountdown();
-                }
-            }
-        }
+        // Stops cooldown and start usage
+        _IsInEffect = true;
+        ActivateEffect(_depleteRate);
     }
 
-    private void OnEnable()
+    protected abstract void UpdateEffect()
     {
-        // Enable the input actions when the object is enabled
-        _pInput.actions["Focus"].performed += OnFocusPerformed;
-        _pInput.actions["Focus"].canceled += OnFocusCanceled;
-        _pInput.actions["Focus"].Enable();
+        // Test if the slow-down effect should start to wither
+        if (_ultiEnergyCur / _ultiEnergyMax < _focusLossThreshold)
+            _slowFactor += (1.0f - _slowFactor) / ( (/*Requires to know how much more time the deplete would take --> Might need FixedUpdate()*/) / Time.deltaTime);
     }
 
-    private void OnDisable()
-    {
-        // Disable the input actions when the object is disabled
-        _pInput.actions["Focus"].performed -= OnFocusPerformed;
-        _pInput.actions["Focus"].canceled -= OnFocusCanceled;
-        _pInput.actions["Focus"].Disable();
-    }
-
-    private void OnFocusPerformed(InputAction.CallbackContext context)
-    {
-        StartSlowMotion();
-    }
-
-    private void OnFocusCanceled(InputAction.CallbackContext context)
-    {
-        StopSlowMotion();
-    }
-
-    public void StartSlowMotion()
-    {
-        Time.timeScale = _slowdownFactor;
-        Time.fixedDeltaTime = Time.timeScale * 0.02f;
-
-        _isActive = true;
-        _progressBarIsActive = true;
-        _isRefilling = false;
-
-        _focusBar.SetActive(true);
-        ActivateCountdown(_slowdownDuration);
-    }
-
-    public void StopSlowMotion()
-    {
-        _isActive = false;
-
-        // Reset TimeScale
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f;
-
-        StartRefill();
-    }
-
-    public void DecreaseTimer()
-    {
-        _slowdownDuration -= Time.unscaledDeltaTime;
-    }
-
-    public void IncreaseTimer()
-    {
-        _slowdownDuration += Time.unscaledDeltaTime / 4;
-    }
-
-    public void StartRefill()
-    {
-        _isRefilling = true;
-        _progressBarIsActive = true;
-    }
-
-    public void ActivateCountdown(float countdownTime)
-    {
-        _maxIndicatorTimer = 5f;
-        _indicatorTimer = countdownTime;
-    }
-
-    public void StopCountdown()
-    {
-        _progressBarIsActive = false;
-    }
+    protected abstract void StopEffect();
 }
