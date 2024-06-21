@@ -12,6 +12,7 @@ public class GameTimer : MonoBehaviour
     void Start()
     {
         _timePassed = 0;
+        Debug.Log("GameTimer started");
     }
 
     private void OnDestroy()
@@ -22,7 +23,7 @@ public class GameTimer : MonoBehaviour
     void Update()
     {
         // Stops updating if we are on the end screen
-        if (GameOverManager._instance._inGameOver || _winScreen.GetComponent<RoomClear>()._roomClearScreen) return;
+        //if (GameOverManager._instance._inGameOver || _winScreen.GetComponent<RoomClear>()._roomClearScreen) return;
 
         // Updates the time passed in the current run
         _timePassed += Time.deltaTime;

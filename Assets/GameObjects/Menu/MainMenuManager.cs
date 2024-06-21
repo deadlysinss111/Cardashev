@@ -15,6 +15,7 @@ public class MainMenuManager : MonoBehaviour
     public List<GameObject> _menuObjects;
     Dictionary<string, GameObject> _menus;
     string _currentMenu;
+    public GameObject _settingsUI;
 
     private void Start()
     {
@@ -94,6 +95,7 @@ public class MainMenuManager : MonoBehaviour
     public void GoToOptions()
     {
         SetMenu("Options");
+        _settingsUI.SetActive(true);
     }
 
     public void GoToCollection()

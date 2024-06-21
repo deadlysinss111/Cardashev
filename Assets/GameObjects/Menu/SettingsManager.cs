@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
+// code by Amaury
 public class SettingsManager : MonoBehaviour
 {
     [SerializeField] AudioMixer _audioMixer;
@@ -17,8 +18,12 @@ public class SettingsManager : MonoBehaviour
     float _currentVolume;
     Resolution[] _resolutions;
 
+    MainMenuManager _mainMenuManager;
+
     private void Start()
     {
+        _mainMenuManager = GameObject.Find("Menu").GetComponent<MainMenuManager>();
+
         _resolutionDropdown.ClearOptions();
         List<string> options = new List<string>();
         _resolutions = Screen.resolutions;
@@ -174,5 +179,10 @@ public class SettingsManager : MonoBehaviour
     {
         SaveSettings();
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
+
+    public void QuitSettings()
+    {
+        _mainMenuManager._settingsUI.SetActive(false);
     }
 }

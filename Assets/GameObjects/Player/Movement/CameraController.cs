@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
         _currentMode = LockedMode;
         _pInput = GameObject.Find("Player").GetComponent<PlayerInput>();
 
-        // Pre-dertermined camera angles
+        // Pre-determined camera angles
         _curRotation = transform.rotation;
         _offsetPositions = new Vector3[4];
         _offsetPositions[0] = new Vector3(0, 15, -10);
@@ -39,10 +39,11 @@ public class CameraController : MonoBehaviour
 
     private void OnEnable()
     {
-        
         _pInput.actions["CameraMode"].performed += OnChangeModePerformed;
         _pInput.actions["CameraMove"].performed += OnMovePerformed;
         _pInput.actions["CameraMove"].canceled += OnMoveCanceled;
+        _pInput.actions["CameraRotateLeft"].performed += RotateToLeft;
+        _pInput.actions["CameraRotateRight"].performed += RotateToRight;
     }
 
     private void OnDisable()
@@ -52,6 +53,8 @@ public class CameraController : MonoBehaviour
             _pInput.actions["CameraMode"].performed -= OnChangeModePerformed;
             _pInput.actions["CameraMove"].performed -= OnMovePerformed;
             _pInput.actions["CameraMove"].canceled -= OnMoveCanceled;
+            _pInput.actions["CameraRotateLeft"].performed -= RotateToLeft;
+            _pInput.actions["CameraRotateRight"].performed -= RotateToRight;
         }
     }
 
@@ -87,9 +90,9 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    private void RotateToLeft()
+    private void RotateToLeft(InputAction.CallbackContext context)
     {
-        if(_offsetID == 0)
+        if (_offsetID == 0)
         {
             _offsetID = 3;
         }
@@ -98,15 +101,17 @@ public class CameraController : MonoBehaviour
             --_offsetID;
         }
         _curOffset = _offsetPositions[_offsetID];
+        Debug.Log(_curOffset);
 
         // Rotation transformations
         _curRotation *= Quaternion.AngleAxis(-45, Vector3.right);
         _curRotation *= Quaternion.AngleAxis(90, Vector3.up);
         _curRotation *= Quaternion.AngleAxis(45, Vector3.right);
     }
-    private void RotateToRight()
+
+    private void RotateToRight(InputAction.CallbackContext context)
     {
-        if(_offsetID == 3)
+        if (_offsetID == 3)
         {
             _offsetID = 0;
         }
@@ -116,44 +121,14 @@ public class CameraController : MonoBehaviour
         }
         _curOffset = _offsetPositions[_offsetID];
 
+        Debug.Log(_curOffset);
+
         // Rotation transformations
         _curRotation *= Quaternion.AngleAxis(-45, Vector3.right);
         _curRotation *= Quaternion.AngleAxis(-90, Vector3.up);
         _curRotation *= Quaternion.AngleAxis(45, Vector3.right);
     }
 
-
-    /* Some really cool maths rotations with a shift bug left
-       May be usefull if we want to let the player move around freely
-    
-    private void RotateToLeft()
-    {
-        // Movement transformations
-        Vector3 gap = _target.position - transform.position;
-        gap = Quaternion.AngleAxis(90, Vector3.up) * gap;
-        _offset.x = gap.x;
-        _offset.z = gap.z;
-
-        // Rotation transformations
-        _rotation *= Quaternion.AngleAxis(-45, Vector3.right);
-        _rotation *= Quaternion.AngleAxis(-90, Vector3.up);
-        _rotation *= Quaternion.AngleAxis(45, Vector3.right);
-    }
-
-    private void RotateToRight()
-    {
-        // Movement transformations
-        Vector3 gap = _target.position - transform.position;
-        gap = Quaternion.AngleAxis(-90, Vector3.up) * gap;
-        _offset.x = gap.x ;
-        _offset.z = gap.z ;
-
-        // Rotation transformations
-        _rotation *= Quaternion.AngleAxis(-45, Vector3.right);
-        _rotation *= Quaternion.AngleAxis(90, Vector3.up);
-        _rotation *= Quaternion.AngleAxis(45, Vector3.right);
-    }
-    */
     private void OnChangeModePerformed(InputAction.CallbackContext context)
     {
         ChangeMode();
@@ -178,7 +153,6 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        
         if (_rebindingOperation != null)
         {
             _rebindingOperation.Dispose();

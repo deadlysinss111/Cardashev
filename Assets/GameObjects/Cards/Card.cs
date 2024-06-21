@@ -26,6 +26,7 @@ public class Card : MonoBehaviour
     protected LineRenderer _lineRenderer;
 
     [SerializeField] protected LayerMask _clickableLayers;
+    public Color _actionColor;
 
     // Actions
     public Action _onDiscard;       // Called when the card's duration reached 0 after activation
