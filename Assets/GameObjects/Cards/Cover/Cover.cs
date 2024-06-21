@@ -16,6 +16,8 @@ public class Cover : Card
      */
     RotationSelectArrow _rotationArrow;
 
+    GameObject _cover;
+
     private void Awake()
     {
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
@@ -30,6 +32,8 @@ public class Cover : Card
         {
             _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
         }
+
+        _cover = GI._PlayerFetcher().transform.Find("cover").gameObject;
     }
 
     void EnterState()
@@ -39,18 +43,24 @@ public class Cover : Card
         // Card range
         _rotationArrow.SetArrow(true);
 
-        manager.SetLeftClickTo(CoverPreview);
-        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
-        manager.SetHoverTo(CoverPreview);
+        manager.SetLeftClickTo(ActivateCover);
+        manager.SetRightClickTo(ExitState);
+        manager.SetHoverTo(() => { });
     }
 
     void ExitState()
     {
         //_selectableArea.ResetSelectable();
         //ClearPath();
+        _rotationArrow.SetArrow(false);
     }
 
-    void CoverPreview() { }
+    void ActivateCover()
+    {
+        GI._PlayerFetcher().GetComponent<CoverManager>().EnableCover(500, _rotationArrow.GetRotation());
+        Effect();
+        GI._PManFetcher().SetToDefault();
+    }
 
     public override void Effect()
     {
