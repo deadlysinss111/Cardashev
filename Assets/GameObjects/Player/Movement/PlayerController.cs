@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     // Fields needed for the Camera
     [SerializeField] float _lookRotationSpeed = 8f;
 
+    public float _moveMult;
+
 
     /*
      METHODS
@@ -53,6 +55,8 @@ public class PlayerController : MonoBehaviour
         PlayerManager manager = GI._PManFetcher();
         manager._virtualPos = _agent.transform.position;
         manager.AddState("movement", EnterMovementState, ExitState);
+
+        _moveMult = 1f;
     }
     private void Update()
     {
@@ -234,7 +238,7 @@ public class PlayerController : MonoBehaviour
             Vector3 end = path.corners[i + 1];
 
             // Add the time to traverse the segment
-            time += Vector3.Distance(start, end) / _agent.speed;
+            time += Vector3.Distance(start, end) / _agent.speed * _moveMult;
         }
         return time;
     }

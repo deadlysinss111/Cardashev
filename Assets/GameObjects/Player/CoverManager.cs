@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CoverManager : MonoBehaviour
 {
-    int _health;
+    public int _health;
     float _timer;
 
     bool _activated = false;
@@ -63,5 +63,6 @@ public class CoverManager : MonoBehaviour
         _activated = false;
         _timerActive = false;
         _cover.SetActive(false);
+        GI._PlayerFetcher().GetComponent<PlayerController>()._moveMult = 1f;
     }
 }
