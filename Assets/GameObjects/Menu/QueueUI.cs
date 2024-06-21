@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -7,19 +6,23 @@ using UnityEngine.UI;
 
 public class QueueUI : MonoBehaviour
 {
-    public GameObject segmentPrefab; // Reference to the segment prefab
+    public GameObject _segmentPrefab; // Reference to the segment prefab
 
     QueueComponent _queue;
     Image _secsBar;
     TMP_Text _secsText;
     float _barScale;
-    List<GameObject> _segmentBars = new List<GameObject>();
+    Queue<GameObject> _segmentBars;
     GameObject _activeSegment;
+    bool _dequeuAsk;
+    Transform _bg;
 
     void Start()
     {
+        _segmentBars = new Queue<GameObject>();
         _queue = GI._PlayerFetcher().GetComponent<QueueComponent>();
-        _secsBar = transform.Find("Background").GetComponent<Image>();
+        _bg = transform.Find("Background");
+        _secsBar = _bg.GetComponent<Image>();
         _barScale = _secsBar.transform.localScale.x;
         _secsText = transform.Find("Seconds").GetComponent<TMP_Text>();
     }
@@ -27,63 +30,66 @@ public class QueueUI : MonoBehaviour
     void Update()
     {
         _secsText.text = Math.Round(_queue.TotalQueueTime(), 1) + "s";
-        DisplaySegmentedTimers();
-        UpdateActiveSegment();
+        DisplayQueue();
     }
 
-    void DisplaySegmentedTimers()
+
+    void DisplayQueue()
     {
-        // Clear previous segments
-        foreach (GameObject segment in _segmentBars)
+
+        float offset = 0;
+        foreach(GameObject segment in _segmentBars)
         {
-            Destroy(segment);
+            UpdateSegment(segment, ref offset);
         }
-        _segmentBars.Clear();
-
-        float cumulativeTime = 0;
-        bool activeSegmentSet = false;
-
-        foreach (var action in _queue.GetQueue())
+        if (_dequeuAsk)
         {
-            float segmentWidth = (action._duration / _queue._MaxTimeBuffer) * _barScale;
-
-            GameObject segmentObj = Instantiate(segmentPrefab, _secsBar.transform);
-            Image segmentImage = segmentObj.GetComponent<Image>();
-            segmentImage.color = action._actionColor;
-            _segmentBars.Add(segmentObj);
-            Debug.Log("Segment width: " + segmentWidth);
-
-            RectTransform rectTransform = segmentObj.GetComponent<RectTransform>();
-            rectTransform.anchorMin = new Vector2(cumulativeTime / _queue._MaxTimeBuffer, 0.5f);
-            rectTransform.anchorMax = new Vector2((cumulativeTime + action._duration) / _queue._MaxTimeBuffer, 0.5f);
-            rectTransform.pivot = new Vector2(0, 0.5f);
-            rectTransform.offsetMin = new Vector2(0, -_secsBar.rectTransform.rect.height / 2);
-            rectTransform.offsetMax = new Vector2(segmentWidth, _secsBar.rectTransform.rect.height / 2);
-
-            if (!activeSegmentSet && action == _queue.GetActiveCard())
-            {
-                _activeSegment = segmentObj;
-                activeSegmentSet = true;
-            }
-
-            cumulativeTime += action._duration;
+            Destroy(_segmentBars.Dequeue());
+            _dequeuAsk = false;
         }
     }
 
-    void UpdateActiveSegment()
+    void UpdateSegment(GameObject segment, ref float offset)
     {
-        if (_activeSegment != null)
+        Vector3 scale = segment.transform.localScale;
+        if (segment == _segmentBars.Peek())
         {
-            var activeCard = _queue.GetActiveCard();
-            if (activeCard != null)
+            if (_queue.IsCurrentCardEmpty())
             {
-                float remainingTime = activeCard.GetRemainingTime();
-                float cumulativeTime = _queue.GetCumulativeTimeOfPreviousCards() + remainingTime;
-
-                RectTransform rectTransform = _activeSegment.GetComponent<RectTransform>();
-                rectTransform.anchorMax = new Vector2(cumulativeTime / _queue._MaxTimeBuffer, 0.5f); // Update width based on remaining time
-                rectTransform.offsetMax = new Vector2(rectTransform.rect.width, _secsBar.rectTransform.rect.height / 2); // Adjust height if needed
+                _dequeuAsk = true;
+                return;
             }
+
+            float cardTime = _queue.GetActiveCard().GetRemainingTime();
+            if (cardTime <= 0)
+            {
+                _segmentBars.Dequeue();
+                return;
+            }
+
+            segment.transform.localScale = DurationToScale(cardTime);
         }
+
+        Vector3 pos = segment.transform.localPosition;
+        pos.x = -400 + offset;
+        segment.transform.localPosition = pos;
+        offset += segment.GetComponent<RectTransform>().rect.width * segment.transform.localScale.x;
+        print(offset);
+    }
+
+    private Vector3 DurationToScale(float duration)
+    {
+        // Sets the scale of the bar based on the queue's total time
+        Vector3 scale = _secsBar.transform.localScale;
+        scale.x = (duration / _queue._MaxTimeBuffer) * _barScale;
+        return scale;
+    }
+
+    public void AddSegment(float duration, Color color)
+    {
+        GameObject segment = Instantiate(_segmentPrefab, _secsBar.transform);
+        segment.GetComponent<Image>().color = color;
+        segment.transform.localScale = DurationToScale(duration);
+        _segmentBars.Enqueue(segment);
     }
 }

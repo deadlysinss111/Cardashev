@@ -8356,7 +8356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 674c5655274c82c498398389723b5328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  segmentPrefab: {fileID: 7895400905050401928, guid: 030a3286347a0ee46905e78aedec90ad, type: 3}
+  _segmentPrefab: {fileID: 7895400905050401928, guid: 030a3286347a0ee46905e78aedec90ad, type: 3}
 --- !u!1 &1709009219
 GameObject:
   m_ObjectHideFlags: 0

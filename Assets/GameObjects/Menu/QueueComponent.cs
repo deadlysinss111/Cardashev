@@ -6,11 +6,17 @@ public class QueueComponent : MonoBehaviour
 {
     private Queue<Card> _queue = new Queue<Card>();
     private Card _activeCard;
+    QueueUI _ui;
     readonly private float _maxTimeBuffer = 15.0f;
 
     public float _MaxTimeBuffer
     {
         get { return _maxTimeBuffer; }
+    }
+
+    private void Start()
+    {
+        _ui = GameObject.Find("QueueBar").GetComponent<QueueUI>();
     }
 
     void Update()
@@ -28,7 +34,7 @@ public class QueueComponent : MonoBehaviour
         }
     }
 
-    bool IsCurrentCardEmpty()
+    public bool IsCurrentCardEmpty()
     {
         return _activeCard is null;
     }
@@ -39,6 +45,7 @@ public class QueueComponent : MonoBehaviour
         if (AllowCard(c))
         {
             _queue.Enqueue(c);
+            _ui.AddSegment(c._duration, c._actionColor);
             return true;
         }
         Debug.Log("New Card refused!");
