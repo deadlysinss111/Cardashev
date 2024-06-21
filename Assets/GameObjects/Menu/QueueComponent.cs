@@ -75,7 +75,7 @@ public class QueueComponent : MonoBehaviour
 
     bool AllowCard(Card c)
     {
-        return !IsQueueFull() && TotalQueueTime() + c._duration <= _maxTimeBuffer;
+        return !IsQueueFull() && TotalQueueTime() + c._duration <= _maxTimeBuffer && c._duration!=0;
     }
 
     public Queue<Card> GetQueue()

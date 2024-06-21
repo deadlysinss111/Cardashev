@@ -134,6 +134,7 @@ public class MapNode : MonoBehaviour
         }
         if(gameObject.name != "Original Node")
         {
+            print("node : " + transform.position);
             GI._prefabToLoad = _linkedScene;
             SceneManager.LoadScene("TestLvl");
         }

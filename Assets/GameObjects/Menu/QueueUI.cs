@@ -13,7 +13,6 @@ public class QueueUI : MonoBehaviour
     TMP_Text _secsText;
     float _barScale;
     Queue<GameObject> _segmentBars;
-    GameObject _activeSegment;
     bool _dequeuAsk;
     Transform _bg;
 
@@ -74,7 +73,6 @@ public class QueueUI : MonoBehaviour
         pos.x = -400 + offset;
         segment.transform.localPosition = pos;
         offset += segment.GetComponent<RectTransform>().rect.width * segment.transform.localScale.x;
-        print(offset);
     }
 
     private Vector3 DurationToScale(float duration)

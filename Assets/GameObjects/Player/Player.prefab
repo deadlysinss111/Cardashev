@@ -2820,7 +2820,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0
 --- !u!120 &5520013547747081522
 LineRenderer:
   serializedVersion: 2
@@ -3038,10 +3038,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38c4f916bbfb3d347a6944a68dd18c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _goldAmount: 0
   _clickableLayers:
     serializedVersion: 2
     m_Bits: 1
+  _UeOnDefeat:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &9070945487576146490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3054,10 +3056,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d09678fc03626f458ea64cb9d55ff77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _clickEffect: {fileID: 0}
   _clickableLayers:
     serializedVersion: 2
     m_Bits: 1
+  _lookRotationSpeed: 8
 --- !u!114 &8313256407998957317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3074,6 +3076,7 @@ MonoBehaviour:
   _moveSpeed: 0
   _attack: 0
   _armor: 0
+  _criticalBar: {fileID: 0}
 --- !u!114 &8115398100823143788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3147,7 +3150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slowdownFactor: 0
-  _slowdownLength: 0
+  _slowdownDuration: 0
   _focusBar: {fileID: 0}
 --- !u!114 &6497200372588378017
 MonoBehaviour:
@@ -3161,7 +3164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78d88c5e8531af446914ea93e50ab97a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cooldown: {fileID: 0}
+  _cooldownSprite: {fileID: 0}
   _cooldownTime: 12
   _pInput: {fileID: 4194023490046058706}
 --- !u!1 &8040844273275877930

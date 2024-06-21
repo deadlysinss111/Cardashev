@@ -66,9 +66,9 @@ public class CameraController : MonoBehaviour
     private void LockedMode()
     {
         Vector3 desiredPosition = _target.position + _curOffset;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, _smoothSpeed * Time.deltaTime);
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, _smoothSpeed * Time.unscaledDeltaTime);
         transform.position = smoothedPosition;
-        Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, _curRotation, _smoothSpeed * Time.deltaTime);
+        Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, _curRotation, _smoothSpeed * Time.unscaledDeltaTime);
         transform.rotation = smoothedRotation;
     }
 

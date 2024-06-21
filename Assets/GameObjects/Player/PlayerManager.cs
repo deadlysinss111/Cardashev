@@ -201,6 +201,7 @@ public class PlayerManager : MonoBehaviour
             exit[1]();
             _currentState = name;
             func[0]();
+            print(_currentState);
             return true;
         }
         return false;

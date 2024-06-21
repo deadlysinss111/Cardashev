@@ -25,7 +25,7 @@ public class Spit : MonoBehaviour
                 // Deals damage if it lands on anything else than fish and bouilloir
                 else if(c.gameObject.GetComponent<Ebouillantueur>() == null)
                 {
-                    manager._health -= 10;
+                    manager.TakeDamage(10);
                 }
             }
 
@@ -60,7 +60,7 @@ public class Spit : MonoBehaviour
                 // Deals damage if it lands on anything else than fish and bouilloir
                 else if (c.gameObject.GetComponent<Ebouillantueur>() == null)
                 {
-                    manager._health -= 10;
+                    manager.TakeDamage(10);
                 }
             }
         }

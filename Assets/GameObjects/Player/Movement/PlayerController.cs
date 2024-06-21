@@ -122,6 +122,8 @@ public class PlayerController : MonoBehaviour
     // If it succeeds, prepares everything to render the path whilst keeping the preview
      void ApplyMovement()
      {
+        //if (Time.timeScale == 0) return;
+        
         // Data duplication so that the closure takes the right data
         Vector3 vect = _virtualDestination;
 
