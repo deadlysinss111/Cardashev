@@ -152,6 +152,8 @@ public class PlayerController : MonoBehaviour
             // Updating Player's virtual pos for the next preview
             GameObject.Find("Player").GetComponent<PlayerManager>()._virtualPos = _virtualDestination;
 
+            GlobalStats.UpdateStat("mouvements", 1);
+
             for (int i = 0; i < path.corners.Length - 1; i++)
             {
                 Vector3 start = path.corners[i];
