@@ -6355,9 +6355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98f123e91d5124a4e86323f10277f10e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _winConditions:
-  - Ebouillantueur
-  - Murlock
+  _winConditions: []
 --- !u!1 &879772511
 GameObject:
   m_ObjectHideFlags: 0

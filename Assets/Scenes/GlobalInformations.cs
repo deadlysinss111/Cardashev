@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
@@ -50,6 +51,7 @@ static public class GI
     {
         NON_PERSISTENT = -1,
         Map,
+        EntryPoint,
     }
 
     // Array that stores persistent GameObjects. Its size automatically fits the Enum's size
@@ -57,7 +59,6 @@ static public class GI
 
     // Data needed for scene transition (Map --> Room)
     static public string _prefabToLoad;
-    static public List<List<GameObject>> _mapNodes; // TODO check for removal
 
 
     // ------
@@ -67,6 +68,7 @@ static public class GI
     // Dict to chnage in one place if a fcking scene undergoes name change
     static public Dictionary<string, string> _SceneNameEncyclopedia = new Dictionary<string, string>{
         { "", "" },
+        { "EntryPoint", "EntryPoint" },
         { "Map", "MapNavigation" },
         { "Room", "TestLvl" },
         { "Reward", "RewardScene" },
@@ -89,8 +91,9 @@ static public class GI
     // 2 Methods to give information to the loader
     static public bool IsPersistentSceneContainerNull(string ARGsceneContainerName)
     {
+        //PersistentSceneContainer sceneID = SceneNametoEnum(_SceneNameEncyclopedia.FirstOrDefault(x => x.Value == ARGsceneContainerName).Key);
         PersistentSceneContainer sceneID = SceneNametoEnum(ARGsceneContainerName);
-
+        
         // Performs the check
         if (_persistentSceneContainers[ (int)sceneID ] == null)
             return true;
@@ -116,6 +119,9 @@ static public class GI
             case "Map":
                 return PersistentSceneContainer.Map;
 
+            case "EntryPoint":
+                return PersistentSceneContainer.EntryPoint;
+
             default:
                 Debug.LogWarning("SceneNametoEnum() found object to be NON_PERSISTENT.\nMaybe the switch case is incomplete ?");
                 return PersistentSceneContainer.NON_PERSISTENT;
@@ -126,15 +132,32 @@ static public class GI
     static public void InstantiateAndCull(string ARGsceneContainerName)
     {
         // Pointer to the array's cell corresponding to the persistent scene. This avoids doing the big ass array access below 3 times
-        GameObject sceneContainer = _persistentSceneContainers[ (int) SceneNametoEnum(ARGsceneContainerName) ];
-        
-        switch (ARGsceneContainerName)
+        GameObject sceneContainer = _persistentSceneContainers[ (int) SceneNametoEnum(_SceneNameEncyclopedia.FirstOrDefault(x => x.Value == ARGsceneContainerName).Key) ];
+        switch (_SceneNameEncyclopedia.FirstOrDefault(x => x.Value == ARGsceneContainerName).Key)
+        {
+            case "EntryPoint":
+                // Instantiate, save and cull
+                _mapPrefab = GameObject.Find("Map");
+                //sceneContainer = MonoBehaviour.Instantiate(_mapPrefab);
+                MonoBehaviour.DontDestroyOnLoad(_mapPrefab);
+                //_mapPrefab.SetActive(false);
+                break;
+
+            default:
+                Debug.LogError("how TF did you get an error in there ? õ_Ô");
+                break;
+        }
+    }
+    
+    static public void Uncull(string ARGsceneContainerName)
+    {
+        // Pointer to the array's cell corresponding to the persistent scene. This avoids doing the big ass array access below 3 times
+        GameObject sceneContainer = _persistentSceneContainers[ (int) SceneNametoEnum(_SceneNameEncyclopedia.FirstOrDefault(x => x.Value == ARGsceneContainerName).Key) ];
+        switch (_SceneNameEncyclopedia.FirstOrDefault(x => x.Value == ARGsceneContainerName).Key)
         {
             case "Map":
                 // Instantiate, save and cull
-                sceneContainer = MonoBehaviour.Instantiate(_mapPrefab);
-                MonoBehaviour.DontDestroyOnLoad(sceneContainer);
-                sceneContainer.SetActive(false);
+                _mapPrefab.SetActive(true);
                 break;
 
             default:

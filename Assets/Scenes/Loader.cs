@@ -15,7 +15,6 @@ public class Loader : MonoBehaviour
     //    { "Room", "TestLvl" },
     //    { "MainMenu", "MenuScene" }};
 
-
     /* 
      EVENTS
     */
@@ -36,7 +35,7 @@ public class Loader : MonoBehaviour
     public void Start()
     {
         // Loads the first scene
-        LoadScene("", "Map");
+        LoadScene("EntryPoint", "Map");
     }
 
 
@@ -45,8 +44,7 @@ public class Loader : MonoBehaviour
     {
         string curScene = GI._SceneNameEncyclopedia[ARGcurScene];
         string targetScene = GI._SceneNameEncyclopedia[ARGtargetScene];
-        print("cur : " + curScene);
-        print("next : " + targetScene);
+        
 
         // Check if the scene we are leaving is persistent (if it is, we need to do more work)
         if (true == GI.IsSceneContainerPersistent(curScene) && ARGloadMode == LoadSceneMode.Single)
@@ -58,8 +56,16 @@ public class Loader : MonoBehaviour
                 GI._persistentSceneContainers[ (int) GI.SceneNametoEnum(curScene) ].SetActive(false);
         }
 
-        // By this points, everything should be saved or culled, so let's change the scene :3
         SceneManager.LoadScene(targetScene, ARGloadMode);
+
+        if (true == GI.IsSceneContainerPersistent(ARGtargetScene) && ARGloadMode == LoadSceneMode.Single)
+        {
+            // Check if the persistent scene was never "saved" before, and saves it if not
+            //if (true == GI.IsPersistentSceneContainerNull(ARGtargetScene))
+            GI.Uncull(targetScene);
+        }
+
+        // By this points, everything should be saved or culled, so let's change the scene :3
 
         // This coroutine will Invoke events related to Load Scene, waiting for all Awake() of the loaded scene to resolve
         StartCoroutine(SceneLoadInvoker());

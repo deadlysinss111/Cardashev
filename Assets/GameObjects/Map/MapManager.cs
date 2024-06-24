@@ -23,9 +23,9 @@ public class MapManager : MonoBehaviour
 
     // For map navigation
     List<List<GameObject>> _mapGrid;
-    GameObject _playerLocation; // TODO auto create this one and make it invisible at Start()
+    [NonSerialized] public GameObject _playerLocation; // TODO auto create this one and make it invisible at Start()
     GameObject _bossRoom;
-    CameraManager _cameraManager;
+    MapCameraController _cameraManager;
 
     // Miscenalious
     [SerializeField] LayerMask _clickableLayers;
@@ -34,17 +34,15 @@ public class MapManager : MonoBehaviour
     private void Awake()
     {
         resources = GetComponent<MapResourceLoader>();
-        _cameraManager = GetComponent<CameraManager>();
+        _cameraManager = GameObject.Find("Main Camera").GetComponent<MapCameraController>();
     }
 
     void Start()
     {
-        _mapGrid = GI._mapNodes;
-
-        if (_mapGrid != null)
-        {
-            return;
-        }
+        //if (GI._loadedOnce)
+        //{
+        //    return;
+        //}
 
         _mapGrid = new List<List<GameObject>>(MAP_SIZE_X);
         _startingNodes = new List<GameObject>();
@@ -58,8 +56,10 @@ public class MapManager : MonoBehaviour
         _playerLocation.GetComponent<MapNode>()._nextNodes = new GameObject[NUMBER_OF_PATH];
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
         _playerLocation.GetComponent<MapNode>().SelectNode();
+        //_cameraManager.UpdateNodeTarget(_playerLocation);
+
         GenerateMap();
-        GI._mapNodes = _mapGrid;
+        //GI._mapNodes = _mapGrid;
     }
 
     void Update()
@@ -80,7 +80,6 @@ public class MapManager : MonoBehaviour
         nodeToMoveTo.GetComponent<MapNode>().SelectNode();
         _playerLocation.GetComponent<MapNode>().UnselectNode();
         _playerLocation = nodeToMoveTo;
-        _cameraManager.UpdateNodeTarget(nodeToMoveTo);
     }
 
     void LockAllNodes()
@@ -266,7 +265,8 @@ public class MapManager : MonoBehaviour
         centerPos = centerPos / _startingNodes.Count;
 
         _playerLocation.transform.position = centerPos;
-        _cameraManager.SetCamPos(centerPos, true);
+        //_cameraManager.SetCamPos(centerPos, true);
+        //_cameraManager.UpdateNodeTarget()
 
         GiveTypeToRooms();
     }
