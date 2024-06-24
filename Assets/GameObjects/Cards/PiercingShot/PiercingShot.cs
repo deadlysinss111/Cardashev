@@ -42,7 +42,7 @@ public class PiercingShot : Card
         // Sets up the settings for the area
         AreaSelector.SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
         AreaSelector.SetSelectableEntites(false, false, true, false);
-        _selectableTiles = AreaSelector.FindSelectableArea(GameObject.Find("Player"), 7);
+        _selectableTiles = AreaSelector.FindSelectableArea(GI._PManFetcher()._virtualPos, 7);
 
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(() => {
@@ -54,7 +54,7 @@ public class PiercingShot : Card
             else
                 print("R u ok?");
         });
-        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        manager.SetRightClickTo(() => { ExitState(); GI._PManFetcher().SetToDefault(); });
         manager.SetHoverTo(() => { });
     }
 
@@ -65,6 +65,6 @@ public class PiercingShot : Card
 
     public override void ClickEvent()
     {
-        GameObject.Find("Player").GetComponent<PlayerManager>().SetToState("shoot" + _id.ToString());
+        GI._PManFetcher().SetToState("shoot" + _id.ToString());
     }
 }

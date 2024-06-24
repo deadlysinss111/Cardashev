@@ -35,7 +35,7 @@ public class TEMPLATE : Card
 
         // Card range
         _selectableArea.SetSelectableEntites(false, true, true, true);
-        _selectableArea.FindSelectableArea(GI._PlayerFetcher(), 0, 0);
+        _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 0, 0);
 
         manager.SetLeftClickTo(Template);
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });

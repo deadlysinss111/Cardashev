@@ -39,7 +39,7 @@ public class LaunchGrenade : Card
     {
         PlayerManager manager = GI._PManFetcher();
         _selectableArea.SetSelectableEntites(false, true, true, true);
-        _selectableArea.FindSelectableArea(GI._PlayerFetcher(), 15, 8);
+        _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 15, 8);
 
         manager.SetLeftClickTo(FireGrenade);
         manager.SetRightClickTo(()=> { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });

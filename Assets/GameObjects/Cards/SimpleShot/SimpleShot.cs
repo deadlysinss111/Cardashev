@@ -43,7 +43,7 @@ public class SimpleShot : Card
         // Sets up the settings for the area
         AreaSelector.SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
         AreaSelector.SetSelectableEntites(false, false, true, false);
-        _selectableTiles = AreaSelector.FindSelectableArea(GameObject.Find("Player"), 4);
+        _selectableTiles = AreaSelector.FindSelectableArea(GI._PManFetcher()._virtualPos, 4);
 
         GI._PManFetcher().SetLeftClickTo(() => {
             if (AreaSelector.CastLeftClick(out GameObject obj))
@@ -54,7 +54,7 @@ public class SimpleShot : Card
             else
                 print("R u ok?");
         });
-        GI._PManFetcher().SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        GI._PManFetcher().SetRightClickTo(() => { ExitState(); GI._PManFetcher().SetToDefault(); });
         GI._PManFetcher().SetHoverTo(() => { });
     }
 
@@ -65,6 +65,6 @@ public class SimpleShot : Card
 
     public override void ClickEvent()
     {
-        GameObject.Find("Player").GetComponent<PlayerManager>().SetToState("shoot" + _id.ToString());
+        GI._PManFetcher().SetToState("shoot" + _id.ToString());
     }
 }

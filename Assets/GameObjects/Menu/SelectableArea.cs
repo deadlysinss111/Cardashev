@@ -115,6 +115,12 @@ public class SelectableArea : MonoBehaviour
 
     // TODO FindSelectableArea: Fix inner radius
 
+    // Little override for convenience
+    public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius)
+    {
+        return FindSelectableArea(obj.transform.position, radius, inner_radius);
+    }
+
     /// <summary>
     /// Sets up an area of a defined radius around obj where objects can be selected
     /// </summary>
@@ -123,7 +129,7 @@ public class SelectableArea : MonoBehaviour
     /// <param name="inner_radius">How many cases from inside should be excluded. DO NOT COUNT THE RADIUS</param>
     /// <param name="ignore_interactable">Whether the area should include the tiles below interactables or not</param>
     /// <returns>A list of tiles that are part of the selectable area</returns>
-    public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius)
+    public List<GameObject> FindSelectableArea(Vector3 origin, int radius, int inner_radius)
     {
         if (inner_radius >= radius)
         {
@@ -194,7 +200,7 @@ public class SelectableArea : MonoBehaviour
         {
             // May look ugly but currently the most efficiant method I have compared to loops in loops in if conditions (22ms vs 66ms on r=7, ir=4)
             int i;
-            count_inner = Physics.SphereCastNonAlloc(obj.transform.position, inner_radius, Vector3.down, _innerHitBuffer, inner_radius, layerMask);
+            count_inner = Physics.SphereCastNonAlloc(origin, inner_radius, Vector3.down, _innerHitBuffer, inner_radius, layerMask);
             LayerMask[] origLayer = new LayerMask[count_inner];
             for (i = 0; i < count_inner; i++)
             {
@@ -203,7 +209,7 @@ public class SelectableArea : MonoBehaviour
                 hit.transform.gameObject.layer = LayerMask.NameToLayer("TempLayer");
             }
             layerMask &= ~(1 << LayerMask.NameToLayer("TempLayer"));
-            count = Physics.SphereCastNonAlloc(obj.transform.position, radius, Vector3.down, _hitBuffer, radius, layerMask);
+            count = Physics.SphereCastNonAlloc(origin, radius, Vector3.down, _hitBuffer, radius, layerMask);
             for (i = 0; i < count_inner; i++)
             {
                 RaycastHit hit = _innerHitBuffer[i];
@@ -252,6 +258,12 @@ public class SelectableArea : MonoBehaviour
         return _selectableTiles;
     }
 
+    // Little override for convenience
+    public List<GameObject> FindSelectableArea(GameObject obj, int radius)
+    {
+        return FindSelectableArea(obj.transform.position, radius);
+    }
+
     /// <summary>
     /// Sets up an area of a defined radius around obj where objects can be selected
     /// </summary>
@@ -259,7 +271,7 @@ public class SelectableArea : MonoBehaviour
     /// <param name="radius">The radius of the area</param>
     /// <param name="ignore_interactable">Whether the area should include the tiles below interactables or not</param>
     /// <returns>A list of tiles that are part of the selectable area</returns>
-    public List<GameObject> FindSelectableArea(GameObject obj, int radius)
+    public List<GameObject> FindSelectableArea(Vector3 origin, int radius)
     {
         ResetSelectable();
 
@@ -364,7 +376,7 @@ public class SelectableArea : MonoBehaviour
         int count;
         try
         {
-            count = Physics.SphereCastNonAlloc(obj.transform.position, radius, Vector3.down, _hitBuffer, radius, layerMask);
+            count = Physics.SphereCastNonAlloc(origin, radius, Vector3.down, _hitBuffer, radius, layerMask);
         }
         catch (Exception e)
         {
@@ -433,7 +445,7 @@ public class SelectableArea : MonoBehaviour
         }
         _selectableTiles.Clear();
 
-        SetGroundColor(Color.white);
+        //SetGroundColor(Color.white);
 
         _enemyAreaCheck = false;
         _interactableAreaCheck = false;
@@ -527,11 +539,11 @@ public class SelectableArea : MonoBehaviour
     public void SetGroundColor(Color color)
     {
         //print("Yeh");
-        List<GameObject> floorTiles = GameObject.FindGameObjectsWithTag("TMTopology").ToList();
-        foreach (GameObject tile in floorTiles)
-        {
-            tile.GetComponent<MeshRenderer>().material.color = color;
-        }
+        //List<GameObject> floorTiles = GameObject.FindGameObjectsWithTag("TMTopology").ToList();
+        //foreach (GameObject tile in floorTiles)
+        //{
+        //    tile.GetComponent<MeshRenderer>().material.color = color;
+        //}
     }
 
     void ResetDebugRay()
