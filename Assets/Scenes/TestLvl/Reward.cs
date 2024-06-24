@@ -67,7 +67,7 @@ public class Reward : MonoBehaviour
         _leaveButton = GenerateItem(false);
         _leaveButton.transform.localPosition = new Vector3(0, -300, 0);
         _leaveButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Leave");
-        _leaveButton.GetComponent<Button>().onClick.AddListener( () =>{ GI._loader.LoadScene("Room", "Map", LoadSceneMode.Single); });
+        _leaveButton.GetComponent<Button>().onClick.AddListener( () =>{ GI._loader.LoadScene("Reward", "Map", LoadSceneMode.Single); });
     }
 
     void GenerateRewards()

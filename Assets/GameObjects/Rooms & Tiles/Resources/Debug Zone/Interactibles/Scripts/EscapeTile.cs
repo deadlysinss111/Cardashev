@@ -33,7 +33,8 @@ public class EscapeTile : Interactible
         {
             if (_conditions.ContainsKey(name))
             {
-                _conditions[(name)] -= 1;
+                if(_conditions[name] > 0)
+                    _conditions[name] -= 1;
             }
         }
         foreach (byte amount in _conditions.Values)
@@ -51,6 +52,6 @@ public class EscapeTile : Interactible
         // TODO: change sprite or smth
         // & trigger rewards
         Reward._content = new Reward.Content(10, 20, 0);
-        OnWalk = ()=> { GI._loader.LoadScene("Reward", "Reward"); };
+        OnWalk = ()=> { GI._loader.LoadScene("Room", "Reward"); };
     }
 }

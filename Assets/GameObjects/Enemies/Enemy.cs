@@ -127,7 +127,6 @@ abstract public class Enemy : MonoBehaviour
     public virtual void Defeat()
     {
         //TODO: ue there
-        print(_name);
         GameObject.Find("ExitTile(Clone)").GetComponent<EscapeTile>().TriggerCondition(_name);
         
         //_particleSystem.Play();

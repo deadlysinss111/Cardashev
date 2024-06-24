@@ -209,7 +209,7 @@ public class SelectableArea : MonoBehaviour
                 RaycastHit hit = _innerHitBuffer[i];
                 hit.transform.gameObject.layer = origLayer[i];
             }
-            Debug.Log(count + count_inner);
+            //Debug.Log(count + count_inner);
         }
         catch (Exception e)
         {
@@ -223,10 +223,10 @@ public class SelectableArea : MonoBehaviour
 
             if (hit.transform.gameObject.CompareTag("TMTopology") == false)
             {
-                Debug.Log("Did Hit Non-Tile " + hit.transform.gameObject.name);
+                //Debug.Log("Did Hit Non-Tile " + hit.transform.gameObject.name);
                 continue;
             }
-            Debug.Log("Did Hit " + hit.transform.gameObject.name);
+            //Debug.Log("Did Hit " + hit.transform.gameObject.name);
 
             _selectableTiles.Add(hit.transform.gameObject);
             try
@@ -515,10 +515,10 @@ public class SelectableArea : MonoBehaviour
         layerMask = ~layerMask;
 
         if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMask) == false) return false;
-        print("Raycast pass");
+        //print("Raycast pass");
 
         if (hit.transform.gameObject.TryGetComponent(out Tile tile) == false) return false;
-        print("Tile pass and it's "+tile.IsSelectable);
+        //print("Tile pass and it's "+tile.IsSelectable);
 
         return tile.IsSelectable;
     }

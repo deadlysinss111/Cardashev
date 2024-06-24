@@ -210,7 +210,7 @@ public abstract class Interactible : MonoBehaviour
 
     public void SetSelected(bool value)
     {
-        print($"Interactable {gameObject.name} is selectable!");
+        //print($"Interactable {gameObject.name} is selectable!");
         _selectable = value;
 
         Outline outline;
