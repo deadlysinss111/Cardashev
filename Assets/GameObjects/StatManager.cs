@@ -162,7 +162,6 @@ public class StatManager : MonoBehaviour
                     //_criticalBar.ActivateBuff(mod._duration);
                     break;
                 case Modifier.ModifierType.Armor:
-                    print("Applied armor");
                     _armor = (int)mod._value;
                     _modifiers.Remove(mod); // No need to keep it any longer once the value is set
                     break;
@@ -176,7 +175,6 @@ public class StatManager : MonoBehaviour
     {
         if (HasArmor() && ignore_armor == false)
         {
-            print("Hurt armor");
             int diff = _armor - amount;
             _armor = diff;
             if (diff >= 0)
@@ -185,7 +183,6 @@ public class StatManager : MonoBehaviour
             
         }
 
-        print("Hurt health");
         _health -= amount;
 
         BetterDebug.Log(_health, _armor);
