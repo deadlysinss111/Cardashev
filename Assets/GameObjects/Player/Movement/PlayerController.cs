@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _lookRotationSpeed = 8f;
 
     public float _moveMult;
+    public float _baseSpeed;
 
 
     /*
@@ -57,12 +58,21 @@ public class PlayerController : MonoBehaviour
         manager.AddState("movement", EnterMovementState, ExitState);
 
         _moveMult = 1f;
+        _baseSpeed = _agent.speed;
     }
     private void Update()
     {
         // TODO: Make them not spam Console to de-comment them
         //FaceTarget();
         //SetAnimations();
+
+        // Could be made an event??
+        // Make sure the baseSpeed is, well, the actual base speed
+        if (Mathf.Approximately(_baseSpeed, _agent.speed) == false && Mathf.Approximately(_baseSpeed, _agent.speed * _moveMult) == false)
+        {
+            print("uhuhh");
+            _baseSpeed = _agent.speed;
+        }
     }
 
     // ------
@@ -90,24 +100,27 @@ public class PlayerController : MonoBehaviour
     //Draws what path the player would take if he decided to move where the mouse is
     void Preview()
     {
-       PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
-       // Crop the destination to the center of the target tile
-       Vector3 alteredPos = manager._lastHit.transform.position;
-       alteredPos.y += 0.5f;
+        PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        // Crop the destination to the center of the target tile
+        Vector3 alteredPos = manager._lastHit.transform.position;
+        alteredPos.y += 0.5f;
 
-       // Calculate the path to the clicked point
-       NavMeshPath path = new NavMeshPath();
+        BetterDebug.Log("Preview", _moveMult, _agent.speed, _baseSpeed, _baseSpeed * _moveMult);
+        _agent.speed = _baseSpeed * _moveMult;
 
-       // In the following snipet, the commented code are those that use not cropped positions
-       //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
-       if (NavMesh.CalculatePath(manager._virtualPos, alteredPos, NavMesh.AllAreas,  path))
-       {
-           _previewPath = path.corners;
-           TrajectoryToolbox.DrawPath(_previewPath, ref _previewLineRenderer);
-           _lastCalculatedWalkTime = GetPathTime(path);
-       }
+        // Calculate the path to the clicked point
+        NavMeshPath path = new NavMeshPath();
 
-       _virtualDestination = alteredPos;
+        // In the following snipet, the commented code are those that use not cropped positions
+        //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
+        if (NavMesh.CalculatePath(manager._virtualPos, alteredPos, NavMesh.AllAreas,  path))
+        {
+            _previewPath = path.corners;
+            TrajectoryToolbox.DrawPath(_previewPath, ref _previewLineRenderer);
+            _lastCalculatedWalkTime = GetPathTime(path);
+        }
+
+        _virtualDestination = alteredPos;
     }
 
     // Clear the path from the line renderer
@@ -238,7 +251,7 @@ public class PlayerController : MonoBehaviour
             Vector3 end = path.corners[i + 1];
 
             // Add the time to traverse the segment
-            time += Vector3.Distance(start, end) / _agent.speed * _moveMult;
+            time += Vector3.Distance(start, end) / _agent.speed;
         }
         return time;
     }
