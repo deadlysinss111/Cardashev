@@ -19,27 +19,9 @@ static public class GI
     static public Loader _loader;
 
     // Super cool Funcs to treat the above Components as a Singleton, limiting calls of GameObject.Find() everywhere :D
-    static public Func<PlayerManager> _PManFetcher = () => {
-        _playerManager = GameObject.Find("Player").GetComponent<PlayerManager>();
-        if (_playerManager != null)
-        {
-            _PManFetcher = () => { return _playerManager; };
-            return _playerManager;
-        }
-        Debug.LogError("It's so sad PManFetcher died of ligma");
-        return null;
-    };
+    static public Func<PlayerManager> _PManFetcher;
 
-    static public Func<GameObject> _PlayerFetcher = () => {
-        _player = GameObject.Find("Player");
-        if (_player != null)
-        {
-            _PlayerFetcher = () => { return _player; };
-            return _player;
-        }
-        Debug.LogError("Me when the PlayerFetcher is bad at the game ong ō_ō");
-        return null;
-    };
+    static public Func<GameObject> _PlayerFetcher;
 
 
     // ------
@@ -164,5 +146,31 @@ static public class GI
                 Debug.LogError("how TF did you get an error in there ? õ_Ô");
                 break;
         }
+    }
+
+
+    static public void ResetFetchers()
+    {
+        _PManFetcher = () => {
+            _playerManager = GameObject.Find("Player").GetComponent<PlayerManager>();
+            if (_playerManager != null)
+            {
+                _PManFetcher = () => { return _playerManager; };
+                return _playerManager;
+            }
+            Debug.LogError("It's so sad PManFetcher died of ligma");
+            return null;
+        };
+
+        _PlayerFetcher = () => {
+            _player = GameObject.Find("Player");
+            if (_player != null)
+            {
+                _PlayerFetcher = () => { return _player; };
+                return _player;
+            }
+            Debug.LogError("Me when the PlayerFetcher is bad at the game ong ō_ō");
+            return null;
+        };
     }
 }

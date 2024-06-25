@@ -30,6 +30,8 @@ public class Loader : MonoBehaviour
 
         // Give its reference to GI
         GI._loader = this;
+
+        GI._UeOnMapSceneLoad.AddListener(GI.ResetFetchers);
     }
 
     public void Start()
