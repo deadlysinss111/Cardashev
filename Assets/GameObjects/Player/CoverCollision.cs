@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class CoverCollision : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.TryGetComponent(out Spit spit) == false) return;
+        if (spit._shieldBrekable != true) return;
+
         print("Fuck you, "+other.gameObject.name);
         Destroy(other.gameObject);
         GI._PlayerFetcher().GetComponent<CoverManager>()._health -= 10;
