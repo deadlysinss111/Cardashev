@@ -34,6 +34,7 @@ public class CoverManager : MonoBehaviour
             if (_timer <= 0)
             {
                 DisableCover();
+                return;
             }
         }
 

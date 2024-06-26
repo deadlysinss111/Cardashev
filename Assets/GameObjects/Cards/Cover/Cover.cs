@@ -57,8 +57,9 @@ public class Cover : Card
 
     void ActivateCover()
     {
-        GI._PlayerFetcher().GetComponent<CoverManager>().EnableCover(500, _rotationArrow.GetRotation(), 15);
-        GI._PlayerFetcher().GetComponent<PlayerController>()._moveMult = 0.3f;
+        GameObject player = GI._PlayerFetcher();
+        player.GetComponent<CoverManager>().EnableCover(500, _rotationArrow.GetRotation(), 15);
+        player.GetComponent<PlayerController>()._moveMult = 0.3f;
         Effect();
         GI._PManFetcher().SetToDefault();
     }

@@ -128,12 +128,15 @@ public class PlayerManager : MonoBehaviour
 
     private void LeftClickMiddleware(InputAction.CallbackContext context)
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        bool hasHit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, -1);
+
+        // TODO: fix this thing that doesn't work actually so it doesn't detect the arrow
+        if (EventSystem.current.IsPointerOverGameObject() && (hasHit && hit.transform.gameObject.layer != LayerMask.NameToLayer("WorldUI")))
         {
             return;
         }
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, -1))
+        
+        if (hasHit)
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("UI"))
             {

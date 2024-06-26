@@ -68,11 +68,12 @@ public class PlayerController : MonoBehaviour
 
         // Could be made an event??
         // Make sure the baseSpeed is, well, the actual base speed
-        if (Mathf.Approximately(_baseSpeed, _agent.speed) == false && Mathf.Approximately(_baseSpeed, _agent.speed * _moveMult) == false)
+        /*if (Mathf.Approximately(_baseSpeed, _agent.speed) == false && Mathf.Approximately(_agent.speed, _baseSpeed * _moveMult) == false && _paths.Count == 0)
         {
             print("uhuhh");
             _baseSpeed = _agent.speed;
         }
+        Debug.LogWarning("Sppppppped: " +_baseSpeed);*/
     }
 
     // ------
@@ -105,7 +106,6 @@ public class PlayerController : MonoBehaviour
         Vector3 alteredPos = manager._lastHit.transform.position;
         alteredPos.y += 0.5f;
 
-        BetterDebug.Log("Preview", _moveMult, _agent.speed, _baseSpeed, _baseSpeed * _moveMult);
         _agent.speed = _baseSpeed * _moveMult;
 
         // Calculate the path to the clicked point
