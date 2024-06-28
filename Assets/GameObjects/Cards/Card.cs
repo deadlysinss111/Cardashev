@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting.FullSerializer.Internal;
 using UnityEngine;
 using UnityEngine.Events;
@@ -24,6 +25,7 @@ public class Card : MonoBehaviour
     public byte _id = 0;
     protected SelectableArea _selectableArea;
     protected LineRenderer _lineRenderer;
+    protected Vector3 _lastScale;
 
     [SerializeField] protected LayerMask _clickableLayers;
     public Color _actionColor;
@@ -71,7 +73,7 @@ public class Card : MonoBehaviour
     // TODO => move it to its own, new class
     public void SetToCollectible(Func<bool> func)
     {
-        _clickEffect = () => { if (func()) CurrentRunInformations.AddCardsToDeck(new List<Card> { this }); };
+        _clickEffect = () => { if (func()) CurrentRunInformations.AddCardsToDeck(new List<GameObject> { gameObject }); };
     }
 
 
@@ -87,10 +89,23 @@ public class Card : MonoBehaviour
         Effect();
     }
 
+    // make the card bigger whene mouse is over it
+    private void OnMouseEnter()
+    {
+        _lastScale = transform.localScale;
+        transform.localScale *= 1.5f;
+    }
+    private void OnMouseExit()
+    {
+        transform.localScale = _lastScale;
+    }
+
+
     private void OnMouseDown()
     {
         _clickEffect();
     }
+
 
     public virtual void ClickEvent()
     {
@@ -124,9 +139,16 @@ public class Card : MonoBehaviour
         if (CanUpgrade())
         {
             _currLv++;
+            GameObject frame = (GameObject)Instantiate(Resources.Load("lvl" + _currLv+"sprite"), gameObject.transform);
             OnUpgrade();
+            UpdateDescription();
             return true;
         }
         return false;
+    }
+
+    public void UpdateDescription()
+    {
+        //HierarchySearcher.FindChildRecursively(transform, "Text").GetComponent<TextMeshProUGUI>().SetText(_description);
     }
 }

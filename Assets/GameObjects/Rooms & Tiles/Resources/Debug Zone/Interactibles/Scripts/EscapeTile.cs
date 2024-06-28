@@ -52,6 +52,9 @@ public class EscapeTile : Interactible
         // TODO: change sprite or smth
         // & trigger rewards
         Reward._content = new Reward.Content(10, 20, 0);
-        OnWalk = ()=> { GI._loader.LoadScene("Room", "Reward"); };
+        OnWalk = ()=> {
+            GI._PlayerFetcher().GetComponent<DeckManager>().UnloadDeck();
+            GI._loader.LoadScene("Room", "Reward"); 
+        };
     }
 }

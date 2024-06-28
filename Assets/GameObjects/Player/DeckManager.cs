@@ -10,35 +10,22 @@ using static UnityEngine.GraphicsBuffer;
 // This class does not control logic yet, and only implements in-room functionnalities
 public class DeckManager : MonoBehaviour
 {
-    protected List<Card> _hand;
-    protected List<Card> _remainsInDeck;
-    protected List<Card> _discardPile;
+    protected List<GameObject> _hand;
+    protected List<GameObject> _remainsInDeck;
+    protected List<GameObject> _discardPile;
 
     protected float _drawCooldown;
     protected int _curHandSize;
 
     void Start()
     {
-        _hand = new List<Card>();
-        _discardPile = new List<Card>();
-        _remainsInDeck = new List<Card>();
+        _hand = new List<GameObject>();
+        _discardPile = new List<GameObject>();
+        _remainsInDeck = new List<GameObject>();
         _drawCooldown = 0;
         _curHandSize = 0;
 
-        // Loads every card in the deck
-        List<string>toLoad = GI._PManFetcher().GetDeck();
-        GameObject CARD;
-        GameObject card;
-        foreach (string name in toLoad)
-        {
-            CARD = (GameObject)Resources.Load(name);
-            card = Instantiate(CARD);
-            card.layer = LayerMask.NameToLayer("UI");
-            card.transform.SetParent(GameObject.Find("Canvas").transform, false);
-            card.transform.localScale = new Vector3(10, 1, 10);
-            _remainsInDeck.Add(card.GetComponent<Card>());
-            card.SetActive(false);
-        }
+        LoadDeck();
     }
 
     private void Update()
@@ -62,14 +49,14 @@ public class DeckManager : MonoBehaviour
             if (_discardPile.Count == 0)
                 return;
             _remainsInDeck = _discardPile;
-            _discardPile = new List<Card> { };
+            _discardPile = new List<GameObject> { };
         }
 
         // We draw a random card
         int rdm = Random.Range(0, _remainsInDeck.Count);
 
         // We need to duplicate the card's game object so that we can display it an destroy it later easily
-        Card obj = _remainsInDeck[rdm];
+        GameObject obj = _remainsInDeck[rdm];
         obj.gameObject.SetActive(true);
         _hand.Add(obj);
 
@@ -79,7 +66,7 @@ public class DeckManager : MonoBehaviour
         DisplayHand();
     }
 
-    void Discard(Card target)
+    void Discard(GameObject target)
     {
         _hand.Remove(target);
         _discardPile.Add(target);
@@ -92,7 +79,7 @@ public class DeckManager : MonoBehaviour
     {
         if (GI._PlayerFetcher().GetComponent<QueueComponent>().AddToQueue(target) == true)
         {
-            Discard(target);
+            Discard(target.gameObject);
         }
     }
 
@@ -101,7 +88,32 @@ public class DeckManager : MonoBehaviour
     {
         for(byte i =0; i< _hand.Count; i++)
         {
-            _hand[i].transform.localPosition = new Vector3(-400 + 150 * i, -200, 0);
+            _hand[i].transform.localPosition = new Vector3(-400 + 150 * i, -300, 0);
+        }
+    }
+
+    public void LoadDeck()
+    {
+        List<GameObject> toLoad = GI._PManFetcher().GetDeck();
+        foreach (GameObject card in toLoad)
+        {
+            _remainsInDeck.Add(card);
+            card.transform.parent = GameObject.Find("Canvas").transform;
+        }
+    }
+    public void UnloadDeck()
+    {
+        foreach (GameObject card in _remainsInDeck)
+        {
+            card.transform.parent = GI._deckContainer.transform;
+        }
+        foreach (GameObject card in _hand)
+        {
+            card.transform.parent = GI._deckContainer.transform;
+        }
+        foreach (GameObject card in _discardPile)
+        {
+            card.transform.parent = GI._deckContainer.transform;
         }
     }
 }

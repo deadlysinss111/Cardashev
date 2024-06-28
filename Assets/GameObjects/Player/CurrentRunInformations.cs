@@ -9,12 +9,12 @@ static public class CurrentRunInformations
 
     // Deck related (serves as storage for DeckManager to prepare itself for a room)
     static int _deckMaxCapacity = 100;
-    static List<Card> _deck = new();
+    static public List<GameObject> _deck = new();
 
     // ------
     // DECK BS
     // ------
-    static public void AddCardsToDeck(List<Card> ARGIncomingCards)
+    static public void AddCardsToDeck(List<GameObject> ARGIncomingCards)
     {
         // Ensures the deck isn't too large
         if (ARGIncomingCards.Count > _deckMaxCapacity)
@@ -22,8 +22,11 @@ static public class CurrentRunInformations
 
         // Cards fit in the deck, so we had them all
         else
-            foreach (Card card in ARGIncomingCards)
+            foreach (GameObject card in ARGIncomingCards)
+            {
                 _deck.Add(card);
+                //card.transform.parent = GI._deckContainer.transform;
+            }
     }
 
 

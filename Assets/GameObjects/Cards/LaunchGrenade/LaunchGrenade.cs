@@ -98,11 +98,6 @@ public class LaunchGrenade : Card
         base.ClickEvent();
     }
 
-    void ClearPath()
-    {
-        _lineRenderer.positionCount = 0;
-    }
-
     public override void OnUpgrade()
     {
         base.OnUpgrade();

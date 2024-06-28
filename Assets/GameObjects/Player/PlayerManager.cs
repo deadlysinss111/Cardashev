@@ -246,22 +246,32 @@ public class PlayerManager : MonoBehaviour
     }
 
     // TODO: Make it an actual getter, n'est ce pas Valentin
-    public List<string> GetDeck()
+    public List<GameObject> GetDeck()
     {
-        List<string> deck = new List<string>();
+        string name;
         for (int i = 0; i < 4; i++)
         {
             // It's getting worse
             if (i % 4 == 1)
-                deck.Add("LaunchGrenadeModel");
+                name ="LaunchGrenadeModel";
             else if (i % 4 == 2)
-                deck.Add("SimpleShot");
+                name = "SimpleShot";
             else if (i % 4 == 3)
-                deck.Add("PiercingShot");
+                name = "PiercingShot";
             else
-                deck.Add("Overdrive");
+                name = "Overdrive";
+
+            GameObject card = Instantiate((GameObject)Resources.Load(name));
+            card.layer = LayerMask.NameToLayer("UI");
+            card.transform.SetParent(GameObject.Find("Canvas").transform, false);
+            card.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+            CurrentRunInformations.AddCardsToDeck(new List<GameObject>() { card });
+            card.GetComponent<Card>().Upgrade();
+
+            
+            card.SetActive(false);
         }
-        return deck;
+        return CurrentRunInformations._deck;
     }
 
     private void PlayerDeath()

@@ -17,6 +17,7 @@ static public class GI
     static PlayerManager _playerManager;
     static GameObject _player;
     static public Loader _loader;
+    static public GameObject _deckContainer;
 
     // Super cool Funcs to treat the above Components as a Singleton, limiting calls of GameObject.Find() everywhere :D
     static public Func<PlayerManager> _PManFetcher;
@@ -122,7 +123,10 @@ static public class GI
                 _mapPrefab = GameObject.Find("Map");
                 //sceneContainer = MonoBehaviour.Instantiate(_mapPrefab);
                 MonoBehaviour.DontDestroyOnLoad(_mapPrefab);
-                //_mapPrefab.SetActive(false);
+                _mapPrefab.SetActive(false);
+
+                _deckContainer = GameObject.Find("DeckContainer");
+                MonoBehaviour.DontDestroyOnLoad(_deckContainer);
                 break;
 
             default:
