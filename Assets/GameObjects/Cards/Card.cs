@@ -93,6 +93,7 @@ public class Card : MonoBehaviour
     private void OnMouseEnter()
     {
         _lastScale = transform.localScale;
+        print("mouse entered");
         transform.localScale *= 1.5f;
     }
     private void OnMouseExit()

@@ -34,7 +34,7 @@ public class Spit : MonoBehaviour
             {
                 RaycastHit hit;
                 Physics.Raycast(transform.position, Vector3.down, out hit);
-                Instantiate(Resources.Load("Debug Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, 0.6f, 0), Quaternion.identity);
+                Instantiate(Resources.Load("Debug Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, 1, 0), Quaternion.identity);
                 break;
             }
         }

@@ -84,7 +84,7 @@ public class UnlockWatcher : MonoBehaviour
     {
         foreach (var cond in _unlockables[card])
         {
-            print("Check for cond " + cond._statName + " for "+card);
+            //print("Check for cond " + cond._statName + " for "+card);
             if (false == cond.IsComplete())
                 return false;
         }

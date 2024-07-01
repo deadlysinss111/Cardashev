@@ -252,14 +252,14 @@ public class PlayerManager : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             // It's getting worse
-            if (i % 4 == 1)
+            //if (i % 4 == 1)
                 name ="LaunchGrenadeModel";
-            else if (i % 4 == 2)
-                name = "SimpleShot";
-            else if (i % 4 == 3)
-                name = "PiercingShot";
-            else
-                name = "Overdrive";
+            //else if (i % 4 == 2)
+            //    name = "SimpleShot";
+            //else if (i % 4 == 3)
+            //    name = "PiercingShot";
+            //else
+            //    name = "Overdrive";
 
             GameObject card = Instantiate((GameObject)Resources.Load(name));
             card.layer = LayerMask.NameToLayer("UI");
