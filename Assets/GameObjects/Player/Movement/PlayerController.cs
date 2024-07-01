@@ -36,8 +36,11 @@ public class PlayerController : MonoBehaviour
     // Fields needed for the Camera
     [SerializeField] float _lookRotationSpeed = 8f;
 
+    public bool _isMoving;
+
     public float _moveMult;
     public float _baseSpeed;
+    public bool _resetMoveMult;
 
 
     /*
@@ -57,7 +60,10 @@ public class PlayerController : MonoBehaviour
         manager._virtualPos = _agent.transform.position;
         manager.AddState("movement", EnterMovementState, ExitState);
 
+        _isMoving = false;
+
         _moveMult = 1f;
+        _resetMoveMult = false;
         _baseSpeed = _agent.speed;
     }
     private void Update()
@@ -74,6 +80,13 @@ public class PlayerController : MonoBehaviour
             _baseSpeed = _agent.speed;
         }
         Debug.LogWarning("Sppppppped: " +_baseSpeed);*/
+        if (_resetMoveMult == false) return;
+        if (GameObject.Find("Player").GetComponent<QueueComponent>().GetActiveCard() is null)
+        {
+            Debug.LogWarning("Reset mult");
+            _moveMult = 1f;
+            _resetMoveMult = false;
+        }
     }
 
     // ------

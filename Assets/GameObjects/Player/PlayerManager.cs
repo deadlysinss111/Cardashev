@@ -258,11 +258,11 @@ public class PlayerManager : MonoBehaviour
             if (i % 4 == 1)
                 deck.Add("LaunchGrenadeModel");
             else if (i % 4 == 2)
-                deck.Add("Cover");
+                deck.Add("HeavyCover");
             else if (i % 4 == 3)
                 deck.Add("PiercingShot");
             else
-                deck.Add("Overdrive");
+                deck.Add("Cover");
         }
         return deck;
     }

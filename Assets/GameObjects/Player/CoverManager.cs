@@ -11,8 +11,10 @@ public class CoverManager : MonoBehaviour
 
     bool _activated = false;
     bool _timerActive = false;
+    bool _fullMode = false;
 
     [SerializeField] GameObject _cover;
+    [SerializeField] GameObject _fullCover;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +23,7 @@ public class CoverManager : MonoBehaviour
         _timer = -1f;
 
         _cover.SetActive(false);
+        _fullCover.SetActive(false);
     }
 
     // Update is called once per frame
@@ -58,12 +61,18 @@ public class CoverManager : MonoBehaviour
         }
         _cover.SetActive(true);
     }
+    public void EnableFullCover(int health)
+    {
+        _health = health;
+        _fullCover.SetActive(true);
+    }
 
     public void DisableCover()
     {
         _activated = false;
         _timerActive = false;
         _cover.SetActive(false);
-        GI._PlayerFetcher().GetComponent<PlayerController>()._moveMult = 1f;
+        _fullCover.SetActive(false);
+        GI._PlayerFetcher().GetComponent<PlayerController>()._resetMoveMult = true;
     }
 }
