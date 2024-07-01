@@ -122,9 +122,14 @@ MonoBehaviour:
   _name: Overdrive
   _description: Activates the Critical status for 5 seconds. Bufs all stats & powers
     up certain cards
-  _duration: 0
-  _endingTime: 0
+  _duration: 1
   _stats: 
   _goldValue: 0
+  _cardEndTimestamp: 0
+  _id: 0
+  _clickableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  _actionColor: {r: 0, g: 0, b: 0, a: 0}
   _currLv: 1
   _maxLv: 3
