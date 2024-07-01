@@ -12,6 +12,8 @@ public class RotationSelectArrow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (GI._PlayerFetcher().transform.Find("arrowCanvas"))
+            return;
         // Creates a world canvas around the player
         _arrowCanvas = new("arrowCanvas");
         _arrowCanvas.transform.SetParent(GI._PlayerFetcher().transform, false);
@@ -31,6 +33,7 @@ public class RotationSelectArrow : MonoBehaviour
         Texture2D tx = Resources.Load("arrow") as Texture2D;
         _arrow = arrowObj.AddComponent<Image>();
         _arrow.sprite = Sprite.Create(tx, new Rect(0, 0, tx.width, tx.height), new Vector2(0.5f, 0.5f));
+        _arrow.raycastTarget = false;
         rt = _arrow.GetComponent<RectTransform>();
         rt.localPosition = new Vector3(0, 0.2f, 0.5f);
         rt.sizeDelta = new Vector2(10f, 42f);
