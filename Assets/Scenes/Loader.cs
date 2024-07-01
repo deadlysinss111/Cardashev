@@ -37,7 +37,7 @@ public class Loader : MonoBehaviour
     public void Start()
     {
         // Loads the first scene
-        LoadScene("EntryPoint", "Map");
+        LoadScene("EntryPoint", "MainMenu");
     }
 
 

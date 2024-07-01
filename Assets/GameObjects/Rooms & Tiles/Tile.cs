@@ -13,6 +13,10 @@ public class Tile : MonoBehaviour
     void OnMouseEnter()
     {
         _startcolor = GetComponent<MeshRenderer>().material.color;
+
+        if (gameObject.layer == 9)
+            return;
+
         GetComponent<MeshRenderer>().material.color = Color.yellow;
         GI._PManFetcher().TriggerMouseHovering();
     }
@@ -21,8 +25,11 @@ public class Tile : MonoBehaviour
         GetComponent<MeshRenderer>().material.color = _startcolor;
     }
 
-    public void SetSelected(bool value)
+    public void SetSelected(bool value, bool hitWall = false)
     {
+        if (gameObject.layer == 9 && false == hitWall)
+            return;
+
         _selectable = value;
 
         Outline outline;

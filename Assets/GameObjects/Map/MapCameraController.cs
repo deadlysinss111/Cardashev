@@ -14,7 +14,7 @@ public class MapCameraController : MonoBehaviour
     {
         _transitionSpeed = 2f;
         _camera = GetComponent<Camera>();
-        SetCamPos(GI._mapPrefab.GetComponent<MapManager>()._playerLocation.transform.position, true);
+        SetCamPos(GI._map.GetComponent<MapManager>()._playerLocation.transform.position, true);
     }
 
     private void Update()

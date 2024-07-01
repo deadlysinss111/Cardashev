@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9099410370513784297}
   - component: {fileID: -8385629782037469278}
   - component: {fileID: -6709748631891636370}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Room Wall
   m_TagString: TMTopology
   m_Icon: {fileID: 0}

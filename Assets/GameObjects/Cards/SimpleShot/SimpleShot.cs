@@ -15,7 +15,7 @@ public class SimpleShot : Card
         int[] stats = new int[1] { 13 };
         base.Init(1, 3, 50, stats);
 
-        while (GI._PManFetcher().AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
+        while (PlayerManager.AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
         if (TryGetComponent(out AreaSelector) == false)
             AreaSelector = gameObject.AddComponent<SelectableArea>();

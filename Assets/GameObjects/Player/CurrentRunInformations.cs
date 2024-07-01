@@ -14,7 +14,7 @@ static public class CurrentRunInformations
     // ------
     // DECK BS
     // ------
-    static public void AddCardsToDeck(List<GameObject> ARGIncomingCards)
+    static public void AddCardsToDeck(List<string> ARGIncomingCards)
     {
         // Ensures the deck isn't too large
         if (ARGIncomingCards.Count > _deckMaxCapacity)
@@ -22,10 +22,11 @@ static public class CurrentRunInformations
 
         // Cards fit in the deck, so we had them all
         else
-            foreach (GameObject card in ARGIncomingCards)
+            foreach (string name in ARGIncomingCards)
             {
+                GameObject card = Card.Instantiate(name);
                 _deck.Add(card);
-                //card.transform.parent = GI._deckContainer.transform;
+                card.transform.parent = GI._deckContainer.transform;
             }
     }
 

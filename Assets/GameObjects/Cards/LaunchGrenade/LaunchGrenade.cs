@@ -20,16 +20,13 @@ public class LaunchGrenade : Card
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
         int[] stats = new int[4];
         stats[0] = 15;
-        base.Init(2, 2, 60, stats);
+        string desc = $"launch a grenade exploding on ground contact, dealing {stats[0]} to enemies in range of explosion";
+        base.Init(2, 2, 60, stats, desc);
         
         // Add a unique state + id to play the correct card and  not the first of its kind
-        while (GI._PManFetcher().AddState("grenade"+_id.ToString(), EnterGrenadeState, ExitState) == false) _id++;
+        while (PlayerManager.AddState("grenade"+_id.ToString(), EnterGrenadeState, ExitState) == false) _id++;
 
         _grenadePrefab = (GameObject)Resources.Load("Grenade");
-
-        UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
-        _previwRadius = (GameObject)Instantiate(RADIUS);
-        _previwRadius.SetActive(false);
 
         if (TryGetComponent(out _selectableArea) == false)
             _selectableArea = gameObject.AddComponent<SelectableArea>();
@@ -101,6 +98,13 @@ public class LaunchGrenade : Card
     public override void OnUpgrade()
     {
         base.OnUpgrade();
+    }
+
+    public override void OnLoad()
+    {
+        UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
+        _previwRadius = (GameObject)Instantiate(RADIUS);
+        _previwRadius.SetActive(false);
     }
 
 }

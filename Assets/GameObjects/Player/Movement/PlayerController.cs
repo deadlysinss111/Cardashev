@@ -50,9 +50,8 @@ public class PlayerController : MonoBehaviour
         _paths = new List<List<Vector3>>();
 
         // Loading in PlayerManager a new state and its Action to change what the controls will do
-        PlayerManager manager = GI._PManFetcher();
-        manager._virtualPos = _agent.transform.position;
-        manager.AddState("movement", EnterMovementState, ExitState);
+        GI._PManFetcher()._virtualPos = _agent.transform.position;
+        PlayerManager.AddState("movement", EnterMovementState, ExitState);
     }
     private void Update()
     {
@@ -86,7 +85,7 @@ public class PlayerController : MonoBehaviour
     //Draws what path the player would take if he decided to move where the mouse is
     void Preview()
     {
-       PlayerManager manager = GameObject.Find("Player").GetComponent<PlayerManager>();
+       PlayerManager manager = GI._PManFetcher();
        // Crop the destination to the center of the target tile
        Vector3 alteredPos = manager._lastHit.transform.position;
        alteredPos.y += 0.5f;

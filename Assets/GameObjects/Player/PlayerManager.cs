@@ -23,8 +23,8 @@ public class PlayerManager : MonoBehaviour
     // State related
     string _currentState;
     string _lastState;
-    Dictionary<string, Action[]> _states;
     [NonSerialized] public string _defaultState;
+    static Dictionary<string, Action[]> _states = new Dictionary<string, Action[]>();
 
     // These actions are the changing code actually executed by the middlewares
     Action _mouseHover;
@@ -49,7 +49,6 @@ public class PlayerManager : MonoBehaviour
     // Pre-Awake constructor
     PlayerManager() 
     {
-        _states = new Dictionary<string, Action[]>();
         _defaultState = "movement";
         _currentState = "movement";
         _lastState = "movement";
@@ -146,8 +145,7 @@ public class PlayerManager : MonoBehaviour
     // Doesn't need context since it's not a key press
     private void MouseHoverMiddleware()
     {
-        //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100, _clickableLayers))
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100,  _clickableLayers))
         {
             _mouseHover();
         }
@@ -177,7 +175,7 @@ public class PlayerManager : MonoBehaviour
     // ------
     // METHODS TO ADD OR SWITCH THE STATE
     // ------
-    public bool AddState(string name, Action enter, Action exit)
+    static public bool AddState(string name, Action enter, Action exit)
     {
         if (_states.ContainsKey(name) == false)
         {
@@ -261,15 +259,11 @@ public class PlayerManager : MonoBehaviour
             //else
             //    name = "Overdrive";
 
-            GameObject card = Instantiate((GameObject)Resources.Load(name));
-            card.layer = LayerMask.NameToLayer("UI");
-            card.transform.SetParent(GameObject.Find("Canvas").transform, false);
-            card.transform.localScale = new Vector3(1.5f, 1.5f, 1);
-            CurrentRunInformations.AddCardsToDeck(new List<GameObject>() { card });
-            card.GetComponent<Card>().Upgrade();
+
+            //Card.Instantiate(name);
 
             
-            card.SetActive(false);
+            //card.SetActive(false);
         }
         return CurrentRunInformations._deck;
     }

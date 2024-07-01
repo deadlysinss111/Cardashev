@@ -98,7 +98,8 @@ public class DeckManager : MonoBehaviour
         foreach (GameObject card in toLoad)
         {
             _remainsInDeck.Add(card);
-            card.transform.parent = GameObject.Find("Canvas").transform;
+            card.transform.SetParent(GameObject.Find("Canvas").transform, false);
+            card.GetComponent<Card>().OnLoad();
         }
     }
     public void UnloadDeck()

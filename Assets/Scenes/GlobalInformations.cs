@@ -64,7 +64,7 @@ static public class GI
 
     // <~~[ UNSURE ]~~>
 
-    static public GameObject _mapPrefab; // maybe not correctly written (should be an array ?)
+    static public GameObject _map; // maybe not correctly written (should be an array ?)
     static public float _gameTimer;
 
 
@@ -120,10 +120,10 @@ static public class GI
         {
             case "EntryPoint":
                 // Instantiate, save and cull
-                _mapPrefab = GameObject.Find("Map");
+                _map = GameObject.Find("Map");
                 //sceneContainer = MonoBehaviour.Instantiate(_mapPrefab);
-                MonoBehaviour.DontDestroyOnLoad(_mapPrefab);
-                _mapPrefab.SetActive(false);
+                MonoBehaviour.DontDestroyOnLoad(_map);
+                _map.SetActive(false);
 
                 _deckContainer = GameObject.Find("DeckContainer");
                 MonoBehaviour.DontDestroyOnLoad(_deckContainer);
@@ -143,7 +143,7 @@ static public class GI
         {
             case "Map":
                 // Instantiate, save and cull
-                _mapPrefab.SetActive(true);
+                _map.SetActive(true);
                 break;
 
             default:

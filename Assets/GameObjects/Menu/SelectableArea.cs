@@ -116,9 +116,9 @@ public class SelectableArea : MonoBehaviour
     // TODO FindSelectableArea: Fix inner radius
 
     // Little override for convenience
-    public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius)
+    public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius, bool hitWall = false)
     {
-        return FindSelectableArea(obj.transform.position, radius, inner_radius);
+        return FindSelectableArea(obj.transform.position, radius, inner_radius, hitWall);
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public class SelectableArea : MonoBehaviour
     /// <param name="inner_radius">How many cases from inside should be excluded. DO NOT COUNT THE RADIUS</param>
     /// <param name="ignore_interactable">Whether the area should include the tiles below interactables or not</param>
     /// <returns>A list of tiles that are part of the selectable area</returns>
-    public List<GameObject> FindSelectableArea(Vector3 origin, int radius, int inner_radius)
+    public List<GameObject> FindSelectableArea(Vector3 origin, int radius, int inner_radius, bool hitWall = false)
     {
         if (inner_radius >= radius)
         {
@@ -237,7 +237,7 @@ public class SelectableArea : MonoBehaviour
             _selectableTiles.Add(hit.transform.gameObject);
             try
             {
-                hit.transform.gameObject.GetComponent<Tile>().SetSelected(true);
+                hit.transform.gameObject.GetComponent<Tile>().SetSelected(true, hitWall);
             }
             catch (MissingComponentException e)
             {
@@ -259,9 +259,9 @@ public class SelectableArea : MonoBehaviour
     }
 
     // Little override for convenience
-    public List<GameObject> FindSelectableArea(GameObject obj, int radius)
+    public List<GameObject> FindSelectableArea(GameObject obj, int radius, bool hitWall = false)
     {
-        return FindSelectableArea(obj.transform.position, radius);
+        return FindSelectableArea(obj.transform.position, radius, hitWall);
     }
 
     /// <summary>
@@ -271,7 +271,7 @@ public class SelectableArea : MonoBehaviour
     /// <param name="radius">The radius of the area</param>
     /// <param name="ignore_interactable">Whether the area should include the tiles below interactables or not</param>
     /// <returns>A list of tiles that are part of the selectable area</returns>
-    public List<GameObject> FindSelectableArea(Vector3 origin, int radius)
+    public List<GameObject> FindSelectableArea(Vector3 origin, int radius, bool hitWall = false)
     {
         ResetSelectable();
 
@@ -398,7 +398,7 @@ public class SelectableArea : MonoBehaviour
             _selectableTiles.Add(hit.transform.gameObject);
             try
             {
-                hit.transform.gameObject.GetComponent<Tile>().SetSelected(true);
+                hit.transform.gameObject.GetComponent<Tile>().SetSelected(true, hitWall);
             }
             catch (MissingComponentException e)
             {
@@ -548,9 +548,9 @@ public class SelectableArea : MonoBehaviour
 
     void ResetDebugRay()
     {
-        _debugRayStart.Clear();
-        _debugRayDir.Clear();
-        _debugRayColor.Clear();
+        //_debugRayStart.Clear();
+        //_debugRayDir.Clear();
+        //_debugRayColor.Clear();
     }
 
     void DebugRay(Vector3 origin, Vector3 direction)

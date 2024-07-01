@@ -53,7 +53,7 @@ public class Card : MonoBehaviour
         _clickEffect = ClickEvent;
     }
 
-    protected void Init(byte duration, byte maxLvl, int goldValue, int[] stats)
+    protected void Init(byte duration, byte maxLvl, int goldValue, int[] stats, string description = "")
     {
         _timeStopedEvent = TimeStopedMouseEnter;
 
@@ -61,6 +61,7 @@ public class Card : MonoBehaviour
         _maxLv = maxLvl;
         _goldValue = goldValue;
         _stats = stats;
+        _description = description;
 
         if(TryGetComponent(out LineRenderer renderer))
             _lineRenderer = renderer;
@@ -78,7 +79,7 @@ public class Card : MonoBehaviour
     // TODO => move it to its own, new class
     public void SetToCollectible(Func<bool> func)
     {
-        _clickEffect = () => { if (func()) CurrentRunInformations.AddCardsToDeck(new List<GameObject> { gameObject }); };
+        _clickEffect = () => { if (func()) CurrentRunInformations.AddCardsToDeck(new List<string> { _name }); };
     }
 
 
@@ -158,7 +159,6 @@ public class Card : MonoBehaviour
     void OnMouseEnter()
     {
         _lastScale = transform.localScale;
-        print("mouse entered");
         transform.localScale *= 1.5f;
     }
     void OnMouseExit()
@@ -215,6 +215,24 @@ public class Card : MonoBehaviour
 
     public void UpdateDescription()
     {
-        //HierarchySearcher.FindChildRecursively(transform, "Text").GetComponent<TextMeshProUGUI>().SetText(_description);
+        HierarchySearcher.FindChildRecursively(transform, "Text").GetComponent<TextMeshProUGUI>().SetText(_description);
+        HierarchySearcher.FindChildRecursively(transform, "Duration").GetComponent<TextMeshProUGUI>().SetText(_duration.ToString());
+    }
+
+    static public GameObject Instantiate(string name)
+    {
+        GameObject card = Instantiate((GameObject)Resources.Load(name));
+        card.layer = LayerMask.NameToLayer("UI");
+        card.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+        card.GetComponent<Card>().UpdateDescription();
+        card.SetActive(false);
+
+        return card;
+    }
+
+    // Called when the card is loaded by the DeckManager
+    public virtual void OnLoad()
+    {
+
     }
 }

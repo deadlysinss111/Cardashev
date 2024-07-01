@@ -16,7 +16,7 @@ public class JumpAndShockwave : Card
         base.Init(2, 2, 80, stats);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
-        while (GI._PManFetcher().AddState("jumpAndShockwave" + _id.ToString(), EnterJumpShockwaveState, ExitState) == false) _id++;
+        while (PlayerManager.AddState("jumpAndShockwave" + _id.ToString(), EnterJumpShockwaveState, ExitState) == false) _id++;
 
         UnityEngine.Object RADIUS = Resources.Load("RadiusJumpPreview");
         _previewRadius = (GameObject)Instantiate(RADIUS);

@@ -15,7 +15,7 @@ public class Jump : Card
         base.Init(2, 2, 60, stats);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
-        while (GI._PManFetcher().AddState("jump" + _id.ToString(), EnterJumpState, ExitState) == false) _id++;
+        while (PlayerManager.AddState("jump" + _id.ToString(), EnterJumpState, ExitState) == false) _id++;
     }
 
     void EnterJumpState()

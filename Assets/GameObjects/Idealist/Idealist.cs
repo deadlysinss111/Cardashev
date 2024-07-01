@@ -15,6 +15,8 @@ public abstract class Idealist
     public string _name;
     public byte _baseHP;
 
+    public List<string> _startingDeck;
+
     public abstract void Ultimate();
 
     static public void StartWith(string name)
@@ -22,6 +24,8 @@ public abstract class Idealist
         Action func;
         _idealistEncyclopedia.TryGetValue(name, out func);
         func();
+
+        CurrentRunInformations.AddCardsToDeck(_instance._startingDeck);
     }
 
     static private Dictionary<string, Action> _idealistEncyclopedia = new Dictionary<string, Action>()

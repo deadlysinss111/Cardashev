@@ -122,6 +122,6 @@ public class MainMenuManager : MonoBehaviour
     public void SelectCharacter(string name)
     {
         Idealist.StartWith(name);
-        SceneManager.LoadScene("MapNavigation");
+        GI._loader.LoadScene("MainMenu", "Map");
     }
 }
