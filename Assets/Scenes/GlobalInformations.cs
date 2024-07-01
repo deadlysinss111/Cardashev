@@ -15,6 +15,7 @@ static public class GI
 
     // Components needed by a LOT of MonoBehaviours
     static PlayerManager _playerManager;
+    static StatManager _playerStat;
     static GameObject _player;
     static public Loader _loader;
 
@@ -22,6 +23,8 @@ static public class GI
     static public Func<PlayerManager> _PManFetcher;
 
     static public Func<GameObject> _PlayerFetcher;
+
+    static public Func<StatManager> _PStatFetcher;
 
 
     // ------
@@ -171,6 +174,16 @@ static public class GI
             }
             Debug.LogError("Me when the PlayerFetcher is bad at the game ong ō_ō");
             return null;
+        };
+
+        _PStatFetcher = () => {
+        if (GameObject.Find("Player").TryGetComponent(out _playerStat))
+        {
+            _PStatFetcher = () => { return _playerStat; };
+            return _playerStat;
+        }
+        Debug.LogError("Bro is PStatFetcherless :skullemoji:");
+        return null;
         };
     }
 }
