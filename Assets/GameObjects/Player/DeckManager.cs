@@ -88,7 +88,7 @@ public class DeckManager : MonoBehaviour
     {
         for(byte i =0; i< _hand.Count; i++)
         {
-            _hand[i].transform.localPosition = new Vector3(-400 + 150 * i, -300, 0);
+            _hand[i].transform.localPosition = new Vector3(-400 + 200 * i, -300, 0);
         }
     }
 

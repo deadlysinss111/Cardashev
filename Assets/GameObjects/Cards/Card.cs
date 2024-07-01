@@ -5,7 +5,8 @@ using TMPro;
 using Unity.VisualScripting.FullSerializer.Internal;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Windows;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class Card : MonoBehaviour
     protected SelectableArea _selectableArea;
     protected LineRenderer _lineRenderer;
     protected Vector3 _lastScale;
+    protected Action _timeStopedEvent = ()=> { };
+    protected Action _timeStopedClick = ()=> { };
 
     [SerializeField] protected LayerMask _clickableLayers;
     public Color _actionColor;
@@ -52,6 +55,8 @@ public class Card : MonoBehaviour
 
     protected void Init(byte duration, byte maxLvl, int goldValue, int[] stats)
     {
+        _timeStopedEvent = TimeStopedMouseEnter;
+
         _duration = duration;
         _maxLv = maxLvl;
         _goldValue = goldValue;
@@ -89,20 +94,80 @@ public class Card : MonoBehaviour
         Effect();
     }
 
+    // Need that stuff to make the card interract as if the time wasn't stop when it is //
+    // All of this is wrecking the perfs //
+    void Update()
+    {
+        if (Time.timeScale == 0)
+        {
+            _timeStopedEvent();
+            if(Input.GetMouseButtonDown(0))
+                _timeStopedClick();
+        }
+    }
+
+    void TimeStopedMouseEnter()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        GameObject.Find("Canvas").GetComponent<GraphicRaycaster>().Raycast(pointerData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            if (HierarchySearcher.FindParentdRecursively(result.gameObject.transform, gameObject.name))
+            {
+                OnMouseEnter();
+                _timeStopedEvent = TimeStopedMouseExit;
+                _timeStopedClick = _clickEffect;
+                break;
+            }
+        }
+    }
+
+    void TimeStopedMouseExit()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        GameObject.Find("Canvas").GetComponent<GraphicRaycaster>().Raycast(pointerData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            if (HierarchySearcher.FindParentdRecursively(result.gameObject.transform, gameObject.name))
+            {
+                return;
+            }
+        }
+        OnMouseExit();
+        _timeStopedEvent = TimeStopedMouseEnter;
+        _timeStopedClick = () => { };
+    }
+
+    
+
+    // Regular way to interract with cards
+
     // make the card bigger whene mouse is over it
-    private void OnMouseEnter()
+    void OnMouseEnter()
     {
         _lastScale = transform.localScale;
         print("mouse entered");
         transform.localScale *= 1.5f;
     }
-    private void OnMouseExit()
+    void OnMouseExit()
     {
         transform.localScale = _lastScale;
     }
 
 
-    private void OnMouseDown()
+    void OnMouseDown()
     {
         _clickEffect();
     }
