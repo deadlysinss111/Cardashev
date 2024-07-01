@@ -7,7 +7,7 @@ public class CoverCollision : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out Spit spit) == false) return;
-        if (spit._shieldBreakable != true) return;
+        if (spit.gameObject.CompareTag("coverBreakable") != true) return;
 
         print("Fuck you, "+other.gameObject.name);
         Destroy(other.gameObject);
