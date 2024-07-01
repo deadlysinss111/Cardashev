@@ -17,7 +17,7 @@ public class HealthBar : MonoBehaviour
         _scale = _healthBar.transform.localScale.x;
         GameObject player = GameObject.Find("Player");
         _statManager = player.GetComponent<StatManager>();
-        _MaxHealth = _statManager._health;
+        _MaxHealth = _statManager.Health;
     }
 
     void Update()
@@ -25,7 +25,7 @@ public class HealthBar : MonoBehaviour
         if (_statManager != null)
         {
             _currentHealth = _healthBar.transform.localScale;
-            _currentHealth.x = (_statManager._health / _MaxHealth) * _scale;
+            _currentHealth.x = (_statManager.Health / _MaxHealth) * _scale;
             _healthBar.transform.localScale = _currentHealth;
         }
     }
