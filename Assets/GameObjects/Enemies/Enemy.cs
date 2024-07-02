@@ -21,6 +21,7 @@ abstract public class Enemy : MonoBehaviour
     protected Coroutine _lookAtCoroutine;
 
     // Death related
+    [SerializeField] protected ParticleSystem _hurtParticles;
     protected bool _waitForDestroy;
     protected ParticleSystem _particleSystem;
     protected string _name;
@@ -111,7 +112,11 @@ abstract public class Enemy : MonoBehaviour
         StatManager manager = gameObject.GetComponent<StatManager>();
         manager.TakeDamage(amount);
         if (manager.Health <= 0)
+        {
             Defeat();
+            return;
+        }
+        _hurtParticles.Play();
     }
 
     protected void CheckPlayerDistance()
