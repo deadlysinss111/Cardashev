@@ -55,7 +55,7 @@ public class JumpAndShockwave : Card
         base.Effect();
     }
 
-    public override void ClickEvent()
+    public override void PlayCard()
     {
         GI._PManFetcher().SetToState("jumpAndShockwave" + _id.ToString());
     }
@@ -81,7 +81,7 @@ public class JumpAndShockwave : Card
         GI._PManFetcher()._virtualPos = _lastDest;
         GI._PManFetcher().SetToDefault();
         // Trigger the card play event
-        base.ClickEvent();
+        base.PlayCard();
     }
 
     public override void OnUpgrade()
