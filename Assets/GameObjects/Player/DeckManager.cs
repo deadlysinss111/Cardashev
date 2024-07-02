@@ -13,10 +13,8 @@ public class DeckManager : MonoBehaviour
     protected int _curHandSize;
 
     GameObject _cardBar;
-/*    Transform _cardBarHeight;
-    float _cardBarScale;*/
 
-    Vector3 virtualPosition = new Vector3(1000, 0, 0); // Virtual position off-screen to the right
+    Vector3 virtualPosition = new Vector3(1000, -475, 0); // Virtual position off-screen to the right
     float transitionDuration = 1.0f; // Duration for the transition
     bool isTransitioning = false; // Flag to check if a card is currently being moved
 
@@ -64,7 +62,7 @@ public class DeckManager : MonoBehaviour
         GameObject obj = _remainsInDeck[rdm];
         obj.gameObject.SetActive(true);
 
-        // Reset the scale of the card to the default value (1.5, 1.5, 1)
+        // Reset the scale of the card to the default value
         obj.transform.localScale = new Vector3(1.5f, 1.5f, 1);
 
         _hand.Add(obj);
@@ -83,7 +81,7 @@ public class DeckManager : MonoBehaviour
     {
         isTransitioning = true;
         Vector3 startPosition = card.transform.localPosition;
-        Vector3 endPosition = new Vector3(-400 + 200 * index, -300, 0);
+        Vector3 endPosition = new Vector3(-400 + 200 * index, -475, 0);
         float elapsedTime = 0;
 
         while (elapsedTime < transitionDuration)
@@ -149,7 +147,7 @@ public class DeckManager : MonoBehaviour
     }
 
     // Handling positions in order to have a good looking displaying
-    private void DisplayHand()
+    /*private void DisplayHand()
     {
         for (byte i = 0; i < _hand.Count; i++)
         {
@@ -159,7 +157,7 @@ public class DeckManager : MonoBehaviour
             }
             _hand[i].transform.localPosition = new Vector3(-400 + 200 * i, -300, 0);
         }
-    }
+    }*/
 
     public void LoadDeck()
     {
@@ -194,19 +192,6 @@ public class DeckManager : MonoBehaviour
     // Method to display the draw cooldown in the UI with _cardBar
     private void CooldownBarScale()
     {
-        /*if (_hand.Count < 4)
-        {
-            Vector3 scale = ;
-            scale.y = _drawCooldown / 3 * _cardBarScale;
-            _cardBarHeight.localScale = scale;
-        }
-        else if (_hand.Count == 4)
-        {
-            Vector3 scale = _cardBarHeight.localScale;
-            scale.y = 1;
-            _cardBarHeight.localScale = scale;
-        }*/
-
         if (_hand.Count < 4)
         {
             _cardBar.GetComponent<Slider>().value = _drawCooldown / 3;

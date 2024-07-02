@@ -155,15 +155,17 @@ public class Card : MonoBehaviour
 
     // Regular way to interract with cards
 
-    // make the card bigger whene mouse is over it
+    // make the card bigger when mouse is over it
     void OnMouseEnter()
     {
         _lastScale = transform.localScale;
-        transform.localScale *= 1.5f;
+        transform.localScale *= 2;
+        transform.localPosition += new Vector3(0, 150, 0);
     }
     void OnMouseExit()
     {
         transform.localScale = _lastScale;
+        transform.localPosition -= new Vector3(0, 150, 0);
     }
 
 

@@ -29,7 +29,7 @@ public class SecondSleeve : Card
         base.Init(2, 2, 60, stats);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
-        while (GI._PManFetcher().AddState("SecondSleeve" + _id.ToString(), EnterState, ExitState) == false) _id++;
+        while (PlayerManager.AddState("SecondSleeve" + _id.ToString(), EnterState, ExitState) == false) _id++;
     }
 
     void EnterState()
