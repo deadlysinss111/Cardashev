@@ -14,7 +14,7 @@ public class PiercingShot : Card
     {
         _duration = 4f;
         _stats = new int[2] { 6, 24 };
-        while (PlayerManager.AddState("PiercingShoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
+        while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
         if (TryGetComponent(out AreaSelector) == false)
             AreaSelector = gameObject.AddComponent<SelectableArea>();
@@ -65,6 +65,6 @@ public class PiercingShot : Card
 
     public override void ClickEvent()
     {
-        GI._PManFetcher().SetToState("shoot" + _id.ToString());
+        GI._PManFetcher().SetToState("PiercingShot" + _id.ToString());
     }
 }

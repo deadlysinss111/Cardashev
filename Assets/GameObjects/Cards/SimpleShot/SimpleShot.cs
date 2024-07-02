@@ -15,7 +15,7 @@ public class SimpleShot : Card
         int[] stats = new int[1] { 13 };
         base.Init(1, 3, 50, stats);
 
-        while (PlayerManager.AddState("shoot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
+        while (PlayerManager.AddState("shot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
         if (TryGetComponent(out AreaSelector) == false)
             AreaSelector = gameObject.AddComponent<SelectableArea>();
@@ -65,6 +65,6 @@ public class SimpleShot : Card
 
     public override void ClickEvent()
     {
-        GI._PManFetcher().SetToState("shoot" + _id.ToString());
+        GI._PManFetcher().SetToState("shot" + _id.ToString());
     }
 }

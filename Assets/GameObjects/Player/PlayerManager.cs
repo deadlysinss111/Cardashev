@@ -257,25 +257,6 @@ public class PlayerManager : MonoBehaviour
     // TODO: Make it an actual getter, n'est ce pas Valentin
     public List<GameObject> GetDeck()
     {
-        string name;
-        for (int i = 0; i < 4; i++)
-        {
-            // It's getting worse
-            //if (i % 4 == 1)
-                name ="LaunchGrenadeModel";
-            //else if (i % 4 == 2)
-            //    name = "SimpleShot";
-            //else if (i % 4 == 3)
-            //    name = "PiercingShot";
-            //else
-            //    name = "Overdrive";
-
-
-            //Card.Instantiate(name);
-
-            
-            //card.SetActive(false);
-        }
         return CurrentRunInformations._deck;
     }
 
