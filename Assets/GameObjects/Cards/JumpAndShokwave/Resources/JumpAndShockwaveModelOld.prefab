@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 5140981619071243993}
   - component: {fileID: 3082283686928567178}
   - component: {fileID: -3756369993129925245}
-  - component: {fileID: 59724826804131009}
+  - component: {fileID: 5761228712198591099}
   m_Layer: 0
-  m_Name: JumpModel
+  m_Name: JumpAndShockwaveModelOld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7629787591699867475, guid: 1aa83896d4f8bd249ab46449ea0fd2ea, type: 3}
+  - {fileID: -905690159841262435, guid: 1aa83896d4f8bd249ab46449ea0fd2ea, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -212,7 +212,7 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &59724826804131009
+--- !u!114 &5761228712198591099
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,7 +221,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7770915759181933807}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19c1f813b73de664080230b66f6a2f4c, type: 3}
+  m_Script: {fileID: 11500000, guid: 028402ece1e2e3944af85c77bc05b6a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _name: 

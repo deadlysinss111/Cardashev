@@ -11,10 +11,10 @@ public class Dix : Idealist
         _instance = this;
         _startingDeck = new List<string> 
         {
-            "LaunchGrenadeModel",
-            "LaunchGrenadeModel",
-            "LaunchGrenadeModel",
-            "LaunchGrenadeModel",
+            "LaunchGrenadeCard",
+            "PiercingShotCard",
+            "SimpleShotCard",
+            "JumpCard",
         };
     }
     

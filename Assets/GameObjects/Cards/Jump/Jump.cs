@@ -28,7 +28,7 @@ public class Jump : Card
 
     void ExitState()
     {
-        ClearPath();
+        //ClearPath();
     }
 
     public override void Effect()
