@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1561137187801148688}
   - component: {fileID: 4401395458358623120}
   m_Layer: 0
-  m_Name: Murlock
+  m_Name: MurlockPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

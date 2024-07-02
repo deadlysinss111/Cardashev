@@ -75,7 +75,7 @@ public class Room : MonoBehaviour
 
                         case "Population":
                             roomGOpath = roomGO.name + "/" + roomGO.name + "Prefab";
-                            //Debug.Log("Attempt to load the prefab " + roomGOpath);
+                            Debug.Log("Attempt to load the prefab " + roomGOpath);
                             break;
 
                         // Topology and Decoration tilemaps
@@ -83,7 +83,7 @@ public class Room : MonoBehaviour
                             roomGOpath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/" + roomGO.name;
                             break;
                     }
-                    Debug.Log("Attempt to load the prefab " + roomGOpath);
+                    //Debug.Log("Attempt to load the prefab " + roomGOpath);
 
                     // We use the ROOMGO to get the local position of the object, and the roomGO for the global transform
                     GameObject ROOMGO = (GameObject)Resources.Load(roomGOpath);
