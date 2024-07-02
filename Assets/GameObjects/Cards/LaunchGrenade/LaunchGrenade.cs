@@ -22,7 +22,7 @@ public class LaunchGrenade : Card
         int[] stats = new int[4];
         stats[0] = 15;
         string desc = $"launch a grenade exploding on ground contact, dealing {stats[0]} to enemies in range of explosion";
-        base.Init(2, 2, 60, stats, desc);
+        base.Init(1, 2, 60, stats, desc);
         
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("grenade"+_id.ToString(), EnterGrenadeState, ExitState) == false) _id++;
@@ -55,8 +55,9 @@ public class LaunchGrenade : Card
     public override void Effect()
     {
         GameObject grenade = Instantiate(_grenadePrefab);
-        grenade.GetComponent<Rigidbody>().transform.position = _grenadeOrigine + new Vector3(0, 1, 0);
-        grenade.GetComponent<Rigidbody>().velocity = _grenadeInitVelocity;
+        grenade.GetComponent<Rigidbody>().transform.position = _grenadeOrigine + new Vector3(0, 5, 0);
+        grenade.GetComponent<GrenadeScript>()._velocity = _grenadeInitVelocity;
+        grenade.GetComponent<GrenadeScript>()._origin = _grenadeOrigine + new Vector3(0, 1, 0);
 
         base.Effect();
     }

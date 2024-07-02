@@ -9,7 +9,9 @@ public class EscapeTile : Interactible
     // Contains name of the condition (such as enemy name) and amount of time this condition must be resolved to clear the room
     [SerializeField] Dictionary<string, byte> _conditions = new();
 
-    Action OnWalk = () => { print("locked"); };
+    Action OnWalk = () => {
+        GI._PlayerFetcher().GetComponent<DeckManager>().UnloadDeck();
+        GI._loader.LoadScene("Room", "Map"); };
 
     protected override void OnTriggerEnter(Collider other)
     {
@@ -52,6 +54,7 @@ public class EscapeTile : Interactible
         // TODO: change sprite or smth
         // & trigger rewards
         Reward._content = new Reward.Content(10, 20, 0);
+        gameObject.GetComponent<MeshRenderer>().material.color = Color.green;
         OnWalk = ()=> {
             GI._PlayerFetcher().GetComponent<DeckManager>().UnloadDeck();
             GI._loader.LoadScene("Room", "Reward"); 

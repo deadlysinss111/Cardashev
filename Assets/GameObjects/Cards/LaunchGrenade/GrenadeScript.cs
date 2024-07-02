@@ -5,6 +5,16 @@ using UnityEngine;
 
 public class GrenadeScript : MonoBehaviour
 {
+    public Vector3 _velocity;
+    public Vector3 _origin;
+
+    private void Start()
+    {
+        StartCoroutine(LaunchTheGrenadeFromHand());
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
+
+
     private void OnCollisionEnter(Collision other)
     {
         StatManager manager;
@@ -28,5 +38,17 @@ public class GrenadeScript : MonoBehaviour
             }
         }
         Destroy(gameObject);
+    }
+
+    IEnumerator LaunchTheGrenadeFromHand()
+    {
+        while (GI._PlayerFetcher().GetComponent<QueueComponent>().GetActiveCard().GetRemainingTime() > 0.5)
+        {
+            yield return null;
+        }
+
+        GetComponent<Rigidbody>().isKinematic = false;
+        transform.position = _origin;
+        GetComponent<Rigidbody>().velocity = _velocity;
     }
 }

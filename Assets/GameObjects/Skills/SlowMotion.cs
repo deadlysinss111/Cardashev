@@ -37,7 +37,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
             DecreaseTimer();
             if (_slowdownDuration <= 0)
             {
-                StopSlowMotion();
+                //StopSlowMotion();
             }
         }
 
@@ -79,18 +79,32 @@ public class SlowMotionWithProgressBar : MonoBehaviour
     private void OnEnable()
     {
         // Enable the input actions when the object is enabled
-        _pInput.actions["Focus"].performed += OnFocusPerformed;
-        _pInput.actions["Focus"].canceled += OnFocusCanceled;
+        _pInput.actions["Focus"].performed += ToggleFocus;
         _pInput.actions["Focus"].Enable();
     }
 
     private void OnDisable()
     {
         // Disable the input actions when the object is disabled
-        _pInput.actions["Focus"].performed -= OnFocusPerformed;
-        _pInput.actions["Focus"].canceled -= OnFocusCanceled;
+        _pInput.actions["Focus"].performed -= ToggleFocus;
         _pInput.actions["Focus"].Disable();
     }
+    
+    //private void OnEnable()
+    //{
+    //    // Enable the input actions when the object is enabled
+    //    _pInput.actions["Focus"].performed += OnFocusPerformed;
+    //    _pInput.actions["Focus"].canceled += OnFocusCanceled;
+    //    _pInput.actions["Focus"].Enable();
+    //}
+
+    //private void OnDisable()
+    //{
+    //    // Disable the input actions when the object is disabled
+    //    _pInput.actions["Focus"].performed -= OnFocusPerformed;
+    //    _pInput.actions["Focus"].canceled -= OnFocusCanceled;
+    //    _pInput.actions["Focus"].Disable();
+    //}
 
     private void OnFocusPerformed(InputAction.CallbackContext context)
     {
@@ -100,6 +114,13 @@ public class SlowMotionWithProgressBar : MonoBehaviour
     private void OnFocusCanceled(InputAction.CallbackContext context)
     {
         StopSlowMotion();
+    }
+    private void ToggleFocus(InputAction.CallbackContext context)
+    {
+        if (_isActive)
+            StopSlowMotion();
+        else
+            StartSlowMotion();
     }
 
     public void StartSlowMotion()
