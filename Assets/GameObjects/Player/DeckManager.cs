@@ -55,7 +55,6 @@ public class DeckManager : MonoBehaviour
         // We draw a random card
         int rdm = Random.Range(0, _remainsInDeck.Count);
 
-        // We need to duplicate the card's game object so that we can display it an destroy it later easily
         GameObject obj = _remainsInDeck[rdm];
         obj.gameObject.SetActive(true);
         _hand.Add(obj);

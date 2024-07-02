@@ -5,7 +5,7 @@ using UnityEngine;
 // This class is meant to contain the player's informations and save / load theme
 static public class CurrentRunInformations
 {
-    static public int _goldAmount = 0;
+    static public int _goldAmount = 100;
 
     // Deck related (serves as storage for DeckManager to prepare itself for a room)
     static int _deckMaxCapacity = 100;

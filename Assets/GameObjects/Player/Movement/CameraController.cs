@@ -121,7 +121,7 @@ public class CameraController : MonoBehaviour
         }
         _curOffset = _offsetPositions[_offsetID];
 
-        Debug.Log(_curOffset);
+        //Debug.Log(_curOffset);
 
         // Rotation transformations
         _curRotation *= Quaternion.AngleAxis(-45, Vector3.right);

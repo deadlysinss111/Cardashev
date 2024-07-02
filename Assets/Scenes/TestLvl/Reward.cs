@@ -127,15 +127,47 @@ public class Reward : MonoBehaviour
     {
         _cardBG.SetActive(true);
         GameObject[] cards = new GameObject[3];
-        for(int i = 0; i < 3; i++) 
+        for (int i = 0; i < 3; i++)
         {
-            GameObject CARD = (GameObject)Resources.Load("LaunchGrenadeModel");
+            GameObject CARD = (GameObject)Resources.Load("LaunchGrenadeCard");
             GameObject card = Instantiate(CARD);
             card.layer = LayerMask.NameToLayer("UI");
             card.transform.SetParent(GameObject.Find("Canvas").transform, false);
-            card.transform.localScale = new Vector3(10, 1, 10);
-            card.transform.localPosition = new Vector3(150*(i-1), 0, -0.1f);
-            card.GetComponent<Card>().SetToCollectible(() => { foreach (GameObject slot in cards) { Destroy(slot); }; _cardBG.SetActive(false); return true; });
+            card.transform.localPosition = new Vector3(150 * (i - 1), 0, -0.1f);
+            card.GetComponent<Card>().SetToCollectible(() => { foreach (GameObject slot in cards) { Destroy(slot); }; _cardBG.SetActive(false); return 0; });
+            cards[i] = card;
+        }
+        GameObject upgrade = GenerateItem(false);
+        upgrade.GetComponent<Button>().onClick.AddListener(() => { foreach (GameObject slot in cards) { Destroy(slot); }; DisplayUpgradableCards(); });
+        upgrade.transform.localPosition = new Vector3(0, -100, -0.1f);
+    }
+
+    void DisplayUpgradableCards()
+    {
+        List<GameObject> deckPool = CurrentRunInformations._deck;
+        GameObject[] cards = new GameObject[3];
+        for (int i = 0; i < 3; i++)
+        {
+            int rdm = UnityEngine.Random.Range(0, deckPool.Count);
+            GameObject card = deckPool[rdm];
+            deckPool.RemoveAt(rdm);
+
+            card.SetActive(true);
+            card.transform.SetParent(GameObject.Find("Canvas").transform, false);
+            card.transform.localPosition = new Vector3(150 * (i - 1), 0, -0.1f);
+
+            card.GetComponent<Card>().SetToCollectible(() =>
+            {
+                card.GetComponent<Card>().Upgrade();
+                foreach (GameObject slot in cards)
+                {
+                    slot.transform.SetParent(GI._deckContainer.transform, false);
+                    slot.SetActive(false);
+                };
+                _cardBG.SetActive(false);
+                return 1;
+            });
+
             cards[i] = card;
         }
     }

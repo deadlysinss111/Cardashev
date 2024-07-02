@@ -31,11 +31,10 @@ public class Merchant : Interactible
         for (int i = 0; i < 6; i++)
         {
             // We first create the card object
-            UnityEngine.Object CARD = Resources.Load(pool[Random.Range(0, pool.Count)]+"Model");
+            UnityEngine.Object CARD = Resources.Load(pool[Random.Range(0, pool.Count)]);
             GameObject cardObj = (GameObject)Instantiate(CARD);
             cardObj.transform.SetParent(_interface.transform, false);
             cardObj.transform.localPosition = new Vector3(x, 100, 0.1f);
-            cardObj.transform.localScale = new Vector3(5, 1, 5);
 
             // We set it's gold value
             Card cardComp = cardObj.GetComponent<Card>();
@@ -59,9 +58,9 @@ public class Merchant : Interactible
                     CurrentRunInformations._goldAmount -= amount;
                     Destroy(cardObj);
                     Destroy(priceObj);
-                    return true;
+                    return 0;
                 }
-                return false;
+                return 2;
             });
 
             x += 100;

@@ -77,9 +77,12 @@ public class Card : MonoBehaviour
 
     // In shop & rewards behaviour
     // TODO => move it to its own, new class
-    public void SetToCollectible(Func<bool> func)
+    public void SetToCollectible(Func<byte> func)
     {
-        _clickEffect = () => { if (func()) CurrentRunInformations.AddCardsToDeck(new List<string> { _name }); };
+        _clickEffect = () => {
+            byte result = func();
+            if (result == 0) CurrentRunInformations.AddCardsToDeck(new List<string> { _name }); 
+            else if(result == 1) { _clickEffect = ClickEvent; } };
     }
 
 
@@ -206,6 +209,7 @@ public class Card : MonoBehaviour
         {
             _currLv++;
             GameObject frame = (GameObject)Instantiate(Resources.Load("lvl" + _currLv+"sprite"), gameObject.transform);
+            print("frame : " + frame);
             OnUpgrade();
             UpdateDescription();
             return true;
