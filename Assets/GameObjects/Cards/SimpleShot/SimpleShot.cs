@@ -7,8 +7,6 @@ public class SimpleShot : Card
 {
     List<GameObject> _selectableTiles = new();
 
-    SelectableArea AreaSelector;
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -17,39 +15,35 @@ public class SimpleShot : Card
 
         while (PlayerManager.AddState("shot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
-        if (TryGetComponent(out AreaSelector) == false)
-            AreaSelector = gameObject.AddComponent<SelectableArea>();
+        if (TryGetComponent(out _selectableArea) == false)
+            _selectableArea = gameObject.AddComponent<SelectableArea>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Effect()
     {
-    }
-
-    public override void Effect(GameObject obj)
-    {
-        base.Effect();
-        if (obj.TryGetComponent(out Enemy enemy) == false)
+        if (_target == null) return;
+        if (_target.TryGetComponent(out Enemy enemy) == false)
         {
-            throw new MissingComponentException($"The object {obj.name} ({obj.GetType()}) the card aimed at does not have a Enemy script.");
+            throw new MissingComponentException($"The object {_target.name} ({_target.GetType()}) the card aimed at does not have a Enemy script.");
         }
+        base.Effect();
         enemy.TakeDamage(_stats[0]);
-        base.ClickEvent(); // Calls this function to add the card to the queue
-        GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+        GI._PlayerFetcher().GetComponent<PlayerManager>().SetToDefault();
     }
 
     void EnterAimState()
     {
         // Sets up the settings for the area
-        AreaSelector.SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
-        AreaSelector.SetSelectableEntites(false, false, true, false);
-        _selectableTiles = AreaSelector.FindSelectableArea(GI._PManFetcher()._virtualPos, 4);
+        _selectableArea.SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
+        _selectableArea.SetSelectableEntites(false, false, true, false);
+        _selectableTiles = _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 4);
 
         GI._PManFetcher().SetLeftClickTo(() => {
-            if (AreaSelector.CastLeftClick(out GameObject obj))
+            if (_selectableArea.CastLeftClick(out GameObject obj))
             {
                 print("You got hit by a smooth " + obj.name);
-                Effect(obj);
+                _target = obj;
+                base.ClickEvent();
             }
             else
                 print("R u ok?");
@@ -60,7 +54,7 @@ public class SimpleShot : Card
 
     void ExitState()
     {
-        AreaSelector.ResetSelectable();
+        _selectableArea.ResetSelectable();
     }
 
     public override void ClickEvent()
