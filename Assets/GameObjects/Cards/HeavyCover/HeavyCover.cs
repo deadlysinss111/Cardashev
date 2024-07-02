@@ -44,7 +44,7 @@ public class HeavyCover : Card
         base.Effect();
     }
 
-    public override void ClickEvent()
+    public override void PlayCard()
     {
         GI._PManFetcher().SetToState("HeavyCover" + _id.ToString());
     }
