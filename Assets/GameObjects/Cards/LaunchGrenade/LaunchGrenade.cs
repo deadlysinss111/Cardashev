@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 public class LaunchGrenade : Card
 {
     Vector3 _grenadeInitVelocity;
+    Vector3 _grenadeOrigine;
     GameObject _previwRadius;
 
     GameObject _grenadePrefab;
@@ -54,7 +55,7 @@ public class LaunchGrenade : Card
     public override void Effect()
     {
         GameObject grenade = Instantiate(_grenadePrefab);
-        grenade.GetComponent<Rigidbody>().transform.position = GI._PlayerFetcher().GetComponent<PlayerManager>()._virtualPos + new Vector3(0, 1, 0);
+        grenade.GetComponent<Rigidbody>().transform.position = _grenadeOrigine + new Vector3(0, 1, 0);
         grenade.GetComponent<Rigidbody>().velocity = _grenadeInitVelocity;
 
         base.Effect();
@@ -81,9 +82,9 @@ public class LaunchGrenade : Card
 
         _previwRadius.transform.position = alteredPos;
 
-        Vector3 playerPos = manager._virtualPos;
-        _grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(playerPos + new Vector3(0, 1, 0), alteredPos, 10.0f);
-        TrajectoryToolbox.BellCurve(playerPos + new Vector3(0, 1, 0), _grenadeInitVelocity, ref _lineRenderer);
+        _grenadeOrigine = manager._virtualPos;
+        _grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(_grenadeOrigine + new Vector3(0, 1, 0), alteredPos, 10.0f);
+        TrajectoryToolbox.BellCurve(_grenadeOrigine + new Vector3(0, 1, 0), _grenadeInitVelocity, ref _lineRenderer);
     }
 
     protected void FireGrenade()
@@ -105,6 +106,10 @@ public class LaunchGrenade : Card
         UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
         _previwRadius = (GameObject)Instantiate(RADIUS);
         _previwRadius.SetActive(false);
+    }
+    public override void OnUnload()
+    {
+        Destroy(_previwRadius);
     }
 
 }

@@ -187,6 +187,14 @@ public class PlayerManager : MonoBehaviour
         }
         return false;
     }
+    
+    static public void AddOrOverrideState(string name, Action enter, Action exit)
+    {
+        Action[] buffer = new Action[2];
+        buffer[0] = enter;
+        buffer[1] = exit;
+        _states[name] = buffer;
+    }
 
     public bool SetToState(string name)
     {

@@ -106,15 +106,18 @@ public class DeckManager : MonoBehaviour
     {
         foreach (GameObject card in _remainsInDeck)
         {
-            card.transform.parent = GI._deckContainer.transform;
+            card.SetActive(false);
+            card.transform.SetParent(GI._deckContainer.transform, false);
         }
         foreach (GameObject card in _hand)
         {
-            card.transform.parent = GI._deckContainer.transform;
+            card.SetActive(false);
+            card.transform.SetParent(GI._deckContainer.transform, false);
         }
         foreach (GameObject card in _discardPile)
         {
-            card.transform.parent = GI._deckContainer.transform;
+            card.SetActive(false);
+            card.transform.SetParent(GI._deckContainer.transform, false);
         }
     }
 }

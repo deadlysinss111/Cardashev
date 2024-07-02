@@ -230,9 +230,8 @@ public class Card : MonoBehaviour
         return card;
     }
 
-    // Called when the card is loaded by the DeckManager
-    public virtual void OnLoad()
-    {
+    // Called when the card is loaded / unloaded by the DeckManager
+    public virtual void OnLoad() { }
 
-    }
+    public virtual void OnUnload() { }
 }

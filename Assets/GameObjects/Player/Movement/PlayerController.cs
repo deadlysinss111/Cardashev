@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         GI._PManFetcher()._virtualPos = _agent.transform.position;
-        PlayerManager.AddState("movement", EnterMovementState, ExitState);
+        PlayerManager.AddOrOverrideState("movement", EnterMovementState, ExitState);
     }
     private void Update()
     {
