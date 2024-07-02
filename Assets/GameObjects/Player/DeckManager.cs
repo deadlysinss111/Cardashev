@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DeckManager : MonoBehaviour
 {
@@ -12,8 +13,8 @@ public class DeckManager : MonoBehaviour
     protected int _curHandSize;
 
     GameObject _cardBar;
-    Transform _cardBarHeight;
-    float _cardBarScale;
+/*    Transform _cardBarHeight;
+    float _cardBarScale;*/
 
     Vector3 virtualPosition = new Vector3(1000, 0, 0); // Virtual position off-screen to the right
     float transitionDuration = 1.0f; // Duration for the transition
@@ -27,8 +28,6 @@ public class DeckManager : MonoBehaviour
         _drawCooldown = 0;
         _curHandSize = 0;
         _cardBar = GameObject.Find("CardBar");
-        _cardBarHeight = _cardBar.transform.Find("Time");
-        _cardBarScale = _cardBarHeight.localScale.y;
 
         LoadDeck();
     }
@@ -195,9 +194,9 @@ public class DeckManager : MonoBehaviour
     // Method to display the draw cooldown in the UI with _cardBar
     private void CooldownBarScale()
     {
-        if (_hand.Count < 4)
+        /*if (_hand.Count < 4)
         {
-            Vector3 scale = _cardBarHeight.localScale;
+            Vector3 scale = ;
             scale.y = _drawCooldown / 3 * _cardBarScale;
             _cardBarHeight.localScale = scale;
         }
@@ -206,6 +205,15 @@ public class DeckManager : MonoBehaviour
             Vector3 scale = _cardBarHeight.localScale;
             scale.y = 1;
             _cardBarHeight.localScale = scale;
+        }*/
+
+        if (_hand.Count < 4)
+        {
+            _cardBar.GetComponent<Slider>().value = _drawCooldown / 3;
+        }
+        else
+        {
+            _cardBar.GetComponent<Slider>().value = 1;
         }
     }
 }
