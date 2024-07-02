@@ -17,6 +17,7 @@ TagManager:
   - Enemy
   - Map Node
   - Map Tree
+  - coverBreakable
   layers:
   - Default
   - TransparentFX

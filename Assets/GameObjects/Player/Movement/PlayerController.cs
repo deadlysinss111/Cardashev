@@ -72,21 +72,11 @@ public class PlayerController : MonoBehaviour
         //FaceTarget();
         //SetAnimations();
 
-        // Could be made an event??
-        // Make sure the baseSpeed is, well, the actual base speed
-        /*if (Mathf.Approximately(_baseSpeed, _agent.speed) == false && Mathf.Approximately(_agent.speed, _baseSpeed * _moveMult) == false && _paths.Count == 0)
-        {
-            print("uhuhh");
-            _baseSpeed = _agent.speed;
-        }
-        Debug.LogWarning("Sppppppped: " +_baseSpeed);*/
         if (_resetMoveMult == false) return;
-        if (GameObject.Find("Player").GetComponent<QueueComponent>().GetActiveCard() is null)
-        {
-            Debug.LogWarning("Reset mult");
-            _moveMult = 1f;
-            _resetMoveMult = false;
-        }
+        if (GI._PlayerFetcher().GetComponent<QueueComponent>().GetActiveCard() is not null) return;
+        Debug.LogWarning("Reset mult");
+        _moveMult = 1f;
+        _resetMoveMult = false;
     }
 
     // ------
