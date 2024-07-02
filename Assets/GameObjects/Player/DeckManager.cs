@@ -1,13 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Scripting;
-using static UnityEngine.GraphicsBuffer;
 
-// This class does not control logic yet, and only implements in-room functionnalities
 public class DeckManager : MonoBehaviour
 {
     protected List<GameObject> _hand;
@@ -17,6 +11,14 @@ public class DeckManager : MonoBehaviour
     protected float _drawCooldown;
     protected int _curHandSize;
 
+    GameObject _cardBar;
+    Transform _cardBarHeight;
+    float _cardBarScale;
+
+    Vector3 virtualPosition = new Vector3(1000, 0, 0); // Virtual position off-screen to the right
+    float transitionDuration = 1.0f; // Duration for the transition
+    bool isTransitioning = false; // Flag to check if a card is currently being moved
+
     void Start()
     {
         _hand = new List<GameObject>();
@@ -24,6 +26,9 @@ public class DeckManager : MonoBehaviour
         _remainsInDeck = new List<GameObject>();
         _drawCooldown = 0;
         _curHandSize = 0;
+        _cardBar = GameObject.Find("CardBar");
+        _cardBarHeight = _cardBar.transform.Find("Time");
+        _cardBarScale = _cardBarHeight.localScale.y;
 
         LoadDeck();
     }
@@ -31,14 +36,15 @@ public class DeckManager : MonoBehaviour
     private void Update()
     {
         _drawCooldown -= Time.deltaTime;
-        if (_drawCooldown  <= 0)
+        if (_drawCooldown <= 0)
         {
-            if (_hand.Count < 5)
+            if (_hand.Count < 5 && !isTransitioning)
             {
                 Draw();
                 _drawCooldown = 3;
             }
         }
+        CooldownBarScale();
     }
 
     public void Draw()
@@ -55,15 +61,41 @@ public class DeckManager : MonoBehaviour
         // We draw a random card
         int rdm = Random.Range(0, _remainsInDeck.Count);
 
-        // We need to duplicate the card's game object so that we can display it an destroy it later easily
+        // We need to duplicate the card's game object so that we can display it and destroy it later easily
         GameObject obj = _remainsInDeck[rdm];
         obj.gameObject.SetActive(true);
+
+        // Reset the scale of the card to the default value (1.5, 1.5, 1)
+        obj.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+
         _hand.Add(obj);
 
         // Since we drew it, we remove the card from the deck
         _remainsInDeck.RemoveAt(rdm);
 
-        DisplayHand();
+        // Place the card at the virtual position
+        obj.transform.localPosition = virtualPosition;
+
+        // Start the coroutine to move the card to its final position
+        StartCoroutine(MoveCardToHand(obj, _hand.Count - 1));
+    }
+
+    IEnumerator MoveCardToHand(GameObject card, int index)
+    {
+        isTransitioning = true;
+        Vector3 startPosition = card.transform.localPosition;
+        Vector3 endPosition = new Vector3(-400 + 200 * index, -300, 0);
+        float elapsedTime = 0;
+
+        while (elapsedTime < transitionDuration)
+        {
+            card.transform.localPosition = Vector3.Lerp(startPosition, endPosition, (elapsedTime / transitionDuration));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        card.transform.localPosition = endPosition;
+        isTransitioning = false;
     }
 
     void Discard(GameObject target)
@@ -72,7 +104,41 @@ public class DeckManager : MonoBehaviour
         _discardPile.Add(target);
         target.gameObject.SetActive(false);
 
-        DisplayHand();
+        // Start the coroutine to move remaining cards to their new positions
+        StartCoroutine(MoveHandCards());
+    }
+
+    IEnumerator MoveHandCards()
+    {
+        isTransitioning = true;
+        List<Vector3> startPositions = new List<Vector3>();
+        List<Vector3> endPositions = new List<Vector3>();
+
+        // Store the start and end positions for each card
+        for (int i = 0; i < _hand.Count; i++)
+        {
+            startPositions.Add(_hand[i].transform.localPosition);
+            endPositions.Add(new Vector3(-400 + 200 * i, -300, 0));
+        }
+
+        float elapsedTime = 0;
+        while (elapsedTime < transitionDuration)
+        {
+            for (int i = 0; i < _hand.Count; i++)
+            {
+                _hand[i].transform.localPosition = Vector3.Lerp(startPositions[i], endPositions[i], (elapsedTime / transitionDuration));
+            }
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Set final positions to ensure all cards are correctly placed
+        for (int i = 0; i < _hand.Count; i++)
+        {
+            _hand[i].transform.localPosition = endPositions[i];
+        }
+
+        isTransitioning = false;
     }
 
     public void Play(Card target)
@@ -86,8 +152,12 @@ public class DeckManager : MonoBehaviour
     // Handling positions in order to have a good looking displaying
     private void DisplayHand()
     {
-        for(byte i =0; i< _hand.Count; i++)
+        for (byte i = 0; i < _hand.Count; i++)
         {
+            if (!_hand[i].activeSelf)
+            {
+                continue;
+            }
             _hand[i].transform.localPosition = new Vector3(-400 + 200 * i, -300, 0);
         }
     }
@@ -102,6 +172,7 @@ public class DeckManager : MonoBehaviour
             card.GetComponent<Card>().OnLoad();
         }
     }
+
     public void UnloadDeck()
     {
         foreach (GameObject card in _remainsInDeck)
@@ -118,6 +189,23 @@ public class DeckManager : MonoBehaviour
         {
             card.SetActive(false);
             card.transform.SetParent(GI._deckContainer.transform, false);
+        }
+    }
+
+    // Method to display the draw cooldown in the UI with _cardBar
+    private void CooldownBarScale()
+    {
+        if (_hand.Count < 4)
+        {
+            Vector3 scale = _cardBarHeight.localScale;
+            scale.y = _drawCooldown / 3 * _cardBarScale;
+            _cardBarHeight.localScale = scale;
+        }
+        else if (_hand.Count == 4)
+        {
+            Vector3 scale = _cardBarHeight.localScale;
+            scale.y = 1;
+            _cardBarHeight.localScale = scale;
         }
     }
 }
