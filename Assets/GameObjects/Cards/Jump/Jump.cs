@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
 public class Jump : Card
 {
@@ -11,15 +8,21 @@ public class Jump : Card
 
     private void Awake()
     {
-        int[] stats = new int[0];
-        base.Init(2, 4, 40, stats, "perform a jump to the target tile");
+        int[] stats = new int[2] { 10, 4 };
+        base.Init(2, 4, 40, stats, $"perform a jump to the target tile in a radius of {stats[0]} cases.");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("jump" + _id.ToString(), EnterJumpState, ExitState) == false) _id++;
+
+        if (TryGetComponent(out _selectableArea) == false)
+            _selectableArea = gameObject.AddComponent<SelectableArea>();
     }
 
     void EnterJumpState()
     {
+        _selectableArea.SetSelectableEntites(false, false, false, true);
+        _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, _stats[0], _stats[1]);
+
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(TriggerJump);
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
@@ -28,6 +31,7 @@ public class Jump : Card
 
     void ExitState()
     {
+        _selectableArea.ResetSelectable();
         //ClearPath();
     }
 
@@ -62,6 +66,11 @@ public class Jump : Card
         alteredPos.y += 0.5f;
 
         _lastDest = alteredPos;
+        if (_selectableArea.CheckForSelectableTile(alteredPos) == false)
+        {
+            ClearPath();
+            return;
+        }
 
         Vector3 playerPos = manager._virtualPos;
         _initVelocity = TrajectoryToolbox.BellCurveInitialVelocity(playerPos, alteredPos, 5.0f);
@@ -70,6 +79,8 @@ public class Jump : Card
 
     protected void TriggerJump()
     {
+        if (_selectableArea.CheckForSelectableTile(_lastDest) == false) return;
+        _selectableArea.ResetSelectable();
         ClearPath();
         PlayerManager manager = GI._PManFetcher();
         manager._virtualPos = _lastDest;

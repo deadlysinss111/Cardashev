@@ -15,6 +15,7 @@ public class Dix : Idealist
             "PiercingShotCard",
             "SimpleShotCard",
             "JumpCard",
+            "JumpAndShockwaveCard"
             //"OverdriveCard",
             //"CoverCard",
         };
