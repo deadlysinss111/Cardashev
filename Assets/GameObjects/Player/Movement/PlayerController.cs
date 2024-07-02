@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
     // Fields needed for the Camera
     [SerializeField] float _lookRotationSpeed = 8f;
 
+    public float _moveMult;
+    public float _baseSpeed;
+
 
     /*
      METHODS
@@ -52,12 +55,24 @@ public class PlayerController : MonoBehaviour
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         GI._PManFetcher()._virtualPos = _agent.transform.position;
         PlayerManager.AddOrOverrideState("movement", EnterMovementState, ExitState);
+
+        _moveMult = 1f;
+        _baseSpeed = _agent.speed;
     }
     private void Update()
     {
         // TODO: Make them not spam Console to de-comment them
         //FaceTarget();
         //SetAnimations();
+
+        // Could be made an event??
+        // Make sure the baseSpeed is, well, the actual base speed
+        /*if (Mathf.Approximately(_baseSpeed, _agent.speed) == false && Mathf.Approximately(_agent.speed, _baseSpeed * _moveMult) == false && _paths.Count == 0)
+        {
+            print("uhuhh");
+            _baseSpeed = _agent.speed;
+        }
+        Debug.LogWarning("Sppppppped: " +_baseSpeed);*/
     }
 
     // ------
@@ -90,19 +105,21 @@ public class PlayerController : MonoBehaviour
        Vector3 alteredPos = manager._lastHit.transform.position;
        alteredPos.y += 0.5f;
 
-       // Calculate the path to the clicked point
-       NavMeshPath path = new NavMeshPath();
+        _agent.speed = _baseSpeed * _moveMult;
 
-       // In the following snipet, the commented code are those that use not cropped positions
-       //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
-       if (NavMesh.CalculatePath(manager._virtualPos, alteredPos, NavMesh.AllAreas,  path))
-       {
-           _previewPath = path.corners;
-           TrajectoryToolbox.DrawPath(_previewPath, ref _previewLineRenderer);
-           _lastCalculatedWalkTime = GetPathTime(path);
-       }
+        // Calculate the path to the clicked point
+        NavMeshPath path = new NavMeshPath();
 
-       _virtualDestination = alteredPos;
+        // In the following snipet, the commented code are those that use not cropped positions
+        //if (NavMesh.CalculatePath(_virtualPos, hit.point, NavMesh.AllAreas,  path))
+        if (NavMesh.CalculatePath(manager._virtualPos, alteredPos, NavMesh.AllAreas,  path))
+        {
+            _previewPath = path.corners;
+            TrajectoryToolbox.DrawPath(_previewPath, ref _previewLineRenderer);
+            _lastCalculatedWalkTime = GetPathTime(path);
+        }
+
+        _virtualDestination = alteredPos;
     }
 
     // Clear the path from the line renderer

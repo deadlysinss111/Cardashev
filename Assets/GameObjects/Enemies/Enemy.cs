@@ -110,7 +110,7 @@ abstract public class Enemy : MonoBehaviour
         print($"Took {amount} damages!");
         StatManager manager = gameObject.GetComponent<StatManager>();
         manager.TakeDamage(amount);
-        if (manager._health <= 0)
+        if (manager.Health <= 0)
             Defeat();
     }
 

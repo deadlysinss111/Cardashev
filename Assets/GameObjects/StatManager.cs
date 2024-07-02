@@ -19,18 +19,26 @@ public class StatManager : MonoBehaviour
             Speed,
             Attack,
             Health,
-            Critical
+            Critical,
+            Armor
         }
 
         public ModifierType _type;
         public float _duration;
         public float _value;
 
-        public Modifier(ModifierType type, float value, float duration)
+        public Modifier(ModifierType type, float value, float duration=1f)
         {
             _type = type;
-            _value = Mathf.Clamp(value, 0.1f, 1);
-            _duration = duration;
+            if (type == ModifierType.Armor)
+            {
+                _value = value;
+            }
+            else
+            {
+                _value = Mathf.Clamp(value, 0.1f, 1);
+                _duration = duration;
+            }
         }
     }
 
@@ -41,7 +49,7 @@ public class StatManager : MonoBehaviour
     float _baseMoveSpeed;
     float _baseAttack;
 
-    public int _health;
+    private int _health; // now read-only to force everyone to use TakeDamage()
     public float _moveSpeed;
     public float _attack;
     public int _armor;
@@ -50,6 +58,9 @@ public class StatManager : MonoBehaviour
 
     List<Modifier> _modifiers;
     [SerializeField] CriticalBar _criticalBar;
+
+    public int Health { get { return _health; } }
+    public int RealHealth { get { return _health+_armor; } }
 
 
     /*
@@ -82,14 +93,16 @@ public class StatManager : MonoBehaviour
         _baseMoveSpeed = _moveSpeed;
         _attack = 1;
         _baseAttack = _attack;
+        _armor = -1;
         _wasJustModified = false;
     }
 
     void Update()
     {
         // Updates the timer of each stat modifiers that are currently being applied
-        for (int i = _modifiers.Count; i < 0; i--)
+        for (int i = _modifiers.Count-1; i > 0; i--)
         {
+            print(i);
             Modifier debuff = _modifiers[i];
             debuff._duration -= Time.deltaTime;
 
@@ -127,8 +140,10 @@ public class StatManager : MonoBehaviour
         _health = _baseHealth;
         _moveSpeed = _baseMoveSpeed;
 
-        foreach (Modifier mod in _modifiers)
+        for (int i = _modifiers.Count-1; i > 0; i--)
         {
+            print(i);
+            Modifier mod = _modifiers[i];
             switch (mod._type)
             {
                 case Modifier.ModifierType.Attack:
@@ -144,7 +159,11 @@ public class StatManager : MonoBehaviour
                 case Modifier.ModifierType.Critical:
                     _attack += _baseAttack * mod._value;
                     _moveSpeed += _baseMoveSpeed * mod._value;
-                    _criticalBar.ActivateBuff(mod._duration);
+                    //_criticalBar.ActivateBuff(mod._duration);
+                    break;
+                case Modifier.ModifierType.Armor:
+                    _armor = (int)mod._value;
+                    _modifiers.Remove(mod); // No need to keep it any longer once the value is set
                     break;
             }
         }
@@ -152,16 +171,23 @@ public class StatManager : MonoBehaviour
         _wasJustModified = false;
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, bool ignore_armor=false)
     {
+        if (HasArmor() && ignore_armor == false)
+        {
+            int diff = _armor - amount;
+            _armor = diff;
+            if (diff >= 0)
+                return;
+            amount -= Math.Abs(diff);
+            
+        }
+
         _health -= amount;
-        //print(_health);
 
         if( _health <= 0)
         {
-            //print(gameObject.name + " : " +_health);
-            Enemy enemy;
-            if (gameObject.TryGetComponent<Enemy>(out enemy))
+            if (gameObject.TryGetComponent(out Enemy enemy))
             {
                 //enemy._UeOnDefeat.Invoke();
                 var ratilo = enemy.GetType().GetField("Defeat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
@@ -169,8 +195,7 @@ public class StatManager : MonoBehaviour
                 enemy.Defeat();
                 return;
             }
-            PlayerManager player;
-            if (gameObject.TryGetComponent<PlayerManager>(out player))
+            if (gameObject.TryGetComponent(out PlayerManager player))
                 player._UeOnDefeat.Invoke();
         }
     }
@@ -220,5 +245,10 @@ public class StatManager : MonoBehaviour
     {
         critMod = GetModifier(Modifier.ModifierType.Critical);
         return critMod is not null;
+    }
+
+    public bool HasArmor()
+    {
+        return _armor > 0;
     }
 }

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
 
-class Overdrive : Card
+class Resilience : Card
 {
     public override void Effect()
     {
         base.Effect();
-        GI._PStatFetcher().AddModifier(new StatManager.Modifier(StatManager.Modifier.ModifierType.Critical, 1, 10));
+        GI._PStatFetcher().AddModifier(new StatManager.Modifier(StatManager.Modifier.ModifierType.Armor, 100));
     }
 }

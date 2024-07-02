@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Spit : MonoBehaviour
 {
+    public bool _shieldBrekable = true;
+
     private void OnCollisionEnter(Collision other)
     {
         // TODO: this is a big band-aid, we'd like to find a better way to do that
