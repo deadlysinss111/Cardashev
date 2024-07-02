@@ -45,6 +45,6 @@ Material:
     - _Screen_Fill_Amount: 0
     - _test: 0
     m_Colors:
-    - _Screen_Fill_Color: {r: 0.16983688, g: 1, b: 0, a: 0}
+    - _Screen_Fill_Color: {r: 1, g: 0.009896709, b: 0, a: 0}
     - _Screen_Overlap_Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

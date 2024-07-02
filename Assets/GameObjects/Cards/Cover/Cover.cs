@@ -72,7 +72,7 @@ public class Cover : Card
         base.Effect();
     }
 
-    public override void ClickEvent()
+    public override void PlayCard()
     {
         GI._PManFetcher().SetToState("Cover" + _id.ToString());
     }

@@ -31,7 +31,7 @@ public class PlayerManager : MonoBehaviour
     Action _leftClick;
     Action _rightClick;
 
-    PlayerInput _pInput;
+    [NonSerialized] public PlayerInput _pInput;
     [NonSerialized] public Vector3 _virtualPos;
     [NonSerialized] public RaycastHit _lastHit;
     [SerializeField] LayerMask _clickableLayers;    // TODO: Implement that

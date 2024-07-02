@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -55,6 +56,7 @@ public class StatManager : MonoBehaviour
     public int _armor;
 
     bool _wasJustModified;
+    [SerializeField] OutlineEffectScript _outlineEffect;
 
     List<Modifier> _modifiers;
     [SerializeField] CriticalBar _criticalBar;
@@ -184,8 +186,9 @@ public class StatManager : MonoBehaviour
         }
 
         _health -= amount;
+        if (_outlineEffect) _outlineEffect.TakeDamageEffect();
 
-        if( _health <= 0)
+        if ( _health <= 0)
         {
             if (gameObject.TryGetComponent(out Enemy enemy))
             {

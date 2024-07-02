@@ -63,7 +63,7 @@ public class LaunchGrenade : Card
         base.Effect();
     }
 
-    public override void ClickEvent()
+    public override void PlayCard()
     {
         GI._PManFetcher().SetToState("grenade" + _id.ToString());
     }
@@ -95,7 +95,7 @@ public class LaunchGrenade : Card
         _selectableArea.ResetSelectable();
         GI._PManFetcher().SetToDefault();
         // Trigger the card play event
-        base.ClickEvent();
+        base.PlayCard();
     }
 
     public override void OnUpgrade()

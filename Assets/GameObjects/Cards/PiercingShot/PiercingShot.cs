@@ -36,7 +36,7 @@ public class PiercingShot : Card
             throw new MissingComponentException($"The object {obj.name} ({obj.GetType()}) the card aimed at does not have a Enemy script.");
         }
         enemy.TakeDamage(_stats[GI._PlayerFetcher().GetComponent<StatManager>().HasCritical() ? 1 : 0]);
-        base.ClickEvent(); // Calls this function to add the card to the queue
+        base.PlayCard(); // Calls this function to add the card to the queue
         GI._PManFetcher().SetToDefault();
     }
 
@@ -66,7 +66,7 @@ public class PiercingShot : Card
         AreaSelector.ResetSelectable();
     }
 
-    public override void ClickEvent()
+    public override void PlayCard()
     {
         GI._PManFetcher().SetToState("PiercingShot" + _id.ToString());
     }

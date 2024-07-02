@@ -21,6 +21,7 @@ public class QueueUI : MonoBehaviour
         _segmentBars = new Queue<GameObject>();
         _queue = GI._PlayerFetcher().GetComponent<QueueComponent>();
         _bg = transform.Find("Background");
+        Debug.Log("bg:" + _bg);
         _secsBar = _bg.GetComponent<Image>();
         _barScale = _secsBar.transform.localScale.x;
         _secsText = transform.Find("Seconds").GetComponent<TMP_Text>();

@@ -48,7 +48,7 @@ public class Jump : Card
         base.Effect();
     }
 
-    public override void ClickEvent()
+    public override void PlayCard()
     {
         GI._PManFetcher().SetToState("jump" + _id.ToString());
     }
@@ -75,7 +75,7 @@ public class Jump : Card
         manager._virtualPos = _lastDest;
         manager.SetToDefault();
         // Trigger the card play event
-        base.ClickEvent();
+        base.PlayCard();
     }
 
     public override void OnUpgrade()
