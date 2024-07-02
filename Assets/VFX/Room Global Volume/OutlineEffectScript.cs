@@ -23,12 +23,4 @@ public class OutlineEffectScript : MonoBehaviour
         GetComponentInChildren<Image>().color = Color.cyan;
         _animator.SetBool("IsTimeStopped", value);
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-            TakeDamageEffect();
-        if (Input.GetKeyDown(KeyCode.Y))
-            SetTimeStopTo(false);
-    }
 }
