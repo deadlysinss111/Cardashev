@@ -36,8 +36,6 @@ public class PlayerController : MonoBehaviour
     // Fields needed for the Camera
     [SerializeField] float _lookRotationSpeed = 8f;
 
-    public bool _isMoving;
-
     public float _moveMult;
     public float _baseSpeed;
     public bool _resetMoveMult;
@@ -59,8 +57,6 @@ public class PlayerController : MonoBehaviour
         PlayerManager manager = GI._PManFetcher();
         manager._virtualPos = _agent.transform.position;
         manager.AddState("movement", EnterMovementState, ExitState);
-
-        _isMoving = false;
 
         _moveMult = 1f;
         _resetMoveMult = false;
