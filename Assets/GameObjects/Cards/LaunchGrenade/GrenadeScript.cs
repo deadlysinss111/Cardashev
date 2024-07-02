@@ -23,7 +23,7 @@ public class GrenadeScript : MonoBehaviour
         //    return;
 
         // Grenade explosion on ground hit
-        Collider[] hits = Physics.OverlapSphere(transform.position, 5);
+        Collider[] hits = Physics.OverlapSphere(transform.position, 3);
         foreach (Collider c in hits)
         {
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
