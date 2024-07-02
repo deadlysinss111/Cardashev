@@ -29,6 +29,21 @@ static public class CurrentRunInformations
                 card.transform.parent = GI._deckContainer.transform;
             }
     }
+    
+    static public void AddCardsToDeck(List<GameObject> ARGIncomingCards)
+    {
+        // Ensures the deck isn't too large
+        if (ARGIncomingCards.Count > _deckMaxCapacity)
+            Debug.LogError("_Deck was passed with a List too large ! ALL CARDS REFUSED");
+
+        // Cards fit in the deck, so we had them all
+        else
+            foreach (GameObject card in ARGIncomingCards)
+            {
+                _deck.Add(card);
+                card.transform.parent = GI._deckContainer.transform;
+            }
+    }
 
 
 

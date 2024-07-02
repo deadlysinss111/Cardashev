@@ -23,6 +23,7 @@ public class Merchant : Interactible
 
     void DrawOfferedCards()
     {
+        print("once");
         _interface.SetActive(true);
         List<string> pool;
         Collection._unlocked.TryGetValue(Idealist._instance._name, out pool);
@@ -31,8 +32,7 @@ public class Merchant : Interactible
         for (int i = 0; i < 6; i++)
         {
             // We first create the card object
-            UnityEngine.Object CARD = Resources.Load(pool[Random.Range(0, pool.Count)]);
-            GameObject cardObj = (GameObject)Instantiate(CARD);
+            GameObject cardObj = Card.Instantiate(pool[Random.Range(0, pool.Count)], true);
             cardObj.transform.SetParent(_interface.transform, false);
             cardObj.transform.localPosition = new Vector3(x, 100, 0.1f);
 
@@ -51,17 +51,18 @@ public class Merchant : Interactible
             priceObj.transform.localPosition = new Vector3(x-5, 60, 0.1f);
 
             // We set the card as a collectible with a price
-            cardComp.SetToCollectible(() =>
-            {
-                if (CurrentRunInformations._goldAmount >= amount)
-                {
-                    CurrentRunInformations._goldAmount -= amount;
-                    Destroy(cardObj);
-                    Destroy(priceObj);
-                    return 0;
-                }
-                return 2;
-            });
+            //cardComp.SetToCollectible(() =>
+            //{
+            //    print("why?");
+            //    if (CurrentRunInformations._goldAmount >= amount)
+            //    {
+            //        CurrentRunInformations._goldAmount -= amount;
+            //        //Destroy(cardObj);
+            //        Destroy(priceObj);
+            //        return Card.CollectibleState.ADDTODECKANDBACKTOPLAY;
+            //    }
+            //    return Card.CollectibleState.NOTHING;
+            //});
 
             x += 100;
         }

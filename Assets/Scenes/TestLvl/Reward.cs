@@ -165,7 +165,7 @@ public class Reward : MonoBehaviour
                     slot.SetActive(false);
                 };
                 _cardBG.SetActive(false);
-                return 1;
+                return Card.CollectibleState.ADDTODECKANDBACKTOPLAY;
             });
 
             cards[i] = card;

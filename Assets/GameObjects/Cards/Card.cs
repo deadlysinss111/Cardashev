@@ -42,6 +42,14 @@ public class Card : MonoBehaviour
     public int _currLv;
     public int _maxLv;
 
+    public enum CollectibleState
+    {
+        NOTHING = 0,
+        ADDTODECK,
+        BACKTOPLAYABLE,
+        ADDTODECKANDBACKTOPLAY
+    }
+
     /*
      METHODS
     */
@@ -77,12 +85,27 @@ public class Card : MonoBehaviour
 
     // In shop & rewards behaviour
     // TODO => move it to its own, new class
-    public void SetToCollectible(Func<byte> func)
+    public void SetToCollectible(Func<CollectibleState> func)
     {
-        _clickEffect = () => {
-            byte result = func();
-            if (result == 0) CurrentRunInformations.AddCardsToDeck(new List<string> { _name }); 
-            else if(result == 1) { _clickEffect = ClickEvent; } };
+        _clickEffect = () =>
+        {
+            switch (func())
+            {
+                case CollectibleState.NOTHING:
+                    return;
+                case CollectibleState.ADDTODECK:
+                    CurrentRunInformations.AddCardsToDeck(new List<GameObject> { gameObject });
+                    break;
+                case CollectibleState.BACKTOPLAYABLE:
+                    _clickEffect = ClickEvent;
+                    break;
+                case CollectibleState.ADDTODECKANDBACKTOPLAY:
+                    CurrentRunInformations.AddCardsToDeck(new List<GameObject> { gameObject });
+                    _clickEffect = ClickEvent;
+                    break;
+            };
+            print("cash id : " + CurrentRunInformations._goldAmount);
+        };
     }
 
 
@@ -223,13 +246,13 @@ public class Card : MonoBehaviour
         HierarchySearcher.FindChildRecursively(transform, "Duration").GetComponent<TextMeshProUGUI>().SetText(_duration.ToString());
     }
 
-    static public GameObject Instantiate(string name)
+    static public GameObject Instantiate(string name, bool isActive = false)
     {
         GameObject card = Instantiate((GameObject)Resources.Load(name));
         card.layer = LayerMask.NameToLayer("UI");
         card.transform.localScale = new Vector3(1.5f, 1.5f, 1);
         card.GetComponent<Card>().UpdateDescription();
-        card.SetActive(false);
+        card.SetActive(isActive);
 
         return card;
     }
