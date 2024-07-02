@@ -17,7 +17,7 @@ public class HeavyCover : Card
         base.Init(2, 2, 60, stats);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
-        while (GI._PManFetcher().AddState("HeavyCover" + _id.ToString(), EnterState, ExitState) == false) _id++;
+        while (PlayerManager.AddState("HeavyCover" + _id.ToString(), EnterState, ExitState) == false) _id++;
     }
 
     void EnterState()

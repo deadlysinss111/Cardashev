@@ -32,8 +32,6 @@ public class Cover : Card
         {
             _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
         }
-
-        _cover = GI._PlayerFetcher().transform.Find("cover").gameObject;
     }
 
     void EnterState()
@@ -79,6 +77,11 @@ public class Cover : Card
     public override void OnUpgrade()
     {
         base.OnUpgrade();
+    }
+
+    public override void OnLoad()
+    {
+        _cover = GI._PlayerFetcher().transform.Find("cover").gameObject;
     }
 
 }
