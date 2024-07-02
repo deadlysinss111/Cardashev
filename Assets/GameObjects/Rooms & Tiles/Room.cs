@@ -74,7 +74,8 @@ public class Room : MonoBehaviour
                             break;
 
                         case "Population":
-                            roomGOpath = roomGO.name + "/" + roomGO.name;
+                            roomGOpath = roomGO.name + "/" + roomGO.name + "Prefab";
+                            //Debug.Log("Attempt to load the prefab " + roomGOpath);
                             break;
 
                         // Topology and Decoration tilemaps
@@ -82,12 +83,12 @@ public class Room : MonoBehaviour
                             roomGOpath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/" + roomGO.name;
                             break;
                     }
-                    //Debug.Log("Attempt to load the prefab " + modelPath);
+                    Debug.Log("Attempt to load the prefab " + roomGOpath);
 
-                    // We use the MODEL to get the local position of the object, and the model for the global transform
+                    // We use the ROOMGO to get the local position of the object, and the roomGO for the global transform
                     GameObject ROOMGO = (GameObject)Resources.Load(roomGOpath);
 
-                    // I cannot understand the reason of it but if we dont offset the MODEL.transform by a vector that goes down, the preview become bugged...
+                    // I cannot understand the reason of it but if we dont offset the ROOMGO.transform by a vector that goes down, the preview become bugged...
                     Vector3 buf = new Vector3(0, 0, 0) + ROOMGO.transform.position;
                     Instantiate(ROOMGO, roomGO.transform.position + buf , roomGO.transform.rotation, newTilemap.transform);
                 }
