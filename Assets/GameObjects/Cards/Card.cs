@@ -45,7 +45,7 @@ public class Card : MonoBehaviour
         _currLv = 1;
         _maxLv = 3;
         _trigger += () => Effect();
-        _clickEffect = ClickEvent;
+        _clickEffect = PlayCard;
     }
 
     protected void Init(byte duration, byte maxLvl, int goldValue, int[] stats)
@@ -92,7 +92,7 @@ public class Card : MonoBehaviour
         _clickEffect();
     }
 
-    public virtual void ClickEvent()
+    public virtual void PlayCard()
     {
         GI._PlayerFetcher().GetComponent<DeckManager>().Play(this);
     }
