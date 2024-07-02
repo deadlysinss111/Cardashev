@@ -7,6 +7,7 @@ public class GrenadeScript : MonoBehaviour
 {
     public Vector3 _velocity;
     public Vector3 _origin;
+    public int _dmg;
 
     private void Start()
     {
@@ -28,13 +29,13 @@ public class GrenadeScript : MonoBehaviour
         {
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
             {
-                manager.TakeDamage(10);
+                manager.TakeDamage(_dmg);
                 //break;
             }
             GameObject target = HierarchySearcher.FindParentdRecursively(c.transform, "Body");
             if (target != null)
             {
-                target.transform.parent.gameObject.GetComponent<StatManager>().TakeDamage(10);
+                target.transform.parent.gameObject.GetComponent<StatManager>().TakeDamage(_dmg);
             }
         }
         Destroy(gameObject);

@@ -11,8 +11,8 @@ public class Jump : Card
 
     private void Awake()
     {
-        int[] stats = new int[3];
-        base.Init(2, 2, 60, stats);
+        int[] stats = new int[0];
+        base.Init(2, 4, 40, stats, "perform a jump to the target tile");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("jump" + _id.ToString(), EnterJumpState, ExitState) == false) _id++;

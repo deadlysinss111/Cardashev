@@ -19,7 +19,7 @@ public class LaunchGrenade : Card
     private void Awake()
     {
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
-        int[] stats = new int[4];
+        int[] stats = new int[1];
         stats[0] = 15;
         string desc = $"launch a grenade exploding on ground contact, dealing {stats[0]} to enemies in range of explosion";
         base.Init(1, 2, 60, stats, desc);
@@ -57,6 +57,7 @@ public class LaunchGrenade : Card
         GameObject grenade = Instantiate(_grenadePrefab);
         grenade.GetComponent<Rigidbody>().transform.position = _grenadeOrigine + new Vector3(0, 5, 0);
         grenade.GetComponent<GrenadeScript>()._velocity = _grenadeInitVelocity;
+        grenade.GetComponent<GrenadeScript>()._dmg = _stats[0];
         grenade.GetComponent<GrenadeScript>()._origin = _grenadeOrigine + new Vector3(0, 1, 0);
 
         base.Effect();

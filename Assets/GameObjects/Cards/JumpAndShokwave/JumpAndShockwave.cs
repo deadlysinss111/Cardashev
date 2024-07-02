@@ -12,15 +12,12 @@ public class JumpAndShockwave : Card
 
     private void Awake()
     {
-        int[] stats = new int[3];
-        base.Init(2, 2, 80, stats);
+        int[] stats = new int[1];
+        stats[0] = 15;
+        base.Init(2, 4, 80, stats, $"perform a jump to the target tile, generating a shockwave that deals {_stats[0]} dmg to ennemies in range");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("jumpAndShockwave" + _id.ToString(), EnterJumpShockwaveState, ExitState) == false) _id++;
-
-        UnityEngine.Object RADIUS = Resources.Load("RadiusJumpPreview");
-        _previewRadius = (GameObject)Instantiate(RADIUS);
-        _previewRadius.SetActive(false);
     }
 
     void EnterJumpShockwaveState()
@@ -87,5 +84,17 @@ public class JumpAndShockwave : Card
     public override void OnUpgrade()
     {
         base.OnUpgrade();
+    }
+
+    public override void OnLoad()
+    {
+        UnityEngine.Object RADIUS = Resources.Load("RadiusJumpPreview");
+        _previewRadius = (GameObject)Instantiate(RADIUS);
+        _previewRadius.SetActive(false);
+    }
+
+    public override void OnUnload()
+    {
+        Destroy(_previewRadius);
     }
 }

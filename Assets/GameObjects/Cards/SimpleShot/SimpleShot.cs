@@ -13,7 +13,7 @@ public class SimpleShot : Card
     void Awake()
     {
         int[] stats = new int[1] { 13 };
-        base.Init(1, 3, 50, stats);
+        base.Init(1.5f, 4, 50, stats, $"Take aim and perform a powerfull shot that deals {stats[0]} dmg.");
 
         while (PlayerManager.AddState("shot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 

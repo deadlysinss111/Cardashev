@@ -53,7 +53,7 @@ public class Card : MonoBehaviour
         _clickEffect = ClickEvent;
     }
 
-    protected void Init(byte duration, byte maxLvl, int goldValue, int[] stats, string description = "")
+    protected void Init(float duration, byte maxLvl, int goldValue, int[] stats, string description = "")
     {
         _timeStopedEvent = TimeStopedMouseEnter;
 

@@ -14,6 +14,9 @@ public class PiercingShot : Card
     {
         _duration = 4f;
         _stats = new int[2] { 6, 24 };
+        int[] stats = new int[2];
+        base.Init(3, 4, 85, stats, $"Take aim and perform a powerfull shot that deals {stats[0]} dmg. Deals instead {stats[1]} if it is a critical strike");
+
         while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
         if (TryGetComponent(out AreaSelector) == false)

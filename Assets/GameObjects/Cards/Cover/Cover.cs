@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -21,9 +22,11 @@ public class Cover : Card
     private void Awake()
     {
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
-        int[] stats = new int[0];
+        int[] stats = new int[2];
+        stats[0] = 50;
+        stats[1] = 6;
         /* stats fill there */
-        base.Init(2, 2, 60, stats);
+        base.Init(2, 4, 60, stats, $"Summon a cool protection that lasts {stats[1]} seconds, or tank {stats[0]} dmg");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("Cover" + _id.ToString(), EnterState, ExitState) == false) _id++;
@@ -56,7 +59,7 @@ public class Cover : Card
     void ActivateCover()
     {
         GameObject player = GI._PlayerFetcher();
-        player.GetComponent<CoverManager>().EnableCover(500, _rotationArrow.GetRotation(), 15);
+        player.GetComponent<CoverManager>().EnableCover(_stats[0], _rotationArrow.GetRotation(), _stats[1]);
         player.GetComponent<PlayerController>()._moveMult = 0.3f;
         Effect();
         GI._PManFetcher().SetToDefault();
