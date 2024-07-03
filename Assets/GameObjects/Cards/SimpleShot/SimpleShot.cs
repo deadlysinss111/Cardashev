@@ -28,7 +28,6 @@ public class SimpleShot : Card
         }
         base.Effect();
         enemy.TakeDamage(_stats[0]);
-        GI._PlayerFetcher().GetComponent<PlayerManager>().SetToDefault();
     }
 
     void EnterAimState()
@@ -44,6 +43,7 @@ public class SimpleShot : Card
                 print("You got hit by a smooth " + obj.name);
                 _target = obj;
                 base.PlayCard();
+                GI._PlayerFetcher().GetComponent<PlayerManager>().SetToDefault();
             }
             else
                 print("R u ok?");

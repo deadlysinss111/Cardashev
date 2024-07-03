@@ -34,7 +34,6 @@ public class PiercingShot : Card
         }
         base.Effect();
         enemy.TakeDamage(_stats[GI._PlayerFetcher().GetComponent<StatManager>().HasCritical() ? 1 : 0]);
-        GI._PManFetcher().SetToDefault();
     }
 
     void EnterAimState()
@@ -50,6 +49,7 @@ public class PiercingShot : Card
             {
                 print("You got hit by a smooth " + obj.name);
                 _target = obj;
+                GI._PlayerFetcher().GetComponent<PlayerManager>().SetToDefault();
                 base.PlayCard();
             }
             else
