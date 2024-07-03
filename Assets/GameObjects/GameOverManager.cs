@@ -26,6 +26,7 @@ public class GameOverManager : MonoBehaviour
 
     void Start()
     {
+        print("Starting Game Manager Script");
         _instance = this;
         _inGameOver = false;
 
@@ -37,16 +38,24 @@ public class GameOverManager : MonoBehaviour
 
         _hud = GameObject.Find("HUD");
 
-        _playerManager = GameObject.Find("Player").GetComponent<PlayerManager>();
+        GameObject player = GameObject.Find("Player");
+        _playerManager = player.GetComponent<PlayerManager>();
+        _deckManager = player.GetComponent<DeckManager>();
 
-        _deckManager = GameObject.Find("Player").GetComponent<DeckManager>();
+        CanvasGroup group = GetComponent<CanvasGroup>();
+        group.alpha = 0f;
+        group.interactable = false;
+        group.blocksRaycasts = false;
 
-        gameObject.SetActive(false);
     }
 
     public void StartGameOver()
     {
-        gameObject.SetActive(true);
+        CanvasGroup group = GetComponent<CanvasGroup>();
+        group.alpha = 1f;
+        group.interactable = true;
+        group.blocksRaycasts = true;
+
         _inGameOver = true;
         //_text.text = "Time spend: "+GameObject.Find("Game Timer").GetComponent<GameTimer>().GetFormattedTime();
         //StartCoroutine(GameOverSequence());
