@@ -56,7 +56,7 @@ public class StatManager : MonoBehaviour
     public int _armor;
 
     bool _wasJustModified;
-    [SerializeField] OutlineEffectScript _outlineEffect;
+    [SerializeField] OutlineEffectScript _takeDamageEffect;
 
     List<Modifier> _modifiers;
     [SerializeField] CriticalBar _criticalBar;
@@ -193,7 +193,7 @@ public class StatManager : MonoBehaviour
         }
 
         _health -= amount;
-        if (_outlineEffect) _outlineEffect.TakeDamageEffect();
+        if (_takeDamageEffect) _takeDamageEffect.TakeDamageEffect();
 
         if ( _health <= 0)
         {
