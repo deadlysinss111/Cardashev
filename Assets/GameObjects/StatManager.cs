@@ -78,6 +78,8 @@ public class StatManager : MonoBehaviour
 
     static Type[] _typeList = { Type.GetType("Ebouillantueur"), Type.GetType("Murlock") };
 
+    public GameOverManager _gameOverManager;
+
     private void Awake()
     {
         // Event subscribing
@@ -204,7 +206,10 @@ public class StatManager : MonoBehaviour
                 return;
             }
             if (gameObject.TryGetComponent(out PlayerManager player))
+            {
                 player._UeOnDefeat.Invoke();
+                _gameOverManager.StartGameOver();
+            }
         }
     }
 

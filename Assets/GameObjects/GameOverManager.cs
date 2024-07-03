@@ -18,6 +18,11 @@ public class GameOverManager : MonoBehaviour
     private List<Button> _buttonList;
     private TMP_Text _text;
 
+    GameObject _hud;
+
+    PlayerManager _playerManager;
+
+    DeckManager _deckManager;
 
     void Start()
     {
@@ -30,6 +35,12 @@ public class GameOverManager : MonoBehaviour
 
         _text = GameObject.Find("TimeText").GetComponent<TMP_Text>();
 
+        _hud = GameObject.Find("HUD");
+
+        _playerManager = GameObject.Find("Player").GetComponent<PlayerManager>();
+
+        _deckManager = GameObject.Find("Player").GetComponent<DeckManager>();
+
         gameObject.SetActive(false);
     }
 
@@ -38,7 +49,11 @@ public class GameOverManager : MonoBehaviour
         gameObject.SetActive(true);
         _inGameOver = true;
         _text.text = "Time spend: "+GameObject.FindAnyObjectByType<GameTimer>().GetFormattedTime();
-        StartCoroutine(GameOverSequence());
+        //StartCoroutine(GameOverSequence());
+        StopGame();
+        _deckManager.UnloadDeck();
+        DisableAllScripts();
+
     }
 
     private IEnumerator GameOverSequence()
@@ -56,5 +71,16 @@ public class GameOverManager : MonoBehaviour
     {
         _inGameOver = true;
         SceneManager.LoadScene("Room & Tile tests");
+    }
+
+    void StopGame()
+    {
+        Time.timeScale = 0;
+        _hud.SetActive(false);
+    }
+
+    void DisableAllScripts()
+    {
+        _playerManager.SetToState("Empty");
     }
 }

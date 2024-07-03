@@ -160,12 +160,12 @@ public class Card : MonoBehaviour
     {
         _lastScale = transform.localScale;
         transform.localScale *= 2;
-        transform.localPosition += new Vector3(0, 150, 0);
+        transform.localPosition += new Vector3(0, 200, 0);
     }
     void OnMouseExit()
     {
         transform.localScale = _lastScale;
-        transform.localPosition -= new Vector3(0, 150, 0);
+        transform.localPosition -= new Vector3(0, 200, 0);
     }
 
 
