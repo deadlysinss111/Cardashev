@@ -21,8 +21,11 @@ abstract public class Enemy : MonoBehaviour
     protected Coroutine _lookAtCoroutine;
 
     // Death related
+    //// Particle systems
+    [SerializeField] protected ParticleSystem _hurtParticles;
+    [SerializeField] protected ParticleSystem _deathParticles;
+    //// Everything else
     protected bool _waitForDestroy;
-    protected ParticleSystem _particleSystem;
     protected string _name;
     private Type _type;
     public Type Type { get { return _type; } set { _type = value; } }
@@ -50,7 +53,6 @@ abstract public class Enemy : MonoBehaviour
         _target = GI._PlayerFetcher();
         _timeBeforeDecision = 0.0f;
 
-        _particleSystem = GetComponent<ParticleSystem>();
         _waitForDestroy = false;
 
         _eff = Act;
@@ -111,7 +113,11 @@ abstract public class Enemy : MonoBehaviour
         StatManager manager = gameObject.GetComponent<StatManager>();
         manager.TakeDamage(amount);
         if (manager.Health <= 0)
+        {
             Defeat();
+            return;
+        }
+        _hurtParticles.Play();
     }
 
     protected void CheckPlayerDistance()
@@ -128,8 +134,13 @@ abstract public class Enemy : MonoBehaviour
     {
         //TODO: ue there
         GameObject.Find("ExitTile(Clone)").GetComponent<EscapeTile>().TriggerCondition(_name);
-        
-        //_particleSystem.Play();
+
+        if (_lookAtCoroutine != null)
+            StopCoroutine(_lookAtCoroutine);
+        _agent.enabled = false;
+        _isMoving = false;
+
+        _deathParticles.Play();
         _eff = ParticleHandle;
 
         // Ensures the animation plays out entirely
@@ -139,13 +150,7 @@ abstract public class Enemy : MonoBehaviour
     // Needs to be called every frame after defeat so that the GO is detroyed correctly after the animation
     protected void ParticleHandle()
     {
-        if (_particleSystem.isEmitting == false)
-        {
-            Color c = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
-            c.a = c.a - (1.0f * Time.deltaTime);
-            //transform.GetChild(0).GetComponent<MeshRenderer>().material.color = c;
-        }
-        if (_particleSystem.isStopped)
+        if (_deathParticles.isStopped)
         {
             Destroy(gameObject);
         }
