@@ -12,16 +12,21 @@ public class JumpAndShockwave : Card
 
     private void Awake()
     {
-        int[] stats = new int[1];
-        stats[0] = 15;
-        base.Init(2, 4, 80, stats, $"perform a jump to the target tile, generating a shockwave that deals {_stats[0]} dmg to ennemies in range");
+        int[] stats = new int[3] { 15, 8, 4 };
+        base.Init(2, 4, 80, stats, $"perform a jump to the target tile, generating a shockwave that deals {stats[0]} dmg to ennemies in range");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("jumpAndShockwave" + _id.ToString(), EnterJumpShockwaveState, ExitState) == false) _id++;
+
+        if (TryGetComponent(out _selectableArea) == false)
+            _selectableArea = gameObject.AddComponent<SelectableArea>();
     }
 
     void EnterJumpShockwaveState()
     {
+        _selectableArea.SetSelectableEntites(false, false, false, true);
+        _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, _stats[1], _stats[2]);
+
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(TriggerJump);
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
@@ -52,7 +57,7 @@ public class JumpAndShockwave : Card
         base.Effect();
     }
 
-    public override void ClickEvent()
+    public override void PlayCard()
     {
         GI._PManFetcher().SetToState("jumpAndShockwave" + _id.ToString());
     }
@@ -67,6 +72,15 @@ public class JumpAndShockwave : Card
         _previewRadius.transform.position = alteredPos;
         _lastDest = alteredPos;
 
+        _lastDest = alteredPos;
+        if (_selectableArea.CheckForSelectableTile(alteredPos) == false)
+        {
+            ClearPath();
+            _previewRadius.SetActive(false);
+            return;
+        }
+        _previewRadius.SetActive(true);
+
         Vector3 playerPos = manager._virtualPos;
         _initVelocity = TrajectoryToolbox.BellCurveInitialVelocity(playerPos, alteredPos, 5.0f);
         TrajectoryToolbox.BellCurve(playerPos, _initVelocity, ref _lineRenderer);
@@ -74,11 +88,13 @@ public class JumpAndShockwave : Card
 
     protected void TriggerJump()
     {
+        if (_selectableArea.CheckForSelectableTile(_lastDest) == false) return;
         ClearPath();
+        _selectableArea.ResetSelectable();
         GI._PManFetcher()._virtualPos = _lastDest;
         GI._PManFetcher().SetToDefault();
         // Trigger the card play event
-        base.ClickEvent();
+        base.PlayCard();
     }
 
     public override void OnUpgrade()

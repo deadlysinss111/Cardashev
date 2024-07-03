@@ -70,6 +70,7 @@ static public class GI
     static public GameObject _map; // maybe not correctly written (should be an array ?)
     static public float _gameTimer;
 
+    static public Texture2D _cursor;
 
     /*
      METHODS

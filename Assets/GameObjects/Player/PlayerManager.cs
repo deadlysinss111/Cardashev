@@ -31,7 +31,7 @@ public class PlayerManager : MonoBehaviour
     Action _leftClick;
     Action _rightClick;
 
-    PlayerInput _pInput;
+    [NonSerialized] public PlayerInput _pInput;
     [NonSerialized] public Vector3 _virtualPos;
     [NonSerialized] public RaycastHit _lastHit;
     [SerializeField] LayerMask _clickableLayers;    // TODO: Implement that
@@ -47,8 +47,15 @@ public class PlayerManager : MonoBehaviour
      METHODS
     */
     // Pre-Awake constructor
-    PlayerManager() 
+    PlayerManager()
     {
+        AddState( "Empty",
+            () => {
+                SetLeftClickTo(()=>{ print("huh"); });
+                SetRightClickTo(() => { });
+                SetHoverTo(()=>{ });
+            }, ()=>{ });
+
         _defaultState = "movement";
         _currentState = "movement";
         _lastState = "movement";
@@ -252,6 +259,15 @@ public class PlayerManager : MonoBehaviour
     public void TriggerMouseHovering()
     {
         MouseHoverMiddleware();
+    }
+    
+    public void TriggerMouseExit()
+    {
+        Action[] exit;
+        _states.TryGetValue(_currentState, out exit);
+        exit[1]();
+        SetLeftClickTo(() => { });
+        SetRightClickTo(() => { });
     }
 
     // TODO: Make it an actual getter, n'est ce pas Valentin

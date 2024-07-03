@@ -57,7 +57,7 @@ public class TEMPLATE : Card
         base.Effect();
     }
 
-    public override void ClickEvent()
+    public override void PlayCard()
     {
         GI._PManFetcher().SetToState("TEMPLATE" + _id.ToString());
     }

@@ -19,6 +19,8 @@ public abstract class Interactible : MonoBehaviour
     [SerializeField] bool _isHiglightable = true;
     bool _selectable = false;
 
+    Texture2D _cursor;
+
     /* 
      PROPERTIES
     */
@@ -49,6 +51,8 @@ public abstract class Interactible : MonoBehaviour
         _playerRef = GameObject.Find("Player").gameObject;
         _playerManager = _playerRef.GetComponent<PlayerManager>();
         _RaycastHitDist = 10.0f;
+
+        _cursor = (Texture2D)Resources.Load("Interactible");
 
         // Event subscribing
         _UeOnRaycastHit.AddListener(OnRaycastHit);
@@ -159,6 +163,7 @@ public abstract class Interactible : MonoBehaviour
             // Changes the PlayerManager state and tells it it should do a MouseHover check since what's under the mouse just changed
             _playerManager.SetToState("InteractibleTargeting");
             _playerManager.TriggerMouseHovering();
+            ChangeCursor(true);
         }
     }
     private void OnMouseExit()
@@ -172,11 +177,20 @@ public abstract class Interactible : MonoBehaviour
 
             // Restores the previous state
             _playerManager.SetToLastState();
+            ChangeCursor(false);
         }
     }
 
+    private void ChangeCursor(bool cursorMod)
+    {
+        if (cursorMod)
+            Cursor.SetCursor(_cursor, Vector2.zero, CursorMode.ForceSoftware);
+        else
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    }
 
-    
+
+
 
     void Update()
     {

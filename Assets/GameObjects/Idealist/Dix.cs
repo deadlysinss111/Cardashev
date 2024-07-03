@@ -7,7 +7,7 @@ public class Dix : Idealist
     public Dix()
     {
         _name = "Dix";
-        _baseHP = 80;
+        _baseHP = 60;
         _instance = this;
         _startingDeck = new List<string> 
         {
@@ -15,6 +15,7 @@ public class Dix : Idealist
             "PiercingShotCard",
             "SimpleShotCard",
             "JumpCard",
+            "JumpAndShockwaveCard"
             //"OverdriveCard",
             //"CoverCard",
         };

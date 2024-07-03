@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -55,6 +56,7 @@ public class StatManager : MonoBehaviour
     public int _armor;
 
     bool _wasJustModified;
+    [SerializeField] OutlineEffectScript _outlineEffect;
 
     List<Modifier> _modifiers;
     [SerializeField] CriticalBar _criticalBar;
@@ -76,6 +78,8 @@ public class StatManager : MonoBehaviour
 
     static Type[] _typeList = { Type.GetType("Ebouillantueur"), Type.GetType("Murlock") };
 
+    public GameOverManager _gameOverManager;
+
     private void Awake()
     {
         // Event subscribing
@@ -87,7 +91,12 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
-        _health = 10;
+        PlayerManager manager;
+        if (gameObject.TryGetComponent<PlayerManager>(out manager))
+            _health = Idealist._instance._baseHP;
+        else
+            _health = 10;
+
         _baseHealth = _health;
         _moveSpeed = 1.5f;
         _baseMoveSpeed = _moveSpeed;
@@ -184,8 +193,9 @@ public class StatManager : MonoBehaviour
         }
 
         _health -= amount;
+        if (_outlineEffect) _outlineEffect.TakeDamageEffect();
 
-        if( _health <= 0)
+        if ( _health <= 0)
         {
             if (gameObject.TryGetComponent(out Enemy enemy))
             {
@@ -196,7 +206,10 @@ public class StatManager : MonoBehaviour
                 return;
             }
             if (gameObject.TryGetComponent(out PlayerManager player))
+            {
                 player._UeOnDefeat.Invoke();
+                _gameOverManager.StartGameOver();
+            }
         }
     }
 
