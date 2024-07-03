@@ -49,15 +49,13 @@ public class PlayerManager : MonoBehaviour
     // Pre-Awake constructor
     PlayerManager()
     {
-        //_states = new Dictionary<string, Action[]>();
-        //{
-        //    {
-        //        "Empty", new Action[2] { () => {
-        //        SetLeftClickTo(()=>{ });
-        //        SetRightClickTo(() => { });
-        //        SetHoverTo(()=>{ });
-        //    }, ()=>{ } } },
-        //};
+        AddState( "Empty",
+            () => {
+                SetLeftClickTo(()=>{ print("huh"); });
+                SetRightClickTo(() => { });
+                SetHoverTo(()=>{ });
+            }, ()=>{ });
+
         _defaultState = "movement";
         _currentState = "movement";
         _lastState = "movement";
@@ -261,6 +259,15 @@ public class PlayerManager : MonoBehaviour
     public void TriggerMouseHovering()
     {
         MouseHoverMiddleware();
+    }
+    
+    public void TriggerMouseExit()
+    {
+        Action[] exit;
+        _states.TryGetValue(_currentState, out exit);
+        exit[1]();
+        SetLeftClickTo(() => { });
+        SetRightClickTo(() => { });
     }
 
     // TODO: Make it an actual getter, n'est ce pas Valentin
