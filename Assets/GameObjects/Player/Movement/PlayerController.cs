@@ -84,10 +84,12 @@ public class PlayerController : MonoBehaviour
         manager.SetLeftClickTo(ApplyMovement);
         manager.SetRightClickTo(() => { });
         manager.SetHoverTo(Preview);
+        GI.SetCursorTo("Move");
     }
 
     void ExitState()
     {
+        GI.SetCursorTo(null);
         ClearPath();
     }
 

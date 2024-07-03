@@ -21,7 +21,7 @@ public class PlayerManager : MonoBehaviour
     byte _ultimateProgression;
 
     // State related
-    string _currentState;
+    public string _currentState;
     string _lastState;
     [NonSerialized] public string _defaultState;
     static Dictionary<string, Action[]> _states = new Dictionary<string, Action[]>();

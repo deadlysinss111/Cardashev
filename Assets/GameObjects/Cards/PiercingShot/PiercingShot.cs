@@ -58,13 +58,13 @@ public class PiercingShot : Card
         manager.SetRightClickTo(() => { ExitState(); GI._PManFetcher().SetToDefault(); });
         manager.SetHoverTo(() => { });
 
-        GI._cursor = (Texture2D)Resources.Load("Sword");
+        GI.SetCursorTo("Cross");
     }
-
+    
     void ExitState()
     {
         _selectableArea.ResetSelectable();
-        GI._cursor = null;
+        GI.SetCursorTo(null);
     }
 
     public override void PlayCard()

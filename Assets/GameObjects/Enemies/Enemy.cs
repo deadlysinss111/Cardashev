@@ -84,10 +84,10 @@ abstract public class Enemy : MonoBehaviour
 
     private void ChangeCursor(bool cursorMod)
     {
-        if(cursorMod)
-            Cursor.SetCursor(GI._cursor, Vector2.zero, CursorMode.ForceSoftware);
+        if (cursorMod)
+            Cursor.SetCursor((Texture2D)Resources.Load("Sword"), Vector2.zero, CursorMode.ForceSoftware);
         else
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            GI.SetCursorTo(GI._cursor);
     }
 
     // Pick a random reachable position

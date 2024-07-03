@@ -4,13 +4,22 @@ using UnityEngine;
 
 public class VoidBackPlate : MonoBehaviour
 {
+    bool _disabling;
+
     void OnMouseEnter()
     {
-        GI._PManFetcher().SetToState("Empty");
+        if(GI._PManFetcher()._currentState == "movement")
+        {
+            GI._PManFetcher().SetToState("Empty");
+            _disabling = true;
+        }
     }
 
     private void OnMouseExit()
     {
-        GI._PManFetcher().SetToLastState();
+        if(_disabling)
+            GI._PManFetcher().SetToLastState();
+
+        _disabling=false;
     }
 }

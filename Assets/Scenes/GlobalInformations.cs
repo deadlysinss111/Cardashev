@@ -70,7 +70,7 @@ static public class GI
     static public GameObject _map; // maybe not correctly written (should be an array ?)
     static public float _gameTimer;
 
-    static public Texture2D _cursor;
+    static public string _cursor;
 
     /*
      METHODS
@@ -190,5 +190,17 @@ static public class GI
         Debug.LogError("Bro is PStatFetcherless :skullemoji:");
         return null;
         };
+    }
+
+    static public void SetCursorTo(string name)
+    {
+        if (name == null)
+        {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.ForceSoftware);
+            return;
+        }
+
+        _cursor = name;
+        Cursor.SetCursor((Texture2D)Resources.Load(name), Vector2.zero, CursorMode.ForceSoftware);
     }
 }

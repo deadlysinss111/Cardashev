@@ -51,13 +51,13 @@ public class SimpleShot : Card
         GI._PManFetcher().SetRightClickTo(() => { ExitState(); GI._PManFetcher().SetToDefault(); });
         GI._PManFetcher().SetHoverTo(() => { });
 
-        GI._cursor = (Texture2D)Resources.Load("Sword");
+        GI.SetCursorTo("Cross");
     }
 
     void ExitState()
     {
         _selectableArea.ResetSelectable();
-        GI._cursor = null;
+        GI.SetCursorTo(null);
     }
 
     public override void PlayCard()
