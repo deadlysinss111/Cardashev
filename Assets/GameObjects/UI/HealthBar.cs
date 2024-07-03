@@ -13,7 +13,7 @@ public class HealthBar : MonoBehaviour
 
     void Start()
     {
-        _healthBar = transform.Find("Foreground")?.GetComponent<Image>();
+        _healthBar = transform.Find("Health")?.GetComponent<Image>();
         _scale = _healthBar.transform.localScale.x;
         GameObject player = GameObject.Find("Player");
         _statManager = player.GetComponent<StatManager>();

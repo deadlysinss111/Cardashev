@@ -115,7 +115,7 @@ public class DeckManager : MonoBehaviour
         for (int i = 0; i < _hand.Count; i++)
         {
             startPositions.Add(_hand[i].transform.localPosition);
-            endPositions.Add(new Vector3(-400 + 200 * i, -300, 0));
+            endPositions.Add(new Vector3(-400 + 200 * i, -475, 0));
         }
 
         float elapsedTime = 0;
