@@ -54,6 +54,7 @@ public class StatManager : MonoBehaviour
     public float _moveSpeed;
     public float _attack;
     public int _armor;
+    public int _maxArmor;
 
     bool _wasJustModified;
     [SerializeField] OutlineEffectScript _outlineEffect;
@@ -146,10 +147,10 @@ public class StatManager : MonoBehaviour
     {
         //if (!_wasJustModified) return;
 
-        _health = _baseHealth;
+        //_health = _baseHealth;
         _moveSpeed = _baseMoveSpeed;
 
-        for (int i = _modifiers.Count-1; i > 0; i--)
+        for (int i = _modifiers.Count-1; i >= 0; i--)
         {
             print(i);
             Modifier mod = _modifiers[i];
@@ -172,6 +173,7 @@ public class StatManager : MonoBehaviour
                     break;
                 case Modifier.ModifierType.Armor:
                     _armor = (int)mod._value;
+                    _maxArmor = _armor;
                     _modifiers.Remove(mod); // No need to keep it any longer once the value is set
                     break;
             }
