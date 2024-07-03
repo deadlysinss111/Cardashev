@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class DeckManager : MonoBehaviour
 
     GameObject _cardBar;
 
-    Vector3 virtualPosition = new Vector3(1000, -475, 0); // Virtual position off-screen to the right
+    Vector3 virtualPosition = new Vector3(1000, -425, 0); // Virtual position off-screen to the right
     float transitionDuration = 1.0f; // Duration for the transition
     bool isTransitioning = false; // Flag to check if a card is currently being moved
 
@@ -27,7 +28,10 @@ public class DeckManager : MonoBehaviour
         _curHandSize = 0;
         _cardBar = GameObject.Find("CardBar");
 
+
         LoadDeck();
+
+        DrawInit();
     }
 
     private void Update()
@@ -56,7 +60,7 @@ public class DeckManager : MonoBehaviour
         }
 
         // We draw a random card
-        int rdm = Random.Range(0, _remainsInDeck.Count);
+        int rdm = UnityEngine.Random.Range(0, _remainsInDeck.Count);
 
         // We need to duplicate the card's game object so that we can display it and destroy it later easily
         GameObject obj = _remainsInDeck[rdm];
@@ -75,6 +79,39 @@ public class DeckManager : MonoBehaviour
 
         // Start the coroutine to move the card to its final position
         StartCoroutine(MoveCardToHand(obj, _hand.Count - 1));
+    }
+
+    public void DrawInit()
+    {
+        for(byte i =0; i<4; i++)
+        {
+            // If the deck is empty, we shuffle the discard pile into it
+            if (_remainsInDeck.Count == 0)
+            {
+                if (_discardPile.Count == 0)
+                    return;
+                _remainsInDeck = _discardPile;
+                _discardPile = new List<GameObject> { };
+            }
+
+            // We draw a random card
+            int rdm = UnityEngine.Random.Range(0, _remainsInDeck.Count);
+
+            // We need to duplicate the card's game object so that we can display it and destroy it later easily
+            GameObject obj = _remainsInDeck[rdm];
+            obj.gameObject.SetActive(true);
+
+            // Reset the scale of the card to the default value
+            obj.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+
+            _hand.Add(obj);
+
+            // Since we drew it, we remove the card from the deck
+            _remainsInDeck.RemoveAt(rdm);
+
+            // Place the card at the virtual position
+            obj.transform.localPosition = new Vector3(-400 + 200 * i, -475, 0);
+        }
     }
 
     IEnumerator MoveCardToHand(GameObject card, int index)
@@ -115,7 +152,7 @@ public class DeckManager : MonoBehaviour
         for (int i = 0; i < _hand.Count; i++)
         {
             startPositions.Add(_hand[i].transform.localPosition);
-            endPositions.Add(new Vector3(-400 + 200 * i, -300, 0));
+            endPositions.Add(new Vector3(-400 + 200 * i, -475, 0));
         }
 
         float elapsedTime = 0;
