@@ -7,20 +7,17 @@ public class PiercingShot : Card
 {
     List<GameObject> _selectableTiles = new List<GameObject>();
 
-    SelectableArea AreaSelector;
-
     // Start is called before the first frame update
     void Start()
     {
         _duration = 4f;
         _stats = new int[2] { 6, 24 };
-        int[] stats = new int[2];
-        base.Init(3, 4, 85, stats, $"Take aim and perform a powerfull shot that deals {stats[0]} dmg. Deals instead {stats[1]} if it is a critical strike");
+        base.Init(3, 4, 85, _stats, $"Take aim and perform a powerfull shot that deals {_stats[0]} dmg. Deals instead {_stats[1]} if it is a critical strike");
 
         while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
-        if (TryGetComponent(out AreaSelector) == false)
-            AreaSelector = gameObject.AddComponent<SelectableArea>();
+        if (TryGetComponent(out _selectableArea) == false)
+            _selectableArea = gameObject.AddComponent<SelectableArea>();
     }
 
     // Update is called once per frame
@@ -28,31 +25,32 @@ public class PiercingShot : Card
     {
     }
 
-    public override void Effect(GameObject obj)
+    public override void Effect()
     {
-        base.Effect();
-        if (obj.TryGetComponent(out Enemy enemy) == false)
+        if (_target == null) return;
+        if (_target.TryGetComponent(out Enemy enemy) == false)
         {
-            throw new MissingComponentException($"The object {obj.name} ({obj.GetType()}) the card aimed at does not have a Enemy script.");
+            throw new MissingComponentException($"The object {_target.name} ({_target.GetType()}) the card aimed at does not have a Enemy script.");
         }
+        base.Effect();
         enemy.TakeDamage(_stats[GI._PlayerFetcher().GetComponent<StatManager>().HasCritical() ? 1 : 0]);
-        base.PlayCard(); // Calls this function to add the card to the queue
         GI._PManFetcher().SetToDefault();
     }
 
     void EnterAimState()
     {
         // Sets up the settings for the area
-        AreaSelector.SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
-        AreaSelector.SetSelectableEntites(false, false, true, false);
-        _selectableTiles = AreaSelector.FindSelectableArea(GI._PManFetcher()._virtualPos, 7);
+        _selectableArea.SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
+        _selectableArea.SetSelectableEntites(false, false, true, false);
+        _selectableTiles = _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 7);
 
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(() => {
-            if (AreaSelector.CastLeftClick(out GameObject obj))
+            if (_selectableArea.CastLeftClick(out GameObject obj))
             {
                 print("You got hit by a smooth " + obj.name);
-                Effect(obj);
+                _target = obj;
+                base.PlayCard();
             }
             else
                 print("R u ok?");
@@ -63,7 +61,7 @@ public class PiercingShot : Card
 
     void ExitState()
     {
-        AreaSelector.ResetSelectable();
+        _selectableArea.ResetSelectable();
     }
 
     public override void PlayCard()
