@@ -134,7 +134,12 @@ abstract public class Enemy : MonoBehaviour
     {
         //TODO: ue there
         GameObject.Find("ExitTile(Clone)").GetComponent<EscapeTile>().TriggerCondition(_name);
-        
+
+        if (_lookAtCoroutine != null)
+            StopCoroutine(_lookAtCoroutine);
+        _agent.enabled = false;
+        _isMoving = false;
+
         _deathParticles.Play();
         _eff = ParticleHandle;
 
