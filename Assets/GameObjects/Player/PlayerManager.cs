@@ -49,14 +49,15 @@ public class PlayerManager : MonoBehaviour
     // Pre-Awake constructor
     PlayerManager()
     {
-        _states = new Dictionary<string, Action[]>()
-        {
-            { "Empty", new Action[2] { () => {
-                SetLeftClickTo(()=>{ });
-                SetRightClickTo(() => { });
-                SetHoverTo(()=>{ });
-            }, ()=>{ } } },
-        };
+        //_states = new Dictionary<string, Action[]>();
+        //{
+        //    {
+        //        "Empty", new Action[2] { () => {
+        //        SetLeftClickTo(()=>{ });
+        //        SetRightClickTo(() => { });
+        //        SetHoverTo(()=>{ });
+        //    }, ()=>{ } } },
+        //};
         _defaultState = "movement";
         _currentState = "movement";
         _lastState = "movement";
