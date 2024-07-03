@@ -42,6 +42,8 @@ public class Card : MonoBehaviour
     public int _currLv;
     public int _maxLv;
 
+    public GameObject _target;
+
     /*
      METHODS
     */
@@ -89,10 +91,6 @@ public class Card : MonoBehaviour
     public virtual void Effect()
     {
         _cardEndTimestamp = Time.time + _duration;
-    }
-    public virtual void Effect(GameObject go)
-    {
-        Effect();
     }
 
     // Need that stuff to make the card interract as if the time wasn't stop when it is //
