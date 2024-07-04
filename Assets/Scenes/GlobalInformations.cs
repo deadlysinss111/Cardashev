@@ -46,6 +46,8 @@ static public class GI
     // Data needed for scene transition (Map --> Room)
     static public string _prefabToLoad;
 
+    static public bool _changeStateOnHUDExit = false;
+
 
     // ------
     // SCENE LOADING UTILS

@@ -49,13 +49,6 @@ public class PlayerManager : MonoBehaviour
     // Pre-Awake constructor
     PlayerManager()
     {
-        AddState( "Empty",
-            () => {
-                SetLeftClickTo(()=>{ print("huh"); });
-                SetRightClickTo(() => { });
-                SetHoverTo(()=>{ });
-            }, ()=>{ });
-
         _defaultState = "movement";
         _currentState = "movement";
         _lastState = "movement";
@@ -208,9 +201,11 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
+        print("change to state : " + name);
         Action[] func;
         if(_states.TryGetValue(name, out func))
         {
+            print("achieved");
             _lastState = _currentState;
             Action[] exit;
             _states.TryGetValue(_currentState, out exit);
@@ -242,6 +237,13 @@ public class PlayerManager : MonoBehaviour
             yield return null;
         }
 
+        AddState("Empty",
+            () => {
+                print("I SHOULD BE EMPTY");
+                SetLeftClickTo(() => { print("huh"); });
+                SetRightClickTo(() => { });
+                SetHoverTo(() => { });
+            }, () => { });
         SetToDefault();
     }
 
