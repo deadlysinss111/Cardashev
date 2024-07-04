@@ -33,7 +33,7 @@ public class Reward : MonoBehaviour
     bool _left = false;
 
     [SerializeField] GameObject _winScreen;
-    [SerializeField] GameObject _cardBG;
+    [SerializeField] GameObject _cardSelectionPanel;
 
     static public Content _content = new Content(0, 0, 0);
 
@@ -109,7 +109,7 @@ public class Reward : MonoBehaviour
     void GenerateBooster()
     {
         GameObject button = GenerateItem(true);
-        button.GetComponent<Button>().onClick.AddListener(() => { DisplayCards(button); });
+        button.GetComponent<Button>().onClick.AddListener(() => { DisplayCards(button); _cardSelectionPanel.GetComponent<CanvasGroup>().alpha = 0.4f;});
         button.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Pick a card");
     }
 
@@ -135,7 +135,15 @@ public class Reward : MonoBehaviour
             card.layer = LayerMask.NameToLayer("UI");
             card.transform.SetParent(GameObject.Find("Card Selection Panel").transform, false);
             card.transform.localPosition = new Vector3(150*(i-1), 0, -0.1f);
-            card.GetComponent<Card>().SetToCollectible(() => { foreach (GameObject slot in cards) { Destroy(slot);}; Destroy(button); _cardBG.SetActive(false); return true; });
+            card.GetComponent<Card>().SetToCollectible(() => { 
+                foreach (GameObject slot in cards) 
+                { 
+                    Destroy(slot);
+                }
+                Destroy(button);
+                _cardSelectionPanel.GetComponent<CanvasGroup>().alpha = 0f;
+                return true; 
+            });
             cards[i] = card;
         }
     }
