@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviour
 
     private void EnterMovementState()
     {
+        print("in");
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(ApplyMovement);
         manager.SetRightClickTo(() => { });

@@ -25,6 +25,7 @@ public class PlayerManager : MonoBehaviour
     string _lastState;
     [NonSerialized] public string _defaultState;
     static Dictionary<string, Action[]> _states = new Dictionary<string, Action[]>();
+    bool _disablingState;
 
     // These actions are the changing code actually executed by the middlewares
     Action _mouseHover;
@@ -105,6 +106,11 @@ public class PlayerManager : MonoBehaviour
         _pInput.actions["RightClick"].performed -= OnRightClickPerformed;
     }
 
+    private void Update()
+    {
+        TriggerMouseHovering();
+    }
+
 
     // ------
     // MIDDLEWARE FEST
@@ -157,7 +163,21 @@ public class PlayerManager : MonoBehaviour
     {
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100,  _clickableLayers))
         {
+            if (_disablingState)
+                SetToLastState();
+
+            _disablingState = false;
             _mouseHover();
+        }
+        else
+        {
+            if(false == _disablingState && _currentState == "movement")
+            {
+                print("avoiding");
+                SetToState("Empty");
+                _disablingState = true;
+            }
+
         }
     }
 
@@ -219,6 +239,7 @@ public class PlayerManager : MonoBehaviour
             func[0]();
             return true;
         }
+        print("missed state change");
         return false;
     }
 

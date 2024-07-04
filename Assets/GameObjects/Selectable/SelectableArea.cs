@@ -221,7 +221,7 @@ public class SelectableArea : MonoBehaviour
         {
             throw new ArgumentOutOfRangeException("[SelectableArea] The numbers of selected tiles is superior to the size of the buffer! (" + e + ")");
         }
-        BetterDebug.Log(_hitBuffer.Length, count);
+        //BetterDebug.Log(_hitBuffer.Length, count);
 
         for (int i = 0; i < count; i++)
         {
