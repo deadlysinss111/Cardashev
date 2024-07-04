@@ -8,7 +8,7 @@ public class RoomClear : MonoBehaviour
 
     private void Start()
     {
-        gameObject.SetActive(false);
+
     }
 
     private void OnEnable()
