@@ -8,6 +8,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 using static UnityEditorInternal.VersionControl.ListControl;
 
@@ -168,16 +169,47 @@ public class PlayerManager : MonoBehaviour
 
             _disablingState = false;
             _mouseHover();
+
+            SetCursorToCorrespondingOne();
         }
         else
         {
             if(false == _disablingState && _currentState == "movement")
             {
-                print("avoiding");
                 SetToState("Empty");
                 _disablingState = true;
+                GI.SetCursorTo(GI.CursorRestriction.VOID);
             }
+        }
+    }
 
+    private void SetCursorToCorrespondingOne()
+    {
+        if(_lastHit.transform.gameObject.TryGetComponent(out Enemy enemy ) )
+        {
+            if (enemy.IsSelectable)
+                GI.SetCursorTo(GI.CursorRestriction.S_ENEMIES);
+            else
+                GI.SetCursorTo(GI.CursorRestriction.ENEMIES);
+            return;
+        }
+        
+        if(_lastHit.transform.gameObject.TryGetComponent(out Interactible interactible))
+        {
+            if (interactible.IsSelectable)
+                GI.SetCursorTo(GI.CursorRestriction.S_INTERACTIBLES);
+            else
+                GI.SetCursorTo(GI.CursorRestriction.INTERACTIBLES);
+            return;
+        }
+
+        if (_lastHit.transform.gameObject.TryGetComponent(out Tile tile))
+        {
+            if (tile.IsSelectable)
+                GI.SetCursorTo(GI.CursorRestriction.S_TILES);
+            else
+                GI.SetCursorTo(GI.CursorRestriction.TILES);
+            return;
         }
     }
 
@@ -233,6 +265,7 @@ public class PlayerManager : MonoBehaviour
         {
             _lastState = _currentState;
             Action[] exit;
+            GI.ResetCursorValues();
             _states.TryGetValue(_currentState, out exit);
             exit[1]();
             _currentState = name;

@@ -43,8 +43,8 @@ public class LaunchGrenade : Card
         manager.SetRightClickTo(()=> { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(Preview);
         _previwRadius.SetActive(true);
-
-        GI.SetCursorTo("Bomb");
+        GI.UpdateCursors("Bomb", (byte)(GI.CursorRestriction.S_TILES));
+        GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_TILES));
     }
 
     void ExitState()
@@ -52,8 +52,6 @@ public class LaunchGrenade : Card
         _previwRadius.SetActive(false);
         _selectableArea.ResetSelectable();
         ClearPath();
-
-        GI.SetCursorTo(null);
     }
 
     public override void Effect()

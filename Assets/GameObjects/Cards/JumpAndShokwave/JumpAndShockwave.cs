@@ -32,12 +32,14 @@ public class JumpAndShockwave : Card
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(Preview);
         _previewRadius.SetActive(true);
+        GI.UpdateCursors("Jump", (byte)(GI.CursorRestriction.S_TILES));
+        GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_TILES));
     }
 
     void ExitState()
     {
         _previewRadius.SetActive(false);
-        ClearPath();
+        //ClearPath();
     }
 
     public override void Effect()

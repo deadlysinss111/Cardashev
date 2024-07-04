@@ -57,14 +57,13 @@ public class PiercingShot : Card
         });
         manager.SetRightClickTo(() => { ExitState(); GI._PManFetcher().SetToDefault(); });
         manager.SetHoverTo(() => { });
-
-        GI.SetCursorTo("Cross");
+        GI.UpdateCursors("Bow", (byte)(GI.CursorRestriction.S_ENEMIES));
+        GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_ENEMIES));
     }
     
     void ExitState()
     {
         _selectableArea.ResetSelectable();
-        GI.SetCursorTo(null);
     }
 
     public override void PlayCard()

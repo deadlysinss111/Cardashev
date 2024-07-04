@@ -72,24 +72,6 @@ abstract public class Enemy : MonoBehaviour
         //print("Enemy is selectable: "+_selectable);
     }
 
-    private void OnMouseEnter()
-    {
-        ChangeCursor(IsSelectable);
-    }
-    
-    private void OnMouseExit()
-    {
-        ChangeCursor(false);
-    }
-
-    private void ChangeCursor(bool cursorMod)
-    {
-        if (cursorMod)
-            Cursor.SetCursor((Texture2D)Resources.Load("Sword"), Vector2.zero, CursorMode.ForceSoftware);
-        else
-            GI.SetCursorTo(GI._cursor);
-    }
-
     // Pick a random reachable position
     public Vector3 RandomNavmeshLocation(float radius, Vector3 pos)
     {
