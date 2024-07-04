@@ -100,8 +100,11 @@ public class Card : MonoBehaviour
         if (Time.timeScale == 0)
         {
             _timeStopedEvent();
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
+            {
+                GI._changeStateOnHUDExit = false;
                 _timeStopedClick();
+            }
         }
     }
 
@@ -126,6 +129,7 @@ public class Card : MonoBehaviour
             }
         }
     }
+
 
     void TimeStopedMouseExit()
     {
