@@ -84,6 +84,7 @@ public class PlayerController : MonoBehaviour
         manager.SetLeftClickTo(ApplyMovement);
         manager.SetRightClickTo(() => { });
         manager.SetHoverTo(Preview);
+        GI.UpdateCursors("Move", (byte)(GI.CursorRestriction.TILES));
     }
 
     void ExitState()

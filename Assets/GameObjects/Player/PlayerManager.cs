@@ -8,6 +8,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 using static UnityEditorInternal.VersionControl.ListControl;
 
@@ -21,10 +22,11 @@ public class PlayerManager : MonoBehaviour
     byte _ultimateProgression;
 
     // State related
-    string _currentState;
+    public string _currentState;
     string _lastState;
     [NonSerialized] public string _defaultState;
     static Dictionary<string, Action[]> _states = new Dictionary<string, Action[]>();
+    bool _disablingState;
 
     // These actions are the changing code actually executed by the middlewares
     Action _mouseHover;
@@ -98,6 +100,11 @@ public class PlayerManager : MonoBehaviour
         _pInput.actions["RightClick"].performed -= OnRightClickPerformed;
     }
 
+    private void Update()
+    {
+        TriggerMouseHovering();
+    }
+
 
     // ------
     // MIDDLEWARE FEST
@@ -150,7 +157,52 @@ public class PlayerManager : MonoBehaviour
     {
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100,  _clickableLayers))
         {
+            if (_disablingState)
+                SetToLastState();
+
+            _disablingState = false;
             _mouseHover();
+
+            SetCursorToCorrespondingOne();
+        }
+        else
+        {
+            if(false == _disablingState && _currentState == "movement")
+            {
+                SetToState("Empty");
+                _disablingState = true;
+                GI.SetCursorTo(GI.CursorRestriction.VOID);
+            }
+        }
+    }
+
+    private void SetCursorToCorrespondingOne()
+    {
+        if(_lastHit.transform.gameObject.TryGetComponent(out Enemy enemy ) )
+        {
+            if (enemy.IsSelectable)
+                GI.SetCursorTo(GI.CursorRestriction.S_ENEMIES);
+            else
+                GI.SetCursorTo(GI.CursorRestriction.ENEMIES);
+            return;
+        }
+        
+        if(_lastHit.transform.gameObject.TryGetComponent(out Interactible interactible))
+        {
+            if (interactible.IsSelectable)
+                GI.SetCursorTo(GI.CursorRestriction.S_INTERACTIBLES);
+            else
+                GI.SetCursorTo(GI.CursorRestriction.INTERACTIBLES);
+            return;
+        }
+
+        if (_lastHit.transform.gameObject.TryGetComponent(out Tile tile))
+        {
+            if (tile.IsSelectable)
+                GI.SetCursorTo(GI.CursorRestriction.S_TILES);
+            else
+                GI.SetCursorTo(GI.CursorRestriction.TILES);
+            return;
         }
     }
 
@@ -208,12 +260,14 @@ public class PlayerManager : MonoBehaviour
             print("achieved");
             _lastState = _currentState;
             Action[] exit;
+            GI.ResetCursorValues();
             _states.TryGetValue(_currentState, out exit);
             exit[1]();
             _currentState = name;
             func[0]();
             return true;
         }
+        print("missed state change");
         return false;
     }
 

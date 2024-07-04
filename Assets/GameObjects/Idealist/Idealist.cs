@@ -13,7 +13,7 @@ public abstract class Idealist
     static public Idealist _instance;
 
     public string _name;
-    public byte _baseHP;
+    public int _baseHP;
 
     public List<string> _startingDeck;
 
