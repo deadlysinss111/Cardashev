@@ -34,7 +34,7 @@ public class GameOverManager : MonoBehaviour
 
         _buttonList = _gameOverPanel.GetComponentsInChildren<Button>().ToList();
 
-        _text = GameObject.Find("GameTimer").GetComponent<TMP_Text>();
+        //_text = GameObject.Find("GameTimer").GetComponent<TMP_Text>();
 
         _hud = GameObject.Find("HUD");
 
@@ -58,16 +58,10 @@ public class GameOverManager : MonoBehaviour
 
         _inGameOver = true;
         //_text.text = "Time spend: "+GameObject.Find("Game Timer").GetComponent<GameTimer>().GetFormattedTime();
-        //StartCoroutine(GameOverSequence());
         StopGame();
         _deckManager.UnloadDeck();
         DisableAllScripts();
 
-    }
-
-    private IEnumerator GameOverSequence()
-    {
-        yield return new WaitForSecondsRealtime(2.15f*2);
     }
 
     public void Restart()
