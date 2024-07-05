@@ -29,9 +29,9 @@ public class PlayerManager : MonoBehaviour
     bool _disablingState;
 
     // These actions are the changing code actually executed by the middlewares
-    Action _mouseHover;
-    Action _leftClick;
-    Action _rightClick;
+    Action _mouseHover = () => { print("hover wtf"); };
+    Action _leftClick = () => { print("left wtf"); };
+    Action _rightClick = () => { print("right wtf"); };
 
     [NonSerialized] public PlayerInput _pInput;
     [NonSerialized] public Vector3 _virtualPos;
@@ -253,10 +253,12 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
-        Action[] func;
-        if(_states.TryGetValue(name, out func))
+        if (name == _currentState) return false;
+
+        if(_states.TryGetValue(name, out Action[] func))
         {
-            _lastState = _currentState;
+            if(_currentState!="Empty")
+                _lastState = _currentState;
             Action[] exit;
             GI.ResetCursorValues();
             _states.TryGetValue(_currentState, out exit);
@@ -271,6 +273,7 @@ public class PlayerManager : MonoBehaviour
 
     public void SetToLastState()
     {
+        print("last state is : " + _lastState);
         SetToState(_lastState);
     }
 

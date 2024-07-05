@@ -124,7 +124,7 @@ public class Card : MonoBehaviour
             {
                 OnMouseEnter();
                 _timeStopedEvent = TimeStopedMouseExit;
-                _timeStopedClick = _clickEffect;
+                _timeStopedClick = ()=> { _clickEffect(); GI.temp = false; };
                 break;
             }
         }

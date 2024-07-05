@@ -20,7 +20,10 @@ public class HUDBlocker : MonoBehaviour
         if (Time.timeScale == 0)
             _timeStopedEvent();
         else
+        {
             Destroy(that);
+            Destroy(this);
+        }
     }
 
     void TimeStopedMouseEnter()
@@ -38,7 +41,7 @@ public class HUDBlocker : MonoBehaviour
             if (HierarchySearcher.FindParentdRecursively(result.gameObject.transform, gameObject.name))
             {
                 GI._PManFetcher().SetToState("Empty");
-                GI._changeStateOnHUDExit = true;
+                GI.temp = true;
                 _timeStopedEvent = TimeStopedMouseExit;
                 break;
             }
@@ -65,9 +68,10 @@ public class HUDBlocker : MonoBehaviour
         }
         if (GI._changeStateOnHUDExit)
         {
+        print("exit");
             GI._PManFetcher().SetToLastState();
+            //GI.temp = false;
+            _timeStopedEvent = TimeStopedMouseEnter;
         }
-        GI._changeStateOnHUDExit = false;
-        _timeStopedEvent = TimeStopedMouseEnter;
     }
 }
