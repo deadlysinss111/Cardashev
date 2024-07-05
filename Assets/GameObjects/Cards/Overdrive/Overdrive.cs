@@ -4,8 +4,6 @@ using UnityEngine;
 
 class Overdrive : Card
 {
-    GameObject text;
-
     private void Awake()
     {
         int[] stats = new int[1];
