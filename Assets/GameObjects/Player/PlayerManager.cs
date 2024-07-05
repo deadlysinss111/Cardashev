@@ -253,11 +253,9 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
-        print("change to state : " + name);
         Action[] func;
         if(_states.TryGetValue(name, out func))
         {
-            print("achieved");
             _lastState = _currentState;
             Action[] exit;
             GI.ResetCursorValues();
@@ -293,7 +291,6 @@ public class PlayerManager : MonoBehaviour
 
         AddState("Empty",
             () => {
-                print("I SHOULD BE EMPTY");
                 SetLeftClickTo(() => { print("huh"); });
                 SetRightClickTo(() => { });
                 SetHoverTo(() => { });
