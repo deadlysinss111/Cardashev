@@ -7,8 +7,7 @@ public class PiercingShot : Card
 {
     List<GameObject> _selectableTiles = new List<GameObject>();
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _duration = 4f;
         _stats = new int[2] { 6, 24 };
@@ -20,10 +19,6 @@ public class PiercingShot : Card
             _selectableArea = gameObject.AddComponent<SelectableArea>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     public override void Effect()
     {
