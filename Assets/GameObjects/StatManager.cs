@@ -53,7 +53,8 @@ public class StatManager : MonoBehaviour
     private int _health; // now read-only to force everyone to use TakeDamage()
     public float _moveSpeed;
     public float _attack;
-    public int _armor;
+    [NonSerialized] public int _armor;
+    [NonSerialized] public int _maxArmor;
 
     bool _wasJustModified;
     [SerializeField] OutlineEffectScript _takeDamageEffect;
@@ -103,6 +104,7 @@ public class StatManager : MonoBehaviour
         _attack = 1;
         _baseAttack = _attack;
         _armor = -1;
+        _maxArmor = _armor;
         _wasJustModified = false;
     }
 
@@ -149,7 +151,7 @@ public class StatManager : MonoBehaviour
         _health = _baseHealth;
         _moveSpeed = _baseMoveSpeed;
 
-        for (int i = _modifiers.Count-1; i > 0; i--)
+        for (int i = _modifiers.Count-1; i >= 0; i--)
         {
             print(i);
             Modifier mod = _modifiers[i];
@@ -172,6 +174,7 @@ public class StatManager : MonoBehaviour
                     break;
                 case Modifier.ModifierType.Armor:
                     _armor = (int)mod._value;
+                    _maxArmor = _armor;
                     _modifiers.Remove(mod); // No need to keep it any longer once the value is set
                     break;
             }
