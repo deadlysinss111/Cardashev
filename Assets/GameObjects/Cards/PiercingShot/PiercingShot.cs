@@ -10,8 +10,8 @@ public class PiercingShot : Card
     void Awake()
     {
         _duration = 4f;
-        _stats = new int[2] { 6, 24 };
-        base.Init(3, 4, 85, _stats, $"Take aim and perform a powerfull shot that deals {_stats[0]} dmg. Deals instead {_stats[1]} if it is a critical strike");
+        int[] stats = new int[2] { 6, 24 };
+        base.Init(3, 4, 85, stats, $"Take aim and perform a powerfull shot that deals {stats[0]} dmg. Deals {stats[1]} instead if it is a critical strike");
 
         while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 

@@ -95,7 +95,7 @@ public class StatManager : MonoBehaviour
         if (gameObject.TryGetComponent<PlayerManager>(out manager))
             _health = Idealist._instance._baseHP;
         else
-            _health = 10;
+            _health = 20;
 
         _baseHealth = _health;
         _moveSpeed = 1.5f;

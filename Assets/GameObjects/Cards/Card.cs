@@ -42,7 +42,7 @@ public class Card : MonoBehaviour
     public int _currLv;
     public int _maxLv;
 
-    public GameObject _target;
+    [NonSerialized] public GameObject _target;
 
     /*
      METHODS
