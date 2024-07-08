@@ -111,7 +111,7 @@ public class StatManager : MonoBehaviour
     void Update()
     {
         // Updates the timer of each stat modifiers that are currently being applied
-        for (int i = _modifiers.Count-1; i > 0; i--)
+        for (int i = _modifiers.Count-1; i >= 0; i--)
         {
             print(i);
             Modifier debuff = _modifiers[i];
