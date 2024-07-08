@@ -9,7 +9,8 @@ public class SelectableArea : MonoBehaviour
     readonly List<string> _ignoreLayerList = new() {
         "Player",
         "Interactable",
-        "Enemy"
+        "Enemy",
+        "Ignore Raycast"
     };
 
     // Currently unused (actually not)
@@ -113,9 +114,11 @@ public class SelectableArea : MonoBehaviour
         }*/
     }
 
-    // TODO FindSelectableArea: Fix inner radius
-
     // Little override for convenience
+    public List<GameObject> FindSelectableArea(GameObject obj, int radius, bool hitWall = false)
+    {
+        return FindSelectableArea(obj.transform.position, radius, hitWall);
+    }
     public List<GameObject> FindSelectableArea(GameObject obj, int radius, int inner_radius, bool hitWall = false)
     {
         return FindSelectableArea(obj.transform.position, radius, inner_radius, hitWall);
@@ -256,12 +259,6 @@ public class SelectableArea : MonoBehaviour
             _interactableAreaCheck = _allowSelectInteractable;
         }
         return _selectableTiles;
-    }
-
-    // Little override for convenience
-    public List<GameObject> FindSelectableArea(GameObject obj, int radius, bool hitWall = false)
-    {
-        return FindSelectableArea(obj.transform.position, radius, hitWall);
     }
 
     /// <summary>
