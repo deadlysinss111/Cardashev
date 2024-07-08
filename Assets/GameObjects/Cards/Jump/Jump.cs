@@ -27,6 +27,8 @@ public class Jump : Card
         manager.SetLeftClickTo(TriggerJump);
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(Preview);
+        GI.UpdateCursors("Jump", (byte)(GI.CursorRestriction.S_TILES));
+        GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_TILES));
     }
 
     void ExitState()
@@ -59,7 +61,6 @@ public class Jump : Card
 
     private void Preview()
     {
-        print("state entered");
         PlayerManager manager = GI._PManFetcher();
         // Crop the destination to the center of the target tile
         Vector3 alteredPos = manager._lastHit.transform.position;

@@ -52,6 +52,7 @@ public class Card : MonoBehaviour
         ADDTODECKANDBACKTOPLAY
     }
     public GameObject _target;
+    [NonSerialized] public GameObject _target;
 
     /*
      METHODS
@@ -132,8 +133,11 @@ public class Card : MonoBehaviour
         if (Time.timeScale == 0)
         {
             _timeStopedEvent();
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
+            {
+                GI._changeStateOnHUDExit = false;
                 _timeStopedClick();
+            }
         }
     }
 
@@ -153,11 +157,12 @@ public class Card : MonoBehaviour
             {
                 OnMouseEnter();
                 _timeStopedEvent = TimeStopedMouseExit;
-                _timeStopedClick = _clickEffect;
+                _timeStopedClick = ()=> { _clickEffect(); GI.temp = false; };
                 break;
             }
         }
     }
+
 
     void TimeStopedMouseExit()
     {

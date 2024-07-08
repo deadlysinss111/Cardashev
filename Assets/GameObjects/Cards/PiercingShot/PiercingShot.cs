@@ -7,12 +7,11 @@ public class PiercingShot : Card
 {
     List<GameObject> _selectableTiles = new List<GameObject>();
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _duration = 4f;
-        _stats = new int[2] { 6, 24 };
-        base.Init(3, 4, 85, _stats, $"Take aim and perform a powerfull shot that deals {_stats[0]} dmg. Deals instead {_stats[1]} if it is a critical strike");
+        int[] stats = new int[2] { 6, 24 };
+        base.Init(3, 4, 85, stats, $"Take aim and perform a powerfull shot that deals {stats[0]} dmg. Deals {stats[1]} instead if it is a critical strike");
 
         while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
@@ -20,10 +19,6 @@ public class PiercingShot : Card
             _selectableArea = gameObject.AddComponent<SelectableArea>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     public override void Effect()
     {
@@ -57,14 +52,13 @@ public class PiercingShot : Card
         });
         manager.SetRightClickTo(() => { ExitState(); GI._PManFetcher().SetToDefault(); });
         manager.SetHoverTo(() => { });
-
-        GI._cursor = (Texture2D)Resources.Load("Sword");
+        GI.UpdateCursors("Bow", (byte)(GI.CursorRestriction.S_ENEMIES));
+        GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_ENEMIES));
     }
-
+    
     void ExitState()
     {
         _selectableArea.ResetSelectable();
-        GI._cursor = null;
     }
 
     public override void PlayCard()

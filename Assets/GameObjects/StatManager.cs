@@ -53,10 +53,11 @@ public class StatManager : MonoBehaviour
     private int _health; // now read-only to force everyone to use TakeDamage()
     public float _moveSpeed;
     public float _attack;
-    public int _armor;
+    [NonSerialized] public int _armor;
+    [NonSerialized] public int _maxArmor;
 
     bool _wasJustModified;
-    [SerializeField] OutlineEffectScript _outlineEffect;
+    [SerializeField] OutlineEffectScript _takeDamageEffect;
 
     List<Modifier> _modifiers;
     [SerializeField] CriticalBar _criticalBar;
@@ -95,7 +96,7 @@ public class StatManager : MonoBehaviour
         if (gameObject.TryGetComponent<PlayerManager>(out manager))
             _health = Idealist._instance._baseHP;
         else
-            _health = 10;
+            _health = 20;
 
         _baseHealth = _health;
         _moveSpeed = 1.5f;
@@ -103,6 +104,7 @@ public class StatManager : MonoBehaviour
         _attack = 1;
         _baseAttack = _attack;
         _armor = -1;
+        _maxArmor = _armor;
         _wasJustModified = false;
     }
 
@@ -146,10 +148,10 @@ public class StatManager : MonoBehaviour
     {
         //if (!_wasJustModified) return;
 
-        _health = _baseHealth;
+        //_health = _baseHealth;
         _moveSpeed = _baseMoveSpeed;
 
-        for (int i = _modifiers.Count-1; i > 0; i--)
+        for (int i = _modifiers.Count-1; i >= 0; i--)
         {
             print(i);
             Modifier mod = _modifiers[i];
@@ -172,6 +174,7 @@ public class StatManager : MonoBehaviour
                     break;
                 case Modifier.ModifierType.Armor:
                     _armor = (int)mod._value;
+                    _maxArmor = _armor;
                     _modifiers.Remove(mod); // No need to keep it any longer once the value is set
                     break;
             }
@@ -193,7 +196,7 @@ public class StatManager : MonoBehaviour
         }
 
         _health -= amount;
-        if (_outlineEffect) _outlineEffect.TakeDamageEffect();
+        if (_takeDamageEffect) _takeDamageEffect.TakeDamageEffect();
 
         if ( _health <= 0)
         {

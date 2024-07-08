@@ -8,6 +8,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 using static UnityEditorInternal.VersionControl.ListControl;
 
@@ -21,15 +22,16 @@ public class PlayerManager : MonoBehaviour
     byte _ultimateProgression;
 
     // State related
-    string _currentState;
+    public string _currentState;
     string _lastState;
     [NonSerialized] public string _defaultState;
     static Dictionary<string, Action[]> _states = new Dictionary<string, Action[]>();
+    bool _disablingState;
 
     // These actions are the changing code actually executed by the middlewares
-    Action _mouseHover;
-    Action _leftClick;
-    Action _rightClick;
+    Action _mouseHover = () => { print("hover wtf"); };
+    Action _leftClick = () => { print("left wtf"); };
+    Action _rightClick = () => { print("right wtf"); };
 
     [NonSerialized] public PlayerInput _pInput;
     [NonSerialized] public Vector3 _virtualPos;
@@ -49,13 +51,6 @@ public class PlayerManager : MonoBehaviour
     // Pre-Awake constructor
     PlayerManager()
     {
-        AddState( "Empty",
-            () => {
-                SetLeftClickTo(()=>{ print("huh"); });
-                SetRightClickTo(() => { });
-                SetHoverTo(()=>{ });
-            }, ()=>{ });
-
         _defaultState = "movement";
         _currentState = "movement";
         _lastState = "movement";
@@ -103,6 +98,11 @@ public class PlayerManager : MonoBehaviour
         _pInput.actions["Ultimate"].performed -= OnUltimatePerformed;
         _pInput.actions["LeftClick"].performed -= OnLeftClickPerformed;
         _pInput.actions["RightClick"].performed -= OnRightClickPerformed;
+    }
+
+    private void Update()
+    {
+        TriggerMouseHovering();
     }
 
 
@@ -157,7 +157,52 @@ public class PlayerManager : MonoBehaviour
     {
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100,  _clickableLayers))
         {
+            if (_disablingState)
+                SetToLastState();
+
+            _disablingState = false;
             _mouseHover();
+
+            SetCursorToCorrespondingOne();
+        }
+        else
+        {
+            if(false == _disablingState && _currentState == "movement")
+            {
+                SetToState("Empty");
+                _disablingState = true;
+                GI.SetCursorTo(GI.CursorRestriction.VOID);
+            }
+        }
+    }
+
+    private void SetCursorToCorrespondingOne()
+    {
+        if(_lastHit.transform.gameObject.TryGetComponent(out Enemy enemy ) )
+        {
+            if (enemy.IsSelectable)
+                GI.SetCursorTo(GI.CursorRestriction.S_ENEMIES);
+            else
+                GI.SetCursorTo(GI.CursorRestriction.ENEMIES);
+            return;
+        }
+        
+        if(_lastHit.transform.gameObject.TryGetComponent(out Interactible interactible))
+        {
+            if (interactible.IsSelectable)
+                GI.SetCursorTo(GI.CursorRestriction.S_INTERACTIBLES);
+            else
+                GI.SetCursorTo(GI.CursorRestriction.INTERACTIBLES);
+            return;
+        }
+
+        if (_lastHit.transform.gameObject.TryGetComponent(out Tile tile))
+        {
+            if (tile.IsSelectable)
+                GI.SetCursorTo(GI.CursorRestriction.S_TILES);
+            else
+                GI.SetCursorTo(GI.CursorRestriction.TILES);
+            return;
         }
     }
 
@@ -208,22 +253,27 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
-        Action[] func;
-        if(_states.TryGetValue(name, out func))
+        if (name == _currentState) return false;
+
+        if(_states.TryGetValue(name, out Action[] func))
         {
-            _lastState = _currentState;
+            if(_currentState!="Empty")
+                _lastState = _currentState;
             Action[] exit;
+            GI.ResetCursorValues();
             _states.TryGetValue(_currentState, out exit);
             exit[1]();
             _currentState = name;
             func[0]();
             return true;
         }
+        print("missed state change");
         return false;
     }
 
     public void SetToLastState()
     {
+        print("last state is : " + _lastState);
         SetToState(_lastState);
     }
 
@@ -242,6 +292,12 @@ public class PlayerManager : MonoBehaviour
             yield return null;
         }
 
+        AddState("Empty",
+            () => {
+                SetLeftClickTo(() => { print("huh"); });
+                SetRightClickTo(() => { });
+                SetHoverTo(() => { });
+            }, () => { });
         SetToDefault();
     }
 

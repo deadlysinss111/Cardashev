@@ -72,24 +72,6 @@ abstract public class Enemy : MonoBehaviour
         //print("Enemy is selectable: "+_selectable);
     }
 
-    private void OnMouseEnter()
-    {
-        ChangeCursor(IsSelectable);
-    }
-    
-    private void OnMouseExit()
-    {
-        ChangeCursor(false);
-    }
-
-    private void ChangeCursor(bool cursorMod)
-    {
-        if(cursorMod)
-            Cursor.SetCursor(GI._cursor, Vector2.zero, CursorMode.ForceSoftware);
-        else
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-    }
-
     // Pick a random reachable position
     public Vector3 RandomNavmeshLocation(float radius, Vector3 pos)
     {
@@ -130,11 +112,7 @@ abstract public class Enemy : MonoBehaviour
         print($"Took {amount} damages!");
         StatManager manager = gameObject.GetComponent<StatManager>();
         manager.TakeDamage(amount);
-        if (manager.Health <= 0)
-        {
-            Defeat();
-            return;
-        }
+        if (manager.Health <= 0) return;
         _hurtParticles.Play();
     }
 
@@ -151,7 +129,7 @@ abstract public class Enemy : MonoBehaviour
     public virtual void Defeat()
     {
         //TODO: ue there
-        GameObject.Find("ExitTile(Clone)").GetComponent<EscapeTile>().TriggerCondition(_name);
+        HierarchySearcher.FindChildRecursively(GameObject.Find("ExitTile(Clone)").transform, "ExitPlate").GetComponent<EscapeTile>().TriggerCondition(_name);
 
         if (_lookAtCoroutine != null)
             StopCoroutine(_lookAtCoroutine);

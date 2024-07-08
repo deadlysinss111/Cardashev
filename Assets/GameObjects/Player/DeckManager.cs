@@ -160,6 +160,8 @@ public class DeckManager : MonoBehaviour
         {
             for (int i = 0; i < _hand.Count; i++)
             {
+                if (i >= startPositions.Count)
+                    continue;
                 _hand[i].transform.localPosition = Vector3.Lerp(startPositions[i], endPositions[i], (elapsedTime / transitionDuration));
             }
             elapsedTime += Time.deltaTime;
