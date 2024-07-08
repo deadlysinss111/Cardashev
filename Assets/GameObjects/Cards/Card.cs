@@ -6,6 +6,7 @@ using Unity.VisualScripting.FullSerializer.Internal;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Card : MonoBehaviour
@@ -29,6 +30,7 @@ public class Card : MonoBehaviour
     protected Vector3 _lastScale;
     protected Action _timeStopedEvent = ()=> { };
     protected Action _timeStopedClick = ()=> { };
+    protected bool _isCollectible;
 
     [SerializeField] protected LayerMask _clickableLayers;
     public Color _actionColor;
@@ -60,6 +62,7 @@ public class Card : MonoBehaviour
         _maxLv = 3;
         _trigger += () => Effect();
         _clickEffect = PlayCard;
+        _isCollectible = false;
     }
 
     protected void Init(float duration, byte maxLvl, int goldValue, int[] stats, string description = "")
@@ -86,8 +89,10 @@ public class Card : MonoBehaviour
 
     // In shop & rewards behaviour
     // TODO => move it to its own, new class
+    // Set a card as collectible, assign it a function that will run on click, and determine what to do with the card depending on the result (nothin / add to deck...)
     public void SetToCollectible(Func<CollectibleState> func)
     {
+        _isCollectible = true;
         _clickEffect = () =>
         {
             switch (func())
@@ -96,16 +101,18 @@ public class Card : MonoBehaviour
                     return;
                 case CollectibleState.ADDTODECK:
                     CurrentRunInformations.AddCardsToDeck(new List<GameObject> { gameObject });
+                    _isCollectible = false;
                     break;
                 case CollectibleState.BACKTOPLAYABLE:
-                    _clickEffect = ClickEvent;
+                    _clickEffect = PlayCard;
+                    _isCollectible = false;
                     break;
                 case CollectibleState.ADDTODECKANDBACKTOPLAY:
                     CurrentRunInformations.AddCardsToDeck(new List<GameObject> { gameObject });
-                    _clickEffect = ClickEvent;
+                    _clickEffect = PlayCard;
+                    _isCollectible = false;
                     break;
             };
-            print("cash id : " + CurrentRunInformations._goldAmount);
         };
     }
 
@@ -181,14 +188,30 @@ public class Card : MonoBehaviour
     // make the card bigger when mouse is over it
     void OnMouseEnter()
     {
-        _lastScale = transform.localScale;
-        transform.localScale *= 2;
-        transform.localPosition += new Vector3(0, 200, 0);
+        if (false == _isCollectible)
+        {
+            _lastScale = transform.localScale;
+            transform.localScale *= 2;
+            transform.localPosition += new Vector3(0, 200, 0);
+        }
+        else
+        {
+            _lastScale = transform.localScale;
+            transform.localScale *= 1.4f;
+        }
+            
     }
     void OnMouseExit()
     {
-        transform.localScale = _lastScale;
-        transform.localPosition -= new Vector3(0, 200, 0);
+        if (false == _isCollectible)
+        {
+            transform.localScale = _lastScale;
+            transform.localPosition -= new Vector3(0, 200, 0);
+        }
+        else
+        {
+            transform.localScale = _lastScale;
+        }
     }
 
 

@@ -16,20 +16,40 @@ public class Merchant : Interactible
     public override void OnRaycastHit()
     {
         if (Vector3.Distance(this.transform.position, _playerRef.transform.position) <= _RaycastHitDist)
-            DrawOfferedCards();
+            StartCoroutine(BandAidOffsetDrawing());
         else
             print("you're too far from the merchant");
     }
 
+    // Band aid that prevent the click effect to be called right awa (hate unity btw)
+    IEnumerator BandAidOffsetDrawing()
+    {
+        byte offset = 2;
+        while (offset-- >0)
+        {
+            yield return null;
+        }
+        DrawOfferedCards();
+    }
+
     void DrawOfferedCards()
     {
-        print("once");
+        GI._PManFetcher().SetToState("Empty");
         _interface.SetActive(true);
         List<string> pool;
         Collection._unlocked.TryGetValue(Idealist._instance._name, out pool);
         int x = -300;
 
-        for (int i = 0; i < 6; i++)
+        // Show to the player his current money
+        GameObject playerGoldbagObj = new GameObject();
+        TextMesh playerGoldbagTxt = playerGoldbagObj.AddComponent<TextMesh>();
+        playerGoldbagObj.transform.SetParent(_interface.transform, false);
+        playerGoldbagTxt.text = CurrentRunInformations._goldAmount.ToString();
+        playerGoldbagTxt.color = Color.red;
+        playerGoldbagTxt.fontSize = 300;
+        playerGoldbagObj.transform.localPosition = new Vector3(-500, 200, 0.1f);
+
+        for (int i = 0; i < 4; i++)
         {
             // We first create the card object
             GameObject cardObj = Card.Instantiate(pool[Random.Range(0, pool.Count)], true);
@@ -48,23 +68,24 @@ public class Merchant : Interactible
             priceTxt.text = amount.ToString();
             priceTxt.color = Color.red;
             priceTxt.fontSize = 200;
-            priceObj.transform.localPosition = new Vector3(x-5, 60, 0.1f);
+            priceObj.transform.localPosition = new Vector3(x - 5, 60, 0.1f);
 
             // We set the card as a collectible with a price
-            //cardComp.SetToCollectible(() =>
-            //{
-            //    print("why?");
-            //    if (CurrentRunInformations._goldAmount >= amount)
-            //    {
-            //        CurrentRunInformations._goldAmount -= amount;
-            //        //Destroy(cardObj);
-            //        Destroy(priceObj);
-            //        return Card.CollectibleState.ADDTODECKANDBACKTOPLAY;
-            //    }
-            //    return Card.CollectibleState.NOTHING;
-            //});
+            cardComp.SetToCollectible(() =>
+            {
+                if (CurrentRunInformations._goldAmount >= amount)
+                {
+                    CurrentRunInformations._goldAmount -= amount;
+                    //Destroy(cardObj);
+                    Destroy(priceObj);
+                    playerGoldbagTxt.text = CurrentRunInformations._goldAmount.ToString();
+                    return Card.CollectibleState.ADDTODECKANDBACKTOPLAY;
+                }
+                cardObj.GetComponent<Animator>().SetTrigger("Shake");
+                return Card.CollectibleState.NOTHING;
+            });
 
-            x += 100;
+            x += 200;
         }
     }
 }

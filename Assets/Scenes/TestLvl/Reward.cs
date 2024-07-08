@@ -162,6 +162,7 @@ public class Reward : MonoBehaviour
                 foreach (GameObject slot in cards)
                 {
                     slot.transform.SetParent(GI._deckContainer.transform, false);
+                    print("NOT ALLOWED");
                     slot.SetActive(false);
                 };
                 _cardBG.SetActive(false);
