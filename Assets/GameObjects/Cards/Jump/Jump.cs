@@ -82,7 +82,7 @@ public class Jump : Card
     {
         if (_selectableArea.CheckForSelectableTile(_lastDest) == false) return;
         _selectableArea.ResetSelectable();
-        ClearPath();
+        //ClearPath();
         PlayerManager manager = GI._PManFetcher();
         manager._virtualPos = _lastDest;
         manager.SetToDefault();

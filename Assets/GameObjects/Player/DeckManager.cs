@@ -171,6 +171,8 @@ public class DeckManager : MonoBehaviour
         // Set final positions to ensure all cards are correctly placed
         for (int i = 0; i < _hand.Count; i++)
         {
+            if (i >= startPositions.Count)
+                continue;
             _hand[i].transform.localPosition = endPositions[i];
         }
 

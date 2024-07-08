@@ -38,6 +38,7 @@ public class JumpAndShockwave : Card
 
     void ExitState()
     {
+        _selectableArea.ResetSelectable();
         _previewRadius.SetActive(false);
         //ClearPath();
     }
@@ -91,7 +92,7 @@ public class JumpAndShockwave : Card
     protected void TriggerJump()
     {
         if (_selectableArea.CheckForSelectableTile(_lastDest) == false) return;
-        ClearPath();
+        //ClearPath();
         _selectableArea.ResetSelectable();
         GI._PManFetcher()._virtualPos = _lastDest;
         GI._PManFetcher().SetToDefault();

@@ -144,6 +144,7 @@ public class PlayerManager : MonoBehaviour
         
         if (hasHit)
         {
+            _disablingState = false;
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("UI"))
             {
                 return;

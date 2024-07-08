@@ -28,6 +28,7 @@ public class Card : MonoBehaviour
     protected SelectableArea _selectableArea;
     protected LineRenderer _lineRenderer;
     protected Vector3 _lastScale;
+    protected Vector3 _lastPos;
     protected Action _timeStopedEvent = ()=> { };
     protected Action _timeStopedClick = ()=> { };
     protected bool _isCollectible;
@@ -51,7 +52,6 @@ public class Card : MonoBehaviour
         BACKTOPLAYABLE,
         ADDTODECKANDBACKTOPLAY
     }
-    public GameObject _target;
     [NonSerialized] public GameObject _target;
 
     /*
@@ -109,6 +109,7 @@ public class Card : MonoBehaviour
                     _isCollectible = false;
                     break;
                 case CollectibleState.ADDTODECKANDBACKTOPLAY:
+                    print("bah je suis la bouffon");
                     CurrentRunInformations.AddCardsToDeck(new List<GameObject> { gameObject });
                     _clickEffect = PlayCard;
                     _isCollectible = false;
@@ -196,6 +197,7 @@ public class Card : MonoBehaviour
         if (false == _isCollectible)
         {
             _lastScale = transform.localScale;
+            _lastPos = transform.localPosition;
             transform.localScale *= 2;
             transform.localPosition += new Vector3(0, 200, 0);
         }
@@ -211,7 +213,7 @@ public class Card : MonoBehaviour
         if (false == _isCollectible)
         {
             transform.localScale = _lastScale;
-            transform.localPosition -= new Vector3(0, 200, 0);
+            transform.localPosition = _lastPos;
         }
         else
         {

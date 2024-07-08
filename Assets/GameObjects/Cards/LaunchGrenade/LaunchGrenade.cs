@@ -51,7 +51,7 @@ public class LaunchGrenade : Card
     {
         _previwRadius.SetActive(false);
         _selectableArea.ResetSelectable();
-        ClearPath();
+        //ClearPath();
     }
 
     public override void Effect()
@@ -93,7 +93,7 @@ public class LaunchGrenade : Card
 
     protected void FireGrenade()
     {
-        ClearPath();
+        //ClearPath();
         _selectableArea.ResetSelectable();
         GI._PManFetcher().SetToDefault();
         // Trigger the card play event

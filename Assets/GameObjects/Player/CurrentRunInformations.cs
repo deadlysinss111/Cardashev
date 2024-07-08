@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 // This class is meant to contain the player's informations and save / load theme
@@ -26,7 +28,7 @@ static public class CurrentRunInformations
             {
                 GameObject card = Card.Instantiate(name);
                 _deck.Add(card);
-                card.transform.parent = GI._deckContainer.transform;
+                card.transform.SetParent(GI._deckContainer.transform);
             }
     }
     
@@ -40,8 +42,9 @@ static public class CurrentRunInformations
         else
             foreach (GameObject card in ARGIncomingCards)
             {
+                Debug.Log("the card is : "+card.name);
                 _deck.Add(card);
-                card.transform.parent = GI._deckContainer.transform;
+                card.transform.SetParent(GI._deckContainer.transform);
             }
     }
 
