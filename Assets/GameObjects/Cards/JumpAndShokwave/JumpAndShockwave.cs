@@ -40,7 +40,7 @@ public class JumpAndShockwave : Card
     {
         _selectableArea.ResetSelectable();
         _previewRadius.SetActive(false);
-        //ClearPath();
+        ClearPath();
     }
 
     public override void Effect()

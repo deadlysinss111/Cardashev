@@ -34,7 +34,7 @@ public class Jump : Card
     void ExitState()
     {
         _selectableArea.ResetSelectable();
-        //ClearPath();
+        ClearPath();
     }
 
     public override void Effect()

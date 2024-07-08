@@ -51,7 +51,7 @@ public class LaunchGrenade : Card
     {
         _previwRadius.SetActive(false);
         _selectableArea.ResetSelectable();
-        //ClearPath();
+        ClearPath();
     }
 
     public override void Effect()
