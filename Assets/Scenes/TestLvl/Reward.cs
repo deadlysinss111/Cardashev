@@ -134,10 +134,11 @@ public class Reward : MonoBehaviour
         upgrade.GetComponent<Button>().onClick.AddListener(() => { foreach (GameObject slot in cards) { Destroy(slot); }; DisplayUpgradableCards(); });
         upgrade.transform.localPosition = new Vector3(0, -100, -0.1f);
 
+        Collection._unlocked.TryGetValue(Idealist._instance._name, out List<string> pool);
+
         for (int i = 0; i < 3; i++)
         {
-            GameObject card = Card.Instantiate("LaunchGrenadeCard");
-            card.SetActive(true);
+            GameObject card = Card.Instantiate(pool[UnityEngine.Random.Range(0, pool.Count)], true);
             card.layer = LayerMask.NameToLayer("UI");
             card.transform.SetParent(GameObject.Find("Canvas").transform, false);
             card.transform.localPosition = new Vector3(200 * (i - 1), -50, -0.1f);

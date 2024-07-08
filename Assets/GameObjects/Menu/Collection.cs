@@ -14,7 +14,15 @@ public class Collection : MonoBehaviour
     // temp way to let the player have cards we'd like to have it in some external files)
     public static Dictionary<string, List<string>> _unlocked = new()
     {
-        { "Dix", new List<string>(){ "LaunchGrenadeCard" } }
+        { "Dix", new List<string>(){
+            "LaunchGrenadeCard",
+            "PiercingShotCard",
+            "SimpleShotCard",
+            "JumpCard",
+            "JumpAndShockwaveCard",
+            "OverdriveCard",
+            "ResilienceCard",
+        } }
     };
     public static Dictionary<string, List<Tuple<string, List<UnlockCondition>>>> _locked = new()
     {

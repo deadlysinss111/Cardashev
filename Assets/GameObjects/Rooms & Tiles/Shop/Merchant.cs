@@ -37,8 +37,7 @@ public class Merchant : Interactible
     {
         GI._PManFetcher().SetToState("Empty");
         _interface.SetActive(true);
-        List<string> pool;
-        Collection._unlocked.TryGetValue(Idealist._instance._name, out pool);
+        Collection._unlocked.TryGetValue(Idealist._instance._name, out List<string> pool);
         int x = -300;
 
         // Show to the player his current money
