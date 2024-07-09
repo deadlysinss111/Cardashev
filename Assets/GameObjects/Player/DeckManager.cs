@@ -46,6 +46,13 @@ public class DeckManager : MonoBehaviour
             }
         }
         CooldownBarScale();
+        if (Debug.isDebugBuild)
+        {
+            if (Input.GetKeyDown(KeyCode.Insert))
+            {
+                _drawCooldown = 0;
+            }
+        }
     }
 
     public void Draw()
