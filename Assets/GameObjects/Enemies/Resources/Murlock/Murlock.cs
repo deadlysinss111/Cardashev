@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,13 +10,15 @@ public class Murlock : Enemy
 {
     [SerializeField] GameObject _swipeHitbox;
     int _dmg;
+    GameObject[] _barrels;
 
     private new void Start()
     {
         base.Start();
         _name = "Murlock";
-        _agent.speed = 0.5f;
+        _agent.speed = 5.5f;
         _dmg = 15;
+        
     }
 
     // Enemy's decision
@@ -22,18 +26,38 @@ public class Murlock : Enemy
     {
         _isMoving = false;
 
+        _barrels = GameObject.FindGameObjectsWithTag("Spillable");
+
+        GameObject closestBarrel = FindClosestBarrel(out float distToBarrel);
+        if(distToBarrel <= 20)
+        {
+            print("there");
+            Barrel barrelScript = HierarchySearcher.FindChildRecursively(closestBarrel.transform, "Body").GetComponent<Barrel>();
+            if (barrelScript._targetedBy == null || barrelScript._targetedBy == gameObject)
+            {
+                if (Vector3.Magnitude(closestBarrel.transform.position - transform.position) <= 4)
+                    SpillBarrel(closestBarrel);
+                else
+                {
+                    barrelScript._targetedBy = gameObject;
+                    MoveToClosestBarrel();
+                }
+                return;
+            }
+        }
+
         float dist = Vector3.Magnitude(_target.transform.position - transform.position);
-        if(dist < 4)
+        if (dist < 4)
         {
             StartCoroutine(Swipe());
         }
-        else if(dist > 10)
+        else if (dist > 10)
         {
             StartCoroutine(Jump());
         }
-        else if(gameObject.GetComponent<StatManager>()._armor == 0)
+        else if (gameObject.GetComponent<StatManager>()._armor == 0)
         {
-            if(Random.Range(0, 2) == 0)
+            if (Random.Range(0, 2) == 0)
             {
                 StartCoroutine(ArmoreUp());
             }
@@ -188,5 +212,52 @@ public class Murlock : Enemy
             yield return null;
         }
         _dmg = 15;
+    }
+
+    GameObject FindClosestBarrel(out float dist)
+    {
+        GameObject closestBarrel = null;
+        float closestDist = 100;
+        foreach(GameObject barrel in _barrels)
+        {
+            dist = Vector3.Magnitude(barrel.transform.position - transform.position);
+            if( dist < closestDist)
+            {
+                closestBarrel = barrel;
+                closestDist = dist;
+            }
+        }
+        dist = closestDist;
+        return closestBarrel;
+    }
+
+    void MoveToClosestBarrel()
+    {
+        _isMoving = true;
+
+        _target = FindClosestBarrel(out float dist);
+        Vector3 dest;
+        dest = _target.transform.position;
+        dest -= 2* Vector3.Normalize(dest - transform.position);
+        dest += new Vector3(0, 2, 0);
+
+        Physics.Raycast(dest, Vector3.down, out RaycastHit hit);
+        dest = hit.transform.position + new Vector3(0.5f, 0.5f, 0.5f);
+
+        NavMeshPath path = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
+        _agent.SetDestination(dest);
+        LookInDirectionTarget(dest, 8f);
+
+        _timeBeforeDecision = GetPathTime(path);
+    }
+
+    void SpillBarrel(GameObject barrel)
+    {
+        GameObject body = HierarchySearcher.FindChildRecursively(barrel.transform, "Body");
+        body.GetComponent<Barrel>().Spill(barrel.transform.position - transform.position);
+        _target = GI._PlayerFetcher();
+        barrel.tag = "Untagged";
+        _timeBeforeDecision = 2;
     }
 }
