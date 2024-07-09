@@ -57,8 +57,9 @@ Material:
     - _Metallic: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Smoothness: 0
+    - _Smoothness: 0.1
     - _Transition_Amount: 0
+    - _Transparancy: 1.5
     m_Colors:
     - _Base_Color: {r: 0.10980394, g: 0.38477045, b: 0.7921569, a: 1}
     - _Dessolve_Noise_Tiling: {r: 0, g: 1, b: 0, a: 0}

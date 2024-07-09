@@ -26,7 +26,6 @@ public class GameOverManager : MonoBehaviour
 
     void Start()
     {
-        print("Starting Game Manager Script");
         _instance = this;
         _inGameOver = false;
 

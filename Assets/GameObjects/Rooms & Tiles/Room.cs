@@ -75,7 +75,7 @@ public class Room : MonoBehaviour
 
                         case "Population":
                             roomGOpath = roomGO.name + "/" + roomGO.name + "Prefab";
-                            Debug.Log("Attempt to load the prefab " + roomGOpath);
+                            //Debug.Log("Attempt to load the prefab " + roomGOpath);
                             break;
 
                         // Topology and Decoration tilemaps
