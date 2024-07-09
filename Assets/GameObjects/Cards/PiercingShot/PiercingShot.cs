@@ -23,12 +23,8 @@ public class PiercingShot : Card
     public override void Effect()
     {
         if (_target == null) return;
-        if (_target.TryGetComponent(out Enemy enemy) == false)
-        {
-            throw new MissingComponentException($"The object {_target.name} ({_target.GetType()}) the card aimed at does not have a Enemy script.");
-        }
         base.Effect();
-        enemy.TakeDamage(_stats[GI._PlayerFetcher().GetComponent<StatManager>().HasCritical() ? 1 : 0]);
+        _target.GetComponent<Enemy>().TakeDamage(_stats[GI._PlayerFetcher().GetComponent<StatManager>().HasCritical() ? 1 : 0]);
     }
 
     void EnterAimState()
@@ -43,6 +39,10 @@ public class PiercingShot : Card
             if (_selectableArea.CastLeftClick(out GameObject obj))
             {
                 print("You got hit by a smooth " + obj.name);
+                if (obj.TryGetComponent(out Enemy _) == false)
+                {
+                    throw new MissingComponentException($"The object {obj.name} ({obj.GetType()}) the card aimed at does not have a Enemy script.");
+                }
                 _target = obj;
                 GI._PlayerFetcher().GetComponent<PlayerManager>().SetToDefault();
                 base.PlayCard();
