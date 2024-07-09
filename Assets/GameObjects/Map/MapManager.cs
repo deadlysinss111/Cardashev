@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -55,10 +56,10 @@ public class MapManager : MonoBehaviour
         _playerLocation = Instantiate(MAP_NODE);
         _playerLocation.GetComponent<MapNode>()._nextNodes = new GameObject[NUMBER_OF_PATH];
         _playerLocation.GetComponent<MapNode>().SetAsOriginalNode();
-        _playerLocation.GetComponent<MapNode>().SelectNode();
         //_cameraManager.UpdateNodeTarget(_playerLocation);
 
         GenerateMap();
+        _playerLocation.GetComponent<MapNode>().SelectNode();
         //GI._mapNodes = _mapGrid;
     }
 
@@ -117,13 +118,21 @@ public class MapManager : MonoBehaviour
                 if (ReferenceEquals(targetNode, nextNode))
                 {
                     if (targetNode.GetComponent<MapNode>().IsLockedByBlocker()) return;
-                    MovePlayerTo(targetNode);
+                    // Triggers the click animation
+                    StartCoroutine(AnimationDuration(targetNode));
                     LockAllNodes();
                     RecursiveUnlock(_playerLocation, true);
                     break;
                 }
             }
         }
+    }
+
+    IEnumerator AnimationDuration(GameObject targetNode)
+    {
+        targetNode.GetComponent<MapNode>()._RoomIcon3D.GetComponent<RoomIconAnim>().Select();
+        yield return new WaitForSeconds(1);
+        MovePlayerTo(targetNode);
     }
 
     void MoveCloud()
@@ -187,7 +196,6 @@ public class MapManager : MonoBehaviour
             startingNode.GetComponent<MapNode>()._isStartingNode = true;
             startingNode.name = "Starting Node";
             _playerLocation.GetComponent<MapNode>()._nextNodes[pathNb] = startingNode;
-            startingNode.GetComponent<MapNode>().IsSelectable(true);
             _startingNodes.Add(startingNode);
             freeNodelist.RemoveAt(newStartCoordIndex);
         }

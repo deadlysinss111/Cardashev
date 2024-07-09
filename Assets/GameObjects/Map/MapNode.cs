@@ -21,10 +21,11 @@ public class MapNode : MonoBehaviour
 {
     [NonSerialized] public GameObject _mapNode;
 
-    Animator _animator;
-
     public GameObject[] _nextNodes;
     public MapBlocker _blocker;
+
+    // Objects for the room icon
+    [SerializeField] GameObject _ScaleParent;
     public GameObject _RoomIcon3D;
 
     [NonSerialized] public bool _isStartingNode;
@@ -50,7 +51,7 @@ public class MapNode : MonoBehaviour
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
+        //_animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -123,15 +124,11 @@ public class MapNode : MonoBehaviour
 
     public void SelectNode()
     {
-        GetComponent<MeshRenderer>().material.color = Color.cyan;
-        _RoomIcon3D.GetComponent<MeshRenderer>().enabled = false; // play a glitch animation + fade transition
-        _playerCameThrough = true;
 
         foreach (GameObject node in _nextNodes)
         {
             if (node == null) continue;
             if (node.GetComponent<MapNode>().IsLockedByBlocker()) continue;
-            node.GetComponent<MapNode>().IsSelectable(true);
         }
         if(gameObject.name != "Original Node")
         {
@@ -139,17 +136,21 @@ public class MapNode : MonoBehaviour
             //SceneManager.LoadScene("TestLvl");
             GI._loader.LoadScene("Map", "Room");
         }
+
+        GetComponent<MeshRenderer>().material.color = Color.cyan;
+        _RoomIcon3D.GetComponent<MeshRenderer>().enabled = false; // play a glitch animation + fade transition
+        _playerCameThrough = true;
     }
 
     public void UnselectNode()
     {
         GetComponent<MeshRenderer>().material.color = _defaultColor;
         if ( !_playerCameThrough ) _RoomIcon3D.GetComponent<MeshRenderer>().enabled = true;
-        foreach (GameObject node in _nextNodes)
+        /*foreach (GameObject node in _nextNodes)
         {
             if (node == null) continue;
             node.GetComponent<MapNode>().IsSelectable(false);
-        }
+        }*/
     }
 
     public void SetRoomTypeTo(RoomType roomType, MapResourceLoader resources)
@@ -165,7 +166,7 @@ public class MapNode : MonoBehaviour
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.SHOP_ICON;
                     Transform temp = _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
-                    _RoomIcon3D.transform.localScale *= 0.3f;
+                    _ScaleParent.transform.localScale *= 0.3f;
                     _RoomIcon3D.transform.localPosition = new Vector3(0, 1.5f, 0);
                     _defaultHoloColor = new Color(1.498f, 1.073f, 0f);
                     _defaultFresnelColor = new Color(2.996f, 2.3f, 0f);
@@ -176,7 +177,7 @@ public class MapNode : MonoBehaviour
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.BOSS_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().materials[0].SetFloat("_Hologram_Density", 16);
-                    _RoomIcon3D.transform.localScale *= 2;
+                    _ScaleParent.transform.localScale *= 2;
                     _RoomIcon3D.transform.localPosition = new Vector3(0, 1f, 0);
                     SetDefaultColorTo(Color.black);
                     break;
@@ -185,7 +186,7 @@ public class MapNode : MonoBehaviour
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.REST_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
-                    _RoomIcon3D.transform.localScale *= 0.5f;
+                    _ScaleParent.transform.localScale *= 0.5f;
                     _RoomIcon3D.transform.localPosition = new Vector3(0, 1.5f, 0);
                     _defaultHoloColor = new Color(0f, 3f, 0f);
                     _defaultFresnelColor = new Color(0.092f, 1.5f, 0.43f);
@@ -196,7 +197,7 @@ public class MapNode : MonoBehaviour
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.EVENT_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
-                    _RoomIcon3D.transform.localScale *= 0.3f;
+                    _ScaleParent.transform.localScale *= 0.3f;
                     SetDefaultColorTo(Color.green);
                     break;
                 }
@@ -209,7 +210,7 @@ public class MapNode : MonoBehaviour
             case RoomType.Elite:
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.ELITE_ICON;
-                    _RoomIcon3D.transform.localScale *= 0.3f;
+                    _ScaleParent.transform.localScale *= 0.3f;
                     _RoomIcon3D.transform.position += Vector3.up;
                     SetDefaultColorTo(Color.magenta);
                     break;
@@ -219,11 +220,6 @@ public class MapNode : MonoBehaviour
 
         _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Primary_Color", _defaultHoloColor);
         _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Fresnel_Color", _defaultFresnelColor);
-    }
-
-    public void IsSelectable(bool value)
-    {
-        _animator.SetBool("CanBeSelected", value);
     }
 
     void SetDefaultColorTo(Color defaultColor)
@@ -251,16 +247,11 @@ public class MapNode : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (_isLocked)
-            return;
-        if (!_animator.GetBool("MouseHover"))
-            _animator.SetBool("MouseHover", true);
+        _RoomIcon3D.GetComponent<RoomIconAnim>().MouseEnter();
     }
 
     private void OnMouseExit()
     {
-        if (_isLocked)
-            return;
-        _animator.SetBool("MouseHover", false);
+        _RoomIcon3D.GetComponent<RoomIconAnim>().MouseExit();
     }
 }

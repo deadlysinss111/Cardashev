@@ -68,7 +68,6 @@ public class HUDBlocker : MonoBehaviour
         }
         if (GI._changeStateOnHUDExit)
         {
-        print("exit");
             GI._PManFetcher().SetToLastState();
             //GI.temp = false;
             _timeStopedEvent = TimeStopedMouseEnter;
