@@ -11,7 +11,9 @@ public class EscapeTile : Interactible
 
     Action OnWalk = () => {
         GI._PlayerFetcher().GetComponent<DeckManager>().UnloadDeck();
-        GI._loader.LoadScene("Room", "Map"); };
+        GI._loader.LoadScene("Room", "Map");
+        GI.ResetCursorValues();
+    };
 
     protected override void OnTriggerEnter(Collider other)
     {
