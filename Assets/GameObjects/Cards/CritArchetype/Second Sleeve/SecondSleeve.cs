@@ -1,25 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.UIElements;
-
 
 // replace all TEMPLATE
 
 public class SecondSleeve : Card
 {
-    [SerializeField] Vignette lol;
-
-    /*
-     * fields
-     */
+    Vector3 _direction;
 
     private void Awake()
     {
@@ -27,6 +13,7 @@ public class SecondSleeve : Card
         int[] stats = new int[0];
         /* stats fill there */
         base.Init(2, 2, 60, stats);
+
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("SecondSleeve" + _id.ToString(), EnterState, ExitState) == false) _id++;
@@ -53,14 +40,14 @@ public class SecondSleeve : Card
 
     void DisplayRange()
     {
-        // Possibility to explore
-        lol.intensity.min = 0.35f;
-        lol.intensity.min = 0.36f;
+
     }
 
     public override void Effect()
     {
+        GameObject bullet = Instantiate((GameObject)Resources.Load("Bullet"));
 
+        bullet.GetComponent<Bullet>().SetDirection(_direction);
 
         base.Effect();
     }

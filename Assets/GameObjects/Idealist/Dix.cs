@@ -17,7 +17,8 @@ public class Dix : Idealist
             "JumpCard",
             "JumpAndShockwaveCard",
             "OverdriveCard",
-            "ResilienceCard"
+            "ResilienceCard",
+            "SecondSleeve"
             //"CoverCard",
         };
     }
