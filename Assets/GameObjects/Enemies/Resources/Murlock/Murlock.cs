@@ -31,7 +31,6 @@ public class Murlock : Enemy
         GameObject closestBarrel = FindClosestBarrel(out float distToBarrel);
         if(distToBarrel <= 20)
         {
-            print("there");
             Barrel barrelScript = HierarchySearcher.FindChildRecursively(closestBarrel.transform, "Body").GetComponent<Barrel>();
             if (barrelScript._targetedBy == null || barrelScript._targetedBy == gameObject)
             {
