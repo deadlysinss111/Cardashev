@@ -12,7 +12,6 @@ public class GameTimer : MonoBehaviour
     void Start()
     {
         _timePassed = 0;
-        Debug.Log("GameTimer started");
     }
 
     private void OnDestroy()

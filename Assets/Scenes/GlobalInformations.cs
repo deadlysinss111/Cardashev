@@ -48,7 +48,7 @@ static public class GI
     static public string _prefabToLoad;
 
     static public bool _changeStateOnHUDExit = false;
-    static public bool temp { set { Debug.Log("PRINT : "+value); _changeStateOnHUDExit = value; } }
+    static public bool temp { set { _changeStateOnHUDExit = value; } }
 
 
     // ------

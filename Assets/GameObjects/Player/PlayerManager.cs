@@ -29,9 +29,9 @@ public class PlayerManager : MonoBehaviour
     bool _disablingState;
 
     // These actions are the changing code actually executed by the middlewares
-    Action _mouseHover = () => { print("hover wtf"); };
-    Action _leftClick = () => { print("left wtf"); };
-    Action _rightClick = () => { print("right wtf"); };
+    Action _mouseHover = () => { /*print("hover wtf");*/ };
+    Action _leftClick = () => { /*print("left wtf");*/ };
+    Action _rightClick = () => { /*print("right wtf");*/ };
 
     [NonSerialized] public PlayerInput _pInput;
     [NonSerialized] public Vector3 _virtualPos;
@@ -274,7 +274,6 @@ public class PlayerManager : MonoBehaviour
 
     public void SetToLastState()
     {
-        print("last state is : " + _lastState);
         SetToState(_lastState);
     }
 
