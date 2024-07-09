@@ -131,9 +131,8 @@ public class StatManager : MonoBehaviour
     {
         if (modifier == null) return;
         // If there's already a critical buff on, remove it
-        if (modifier._type == Modifier.ModifierType.Critical && HasCritical())
+        if (modifier._type == Modifier.ModifierType.Critical && HasCritical(out Modifier mod))
         {
-            Modifier mod = GetModifier(Modifier.ModifierType.Critical);
             _modifiers.Remove(mod);
         }
 
