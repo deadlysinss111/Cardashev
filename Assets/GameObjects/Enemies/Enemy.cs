@@ -107,6 +107,8 @@ abstract public class Enemy : MonoBehaviour
 
     protected abstract void Move();
 
+    public void InterruptAct() { }
+
     public void TakeDamage(int amount)
     {
         print($"Took {amount} damages!");

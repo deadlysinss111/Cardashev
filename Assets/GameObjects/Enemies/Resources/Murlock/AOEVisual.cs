@@ -22,7 +22,14 @@ public class AOEVisual : MonoBehaviour
         StatManager target;
         if(collider.gameObject.TryGetComponent<StatManager>(out target))
         {
-            target.TakeDamage(_dmg);
+            if (collider.gameObject.TryGetComponent(out CoverManager cover) && cover._activated)
+            {
+                cover._health -= _dmg;
+            }
+            else
+            {
+                target.TakeDamage(_dmg);
+            }
         }
     }
 }

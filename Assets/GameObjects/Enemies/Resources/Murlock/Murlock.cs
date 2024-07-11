@@ -54,16 +54,9 @@ public class Murlock : Enemy
         {
             StartCoroutine(Jump());
         }
-        else if (gameObject.GetComponent<StatManager>()._armor == 0)
+        else if (gameObject.GetComponent<StatManager>()._armor == 0 && Random.Range(0, 2) == 0)
         {
-            if (Random.Range(0, 2) == 0)
-            {
-                StartCoroutine(ArmoreUp());
-            }
-            else
-            {
-                Move();
-            }
+            StartCoroutine(ArmoreUp());
         }
         else
         {
@@ -258,5 +251,25 @@ public class Murlock : Enemy
         _target = GI._PlayerFetcher();
         barrel.tag = "Untagged";
         _timeBeforeDecision = 2;
+    }
+
+    public new void InterruptAct()
+    {
+        StopAllCoroutines(); // Could definitely mess up something at some point but fuck it we ball
+        if (_isMoving) // Move
+        {
+            _agent.isStopped = true;
+            _agent.ResetPath();
+
+            _isMoving = false;
+        }
+        else if (_agent.enabled == false && GetComponent<Rigidbody>().isKinematic == false) // Jump
+        {
+            _agent.enabled = true;
+            _agent.ResetPath();
+            GetComponent<Rigidbody>().isKinematic = true;
+        }
+
+        _timeBeforeDecision = 2f;
     }
 }

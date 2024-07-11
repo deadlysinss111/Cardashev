@@ -9,7 +9,7 @@ public class CoverManager : MonoBehaviour
     public int _health;
     float _timer;
 
-    bool _activated = false;
+    public bool _activated = false;
     bool _timerActive = false;
     bool _fullMode = false;
 
