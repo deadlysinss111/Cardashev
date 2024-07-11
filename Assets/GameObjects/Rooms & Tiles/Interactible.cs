@@ -18,9 +18,11 @@ public abstract class Interactible : MonoBehaviour
     protected static PlayerManager _playerManager;
     [SerializeField] protected bool _isHiglightable = true;
     bool _selectable = false;
+    public bool _inRange = false;
 
     [SerializeField] public int _health = 0;
-    [SerializeField] protected string _cursor = "Interacible";
+    [SerializeField] protected string _inRangeCursor = "Interactible";
+    [SerializeField] protected string _outOfRangeCursor = "Cross";
 
     /* 
      PROPERTIES
@@ -163,7 +165,8 @@ public abstract class Interactible : MonoBehaviour
             // Changes the PlayerManager state and tells it it should do a MouseHover check since what's under the mouse just changed
             _playerManager.SetToState("InteractibleTargeting");
             _playerManager.TriggerMouseHovering();
-            GI.UpdateCursors(_cursor, ((byte)GI.CursorRestriction.INTERACTIBLES+ (byte)GI.CursorRestriction.S_INTERACTIBLES));
+            GI.UpdateCursors(_inRangeCursor, (byte)GI.CursorRestriction.S_INTERACTIBLES);
+            GI.UpdateCursors(_outOfRangeCursor, (byte)GI.CursorRestriction.INTERACTIBLES);
         }
     }
     private void OnMouseExit()
@@ -184,6 +187,12 @@ public abstract class Interactible : MonoBehaviour
     void Update()
     {
         CheckSelectable();
+        CheckRange();
+    }
+
+    void CheckRange()
+    {
+        _inRange = Vector3.Magnitude(transform.position - GI._PManFetcher()._virtualPos) <= _RaycastHitDist? true : false;
     }
 
     void CheckSelectable()

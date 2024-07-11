@@ -10,7 +10,7 @@ public class JackLever : Interactible
 
     private void Start()
     {
-        _RaycastHitDist = 15;
+        _RaycastHitDist = 11;
         _startuping = false;
     }
 
@@ -33,6 +33,9 @@ public class JackLever : Interactible
             if (TryGetComponent<Outline>(out Outline outline))
                 Destroy(outline);
             _isHiglightable = false;
+            _inRangeCursor = null;
+            _outOfRangeCursor = null;
+            GI._PManFetcher().SetToDefault();
         }
         else
             print("you're too far from the hammer");
@@ -70,7 +73,6 @@ public class JackLever : Interactible
                 // Alterate the target in case we hit an object structured with an Animator (Jackhammer only atm)
                 if (HierarchySearcher.FindParentdRecursively(target.transform, "Animator") != null)
                 {
-                    print("altered");
                     target = HierarchySearcher.FindParentdRecursively(target.transform, "Animator");
                 }
                 if (target.transform.parent.gameObject.TryGetComponent<StatManager>(out StatManager statManager))

@@ -11,7 +11,7 @@ public class Merchant : Interactible
     {
         _interface = GameObject.Find("Canvas").GetComponent<CanvasScript>()._shopInterface;
         _RaycastHitDist = 4;
-        _cursor = "Dialog";
+        _inRangeCursor = "Dialog";
     }
 
     public override void OnRaycastHit()

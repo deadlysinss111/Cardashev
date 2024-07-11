@@ -113,7 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isHiglightable: 1
   _health: 5
-  _cursor: Interacible
+  _cursor: Interactible
   _UeOnRaycastHit:
     m_PersistentCalls:
       m_Calls: []
