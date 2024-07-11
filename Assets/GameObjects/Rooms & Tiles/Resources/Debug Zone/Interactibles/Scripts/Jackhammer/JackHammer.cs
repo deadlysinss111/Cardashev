@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
+using static UnityEngine.GraphicsBuffer;
 
 public class JackHammer : MonoBehaviour
 {
-    Action _updateEffect;
-
     Dictionary<int, Vector3> _intToVector = new Dictionary<int, Vector3>()
     {
         {0, new Vector3(0, 0, 2) },
@@ -17,40 +17,47 @@ public class JackHammer : MonoBehaviour
         {3, new Vector3(-2, 0, 0) },
     };
 
-    private void Awake()
-    {
-        //_updateEffect = () => { };
-        _updateEffect = Operating;
-    }
+    [SerializeField] float _fuel = 35;
+    [SerializeField] int _dmg = 25;
 
     private void Update()
     {
-        //_updateEffect();
+        _fuel -= Time.deltaTime;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider target)
     {
-        //if (collision.transform.gameObject.CompareTag("TMTopology"))
+        if(target.gameObject.TryGetComponent(out StatManager statManager))
         {
-            _updateEffect();
-            print("collided");
+            statManager.TakeDamage(_dmg);
         }
-
     }
 
-    void Operating()
+    public void Operating(bool state)
     {
-        ////gameObject.GetComponent<Rigidbody>().AddForce(0, 10, 1);
-        //Physics.Raycast(transform.position + new Vector3(0, 2, 0), Vector3.down, out RaycastHit hit);
-        //Vector3 target = hit.transform.position + _intToVector[1];
-        //Vector3 velocity = TrajectoryToolbox.BellCurveInitialVelocity(hit.transform.position, target, 5)*5;
-        ////velocity.y *= 1000;
-        //gameObject.GetComponent<Rigidbody>().AddForce(velocity);
-        HierarchySearcher.FindChildRecursively(transform, "Animator").GetComponent<Animator>().SetTrigger("Bounce");
+        HierarchySearcher.FindChildRecursively(transform, "Animator").GetComponent<Animator>().SetBool("Bounce", state);
     }
 
     public void Move()
     {
-        GetComponent<Rigidbody>().velocity += _intToVector[UnityEngine.Random.Range(0, 4)];
+        Vector3 target = transform.position + _intToVector[UnityEngine.Random.Range(0, 4)];
+        Physics.Raycast(target + new Vector3(0, 2, 0), Vector3.down, out RaycastHit hit);
+        if (hit.transform == null) return;
+        //print(hit.transform.gameObject.name);
+        if (hit.transform.gameObject.CompareTag("TMTopology"))
+            //GetComponent<Rigidbody>().AddForce(_intToVector[UnityEngine.Random.Range(0, 4)]);
+            //GetComponent<Rigidbody>().AddForce(new Vector3(0, 0, -200));
+            transform.position = target;
+        CheckForFuel();
+    }
+
+    void CheckForFuel()
+    {
+        if (_fuel <= 0)
+        {
+            HierarchySearcher.FindChildRecursively(transform, "Animator").GetComponent<Animator>().SetInteger("Debris", UnityEngine.Random.Range(0, 2)==0? 90 : -90);
+            Operating(false);
+            Destroy(GetComponent<StatManager>());
+        }
     }
 }

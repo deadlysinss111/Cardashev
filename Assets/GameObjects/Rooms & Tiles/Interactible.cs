@@ -16,9 +16,10 @@ public abstract class Interactible : MonoBehaviour
     */
     protected static GameObject _playerRef;
     protected static PlayerManager _playerManager;
-    [SerializeField] bool _isHiglightable = true;
+    [SerializeField] protected bool _isHiglightable = true;
     bool _selectable = false;
 
+    [SerializeField] public int _health = 0;
     [SerializeField] protected string _cursor = "Interacible";
 
     /* 
@@ -56,7 +57,7 @@ public abstract class Interactible : MonoBehaviour
         _UeOnRaycastHit.AddListener(OnRaycastHit);
 
         // Non combined mesh scenario
-        if (transform.childCount == 0) return;
+        if (transform.childCount == 0 || false == gameObject.TryGetComponent(out MeshCollider collider)) return;
 
         // Mesh Combining
         List<MeshFilter> meshFilters = new List<MeshFilter>();
@@ -97,17 +98,17 @@ public abstract class Interactible : MonoBehaviour
         switch (ARGcollider.gameObject.tag)
         {
             case "Player":
-                Debug.Log("Player came into contact with " + this.gameObject.name);
+                //Debug.Log("Player came into contact with " + this.gameObject.name);
                 break;
 
             case "Enemy":
-                Debug.Log(ARGcollider.gameObject.name + "Enemy came into contact with " + this.gameObject.name);
+                //Debug.Log(ARGcollider.gameObject.name + "Enemy came into contact with " + this.gameObject.name);
                 break;
 
             // Should be replaced by more case, since this is intended to detect projectiles, attack hitboxes or explosions
             // TODO : add more case when those 3 will be implemented
             default:
-                Debug.Log("Something else came into contact with " + this.gameObject.name);
+                //Debug.Log("Something else came into contact with " + this.gameObject.name);
                 break;
         }
     }
@@ -137,6 +138,7 @@ public abstract class Interactible : MonoBehaviour
     virtual public void OnRaycastHit()
     {
         // Tests the distance of the player from the one of the Interactible in all 3 axis
+        print("targeted interactible");
         if (Vector3.Distance(this.transform.position, _playerRef.transform.position) <= _RaycastHitDist)
             Debug.Log(this.gameObject.name + " was raycast-hit within valid distance !");
         else
@@ -191,8 +193,8 @@ public abstract class Interactible : MonoBehaviour
 
         if (SelectableArea.EnemyAreaCheck == false)
         {
-            if (TryGetComponent(out Outline outline))
-                Destroy(outline);
+            //if (TryGetComponent(out Outline outline))
+            //    Destroy(outline);
             return;
         }
 
@@ -226,5 +228,10 @@ public abstract class Interactible : MonoBehaviour
         {
             Destroy(outline);
         }
+    }
+
+    public virtual void Kill()
+    {
+        Destroy(gameObject);
     }
 }

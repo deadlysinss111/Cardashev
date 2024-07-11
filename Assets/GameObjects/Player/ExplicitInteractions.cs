@@ -29,14 +29,16 @@ public class ExplicitInteractions : MonoBehaviour
         _manager.SetHoverTo( () => { } );
         _manager.SetRightClickTo( () => { } );
     }
-    private void OnExitState() { }
+    private void OnExitState() {  }
 
 
     // Calls the response to a raycast hit event of the Interactbile target
     public void RaycastResponseCaller()
     {
         // Updates the current Interactible
-        _currentInteractible = FindPrefabOriginRecur(_manager._lastHit.collider.gameObject);
+        //_currentInteractible = FindPrefabOriginRecur(_manager._lastHit.collider.gameObject);
+        _currentInteractible = FindPrefabOriginRecur(_manager._lastHit.transform.gameObject);
+        //print("target is : "+ _currentInteractible.name);
 
         // "Raises" a RaycastHit event, given the Interactible isn't null for some reason
         if (_currentInteractible != null)
@@ -57,7 +59,9 @@ public class ExplicitInteractions : MonoBehaviour
 
         // Simplest case : the tested GameObject is the root prefab
         if (ARGprefabChild.tag == "InteractibleObject")
+        {
             result = ARGprefabChild;
+        }
 
         // Simplest case failed : going up the Parent ONLY IF the root of the scene was not reached
         else if (ARGprefabChild.gameObject != ARGprefabChild.GetComponentInParent<Transform>().gameObject)

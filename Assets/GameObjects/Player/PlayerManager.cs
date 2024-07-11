@@ -190,6 +190,7 @@ public class PlayerManager : MonoBehaviour
         
         if(_lastHit.transform.gameObject.TryGetComponent(out Interactible interactible))
         {
+            //print("should cursor :c");
             if (interactible.IsSelectable)
                 GI.SetCursorTo(GI.CursorRestriction.S_INTERACTIBLES);
             else
