@@ -35,7 +35,14 @@ public class GrenadeScript : MonoBehaviour
             GameObject target = HierarchySearcher.FindParentdRecursively(c.transform, "Body");
             if (target != null)
             {
-                target.transform.parent.gameObject.GetComponent<StatManager>().TakeDamage(_dmg);
+                // Alterate the target in case we hit an object structured with an Animator (Jackhammer only atm)
+                if (HierarchySearcher.FindParentdRecursively(target.transform, "Animator") != null)
+                {
+                    print("altered");
+                    target = HierarchySearcher.FindParentdRecursively(target.transform, "Animator");
+                }
+                if(target.transform.parent.gameObject.TryGetComponent<StatManager>(out StatManager statManager))
+                    statManager.TakeDamage(_dmg);
             }
         }
         Destroy(gameObject);
