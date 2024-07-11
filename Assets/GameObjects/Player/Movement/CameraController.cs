@@ -75,7 +75,7 @@ public class CameraController : MonoBehaviour
     private void UnlockedMode()
     {
         Vector3 move = new Vector3(_moveInput.x, 0, _moveInput.y);
-        transform.Translate(move * Time.deltaTime * _smoothSpeed, Space.World);
+        transform.Translate(move * Time.unscaledDeltaTime * _smoothSpeed, Space.World);
     }
 
     private void ChangeMode()
