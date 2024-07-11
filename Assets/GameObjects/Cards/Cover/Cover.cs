@@ -24,9 +24,9 @@ public class Cover : Card
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
         int[] stats = new int[2];
         stats[0] = 50;
-        stats[1] = 6;
+        stats[1] = 15;
         /* stats fill there */
-        base.Init(2, 4, 60, stats, $"Summon a cool protection that lasts {stats[1]} seconds, or tank {stats[0]} dmg");
+        base.Init(2, 4, 60, stats, $"Summon a cool protection that lasts {stats[1]} seconds that can tank {stats[0]} dmg");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("Cover" + _id.ToString(), EnterState, ExitState) == false) _id++;
