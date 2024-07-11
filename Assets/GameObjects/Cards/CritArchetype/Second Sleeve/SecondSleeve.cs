@@ -6,6 +6,7 @@ using UnityEngine.Rendering.Universal;
 public class SecondSleeve : Card
 {
     Vector3 _direction;
+    int _damage = 10;
 
     private void Awake()
     {
@@ -68,7 +69,7 @@ public class SecondSleeve : Card
         bullet.GetComponent<Bullet>().SetDirection(_direction);
         Vector3 initPos = GI._PManFetcher()._virtualPos;
         initPos.y += 3;
-        bullet.GetComponent<Bullet>().SetInitialPosition(initPos);
+        bullet.GetComponent<Bullet>().SetInitialValues(initPos, 10,_damage);
 
         base.Effect();
     }
