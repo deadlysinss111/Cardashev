@@ -14,6 +14,7 @@ public class Bullet : MonoBehaviour
         {
             other.GetComponent<Enemy>().TakeDamage(_damage);
             Destroy(this);
+            return;
         }
 
         // TODO : Add a case for obstacle collision

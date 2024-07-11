@@ -67,7 +67,7 @@ public class SecondSleeve : Card
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
         Vector3 initPos = GI._PManFetcher()._virtualPos;
-        initPos.y += 4;
+        initPos.y += 3;
         bullet.GetComponent<Bullet>().SetInitialPosition(initPos);
 
         base.Effect();
