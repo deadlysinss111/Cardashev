@@ -75,7 +75,9 @@ public class Murlock : Enemy
         {
             yield return null;
         }
-        Instantiate(_swipeHitbox, transform.position + dir * _swipeHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<AOEVisual>()._dmg = _dmg;
+        GameObject swipe = Instantiate(_swipeHitbox, transform.position + dir * _swipeHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir));
+        swipe.GetComponent<AOEVisual>()._dmg = _dmg;
+        swipe.GetComponent<AOEVisual>()._originEnemy = gameObject;
     }
 
     // Gain armor
