@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using UnityEngine.InputSystem.Android;
 
 // GI stands for GlobalInformations
 static public class GI
@@ -46,6 +47,9 @@ static public class GI
     // Data needed for scene transition (Map --> Room)
     static public string _prefabToLoad;
 
+    static public bool _changeStateOnHUDExit = false;
+    static public bool temp { set { _changeStateOnHUDExit = value; } }
+
 
     // ------
     // SCENE LOADING UTILS
@@ -70,6 +74,24 @@ static public class GI
     static public GameObject _map; // maybe not correctly written (should be an array ?)
     static public float _gameTimer;
 
+    static public string _cursorVoid = null;
+    static public string _cursorTiles = null;
+    static public string _cursorEnemies = null;
+    static public string _cursorInteractibles = null;
+    static public string _cursorSTiles = null;
+    static public string _cursorSEnemies = null;
+    static public string _cursorSInteractibles = null;
+
+    public enum CursorRestriction
+    {
+        VOID = 1,
+        TILES = 2,
+        ENEMIES = 4,
+        INTERACTIBLES = 8,
+        S_TILES = 16,
+        S_ENEMIES = 32,
+        S_INTERACTIBLES = 64,
+    }
 
     /*
      METHODS
@@ -189,5 +211,127 @@ static public class GI
         Debug.LogError("Bro is PStatFetcherless :skullemoji:");
         return null;
         };
+    }
+
+    static public void SetCursorTo(CursorRestriction target)
+    {
+        switch (target)
+        {
+            case CursorRestriction.S_INTERACTIBLES:
+                SetCursorTo(_cursorSInteractibles);
+                break;
+            case CursorRestriction.S_ENEMIES:
+                SetCursorTo(_cursorSEnemies);
+                break;
+            case CursorRestriction.S_TILES:
+                SetCursorTo(_cursorSTiles);
+                break;
+            case CursorRestriction.INTERACTIBLES:
+                SetCursorTo(_cursorInteractibles);
+                break;
+            case CursorRestriction.ENEMIES:
+                SetCursorTo(_cursorSEnemies);
+                break;
+            case CursorRestriction.TILES:
+                SetCursorTo(_cursorTiles);
+                break;
+            case CursorRestriction.VOID:
+                SetCursorTo(_cursorVoid);
+                break;
+        }
+    }
+
+    static private void SetCursorTo(string target)
+    {
+        Cursor.SetCursor((Texture2D)Resources.Load(target), Vector2.zero, CursorMode.ForceSoftware);
+    }
+
+    static public void UpdateCursors(string name, byte restriction)
+    {
+        byte counter = 64;
+        while (counter > 0)
+        {
+            if (restriction - counter >= 0)
+            {
+                restriction -= counter;
+                switch (counter)
+                {
+                    case (byte)CursorRestriction.S_INTERACTIBLES:
+                        _cursorSInteractibles = name;
+                        break;
+                    case (byte)CursorRestriction.S_ENEMIES:
+                        _cursorSEnemies = name;
+                        break;
+                    case (byte)CursorRestriction.S_TILES:
+                        _cursorSTiles = name;
+                        break;
+                    case (byte)CursorRestriction.INTERACTIBLES:
+                        _cursorInteractibles = name;
+                        break;
+                    case (byte)CursorRestriction.ENEMIES:
+                        _cursorEnemies = name;
+                        break;
+                    case (byte)CursorRestriction.TILES:
+                        _cursorTiles = name;
+                        break;
+                    case (byte)CursorRestriction.VOID:
+                        _cursorVoid = name;
+                        break;
+                }
+            }
+            counter /= 2;
+        }
+    }
+
+    static public void UpdateCursorsInverted(string name, int restriction)
+    {
+        int counter = 64;
+        while (counter > 0)
+        {
+            if (restriction - counter < 0)
+            {
+                switch (counter)
+                {
+                    case (byte)CursorRestriction.S_INTERACTIBLES:
+                        _cursorSInteractibles = name;
+                        break;
+                    case (byte)CursorRestriction.S_ENEMIES:
+                        _cursorSEnemies = name;
+                        break;
+                    case (byte)CursorRestriction.S_TILES:
+                        _cursorSTiles = name;
+                        break;
+                    case (byte)CursorRestriction.INTERACTIBLES:
+                        _cursorInteractibles = name;
+                        break;
+                    case (byte)CursorRestriction.ENEMIES:
+                        _cursorEnemies = name;
+                        break;
+                    case (byte)CursorRestriction.TILES:
+                        _cursorTiles = name;
+                        break;
+                    case (byte)CursorRestriction.VOID:
+                        _cursorVoid = name;
+                        break;
+                }
+            }
+            else
+            {
+                if (counter == 0) return;
+                restriction -= counter;
+            }
+            counter /= 2;
+        }
+    }
+
+    static public void ResetCursorValues()
+    {
+        _cursorSInteractibles = null;
+        _cursorSEnemies = null;
+        _cursorSTiles = null;
+        _cursorInteractibles = null ;
+        _cursorSEnemies = null;
+        _cursorTiles = null;
+        _cursorVoid = null;
     }
 }

@@ -6,6 +6,7 @@ using Unity.VisualScripting.FullSerializer.Internal;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Card : MonoBehaviour
@@ -27,8 +28,10 @@ public class Card : MonoBehaviour
     protected SelectableArea _selectableArea;
     protected LineRenderer _lineRenderer;
     protected Vector3 _lastScale;
+    protected Vector3 _lastPos;
     protected Action _timeStopedEvent = ()=> { };
     protected Action _timeStopedClick = ()=> { };
+    protected bool _isCollectible;
 
     [SerializeField] protected LayerMask _clickableLayers;
     public Color _actionColor;
@@ -42,7 +45,14 @@ public class Card : MonoBehaviour
     public int _currLv;
     public int _maxLv;
 
-    public GameObject _target;
+    public enum CollectibleState
+    {
+        NOTHING = 0,
+        ADDTODECK,
+        BACKTOPLAYABLE,
+        ADDTODECKANDBACKTOPLAY
+    }
+    [NonSerialized] public GameObject _target;
 
     /*
      METHODS
@@ -53,6 +63,7 @@ public class Card : MonoBehaviour
         _maxLv = 3;
         _trigger += () => Effect();
         _clickEffect = PlayCard;
+        _isCollectible = false;
     }
 
     protected void Init(float duration, byte maxLvl, int goldValue, int[] stats, string description = "")
@@ -79,9 +90,32 @@ public class Card : MonoBehaviour
 
     // In shop & rewards behaviour
     // TODO => move it to its own, new class
-    public void SetToCollectible(Func<bool> func)
+    // Set a card as collectible, assign it a function that will run on click, and determine what to do with the card depending on the result (nothin / add to deck...)
+    public void SetToCollectible(Func<CollectibleState> func)
     {
-        _clickEffect = () => { if (func()) CurrentRunInformations.AddCardsToDeck(new List<string> { _name }); };
+        _isCollectible = true;
+        _clickEffect = () =>
+        {
+            switch (func())
+            {
+                case CollectibleState.NOTHING:
+                    return;
+                case CollectibleState.ADDTODECK:
+                    CurrentRunInformations.AddCardsToDeck(new List<GameObject> { gameObject });
+                    _isCollectible = false;
+                    break;
+                case CollectibleState.BACKTOPLAYABLE:
+                    _clickEffect = PlayCard;
+                    _isCollectible = false;
+                    break;
+                case CollectibleState.ADDTODECKANDBACKTOPLAY:
+                    print("bah je suis la bouffon");
+                    CurrentRunInformations.AddCardsToDeck(new List<GameObject> { gameObject });
+                    _clickEffect = PlayCard;
+                    _isCollectible = false;
+                    break;
+            };
+        };
     }
 
 
@@ -100,8 +134,11 @@ public class Card : MonoBehaviour
         if (Time.timeScale == 0)
         {
             _timeStopedEvent();
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
+            {
+                GI._changeStateOnHUDExit = false;
                 _timeStopedClick();
+            }
         }
     }
 
@@ -121,11 +158,12 @@ public class Card : MonoBehaviour
             {
                 OnMouseEnter();
                 _timeStopedEvent = TimeStopedMouseExit;
-                _timeStopedClick = _clickEffect;
+                _timeStopedClick = ()=> { _clickEffect(); GI.temp = false; };
                 break;
             }
         }
     }
+
 
     void TimeStopedMouseExit()
     {
@@ -156,14 +194,31 @@ public class Card : MonoBehaviour
     // make the card bigger when mouse is over it
     void OnMouseEnter()
     {
-        _lastScale = transform.localScale;
-        transform.localScale *= 2;
-        transform.localPosition += new Vector3(0, 200, 0);
+        if (false == _isCollectible)
+        {
+            _lastScale = transform.localScale;
+            _lastPos = transform.localPosition;
+            transform.localScale *= 2;
+            transform.localPosition += new Vector3(0, 200, 0);
+        }
+        else
+        {
+            _lastScale = transform.localScale;
+            transform.localScale *= 1.4f;
+        }
+            
     }
     void OnMouseExit()
     {
-        transform.localScale = _lastScale;
-        transform.localPosition -= new Vector3(0, 200, 0);
+        if (false == _isCollectible)
+        {
+            transform.localScale = _lastScale;
+            transform.localPosition = _lastPos;
+        }
+        else
+        {
+            transform.localScale = _lastScale;
+        }
     }
 
 
@@ -205,6 +260,7 @@ public class Card : MonoBehaviour
         {
             _currLv++;
             GameObject frame = (GameObject)Instantiate(Resources.Load("lvl" + _currLv+"sprite"), gameObject.transform);
+            print("frame : " + frame);
             OnUpgrade();
             UpdateDescription();
             return true;
@@ -218,13 +274,13 @@ public class Card : MonoBehaviour
         HierarchySearcher.FindChildRecursively(transform, "Duration").GetComponent<TextMeshProUGUI>().SetText(_duration.ToString());
     }
 
-    static public GameObject Instantiate(string name)
+    static public GameObject Instantiate(string name, bool isActive = false)
     {
         GameObject card = Instantiate((GameObject)Resources.Load(name));
         card.layer = LayerMask.NameToLayer("UI");
         card.transform.localScale = new Vector3(1.5f, 1.5f, 1);
         card.GetComponent<Card>().UpdateDescription();
-        card.SetActive(false);
+        card.SetActive(isActive);
 
         return card;
     }

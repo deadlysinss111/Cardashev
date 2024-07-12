@@ -22,12 +22,8 @@ public class SimpleShot : Card
     public override void Effect()
     {
         if (_target == null) return;
-        if (_target.TryGetComponent(out Enemy enemy) == false)
-        {
-            throw new MissingComponentException($"The object {_target.name} ({_target.GetType()}) the card aimed at does not have a Enemy script.");
-        }
         base.Effect();
-        enemy.TakeDamage(_stats[0]);
+        _target.GetComponent<Enemy>().TakeDamage(_stats[0]);
     }
 
     void EnterAimState()
@@ -37,19 +33,26 @@ public class SimpleShot : Card
         _selectableArea.SetSelectableEntites(false, false, true, false);
         _selectableTiles = _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 4);
 
-        GI._PManFetcher().SetLeftClickTo(() => {
+        PlayerManager manager = GI._PManFetcher();
+        manager.SetLeftClickTo(() => {
             if (_selectableArea.CastLeftClick(out GameObject obj))
             {
                 print("You got hit by a smooth " + obj.name);
+                if (obj.TryGetComponent<Enemy>(out _) == false)
+                {
+                    throw new MissingComponentException($"The object {obj.name} ({obj.GetType()}) the card aimed at does not have a Enemy script.");
+                }
                 _target = obj;
                 base.PlayCard();
-                GI._PlayerFetcher().GetComponent<PlayerManager>().SetToDefault();
+                GI._PManFetcher().SetToDefault();
             }
             else
                 print("R u ok?");
         });
-        GI._PManFetcher().SetRightClickTo(() => { ExitState(); GI._PManFetcher().SetToDefault(); });
-        GI._PManFetcher().SetHoverTo(() => { });
+        manager.SetRightClickTo(() => { ExitState(); GI._PManFetcher().SetToDefault(); });
+        manager.SetHoverTo(() => { });
+        GI.UpdateCursors("Bow", (byte)(GI.CursorRestriction.S_ENEMIES));
+        GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_ENEMIES));
     }
 
     void ExitState()

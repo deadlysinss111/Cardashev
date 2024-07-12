@@ -52,14 +52,15 @@ public class RotationSelectArrow : MonoBehaviour
     {
         if (_arrowCanvas.activeSelf)
         {
+            _arrowCanvas.transform.position = GI._PManFetcher()._virtualPos;
             Vector3 mPos = Input.mousePosition;
-            mPos.z = Camera.main.WorldToScreenPoint(GI._PlayerFetcher().transform.position).z;
+            mPos.z = Camera.main.WorldToScreenPoint(GI._PManFetcher()._virtualPos).z;
             //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity) == false) return;
             Vector3 wPos = Camera.main.ScreenToWorldPoint(mPos);
             print("PosMouse: "+wPos);
 
             //BetterDebug.Log(Input.mousePosition, _arrowCanvas.transform.rotation);
-            Quaternion rot = Quaternion.LookRotation(wPos - GI._PlayerFetcher().transform.position);
+            Quaternion rot = Quaternion.LookRotation(wPos - GI._PManFetcher()._virtualPos);
             rot.eulerAngles = new Vector3(0, rot.eulerAngles.y, rot.eulerAngles.z);
 
             _arrowCanvas.transform.rotation = rot;

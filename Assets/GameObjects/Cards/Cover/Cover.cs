@@ -58,17 +58,16 @@ public class Cover : Card
 
     void ActivateCover()
     {
-        GameObject player = GI._PlayerFetcher();
-        player.GetComponent<CoverManager>().EnableCover(_stats[0], _rotationArrow.GetRotation(), _stats[1]);
-        player.GetComponent<PlayerController>()._moveMult = 0.3f;
-        Effect();
+        base.PlayCard();
         GI._PManFetcher().SetToDefault();
     }
 
     public override void Effect()
     {
         /* Card Effect */
-
+        GameObject player = GI._PlayerFetcher();
+        player.GetComponent<CoverManager>().EnableCover(_stats[0], _rotationArrow.GetRotation(), _stats[1]);
+        player.GetComponent<PlayerController>()._moveMult = 0.3f;
         base.Effect();
     }
 
@@ -84,7 +83,7 @@ public class Cover : Card
 
     public override void OnLoad()
     {
-        _cover = GI._PlayerFetcher().transform.Find("cover").gameObject;
+        _cover = GI._PlayerFetcher().transform.Find("Cover").gameObject;
     }
 
 }

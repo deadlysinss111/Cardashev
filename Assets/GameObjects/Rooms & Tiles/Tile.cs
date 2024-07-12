@@ -18,7 +18,7 @@ public class Tile : MonoBehaviour
             return;
 
         GetComponent<MeshRenderer>().material.color = Color.yellow;
-        GI._PManFetcher().TriggerMouseHovering();
+        //GI._PManFetcher().TriggerMouseHovering();
     }
     void OnMouseExit()
     {

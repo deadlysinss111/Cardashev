@@ -21,6 +21,8 @@ abstract public class Enemy : MonoBehaviour
     protected Coroutine _lookAtCoroutine;
 
     // Death related
+    [SerializeField] public int _health = 30;
+
     //// Particle systems
     [SerializeField] protected ParticleSystem _hurtParticles;
     [SerializeField] protected ParticleSystem _deathParticles;
@@ -112,18 +114,14 @@ abstract public class Enemy : MonoBehaviour
         print($"Took {amount} damages!");
         StatManager manager = gameObject.GetComponent<StatManager>();
         manager.TakeDamage(amount);
-        if (manager.Health <= 0)
-        {
-            Defeat();
-            return;
-        }
+        if (manager.Health <= 0) return;
         _hurtParticles.Play();
     }
 
     protected void CheckPlayerDistance()
     {
         // If the enemy is too close to the player, he will stop to move
-        if( _isMoving && Vector3.Magnitude(_target.transform.position - transform.position) < 2)
+        if( _isMoving && Vector3.Magnitude(GI._PlayerFetcher().transform.position - transform.position) < 2)
         {
             _agent.destination = transform.position;
             _timeBeforeDecision = 0;
@@ -133,7 +131,7 @@ abstract public class Enemy : MonoBehaviour
     public virtual void Defeat()
     {
         //TODO: ue there
-        GameObject.Find("ExitTile(Clone)").GetComponent<EscapeTile>().TriggerCondition(_name);
+        HierarchySearcher.FindChildRecursively(GameObject.Find("ExitTile(Clone)").transform, "ExitPlate").GetComponent<EscapeTile>().TriggerCondition(_name);
 
         if (_lookAtCoroutine != null)
             StopCoroutine(_lookAtCoroutine);

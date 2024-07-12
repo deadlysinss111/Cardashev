@@ -53,10 +53,11 @@ public class StatManager : MonoBehaviour
     private int _health; // now read-only to force everyone to use TakeDamage()
     public float _moveSpeed;
     public float _attack;
-    public int _armor;
+    [NonSerialized] public int _armor;
+    [NonSerialized] public int _maxArmor;
 
     bool _wasJustModified;
-    [SerializeField] OutlineEffectScript _outlineEffect;
+    [SerializeField] OutlineEffectScript _takeDamageEffect;
 
     List<Modifier> _modifiers;
     [SerializeField] CriticalBar _criticalBar;
@@ -91,11 +92,14 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
-        PlayerManager manager;
-        if (gameObject.TryGetComponent<PlayerManager>(out manager))
+        if (gameObject.TryGetComponent<PlayerManager>(out PlayerManager manager))
             _health = Idealist._instance._baseHP;
+        else if (gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+            _health = enemy._health;
+        else if (gameObject.TryGetComponent<Interactible>(out Interactible interactible))
+            _health = interactible._health;
         else
-            _health = 10;
+            throw new Exception("are you trying to have a stat manager on a non player / enemy / interactible object?");
 
         _baseHealth = _health;
         _moveSpeed = 1.5f;
@@ -103,15 +107,16 @@ public class StatManager : MonoBehaviour
         _attack = 1;
         _baseAttack = _attack;
         _armor = -1;
+        _maxArmor = _armor;
         _wasJustModified = false;
     }
 
     void Update()
     {
         // Updates the timer of each stat modifiers that are currently being applied
-        for (int i = _modifiers.Count-1; i > 0; i--)
+        for (int i = _modifiers.Count-1; i >= 0; i--)
         {
-            print(i);
+            //print(i);
             Modifier debuff = _modifiers[i];
             debuff._duration -= Time.deltaTime;
 
@@ -129,9 +134,8 @@ public class StatManager : MonoBehaviour
     {
         if (modifier == null) return;
         // If there's already a critical buff on, remove it
-        if (modifier._type == Modifier.ModifierType.Critical && HasCritical())
+        if (modifier._type == Modifier.ModifierType.Critical && HasCritical(out Modifier mod))
         {
-            Modifier mod = GetModifier(Modifier.ModifierType.Critical);
             _modifiers.Remove(mod);
         }
 
@@ -146,10 +150,10 @@ public class StatManager : MonoBehaviour
     {
         //if (!_wasJustModified) return;
 
-        _health = _baseHealth;
+        //_health = _baseHealth;
         _moveSpeed = _baseMoveSpeed;
 
-        for (int i = _modifiers.Count-1; i > 0; i--)
+        for (int i = _modifiers.Count-1; i >= 0; i--)
         {
             print(i);
             Modifier mod = _modifiers[i];
@@ -172,6 +176,7 @@ public class StatManager : MonoBehaviour
                     break;
                 case Modifier.ModifierType.Armor:
                     _armor = (int)mod._value;
+                    _maxArmor = _armor;
                     _modifiers.Remove(mod); // No need to keep it any longer once the value is set
                     break;
             }
@@ -193,16 +198,21 @@ public class StatManager : MonoBehaviour
         }
 
         _health -= amount;
-        if (_outlineEffect) _outlineEffect.TakeDamageEffect();
+        if (_takeDamageEffect) _takeDamageEffect.TakeDamageEffect();
 
         if ( _health <= 0)
         {
             if (gameObject.TryGetComponent(out Enemy enemy))
             {
                 //enemy._UeOnDefeat.Invoke();
-                var ratilo = enemy.GetType().GetField("Defeat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                //var ratilo = enemy.GetType().GetField("Defeat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
                 //print("ratilo there : "+ enemy.GetType() );
                 enemy.Defeat();
+                return;
+            }
+            if (gameObject.TryGetComponent(out Interactible interactible))
+            {
+                interactible.Kill();
                 return;
             }
             if (gameObject.TryGetComponent(out PlayerManager player))

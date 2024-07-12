@@ -12,7 +12,7 @@ public class MobAndWincon : MonoBehaviour
     void Start()
     {
         _exitTile = GameObject.Find("ExitTile(Clone)");
-        EscapeTile esc = _exitTile.GetComponent<EscapeTile>();
+        EscapeTile esc = HierarchySearcher.FindChildRecursively(_exitTile.transform, "ExitPlate").GetComponent<EscapeTile>();
 
         foreach(string name in _winConditions)
         {

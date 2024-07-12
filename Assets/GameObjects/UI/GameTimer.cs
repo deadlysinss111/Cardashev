@@ -12,7 +12,6 @@ public class GameTimer : MonoBehaviour
     void Start()
     {
         _timePassed = 0;
-        Debug.Log("GameTimer started");
     }
 
     private void OnDestroy()
@@ -29,15 +28,15 @@ public class GameTimer : MonoBehaviour
         _timePassed += Time.deltaTime;
         _timerText.GetComponent<TMPro.TextMeshProUGUI>().text = GetFormattedTime();
 
-        // Debug trigger of the GameOver and Win screen
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
-        {
-            GameOverManager._instance.StartGameOver();
-        }
-        else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
-        {
-            _winScreen.SetActive(true);
-        }
+        //// Debug trigger of the GameOver and Win screen
+        //if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
+        //{
+        //    GameOverManager._instance.StartGameOver();
+        //}
+        //else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
+        //{
+        //    _winScreen.SetActive(true);
+        //}
     }
 
     public string GetFormattedTime()

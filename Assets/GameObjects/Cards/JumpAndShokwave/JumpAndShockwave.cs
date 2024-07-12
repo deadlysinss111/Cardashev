@@ -32,10 +32,13 @@ public class JumpAndShockwave : Card
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(Preview);
         _previewRadius.SetActive(true);
+        GI.UpdateCursors("Jump", (byte)(GI.CursorRestriction.S_TILES));
+        GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_TILES));
     }
 
     void ExitState()
     {
+        _selectableArea.ResetSelectable();
         _previewRadius.SetActive(false);
         ClearPath();
     }
@@ -89,7 +92,7 @@ public class JumpAndShockwave : Card
     protected void TriggerJump()
     {
         if (_selectableArea.CheckForSelectableTile(_lastDest) == false) return;
-        ClearPath();
+        //ClearPath();
         _selectableArea.ResetSelectable();
         GI._PManFetcher()._virtualPos = _lastDest;
         GI._PManFetcher().SetToDefault();

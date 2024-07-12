@@ -18,6 +18,8 @@ TagManager:
   - Map Node
   - Map Tree
   - coverBreakable
+  - HUD
+  - Spillable
   layers:
   - Default
   - TransparentFX

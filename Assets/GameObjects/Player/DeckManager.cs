@@ -46,6 +46,13 @@ public class DeckManager : MonoBehaviour
             }
         }
         CooldownBarScale();
+        if (Debug.isDebugBuild)
+        {
+            if (Input.GetKeyDown(KeyCode.Insert))
+            {
+                _drawCooldown = 0;
+            }
+        }
     }
 
     public void Draw()
@@ -160,6 +167,8 @@ public class DeckManager : MonoBehaviour
         {
             for (int i = 0; i < _hand.Count; i++)
             {
+                if (i >= startPositions.Count)
+                    continue;
                 _hand[i].transform.localPosition = Vector3.Lerp(startPositions[i], endPositions[i], (elapsedTime / transitionDuration));
             }
             elapsedTime += Time.deltaTime;
@@ -169,6 +178,8 @@ public class DeckManager : MonoBehaviour
         // Set final positions to ensure all cards are correctly placed
         for (int i = 0; i < _hand.Count; i++)
         {
+            if (i >= startPositions.Count)
+                continue;
             _hand[i].transform.localPosition = endPositions[i];
         }
 

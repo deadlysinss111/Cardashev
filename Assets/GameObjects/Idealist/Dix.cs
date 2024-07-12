@@ -7,16 +7,18 @@ public class Dix : Idealist
     public Dix()
     {
         _name = "Dix";
-        _baseHP = 60;
+        _baseHP = 6000;
         _instance = this;
         _startingDeck = new List<string> 
         {
             "LaunchGrenadeCard",
-            "PiercingShotCard",
+            "PiercingShotCard",/*
             "SimpleShotCard",
             "JumpCard",
-            "JumpAndShockwaveCard"
-            //"OverdriveCard",
+            "JumpAndShockwaveCard",
+            "OverdriveCard",
+            "ResilienceCard",*/
+            "SecondSleeve"
             //"CoverCard",
         };
     }

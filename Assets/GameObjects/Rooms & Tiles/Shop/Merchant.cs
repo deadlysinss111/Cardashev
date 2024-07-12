@@ -11,31 +11,50 @@ public class Merchant : Interactible
     {
         _interface = GameObject.Find("Canvas").GetComponent<CanvasScript>()._shopInterface;
         _RaycastHitDist = 4;
+        _inRangeCursor = "Dialog";
     }
 
     public override void OnRaycastHit()
     {
         if (Vector3.Distance(this.transform.position, _playerRef.transform.position) <= _RaycastHitDist)
-            DrawOfferedCards();
+            StartCoroutine(BandAidOffsetDrawing());
         else
             print("you're too far from the merchant");
     }
 
+    // Band aid that prevent the click effect to be called right awa (hate unity btw)
+    IEnumerator BandAidOffsetDrawing()
+    {
+        byte offset = 2;
+        while (offset-- >0)
+        {
+            yield return null;
+        }
+        DrawOfferedCards();
+    }
+
     void DrawOfferedCards()
     {
+        GI._PManFetcher().SetToState("Empty");
         _interface.SetActive(true);
-        List<string> pool;
-        Collection._unlocked.TryGetValue(Idealist._instance._name, out pool);
+        Collection._unlocked.TryGetValue(Idealist._instance._name, out List<string> pool);
         int x = -300;
 
-        for (int i = 0; i < 6; i++)
+        // Show to the player his current money
+        GameObject playerGoldbagObj = new GameObject();
+        TextMesh playerGoldbagTxt = playerGoldbagObj.AddComponent<TextMesh>();
+        playerGoldbagObj.transform.SetParent(_interface.transform, false);
+        playerGoldbagTxt.text = CurrentRunInformations._goldAmount.ToString();
+        playerGoldbagTxt.color = Color.red;
+        playerGoldbagTxt.fontSize = 300;
+        playerGoldbagObj.transform.localPosition = new Vector3(-500, 200, 0.1f);
+
+        for (int i = 0; i < 4; i++)
         {
             // We first create the card object
-            UnityEngine.Object CARD = Resources.Load(pool[Random.Range(0, pool.Count)]+"Model");
-            GameObject cardObj = (GameObject)Instantiate(CARD);
+            GameObject cardObj = Card.Instantiate(pool[Random.Range(0, pool.Count)], true);
             cardObj.transform.SetParent(_interface.transform, false);
             cardObj.transform.localPosition = new Vector3(x, 100, 0.1f);
-            cardObj.transform.localScale = new Vector3(5, 1, 5);
 
             // We set it's gold value
             Card cardComp = cardObj.GetComponent<Card>();
@@ -49,7 +68,7 @@ public class Merchant : Interactible
             priceTxt.text = amount.ToString();
             priceTxt.color = Color.red;
             priceTxt.fontSize = 200;
-            priceObj.transform.localPosition = new Vector3(x-5, 60, 0.1f);
+            priceObj.transform.localPosition = new Vector3(x - 5, 60, 0.1f);
 
             // We set the card as a collectible with a price
             cardComp.SetToCollectible(() =>
@@ -57,14 +76,16 @@ public class Merchant : Interactible
                 if (CurrentRunInformations._goldAmount >= amount)
                 {
                     CurrentRunInformations._goldAmount -= amount;
-                    Destroy(cardObj);
+                    //Destroy(cardObj);
                     Destroy(priceObj);
-                    return true;
+                    playerGoldbagTxt.text = CurrentRunInformations._goldAmount.ToString();
+                    return Card.CollectibleState.ADDTODECKANDBACKTOPLAY;
                 }
-                return false;
+                cardObj.GetComponent<Animator>().SetTrigger("Shake");
+                return Card.CollectibleState.NOTHING;
             });
 
-            x += 100;
+            x += 200;
         }
     }
 }
