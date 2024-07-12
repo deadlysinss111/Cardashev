@@ -21,6 +21,8 @@ abstract public class Enemy : MonoBehaviour
     protected Coroutine _lookAtCoroutine;
 
     // Death related
+    [SerializeField] public int _health = 30;
+
     //// Particle systems
     [SerializeField] protected ParticleSystem _hurtParticles;
     [SerializeField] protected ParticleSystem _deathParticles;

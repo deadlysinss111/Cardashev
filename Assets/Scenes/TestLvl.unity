@@ -551,7 +551,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
 --- !u!4 &368119725 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7232163658981407054, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2960062012715382042, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
   m_PrefabInstance: {fileID: 368119724}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &386421760
@@ -2570,7 +2570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 368119725}
-  _smoothSpeed: 8
+  _smoothSpeed: 15
 --- !u!81 &1225737237
 AudioListener:
   m_ObjectHideFlags: 0

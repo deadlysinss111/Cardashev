@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 358442004369430234}
   - component: {fileID: 2077431163848471524}
   - component: {fileID: 4401395458358623120}
+  - component: {fileID: 78369468761149102}
   m_Layer: 0
   m_Name: MurlockPrefab
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,8 +53,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 0
   _attack: 0
-  _armor: 0
+  _takeDamageEffect: {fileID: 0}
   _criticalBar: {fileID: 0}
+  _gameOverManager: {fileID: 0}
 --- !u!195 &358442004369430234
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -118,6 +120,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 16
   m_CollisionDetection: 0
+--- !u!65 &78369468761149102
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735666548967574443}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.477495, y: 3.0506907, z: 1}
+  m_Center: {x: -0.013839692, y: 1.0253453, z: 0}
 --- !u!1 &3518691085754365176
 GameObject:
   m_ObjectHideFlags: 0
