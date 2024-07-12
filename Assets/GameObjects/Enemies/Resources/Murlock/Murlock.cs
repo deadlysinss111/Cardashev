@@ -52,9 +52,10 @@ public class Murlock : Enemy
         }
         else if (dist > 10)
         {
-            StartCoroutine(Jump());
+            if (CheckForJump())
+                return;
         }
-        else if (gameObject.GetComponent<StatManager>()._armor == 0)
+        if (gameObject.GetComponent<StatManager>()._armor == 0)
         {
             if (Random.Range(0, 2) == 0)
             {
@@ -98,12 +99,26 @@ public class Murlock : Enemy
         gameObject.GetComponent<StatManager>()._armor += Random.Range(14, 17);
     }
 
-    // Jump up to 8 tiles in target's direction
-    private IEnumerator Jump()
+    bool CheckForJump()
+    {
+        // Check for the tile of jump end to know if the enemy can jump to it
+        Vector3 endPos = _target.transform.position - Vector3.Normalize(_target.transform.position - transform.position) * 5;
+        Physics.Raycast(endPos + new Vector3(0, 3, 0), Vector3.down, out RaycastHit hit);
+        Transform endTile = TrajectoryToolbox.RaycastBellCurve(transform.position, endPos, 7); // Need to have a jump apex :)
+        if (endTile.gameObject.CompareTag("TMTopology")) 
+        {
+            StartCoroutine(Jump(endPos));
+            return true;
+        }
+        return false;
+    }
+
+    // Jump to the position passed as argument
+    private IEnumerator Jump(Vector3 endPos)
     {
         _timeBeforeDecision = 3;
 
-        Vector3 velocity = TrajectoryToolbox.BellCurveInitialVelocity(transform.position, _target.transform.position, 7);
+        Vector3 velocity = TrajectoryToolbox.BellCurveInitialVelocity(transform.position, endPos, 7);
 
         LookInDirectionTarget(velocity, 8f);
 

@@ -19,8 +19,9 @@ public class AOEVisual : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        StatManager target;
-        if(collider.gameObject.TryGetComponent<StatManager>(out target))
+        if(collider.gameObject.TryGetComponent<Enemy>(out _))return;
+
+        if(collider.gameObject.TryGetComponent<StatManager>(out StatManager target))
         {
             target.TakeDamage(_dmg);
         }
