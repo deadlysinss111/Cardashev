@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class CoverCollision : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-        Murlock enemy = other.GetComponentInParent<Murlock>();
+        Murlock enemy = other.gameObject.GetComponentInParent<Murlock>();
         if (other.gameObject.TryGetComponent(out Spit spit))
         {
             print("Fuck you, " + other.gameObject.name);
@@ -21,6 +21,11 @@ public class CoverCollision : MonoBehaviour
             print("Begone, fish!");
 
             enemy.InterruptAct();
+            if (enemy.TryGetComponent(out Rigidbody rBody))
+            {
+                print("Push back!");
+                rBody.velocity = Vector3.Reflect(other.relativeVelocity, other.contacts[0].normal); ;
+            }
         }
         else if (other.gameObject.CompareTag("coverBreakable"))
         {
