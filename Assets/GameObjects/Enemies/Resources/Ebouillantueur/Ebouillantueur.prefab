@@ -10078,7 +10078,7 @@ GameObject:
   - component: {fileID: 4948092747619385758}
   - component: {fileID: 140844579113438690}
   m_Layer: 0
-  m_Name: EbouillantueurPrefab
+  m_Name: Ebouillantueur
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10093,7 +10093,7 @@ Transform:
   m_GameObject: {fileID: 4735903091125180739}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
