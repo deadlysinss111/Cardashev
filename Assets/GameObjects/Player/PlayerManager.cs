@@ -161,7 +161,6 @@ public class PlayerManager : MonoBehaviour
         {
             if (_disablingState)
             {
-                print("gatcha");
                 SetToLastState();
             }
 
@@ -174,7 +173,6 @@ public class PlayerManager : MonoBehaviour
         {
             if(false == _disablingState && _currentState == "movement")
             {
-                print("you shpuldnt be there kid");
                 SetToState("Empty");
                 _disablingState = true;
                 GI.SetCursorTo(GI.CursorRestriction.VOID);
