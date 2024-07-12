@@ -6,6 +6,7 @@ using UnityEngine.Rendering.Universal;
 public class SecondSleeve : Card
 {
     Vector3 _direction;
+    Vector3 _startingPosition;
     int _damage = 10;
 
     private void Awake()
@@ -47,6 +48,7 @@ public class SecondSleeve : Card
 
         _direction = Vector3.Normalize(manager._lastHit.transform.position - manager._virtualPos);
         _direction.y = 0;
+        _startingPosition = manager._virtualPos;
 
         base.PlayCard();
     }
@@ -67,9 +69,8 @@ public class SecondSleeve : Card
         GameObject bullet = Instantiate((GameObject)Resources.Load("Bullet"));
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
-        Vector3 initPos = GI._PManFetcher()._virtualPos;
-        initPos.y += 3;
-        bullet.GetComponent<Bullet>().SetInitialValues(initPos, 10,_damage);
+        _startingPosition.y += 3;
+        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 10, _damage);
 
         base.Effect();
     }
