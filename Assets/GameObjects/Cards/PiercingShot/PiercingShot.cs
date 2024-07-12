@@ -67,7 +67,7 @@ public class PiercingShot : Card
         GameObject bullet = Instantiate((GameObject)Resources.Load("Bullet"));
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
-        _startingPosition.y += 3;
+        _startingPosition.y += 1.5f;
         bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 1000, _stats[1]);
 
         base.Effect();

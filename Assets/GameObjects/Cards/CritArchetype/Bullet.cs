@@ -8,10 +8,12 @@ public class Bullet : MonoBehaviour
     public float _velocity = 5;
     Vector3 _direction;
     Vector3 _lastPosition;
+    float _lifetime;
 
     void Start()
     {
         _lastPosition = transform.position;
+        _lifetime = 10;
     }
 
     void OnTriggerEnter(Collider collider)
@@ -21,11 +23,15 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
+        _lifetime -= Time.deltaTime;
+        if (_lifetime <= 0) Destroy(gameObject);
+
         transform.position += _direction * _velocity * Time.deltaTime;
 
         RaycastHit hit;
 
-        if(Physics.Raycast(_lastPosition, transform.position, out hit))
+        Debug.DrawRay(_lastPosition, transform.position - _lastPosition);
+        if(Physics.Raycast(_lastPosition, transform.position - _lastPosition, out hit, _velocity * Time.deltaTime))
         {
             CollisionOccured(hit.transform.gameObject, true);
         }
@@ -41,12 +47,21 @@ public class Bullet : MonoBehaviour
         if (collider.CompareTag("Enemy"))
         {
             collider.GetComponent<Enemy>().TakeDamage(_damage);
-            print($"hit an enemy: {collider.gameObject.name}, tunel: {tunel}");
+            print($"hit an Enemy: {collider.gameObject.name}, tunel: {tunel}");
             Destroy(gameObject);
             return;
         }
 
         // TODO : Add a case for obstacle collision
+        if (collider.CompareTag("TMTopology") && collider.layer == LayerMask.NameToLayer("Wall"))
+        {
+            print($"hit an Obstacle: {collider.gameObject.name}, tunel: {tunel}");
+
+            collider.GetComponent<MeshRenderer>().material.color = Color.red;
+            
+            Destroy(gameObject);
+            return;
+        }
     }
 
     public void SetDirection(Vector3 direction)

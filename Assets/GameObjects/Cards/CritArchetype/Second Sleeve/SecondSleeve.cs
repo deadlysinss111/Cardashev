@@ -69,7 +69,7 @@ public class SecondSleeve : Card
         GameObject bullet = Instantiate((GameObject)Resources.Load("Bullet"));
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
-        _startingPosition.y += 3;
+        _startingPosition.y += 1.5f;
         bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 10, _damage);
 
         base.Effect();
