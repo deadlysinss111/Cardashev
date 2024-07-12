@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,13 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 12
-  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -67,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -133,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 212725662}
   - component: {fileID: 212725661}
+  - component: {fileID: 212725663}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -148,9 +145,8 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 212725660}
   m_Enabled: 1
-  serializedVersion: 10
+  serializedVersion: 11
   m_Type: 1
-  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -217,6 +213,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &212725663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212725660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &326249424 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2530332769382056885, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
@@ -542,11 +561,11 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8010272374056151354, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-      propertyPath: _nextNodes.Array.data[0]
+      propertyPath: '_nextNodes.Array.data[0]'
       value: 
       objectReference: {fileID: 1698570199}
     - target: {fileID: -8010272374056151354, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-      propertyPath: _nextNodes.Array.data[1]
+      propertyPath: '_nextNodes.Array.data[1]'
       value: 
       objectReference: {fileID: 326249424}
     - target: {fileID: 2206141532756203203, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
@@ -633,23 +652,23 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8010272374056151354, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-      propertyPath: _nextNode.Array.data[0]
+      propertyPath: '_nextNode.Array.data[0]'
       value: 
       objectReference: {fileID: 1074877382}
     - target: {fileID: -8010272374056151354, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-      propertyPath: _nextNode.Array.data[1]
+      propertyPath: '_nextNode.Array.data[1]'
       value: 
       objectReference: {fileID: 377385637}
     - target: {fileID: -8010272374056151354, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-      propertyPath: _nextNodes.Array.data[0]
+      propertyPath: '_nextNodes.Array.data[0]'
       value: 
       objectReference: {fileID: 1074877382}
     - target: {fileID: -8010272374056151354, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-      propertyPath: _nextNodes.Array.data[1]
+      propertyPath: '_nextNodes.Array.data[1]'
       value: 
       objectReference: {fileID: 377385637}
     - target: {fileID: 1696852440317144881, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 2206141532756203203, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
@@ -719,11 +738,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2206141532756203203, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
   m_PrefabInstance: {fileID: 2145692268}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1302400729 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2530332769382056885, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-  m_PrefabInstance: {fileID: 1078204732}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1302400730 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2206141532756203203, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
@@ -761,10 +775,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c88fa677c701104c9f0f5d189185ad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startingNode: {fileID: 1302400729}
+  MAP_SIZE_X: 8
+  MAP_SIZE_Y: 10
+  NUMBER_OF_PATH: 6
+  _radioactiveCloud: {fileID: 0}
   _clickableLayers:
     serializedVersion: 2
     m_Bits: 8
+  _BlockerProbability: 0
 --- !u!114 &1340930992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -861,11 +879,11 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8010272374056151354, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-      propertyPath: _nextNodes.Array.data[0]
+      propertyPath: '_nextNodes.Array.data[0]'
       value: 
       objectReference: {fileID: 587094473}
     - target: {fileID: -8010272374056151354, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
-      propertyPath: _nextNodes.Array.data[1]
+      propertyPath: '_nextNodes.Array.data[1]'
       value: 
       objectReference: {fileID: 1235174424}
     - target: {fileID: 2206141532756203203, guid: 59e256ecf8f3bd04e94e26cd3ecc982f, type: 3}
