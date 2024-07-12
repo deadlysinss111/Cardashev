@@ -151,6 +151,7 @@ public class PlayerManager : MonoBehaviour
             }
         }
         _leftClick();
+        _disablingState = false;
     }
 
     // Doesn't need context since it's not a key press
@@ -159,7 +160,10 @@ public class PlayerManager : MonoBehaviour
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100,  _clickableLayers))
         {
             if (_disablingState)
+            {
+                print("gatcha");
                 SetToLastState();
+            }
 
             _disablingState = false;
             _mouseHover();
@@ -170,6 +174,7 @@ public class PlayerManager : MonoBehaviour
         {
             if(false == _disablingState && _currentState == "movement")
             {
+                print("you shpuldnt be there kid");
                 SetToState("Empty");
                 _disablingState = true;
                 GI.SetCursorTo(GI.CursorRestriction.VOID);
