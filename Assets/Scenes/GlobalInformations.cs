@@ -74,6 +74,9 @@ static public class GI
     static public GameObject _map; // maybe not correctly written (should be an array ?)
     static public float _gameTimer;
 
+    static public bool _hideCursor = false;
+    static public CursorLockMode _CursorLockMode;
+
     static public string _cursorVoid = null;
     static public string _cursorTiles = null;
     static public string _cursorEnemies = null;
@@ -333,5 +336,22 @@ static public class GI
         _cursorSEnemies = null;
         _cursorTiles = null;
         _cursorVoid = null;
+
+        CheckAndSetCursorState();
+    }
+
+    static public void SetCursorState(bool isVisible, CursorLockMode lockMode=CursorLockMode.None)
+    {
+        _hideCursor = !isVisible;
+        _CursorLockMode = lockMode;
+
+        CheckAndSetCursorState();
+    }
+
+    static void CheckAndSetCursorState()
+    {
+        Cursor.visible = !_hideCursor;
+        if (_CursorLockMode != Cursor.lockState)
+            Cursor.lockState = _CursorLockMode;
     }
 }

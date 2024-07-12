@@ -47,6 +47,8 @@ public class Cover : Card
         manager.SetLeftClickTo(ActivateCover);
         manager.SetRightClickTo(ExitState);
         manager.SetHoverTo(() => { });
+
+        GI.SetCursorState(false, CursorLockMode.Confined);
     }
 
     void ExitState()
@@ -54,6 +56,7 @@ public class Cover : Card
         //_selectableArea.ResetSelectable();
         //ClearPath();
         _rotationArrow.SetArrow(false);
+        GI.SetCursorState(true);
     }
 
     void ActivateCover()

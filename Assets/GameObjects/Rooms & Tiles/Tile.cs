@@ -13,6 +13,7 @@ public class Tile : MonoBehaviour
     void OnMouseEnter()
     {
         _startcolor = GetComponent<MeshRenderer>().material.color;
+        if (GI._hideCursor) return;
 
         if (gameObject.layer == 9)
             return;

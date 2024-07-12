@@ -24,7 +24,7 @@ public class CoverCollision : MonoBehaviour
             if (enemy.TryGetComponent(out Rigidbody rBody))
             {
                 print("Push back!");
-                rBody.velocity = Vector3.Reflect(other.relativeVelocity, other.contacts[0].normal); ;
+                rBody.velocity = Vector3.Reflect(other.relativeVelocity, other.contacts[0].normal);
             }
         }
         else if (other.gameObject.CompareTag("coverBreakable"))
