@@ -190,6 +190,7 @@ abstract public class Enemy : MonoBehaviour
         _selectable = value;
 
         Outline outline;
+        // out _ means ou ignore the variable return by the out keyword
         if (_selectable && TryGetComponent<Outline>(out _) == false)
         {
             outline = gameObject.AddComponent<Outline>();

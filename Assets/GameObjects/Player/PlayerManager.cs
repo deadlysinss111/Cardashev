@@ -151,6 +151,7 @@ public class PlayerManager : MonoBehaviour
             }
         }
         _leftClick();
+        _disablingState = false;
     }
 
     // Doesn't need context since it's not a key press
@@ -159,7 +160,9 @@ public class PlayerManager : MonoBehaviour
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100,  _clickableLayers))
         {
             if (_disablingState)
+            {
                 SetToLastState();
+            }
 
             _disablingState = false;
             _mouseHover();

@@ -7,6 +7,7 @@ public class PiercingShot : Card
 {
     List<GameObject> _selectableTiles = new List<GameObject>();
     Vector3 _direction;
+    Vector3 _startingPosition;
     int _damage;
 
     void Awake()
@@ -45,6 +46,7 @@ public class PiercingShot : Card
 
         _direction = Vector3.Normalize(manager._lastHit.transform.position - manager._virtualPos);
         _direction.y = 0;
+        _startingPosition = manager._virtualPos;
 
         base.PlayCard();
     }
@@ -65,9 +67,8 @@ public class PiercingShot : Card
         GameObject bullet = Instantiate((GameObject)Resources.Load("Bullet"));
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
-        Vector3 initPos = GI._PManFetcher()._virtualPos;
-        initPos.y += 3;
-        bullet.GetComponent<Bullet>().SetInitialValues(initPos, 100000, _stats[1]);
+        _startingPosition.y += 1.5f;
+        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 1000, _stats[1]);
 
         base.Effect();
     }
