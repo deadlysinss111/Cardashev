@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+//using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class CameraController : MonoBehaviour
 {
     public Transform _target;
-    public float _smoothSpeed = 8f;
+    public float _smoothSpeed = 15f;
 
     Vector3 _curOffset;
     Quaternion _curRotation;
@@ -74,8 +75,37 @@ public class CameraController : MonoBehaviour
 
     private void UnlockedMode()
     {
-        Vector3 move = new Vector3(_moveInput.x, 0, _moveInput.y);
-        transform.Translate(move * Time.unscaledDeltaTime * _smoothSpeed, Space.World);
+        Vector3 move;
+
+        switch (_offsetID)
+        {
+            case 0:
+                move = new Vector3(-_moveInput.y, 0, _moveInput.x);
+                break;
+            case 1:
+                move = new Vector3(-_moveInput.x, 0, -_moveInput.y);
+                break;
+            case 2:
+                move = new Vector3(_moveInput.y, 0, -_moveInput.x);
+                break;
+            case 3:
+                move = new Vector3(_moveInput.x, 0, _moveInput.y);
+                break;
+            default:
+                move = new Vector3(0, 0, 0);
+                print("how the fuck is that possibl??");
+                break;
+        }
+
+        
+
+        _target.Translate(move * Time.unscaledDeltaTime * _smoothSpeed);
+
+        Vector3 desiredPosition = _target.position + _curOffset;
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, _smoothSpeed * Time.unscaledDeltaTime);
+        transform.position = smoothedPosition;
+        Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, _curRotation, _smoothSpeed * Time.unscaledDeltaTime);
+        transform.rotation = smoothedRotation;
     }
 
     private void ChangeMode()
@@ -83,10 +113,13 @@ public class CameraController : MonoBehaviour
         if (_currentMode == LockedMode)
         {
             _currentMode = UnlockedMode;
+            _target.SetParent(null, true);
         }
         else
         {
+            _target.SetParent(GI._PlayerFetcher().transform, true);
             _currentMode = LockedMode;
+            _target.localPosition = new Vector3(0, 0, 0);
         }
     }
 
