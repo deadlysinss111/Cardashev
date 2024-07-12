@@ -4989,7 +4989,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -10071,6 +10071,7 @@ GameObject:
   - component: {fileID: 957208257447217977}
   - component: {fileID: 4948092747619385758}
   - component: {fileID: 140844579113438690}
+  - component: {fileID: 5404220225962911177}
   m_Layer: 0
   m_Name: EbouillantueurPrefab
   m_TagString: Untagged
@@ -10137,8 +10138,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 0
   _attack: 0
-  _armor: 0
+  _takeDamageEffect: {fileID: 0}
   _criticalBar: {fileID: 0}
+  _gameOverManager: {fileID: 0}
 --- !u!195 &957208257447217977
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -10178,7 +10180,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -10198,3 +10200,26 @@ MonoBehaviour:
   _hurtParticles: {fileID: 7889270962362218549}
   _deathParticles: {fileID: 5195263641888954999}
   _bullet: {fileID: 3204624112210869285, guid: d763c541be426c146bd0681da929da78, type: 3}
+--- !u!136 &5404220225962911177
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4735903091125180739}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}

@@ -52,8 +52,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 0
   _attack: 0
-  _armor: 0
+  _takeDamageEffect: {fileID: 0}
   _criticalBar: {fileID: 0}
+  _gameOverManager: {fileID: 0}
 --- !u!195 &358442004369430234
 NavMeshAgent:
   m_ObjectHideFlags: 0
