@@ -30,7 +30,7 @@ public class MapNode : MonoBehaviour
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
-    string _linkedScene = "New Room Test";
+    string _stringType;
     //string _linkedScene = "Shop";
     bool _playerCameThrough;
     bool _isLocked;
@@ -132,7 +132,7 @@ public class MapNode : MonoBehaviour
         }
         if(gameObject.name != "Original Node")
         {
-            GI._prefabToLoad = _linkedScene;
+            GI._roomType = _stringType;
             //SceneManager.LoadScene("TestLvl");
             GI._loader.LoadScene("Map", "Room");
         }
@@ -171,6 +171,7 @@ public class MapNode : MonoBehaviour
                     _defaultHoloColor = new Color(1.498f, 1.073f, 0f);
                     _defaultFresnelColor = new Color(2.996f, 2.3f, 0f);
                     SetDefaultColorTo(Color.yellow);
+                    _stringType = "Shop";
                     break;
                 }
             case RoomType.Boss:
@@ -180,6 +181,7 @@ public class MapNode : MonoBehaviour
                     _ScaleParent.transform.localScale *= 2;
                     _RoomIcon3D.transform.localPosition = new Vector3(0, 1f, 0);
                     SetDefaultColorTo(Color.black);
+                    _stringType = "Boss";
                     break;
                 }
             case RoomType.Rest:
@@ -191,6 +193,7 @@ public class MapNode : MonoBehaviour
                     _defaultHoloColor = new Color(0f, 3f, 0f);
                     _defaultFresnelColor = new Color(0.092f, 1.5f, 0.43f);
                     SetDefaultColorTo(Color.white);
+                    _stringType = "Rest";
                     break;
                 }
             case RoomType.Event:
@@ -199,12 +202,14 @@ public class MapNode : MonoBehaviour
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
                     _ScaleParent.transform.localScale *= 0.3f;
                     SetDefaultColorTo(Color.green);
+                    _stringType = "Event";
                     break;
                 }
             case RoomType.Combat:
                 {
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.COMBAT_ICON;
                     SetDefaultColorTo(Color.red);
+                    _stringType = "Combat";
                     break;
                 }
             case RoomType.Elite:
@@ -213,6 +218,7 @@ public class MapNode : MonoBehaviour
                     _ScaleParent.transform.localScale *= 0.3f;
                     _RoomIcon3D.transform.position += Vector3.up;
                     SetDefaultColorTo(Color.magenta);
+                    _stringType = "Elite";
                     break;
                 }
 

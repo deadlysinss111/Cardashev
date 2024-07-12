@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEditorInternal;
@@ -7,6 +8,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 // TODO: Optimize the code by using Resources.Load() only once per kind-of tile rather than for every instances of tile
 
@@ -40,7 +42,9 @@ public class Room : MonoBehaviour
     public void EnterRoom(/* prefab name comes from GI*/)
     {
         // Go find the room prefab for the floor
-        GameObject roomPrefab = (GameObject)Resources.Load(ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + GI._prefabToLoad);
+        string path = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/RoomPrefabs/" + GI._roomType;
+        int size = Directory.GetFiles("Assets\\GameObjects\\Rooms & Tiles\\Resources\\" + path).Length;
+        GameObject roomPrefab = (GameObject)Resources.Load( path + "/" + UnityEngine.Random.Range(1, size).ToString());
 
         // Prepares some GameObjects we'll need to instantiate quite a few times during this method
         GameObject gridTemplate = new GameObject();

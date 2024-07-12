@@ -45,7 +45,7 @@ static public class GI
     public static GameObject[] _persistentSceneContainers = new GameObject[Enum.GetNames(typeof(PersistentSceneContainer)).Length - 1];
 
     // Data needed for scene transition (Map --> Room)
-    static public string _prefabToLoad;
+    static public string _roomType;
 
     static public bool _changeStateOnHUDExit = false;
     static public bool temp { set { _changeStateOnHUDExit = value; } }
@@ -213,6 +213,7 @@ static public class GI
         };
     }
 
+    //Change the cursor image to the one that is allocated to the argument sate
     static public void SetCursorTo(CursorRestriction target)
     {
         switch (target)
@@ -241,11 +242,15 @@ static public class GI
         }
     }
 
+    // Internal methode that has no restiction. The restiction on the previous function is meant to make it easier to understand.
     static private void SetCursorTo(string target)
     {
         Cursor.SetCursor((Texture2D)Resources.Load(target), Vector2.zero, CursorMode.ForceSoftware);
     }
 
+    // Allocate a new image to the state(s) you passes as arguments
+    // Follow the following exemple for passing multiple states as argument
+    // UpdateCursor("myCursorImg", (byte)CursorRestriction.VOID + (byte)ENEMIES)
     static public void UpdateCursors(string name, byte restriction)
     {
         byte counter = 64;
@@ -283,6 +288,9 @@ static public class GI
         }
     }
 
+    // Allocate a new image to all the states, except those you passes as arguments
+    // Follow the following exemple for passing multiple states as argument
+    // UpdateCursor("myCursorImg", (byte)CursorRestriction.VOID + (byte)ENEMIES)
     static public void UpdateCursorsInverted(string name, int restriction)
     {
         int counter = 64;
@@ -324,6 +332,7 @@ static public class GI
         }
     }
 
+    // Reset the cursors to the default one for each states
     static public void ResetCursorValues()
     {
         _cursorSInteractibles = null;
