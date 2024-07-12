@@ -76,20 +76,20 @@ public class CameraController : MonoBehaviour
     private void UnlockedMode()
     {
         Vector3 move;
-
+        
         switch (_offsetID)
         {
             case 0:
-                move = new Vector3(-_moveInput.y, 0, _moveInput.x);
+                move = new Vector3(_moveInput.x, 0, _moveInput.y);
                 break;
             case 1:
-                move = new Vector3(-_moveInput.x, 0, -_moveInput.y);
+                move = new Vector3(-_moveInput.y, 0, _moveInput.x);
                 break;
             case 2:
-                move = new Vector3(_moveInput.y, 0, -_moveInput.x);
+                move = new Vector3(-_moveInput.x, 0, -_moveInput.y);
                 break;
             case 3:
-                move = new Vector3(_moveInput.x, 0, _moveInput.y);
+                move = new Vector3(_moveInput.y, 0, -_moveInput.x);
                 break;
             default:
                 move = new Vector3(0, 0, 0);

@@ -93,7 +93,7 @@ public class Room : MonoBehaviour
                     GameObject ROOMGO = (GameObject)Resources.Load(roomGOpath);
 
                     // I cannot understand the reason of it but if we dont offset the ROOMGO.transform by a vector that goes down, the preview become bugged...
-                    print(roomGOpath);
+                    //print(roomGOpath);
                     Vector3 buf = new Vector3(0, 0, 0) + ROOMGO.transform.position;
                     Instantiate(ROOMGO, roomGO.transform.position + buf , roomGO.transform.rotation, newTilemap.transform);
                 }
