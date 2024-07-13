@@ -124,22 +124,31 @@ public class MapNode : MonoBehaviour
 
     public void SelectNode()
     {
-
-        foreach (GameObject node in _nextNodes)
+        /*foreach (GameObject node in _nextNodes)
         {
             if (node == null) continue;
             if (node.GetComponent<MapNode>().IsLockedByBlocker()) continue;
-        }
+        }*/
         if(gameObject.name != "Original Node")
         {
-            GI._roomType = _stringType;
-            //SceneManager.LoadScene("TestLvl");
-            GI._loader.LoadScene("Map", "Room");
+            StartCoroutine(LoadScene());
         }
 
         GetComponent<MeshRenderer>().material.color = Color.cyan;
         _RoomIcon3D.GetComponent<MeshRenderer>().enabled = false; // play a glitch animation + fade transition
         _playerCameThrough = true;
+    }
+
+    IEnumerator LoadScene()
+    {
+        GameObject trans = GameObject.Find("Transition Effect");
+        trans.GetComponent<Animator>().SetTrigger("Fade In");
+
+        yield return new WaitForSeconds(1);
+
+        GI._roomType = _stringType;
+        //SceneManager.LoadScene("TestLvl");
+        GI._loader.LoadScene("Map", "Room");
     }
 
     public void UnselectNode()
