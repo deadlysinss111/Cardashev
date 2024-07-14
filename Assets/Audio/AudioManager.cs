@@ -8,7 +8,7 @@ public class AudioManager : MonoBehaviour
 
     public Sound[] sounds;
 
-    void Awake()
+    void Start()
     {
         foreach (Sound sound in sounds)
         {
@@ -18,6 +18,9 @@ public class AudioManager : MonoBehaviour
             sound.source.volume = sound.volume;
             sound.source.pitch = sound.pitch;
             sound.source.loop = sound.loop;
+            sound.source.outputAudioMixerGroup = sound.output;
+            if(sound.playOnStart)
+                Play(sound.name);
         }
     }
 

@@ -49,6 +49,7 @@ public class Murlock : Enemy
         if (dist < 4)
         {
             StartCoroutine(Swipe());
+            return;
         }
         else if (dist > 10)
         {
