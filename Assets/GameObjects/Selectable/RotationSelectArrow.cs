@@ -57,7 +57,7 @@ public class RotationSelectArrow : MonoBehaviour
             mPos.z = Camera.main.WorldToScreenPoint(GI._PManFetcher()._virtualPos).z;
             //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity) == false) return;
             Vector3 wPos = Camera.main.ScreenToWorldPoint(mPos);
-            print("PosMouse: "+wPos);
+            //print("PosMouse: "+wPos);
 
             //BetterDebug.Log(Input.mousePosition, _arrowCanvas.transform.rotation);
             Quaternion rot = Quaternion.LookRotation(wPos - GI._PManFetcher()._virtualPos);

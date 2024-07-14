@@ -126,7 +126,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""fe66b46b-d892-4cd3-8208-cb0449dadb86"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -148,7 +148,7 @@ public partial class @CustomActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2e2adef1-ce97-4fa5-a7d7-0fb66fe7e452"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

@@ -26,6 +26,7 @@ public class Card : MonoBehaviour
     public float _cardEndTimestamp;
     public byte _id = 0;
     protected SelectableArea _selectableArea;
+    protected RotationSelectArrow _rotationArrow;
     protected LineRenderer _lineRenderer;
     protected Vector3 _lastScale;
     protected Vector3 _lastPos;

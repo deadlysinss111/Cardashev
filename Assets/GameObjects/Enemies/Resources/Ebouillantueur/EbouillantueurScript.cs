@@ -56,6 +56,8 @@ public class Ebouillantueur : Enemy
 
     protected override void Move()
     {
+        if (false == _agent.isActiveAndEnabled || false == _agent.isOnNavMesh) return;
+
         _isMoving = true;
 
         Vector3 dest =  RandomNavmeshLocation(3, transform.position);
