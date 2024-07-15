@@ -64,6 +64,7 @@ public class StatManager : MonoBehaviour
 
     public int Health { get { return _health; } }
     public int RealHealth { get { return _health+_armor; } }
+    public int BaseHealth { get { return _baseHealth; } }
 
 
     /*
