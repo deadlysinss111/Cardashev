@@ -169,7 +169,6 @@ public class PlayerManager : MonoBehaviour
             {
                 SetToState("Empty");
                 _disablingState = true;
-                print("how the fuck");
                 GI.SetCursorTo(GI.CursorRestriction.VOID);
             }
         }
@@ -267,7 +266,7 @@ public class PlayerManager : MonoBehaviour
             func[0]();
             return true;
         }
-        print("missed state change");
+        //print("missed state change");
         return false;
     }
 
