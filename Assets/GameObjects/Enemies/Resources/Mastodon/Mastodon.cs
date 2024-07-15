@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -11,11 +12,12 @@ public class Mastodon : Enemy
     [SerializeField] GameObject _swipeHitbox;
     int _dmg;
     GameObject[] _barrels;
+    GameObject[] _diveSpots;
 
     private new void Start()
     {
         base.Start();
-        _name = "Murlock";
+        _name = "Mastodon";
         _agent.speed = 5.5f;
         _dmg = 15;
         
@@ -27,6 +29,7 @@ public class Mastodon : Enemy
         _isMoving = false;
 
         _barrels = GameObject.FindGameObjectsWithTag("Spillable");
+        _diveSpots = GameObject.FindGameObjectsWithTag("DiveSpot");
 
         GameObject closestBarrel = FindClosestBarrel(out float distToBarrel);
         if(distToBarrel <= 20)
@@ -50,11 +53,6 @@ public class Mastodon : Enemy
         {
             StartCoroutine(Swipe());
             return;
-        }
-        else if (dist > 10)
-        {
-            if (CheckForJump())
-                return;
         }
         if (gameObject.GetComponent<StatManager>()._armor == 0)
         {
@@ -98,108 +96,6 @@ public class Mastodon : Enemy
             yield return null;
         }
         gameObject.GetComponent<StatManager>()._armor += Random.Range(14, 17);
-    }
-
-    bool CheckForJump()
-    {
-        // Check for the tile of jump end to know if the enemy can jump to it
-        Vector3 endPos = _target.transform.position - Vector3.Normalize(_target.transform.position - transform.position) * 5;
-        Physics.Raycast(endPos + new Vector3(0, 3, 0), Vector3.down, out RaycastHit hit);
-        Transform endTile = TrajectoryToolbox.RaycastBellCurve(transform.position, endPos, 7); // Need to have a jump apex :)
-        if (endTile.gameObject.CompareTag("TMTopology")) 
-        {
-            StartCoroutine(Jump(endPos));
-            return true;
-        }
-        return false;
-    }
-
-    // Jump to the position passed as argument
-    private IEnumerator Jump(Vector3 endPos)
-    {
-        _timeBeforeDecision = 3;
-
-        Vector3 velocity = TrajectoryToolbox.BellCurveInitialVelocity(transform.position, endPos, 7);
-
-        LookInDirectionTarget(velocity, 8f);
-
-        // We need to disable the agent in order to be able to manipulate rigidbody's velocity
-        _agent.enabled = false;
-
-        // ANIM HERE
-        while (_timeBeforeDecision > 3)
-        {
-            yield return null;
-        }
-        // ANIM HERE
-
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.isKinematic = false;
-        rb.velocity = velocity;
-
-        // Calculate the curve for the jump
-        List<Vector3> curve;
-        TrajectoryToolbox.BellCurve(transform.position, Vector3.ClampMagnitude(_target.transform.position, 8), out curve);
-
-        
-        // Calculate the time to traverse the path
-        float time = 0;
-        float speed = Vector3.Magnitude(velocity);
-        for (int i = 0; i < curve.Count - 1; i++)
-        {
-            // Get the start and end points of the segment
-            Vector3 start = curve[i];
-            Vector3 end = curve[i + 1];
-
-            // Add the time to traverse the segment
-            time += Vector3.Distance(start, end) / speed;
-        }
-
-        _timeBeforeDecision += time;
-        
-        StartCoroutine(SetBackAgent());
-    }
-
-    IEnumerator SetBackAgent()
-    {
-        while(_timeBeforeDecision > 0.1f)
-        {
-            yield return null;
-        }
-        _agent.enabled = true;
-        GetComponent<Rigidbody>().isKinematic = true;
-    }
-
-    protected override void Move()
-    {
-        _isMoving = true;
-
-        Vector3 dest;
-        dest = _target.transform.position;
-        NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
-        _agent.SetDestination(dest);
-        LookInDirectionTarget(dest, 8f);
-
-        _timeBeforeDecision = GetPathTime(path);
-
-        // Once the half of the movement done, we want the enemy to refresh his destination to match target's movments
-        // TODO: Decide of a tile to snap too, to ensure we don't stop in the middle of the board
-        StartCoroutine(reOrient(_timeBeforeDecision / 2));
-    }
-
-    private IEnumerator reOrient(float time)
-    {
-        while( _timeBeforeDecision > time)
-        {
-            yield return null;
-        }
-
-        Vector3 dest = _target.transform.position;
-        NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
-        _agent.SetDestination(dest);
-        LookInDirectionTarget(dest, 8f);
     }
 
     public void AcideBuff()
@@ -274,5 +170,156 @@ public class Mastodon : Enemy
         _target = GI._PlayerFetcher();
         barrel.tag = "Untagged";
         _timeBeforeDecision = 2;
+    }
+
+
+    //
+    // Whole movement logic below
+    //
+
+    GameObject FindClosestDivSpotFromMe(out float time)
+    {
+        GameObject closestSpot = null;
+        NavMeshPath path = new();
+        float closestTime = 1000;
+        foreach (GameObject spot in _diveSpots)
+        {
+            if(Physics.Raycast(spot.transform.position + new Vector3(0, 2f, 0) - Vector3.Normalize(spot.transform.position - transform.position) * 2, Vector3.down, out RaycastHit hit))
+            {
+                NavMesh.CalculatePath(transform.position, hit.transform.position, NavMesh.AllAreas, path);
+                time = GetPathTime(path);
+                if (time < closestTime && time != 0)
+                {
+                    closestSpot = spot;
+                    closestTime = time;
+                }
+            }
+        }
+        time = closestTime;
+        //print("time : "+time);
+        return closestSpot;
+    }
+
+    GameObject FindClosestDivSpotFromTarget(out float time)
+    {
+        GameObject closestSpot = null;
+        NavMeshPath path = new();
+        float closestTime = 1000;
+        foreach (GameObject spot in _diveSpots)
+        {
+            NavMesh.CalculatePath(spot.transform.position + new Vector3(0, 0.5f, 0) - Vector3.Normalize(_target.transform.position - spot.transform.position) * 2, _target.transform.position, NavMesh.AllAreas, path);
+            time = GetPathTime(path);
+            if (time < closestTime && time != 0)
+            {
+                closestSpot = spot;
+                closestTime = time;
+            }
+        }
+        time = closestTime;
+        return closestSpot;
+    }
+
+    float GetDivePath(out NavMeshPath[] paths)
+    {
+        paths = new NavMeshPath[2];
+        paths[0] = new NavMeshPath();
+        paths[1] = new NavMeshPath();
+        GameObject closestFromMe = FindClosestDivSpotFromMe(out _);
+        GameObject closestFromTarget = FindClosestDivSpotFromTarget(out _);
+        print("isnull? : "+ closestFromMe);
+        if (closestFromMe == null || closestFromMe == closestFromTarget) return -1;
+
+        NavMesh.CalculatePath(transform.position, closestFromMe.transform.position + new Vector3(0, 0.5f, 0) - Vector3.Normalize(closestFromMe.transform.position - transform.position) * 2, NavMesh.AllAreas, paths[0]);
+        NavMesh.CalculatePath(
+            closestFromTarget.transform.position + new Vector3(0, 0.5f, 0) - Vector3.Normalize(closestFromTarget.transform.position - _target.transform.position) * 2, 
+            _target.transform.position + new Vector3(0, 0.5f, 0) ,
+            NavMesh.AllAreas, paths[1]);
+        print("time 1 : " + GetPathTime(paths[0]));
+        print("time 2 : " + GetPathTime(paths[1]));
+
+        return (GetPathTime(paths[0]) + GetPathTime(paths[1]));
+    }
+
+    IEnumerator MoveWithDive(NavMeshPath[] paths)
+    {
+
+        Vector3 destOne, destTwo;
+        GameObject spotOne = FindClosestDivSpotFromMe(out _);
+        destOne = spotOne.transform.position + new Vector3(0, 0.5f, 0) - Vector3.Normalize(spotOne.transform.position - transform.position)*4;
+        destTwo = FindClosestDivSpotFromTarget(out _).transform.position + new Vector3(0, 0.5f, 0);
+
+        _agent.SetDestination(destOne);
+        LookInDirectionTarget(destOne, 8f);
+
+        float pathTime = GetPathTime(paths[0]);
+        while(pathTime > 0)
+        {
+            pathTime -= Time.deltaTime;
+            yield return null;
+        }
+
+        // Dive there
+        _agent.enabled = false;
+        transform.position = destTwo;
+        _agent.enabled = true;
+
+        _agent.SetDestination(destTwo);
+        LookInDirectionTarget(destTwo, 8f);
+
+        pathTime = GetPathTime(paths[1]);
+        while (pathTime > 0)
+        {
+            pathTime -= Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    protected void MoveDirectly()
+    {
+        Vector3 dest;
+        dest = _target.transform.position;
+        NavMeshPath path = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
+        _agent.SetDestination(dest);
+        LookInDirectionTarget(dest, 8f);
+
+        _timeBeforeDecision = GetPathTime(path);
+
+        // Once the half of the movement done, we want the enemy to refresh his destination to match target's movments
+        // TODO: Decide of a tile to snap too, to ensure we don't stop in the middle of the board
+        StartCoroutine(reOrient(_timeBeforeDecision / 2));
+    }
+
+    private IEnumerator reOrient(float time)
+    {
+        while (_timeBeforeDecision > time)
+        {
+            yield return null;
+        }
+
+        Vector3 dest = _target.transform.position;
+        NavMeshPath path = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
+        _agent.SetDestination(dest);
+        LookInDirectionTarget(dest, 8f);
+    }
+
+    protected override void Move()
+    {
+        _isMoving = true;
+
+        NavMeshPath directPath = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, _target.transform.position, NavMesh.AllAreas, directPath);
+
+        float divePathTime = GetDivePath(out NavMeshPath[] divePaths);
+        print("dive : "+ divePathTime);
+        print("direct : "+ GetPathTime(directPath));
+        if (divePathTime != -1 && divePathTime < GetPathTime(directPath))
+        {
+            _timeBeforeDecision = divePathTime;
+            StartCoroutine(MoveWithDive(divePaths));
+        }
+        else
+            MoveDirectly();
     }
 }
