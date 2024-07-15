@@ -266,7 +266,7 @@ public class PlayerManager : MonoBehaviour
             func[0]();
             return true;
         }
-        print("missed state change");
+        //print("missed state change");
         return false;
     }
 
