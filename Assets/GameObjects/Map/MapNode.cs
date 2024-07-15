@@ -131,24 +131,12 @@ public class MapNode : MonoBehaviour
         }*/
         if(gameObject.name != "Original Node")
         {
-            StartCoroutine(LoadScene());
+            GameObject.Find("Transition Effect").GetComponent<SceneLoadingAnimation>().StartAnimation(_stringType);
         }
 
         GetComponent<MeshRenderer>().material.color = Color.cyan;
         _RoomIcon3D.GetComponent<MeshRenderer>().enabled = false; // play a glitch animation + fade transition
         _playerCameThrough = true;
-    }
-
-    IEnumerator LoadScene()
-    {
-        GameObject trans = GameObject.Find("Transition Effect");
-        trans.GetComponent<Animator>().SetTrigger("Fade In");
-
-        yield return new WaitForSeconds(1);
-
-        GI._roomType = _stringType;
-        //SceneManager.LoadScene("TestLvl");
-        GI._loader.LoadScene("Map", "Room");
     }
 
     public void UnselectNode()

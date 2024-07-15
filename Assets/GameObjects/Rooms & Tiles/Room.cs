@@ -86,15 +86,15 @@ public class Room : MonoBehaviour
         surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
         surface.BuildNavMesh();
 
+        Transform parent = GameObject.Find("Height 1").transform;
         foreach (Transform heightGrid in populationLayers)
         {
-            var newGrid = Instantiate(gridTemplate, heightGrid.position, heightGrid.rotation, this.transform);
-            newGrid.name = "Height " + heightLevel;
+            /*var newGrid = Instantiate(gridTemplate, heightGrid.position, heightGrid.rotation, this.transform);
+            newGrid.name = "Height " + heightLevel;*/
 
             Transform tilemap = heightGrid.transform;
-            GameObject newTilemap = Instantiate(tilemapTemplate, tilemap.position, tilemap.rotation, newGrid.transform);
+            GameObject newTilemap = Instantiate(tilemapTemplate, tilemap.position, tilemap.rotation, parent);
             newTilemap.name = tilemap.name;
-
             LoadHeight(tilemap, newTilemap);
             heightLevel++;
         }
