@@ -11246,7 +11246,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 735666548967574443, guid: f33a3f9765e8f4e43a38bdc050fa88e1, type: 3}
       propertyPath: m_Name
-      value: Murlock
+      value: Mastodon
       objectReference: {fileID: 0}
     - target: {fileID: 8783693574663383286, guid: f33a3f9765e8f4e43a38bdc050fa88e1, type: 3}
       propertyPath: m_LocalPosition.x

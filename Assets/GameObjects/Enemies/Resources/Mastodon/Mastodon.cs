@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Murlock : Enemy
+public class Mastodon : Enemy
 {
     [SerializeField] GameObject _swipeHitbox;
     int _dmg;

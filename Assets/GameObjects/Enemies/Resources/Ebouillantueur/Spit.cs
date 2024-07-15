@@ -17,9 +17,9 @@ public class Spit : MonoBehaviour
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
             {
                 // Buffs a fish if the projectile lands on it
-                if(c.gameObject.GetComponent<Murlock>() != null)
+                if(c.gameObject.GetComponent<Mastodon>() != null)
                 {
-                    c.gameObject.GetComponent<Murlock>().AcideBuff();
+                    c.gameObject.GetComponent<Mastodon>().AcideBuff();
                 }
 
                 // Deals damage if it lands on anything else than fish and bouilloir
@@ -52,9 +52,9 @@ public class Spit : MonoBehaviour
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
             {
                 // Buffs a fish if the projectile lands on it
-                if (c.gameObject.GetComponent<Murlock>() != null)
+                if (c.gameObject.GetComponent<Mastodon>() != null)
                 {
-                    c.gameObject.GetComponent<Murlock>().AcideBuff();
+                    c.gameObject.GetComponent<Mastodon>().AcideBuff();
                 }
 
                 // Deals damage if it lands on anything else than fish and bouilloir
