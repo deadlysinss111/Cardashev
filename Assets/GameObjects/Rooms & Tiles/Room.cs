@@ -54,6 +54,8 @@ public class Room : MonoBehaviour
         tilemapTemplate.AddComponent<Tilemap>();
         tilemapTemplate.AddComponent<TilemapRenderer>();
 
+        List<Transform> populationLayers = new();
+
         // This allows to instantiate each 3D Model according to the Zone's theme
         // In order, this creates : A new Grid, its Tilemaps, and their tiles for each altitude levels
         int heightLevel = 0;
@@ -64,40 +66,36 @@ public class Room : MonoBehaviour
 
             foreach (Transform tilemap in heightGrid.transform)
             {
-                var newTilemap = Instantiate(tilemapTemplate, tilemap.position, tilemap.rotation, newGrid.transform);
+                GameObject newTilemap = Instantiate(tilemapTemplate, tilemap.position, tilemap.rotation, newGrid.transform);
                 newTilemap.name = tilemap.name;
 
-                foreach (Transform roomGO in tilemap.transform)
+                if (tilemap.gameObject.name == "Population")
                 {
-                    // Finds the correct path to the asset, taking into accounts the Zone Type and asset type
-                    string roomGOpath = "";
-                    switch (tilemap.name)
-                    {
-                        case "Interactibles":
-                            roomGOpath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/Prefabs/" + roomGO.name;
-                            break;
-
-                        case "Population":
-                            roomGOpath = roomGO.name + "/" + roomGO.name;
-                            //Debug.Log("Attempt to load the prefab " + roomGOpath);
-                            break;
-
-                        // Topology and Decoration tilemaps
-                        default:
-                            roomGOpath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/" + roomGO.name;
-                            break;
-                    }
-                    //Debug.Log("Attempt to load the prefab " + roomGOpath);
-
-                    //print(roomGOpath);
-                    // We use the ROOMGO to get the local position of the object, and the roomGO for the global transform
-                    GameObject ROOMGO = (GameObject)Resources.Load(roomGOpath);
-
-                    // I cannot understand the reason of it but if we dont offset the ROOMGO.transform by a vector that goes down, the preview become bugged...
-                    Vector3 buf = new Vector3(0, 0, 0) + ROOMGO.transform.position;
-                    Instantiate(ROOMGO, roomGO.transform.position + buf , roomGO.transform.rotation, newTilemap.transform);
+                    populationLayers.Add(tilemap);
+                    continue;
                 }
+
+                LoadHeight(tilemap, newTilemap);
             }
+            heightLevel++;
+        }
+
+        heightLevel = 0;
+
+        NavMeshSurface surface = GameObject.Find("RoomAnchor").AddComponent<NavMeshSurface>();
+        surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
+        surface.BuildNavMesh();
+
+        foreach (Transform heightGrid in populationLayers)
+        {
+            var newGrid = Instantiate(gridTemplate, heightGrid.position, heightGrid.rotation, this.transform);
+            newGrid.name = "Height " + heightLevel;
+
+            Transform tilemap = heightGrid.transform;
+            GameObject newTilemap = Instantiate(tilemapTemplate, tilemap.position, tilemap.rotation, newGrid.transform);
+            newTilemap.name = tilemap.name;
+
+            LoadHeight(tilemap, newTilemap);
             heightLevel++;
         }
 
@@ -106,6 +104,40 @@ public class Room : MonoBehaviour
         Destroy(tilemapTemplate);
 
         // TODO: Places Entities (ennemies and the like)
+    }
+
+    void LoadHeight(Transform tilemap, GameObject newTilemap)
+    {
+        foreach (Transform roomGO in tilemap.transform)
+        {
+            // Finds the correct path to the asset, taking into accounts the Zone Type and asset type
+            string roomGOpath = "";
+            switch (tilemap.name)
+            {
+                case "Interactibles":
+                    roomGOpath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/Prefabs/" + roomGO.name;
+                    break;
+
+                case "Population":
+                    roomGOpath = roomGO.name + "/" + roomGO.name;
+                    //Debug.Log("Attempt to load the prefab " + roomGOpath);
+                    break;
+
+                // Topology and Decoration tilemaps
+                default:
+                    roomGOpath = ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/" + tilemap.name + "/" + roomGO.name;
+                    break;
+            }
+            //Debug.Log("Attempt to load the prefab " + roomGOpath);
+
+            //print(roomGOpath);
+            // We use the ROOMGO to get the local position of the object, and the roomGO for the global transform
+            GameObject ROOMGO = (GameObject)Resources.Load(roomGOpath);
+
+            // I cannot understand the reason of it but if we dont offset the ROOMGO.transform by a vector that goes down, the preview become bugged...
+            Vector3 buf = new Vector3(0, 0, 0) + ROOMGO.transform.position;
+            Instantiate(ROOMGO, roomGO.transform.position + buf, roomGO.transform.rotation, newTilemap.transform);
+        }
     }
 
     void Awake()

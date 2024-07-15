@@ -18,13 +18,13 @@ public class PiercingShot : Card
 
         while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterState, ExitState) == false) _id++;
 
-        //if (gameObject.TryGetComponent(out _rotationArrow) == false)
-        //    _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
+        if (gameObject.TryGetComponent(out _rotationArrow) == false)
+            _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
     }
 
     void EnterState()
     {
-        //_rotationArrow.SetArrow(true);
+        _rotationArrow.SetArrow(true);
 
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(LeftClick);
@@ -34,7 +34,6 @@ public class PiercingShot : Card
 
     void LeftClick()
     {
-        ClearPath();
         PlayerManager manager = GI._PManFetcher();
         manager.SetToDefault();
 
@@ -49,7 +48,7 @@ public class PiercingShot : Card
 
     void ExitState()
     {
-        //_rotationArrow.SetArrow(false);
+        _rotationArrow.SetArrow(false);
         ClearPath();
     }
 

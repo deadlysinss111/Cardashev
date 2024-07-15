@@ -135,12 +135,6 @@ public class PlayerManager : MonoBehaviour
     private void LeftClickMiddleware(InputAction.CallbackContext context)
     {
         bool hasHit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, -1);
-
-        // TODO: fix this thing that doesn't work actually so it doesn't detect the arrow
-        if (EventSystem.current.IsPointerOverGameObject() && (hasHit && hit.transform.gameObject.layer != LayerMask.NameToLayer("WorldUI")))
-        {
-            return;
-        }
         
         if (hasHit)
         {
@@ -175,6 +169,7 @@ public class PlayerManager : MonoBehaviour
             {
                 SetToState("Empty");
                 _disablingState = true;
+                print("how the fuck");
                 GI.SetCursorTo(GI.CursorRestriction.VOID);
             }
         }
@@ -257,6 +252,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
+        print("set to : " + name);
         if (name == _currentState) return false;
 
         if(_states.TryGetValue(name, out Action[] func))

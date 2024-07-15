@@ -12,20 +12,28 @@ public class RotationSelectArrow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (GI._PlayerFetcher().transform.Find("arrowCanvas"))
-            return;
-        // Creates a world canvas around the player
-        _arrowCanvas = new("arrowCanvas");
-        _arrowCanvas.transform.SetParent(GI._PlayerFetcher().transform, false);
-        Canvas canvas = _arrowCanvas.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.WorldSpace;
-        RectTransform rt = _arrowCanvas.GetComponent<RectTransform>();
-        rt.localPosition = new Vector3(0, 0.5f, 0);
-        rt.sizeDelta = new Vector2(1, 1);
-        rt.localScale = new Vector3(3, 3, 3);
+        RectTransform rt;
 
-        _arrowCanvas.AddComponent<CanvasScaler>();
-        _arrowCanvas.AddComponent<GraphicRaycaster>();
+        if (GI._PlayerFetcher().transform.Find("arrowCanvas"))
+        {
+            _arrowCanvas = GI._PlayerFetcher().transform.Find("arrowCanvas").gameObject;
+            rt = _arrowCanvas.GetComponent<RectTransform>();
+        }
+        else
+        {
+            // Creates a world canvas around the player
+            _arrowCanvas = new("arrowCanvas");
+            _arrowCanvas.transform.SetParent(GI._PlayerFetcher().transform, false);
+            Canvas canvas = _arrowCanvas.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.WorldSpace;
+            rt = _arrowCanvas.GetComponent<RectTransform>();
+            rt.localPosition = new Vector3(0, 0.5f, 0);
+            rt.sizeDelta = new Vector2(1, 1);
+            rt.localScale = new Vector3(3, 3, 3);
+
+            _arrowCanvas.AddComponent<CanvasScaler>();
+            _arrowCanvas.AddComponent<GraphicRaycaster>();
+        }
 
         // Creates the image of the arrow on the canvas around the player
         GameObject arrowObj = new("arrowImage");

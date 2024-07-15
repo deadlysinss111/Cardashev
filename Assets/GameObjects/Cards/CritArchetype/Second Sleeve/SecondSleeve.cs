@@ -37,10 +37,6 @@ public class SecondSleeve : Card
 
     void LeftClick()
     {
-        _rotationArrow.SetArrow(false);
-
-        ClearPath();
-
         PlayerManager manager = GI._PManFetcher();
         manager.SetToDefault();
 
@@ -55,6 +51,7 @@ public class SecondSleeve : Card
 
     void ExitState()
     {
+        _rotationArrow.SetArrow(false);
         ClearPath();
     }
 
