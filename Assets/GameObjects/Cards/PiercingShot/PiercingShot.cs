@@ -39,7 +39,7 @@ public class PiercingShot : Card
 
         if (manager._lastHit.transform == null) return;
 
-        _direction = Vector3.Normalize(manager._lastHit.transform.position - manager._virtualPos);
+        _direction = Vector3.Normalize(manager._lastHit.point - manager._virtualPos);
         _direction.y = 0;
         _startingPosition = manager._virtualPos;
 
