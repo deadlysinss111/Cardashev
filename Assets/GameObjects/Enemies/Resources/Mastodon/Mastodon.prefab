@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4401395458358623120}
   - component: {fileID: 78369468761149102}
   m_Layer: 0
-  m_Name: Murlock
+  m_Name: Mastodon
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -64,7 +64,7 @@ public class PiercingShot : Card
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
         _startingPosition.y += 1.5f;
-        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 1000, _stats[1]);
+        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 100, _stats[1]);
 
         base.Effect();
     }

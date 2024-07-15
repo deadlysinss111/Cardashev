@@ -14,10 +14,10 @@ public class Acid : Interactible
             other.gameObject.GetComponent<StatManager>().TakeDamage(10);
             return;
         }
-        Murlock murlock;
-        if (other.gameObject.TryGetComponent<Murlock>(out murlock))
+        Mastodon mastodon;
+        if (other.gameObject.TryGetComponent<Mastodon>(out mastodon))
         {
-            murlock.AcideBuff();
+            mastodon.AcideBuff();
         }
             
     }
