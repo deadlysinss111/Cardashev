@@ -234,4 +234,39 @@ public static class TrajectoryToolbox
 
         return initialVelocity;
     }
+
+
+    // Raycas twith a bll curve shape
+    static public UnityEngine.Transform RaycastBellCurve(Vector3 origin, Vector3 end, float apex)
+    {
+        return RaycastBellCurve(origin, BellCurveInitialVelocity(origin, end, apex));
+    }
+
+    static public UnityEngine.Transform RaycastBellCurve(Vector3 origin, Vector3 velocity)
+    {
+        // We initialize base values
+        float step = 0.01f;
+        Vector3 virtualPos = origin;
+        Vector3 nextPos;
+        float overlap;
+
+        // This loop will calculate next position, check if we hit something and add point to draw in prediction each iteration 
+        for (int i = 1; i < 500; i++)
+        {
+            nextPos = virtualPos + velocity * step;
+            velocity += Physics.gravity * step;
+            // Overlap our rays by small margin to ensure we never miss a surface
+            overlap = Vector3.Distance(virtualPos, nextPos) * 1.1f;
+
+            //When hitting a surface we want to show the surface marker and stop updating our line
+            if (Physics.Raycast(virtualPos, velocity.normalized, out RaycastHit hit, overlap))
+            {
+                return hit.transform;
+            }
+
+            virtualPos = nextPos;
+        }
+
+        return null;
+    }
 }

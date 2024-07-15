@@ -139,6 +139,7 @@ public class PlayerController : MonoBehaviour
      void ApplyMovement()
      {
         //if (Time.timeScale == 0) return;
+        if (_virtualDestination == GI._PManFetcher()._virtualPos) return;
         
         // Data duplication so that the closure takes the right data
         Vector3 vect = _virtualDestination;

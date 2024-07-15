@@ -78,7 +78,7 @@ public class Room : MonoBehaviour
                             break;
 
                         case "Population":
-                            roomGOpath = roomGO.name + "/" + roomGO.name + "Prefab";
+                            roomGOpath = roomGO.name + "/" + roomGO.name;
                             //Debug.Log("Attempt to load the prefab " + roomGOpath);
                             break;
 
@@ -89,11 +89,11 @@ public class Room : MonoBehaviour
                     }
                     //Debug.Log("Attempt to load the prefab " + roomGOpath);
 
+                    //print(roomGOpath);
                     // We use the ROOMGO to get the local position of the object, and the roomGO for the global transform
                     GameObject ROOMGO = (GameObject)Resources.Load(roomGOpath);
 
                     // I cannot understand the reason of it but if we dont offset the ROOMGO.transform by a vector that goes down, the preview become bugged...
-                    print(roomGOpath);
                     Vector3 buf = new Vector3(0, 0, 0) + ROOMGO.transform.position;
                     Instantiate(ROOMGO, roomGO.transform.position + buf , roomGO.transform.rotation, newTilemap.transform);
                 }

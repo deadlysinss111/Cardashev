@@ -20,27 +20,27 @@ public class SecondSleeve : Card
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("SecondSleeve" + _id.ToString(), EnterState, ExitState) == false) _id++;
 
-        if (TryGetComponent(out _selectableArea) == false)
-            _selectableArea = gameObject.AddComponent<SelectableArea>();
+        if (gameObject.TryGetComponent(out _rotationArrow) == false)
+            _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
     }
 
     void EnterState()
     {
+        _rotationArrow.SetArrow(true);
+
         PlayerManager manager = GI._PManFetcher();
-
-        // Card range
-        _selectableArea.SetSelectableEntites(false, true, true, true);
-        _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 1, 0);
-
         manager.SetLeftClickTo(LeftClick);
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(DisplayRange);
+        GI.UpdateCursorsInverted("Bow", (byte)(GI.CursorRestriction.S_TILES));
     }
 
     void LeftClick()
     {
+        _rotationArrow.SetArrow(false);
+
         ClearPath();
-        _selectableArea.ResetSelectable();
+
         PlayerManager manager = GI._PManFetcher();
         manager.SetToDefault();
 
@@ -55,7 +55,6 @@ public class SecondSleeve : Card
 
     void ExitState()
     {
-        _selectableArea.ResetSelectable();
         ClearPath();
     }
 

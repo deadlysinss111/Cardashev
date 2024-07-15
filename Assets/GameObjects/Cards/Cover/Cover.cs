@@ -15,7 +15,6 @@ public class Cover : Card
     /*
      * fields
      */
-    RotationSelectArrow _rotationArrow;
 
     GameObject _cover;
 
