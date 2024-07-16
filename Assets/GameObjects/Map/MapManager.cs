@@ -60,7 +60,6 @@ public class MapManager : MonoBehaviour
 
         GenerateMap();
         _playerLocation.GetComponent<MapNode>().SelectNode();
-        //GI._mapNodes = _mapGrid;
     }
 
     void Update()

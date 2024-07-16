@@ -18,5 +18,14 @@ public class MobAndWincon : MonoBehaviour
         {
             esc.AddCondition(name);
         }
+
+        StartCoroutine(StartFadeOut());
+    }
+
+    IEnumerator StartFadeOut()
+    {
+        yield return new WaitForSecondsRealtime(.5f);
+
+        GameObject.Find("Transition Effect").GetComponent<Animator>().SetTrigger("Fade Out");
     }
 }

@@ -13,6 +13,18 @@ public class SceneLoadingAnimation : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    private void Start()
+    {
+        StartCoroutine(StartFadeOut());
+    }
+
+    IEnumerator StartFadeOut()
+    {
+        yield return new WaitForSecondsRealtime(.5f);
+
+        animator.SetTrigger("Fade Out");
+    }
+
     public void StartAnimation(string sceneType)
     {
         _sceneType = sceneType;
