@@ -3,7 +3,12 @@ guid: 47349c095d5f266409829455fa356c2c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tile_pente
+    second: {fileID: 2100000, guid: acc6000a87d0598458f3ee929038b216, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
