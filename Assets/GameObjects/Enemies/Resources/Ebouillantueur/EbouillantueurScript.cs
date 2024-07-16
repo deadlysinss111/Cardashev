@@ -9,8 +9,8 @@ using UnityEngine.Events;
 public class Ebouillantueur : Enemy
 {
     [SerializeField] GameObject _bullet;
-    int _movePity;
     float _meleeCooldown;
+    bool _fleeing;
     PlayerManager _player;
     GameObject ACID;
 
@@ -19,7 +19,6 @@ public class Ebouillantueur : Enemy
         base.Start();
         _name = "Ebouillantueur";
         _agent.speed = 3f;
-        _movePity = 0;
         _player = GI._PManFetcher();
         ACID = (GameObject)Resources.Load("Debug Zone/Interactibles/Prefabs/Acid");
     }
@@ -31,46 +30,52 @@ public class Ebouillantueur : Enemy
         _isMoving = true; // DO NOT REMOVE THIS LINE
         _meleeCooldown -= Time.deltaTime;
 
-        int perc = UnityEngine.Random.Range(1, 101);
+        float playerDist = DistanceToPlayer();
 
-        if (perc >= _movePity + (PlayerCloserThan(20) ? 60 : 0))
+        if (playerDist > 5 && playerDist < 20)
         {
-            _movePity += 15;
-            perc = UnityEngine.Random.Range(1, 101);
+            int perc = UnityEngine.Random.Range(1, 101);
 
-            GameObject closestMonster = GameObject.Find("Mastodon(Clone)");
+            //GameObject closestMonster = GameObject.Find("Mastodon(Clone)");
 
-            if (PlayerCloserThan(5) && _meleeCooldown <= 0)
+            if (playerDist < 2 && _meleeCooldown <= 0)
             {
                 print("Meleed player");
                 _meleeCooldown = 10;
-                MeleeAttack();
+                StartCoroutine(MeleeAttack());
             }
-            else if (perc >= 20 || closestMonster == null)
+            else // if (perc >= 20 || closestMonster == null)
             {
                 print("Shot at player");
                 StartCoroutine(ShootPlayer());
             }
-            else
+            /*else
             {
                 print("Supported");
                 StartCoroutine(SupportMonster(closestMonster));
-            }
+            }*/
         }
         else
         {
-            print("Moved FDP");
-            _movePity = 0;
-            Move();
+            if (playerDist > 20)
+            {
+                _fleeing = false;
+                Move();
+            }
+            else
+            {
+                _fleeing = true;
+                Move();
+            }
         }
     }
 
-    bool PlayerCloserThan(float distance)
+    float DistanceToPlayer()
     {
-        return Vector3.Distance(_player.transform.position, transform.position) / 2 < distance;
+        return Vector3.Distance(_player.transform.position, transform.position) / 2;
     }
 
-    void MeleeAttack()
+    IEnumerator MeleeAttack()
     {
         Collider[] temp = Physics.OverlapSphere(transform.position - Vector3.up * 2, 0.1f);
         print(temp[0]);
@@ -78,7 +83,9 @@ public class Ebouillantueur : Enemy
         {
             for (int j = 0; j < 3; j++)
             {
+                // TODO : FIX FLYING ACID PLACED ON EMPTY SPACE 
                 Instantiate(ACID, temp[0].transform.position + new Vector3(i * 2, 1.1f, j * 2), Quaternion.identity);
+                yield return new WaitForSeconds(.3f);
             }
         }
     }
@@ -98,7 +105,7 @@ public class Ebouillantueur : Enemy
         // Fires a projectile
         GameObject bullet = Instantiate(_bullet);
         bullet.transform.position = transform.position + new Vector3(0, 1, 0);
-        Vector3 velocity= TrajectoryToolbox.BellCurveInitialVelocity(transform.position + new Vector3(0, 1, 0), _target.transform.position, 4);
+        Vector3 velocity= TrajectoryToolbox.BellCurveInitialVelocity(transform.position + new Vector3(0, 1, 0), _target.transform.position, 2);
         bullet.GetComponent<Rigidbody>().velocity = velocity;
     }
 
@@ -126,6 +133,16 @@ public class Ebouillantueur : Enemy
         if (false == _agent.isActiveAndEnabled || false == _agent.isOnNavMesh) return;
 
         _isMoving = true;
+        Vector3 targetArea;
+
+        if (_fleeing)
+        {
+            targetArea = new Vector3(0, 1, 0);
+        }
+        else
+        {
+            targetArea = new Vector3(0, 1, 0);
+        }
 
         Vector3 dest =  RandomNavmeshLocation(1, transform.position);
         _agent.SetDestination(dest);

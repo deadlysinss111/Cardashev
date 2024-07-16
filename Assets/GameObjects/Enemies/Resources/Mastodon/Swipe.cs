@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 
-public class AOEVisual : MonoBehaviour
+public class Swipe : MonoBehaviour
 {
     float _lifeTime = 0.5f;
     public int _dmg;
