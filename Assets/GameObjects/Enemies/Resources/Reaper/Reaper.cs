@@ -9,6 +9,9 @@ public class Reaper : Enemy
     int _dmg = 777;
 
     float startScratchSpeed = -1f;
+    Vector3 baseDirSpeed = Vector3.zero;
+
+    int corId = 0;
 
     DebugRayCaster.DebugRayCast _debugCurrentDest;
 
@@ -157,22 +160,48 @@ public class Reaper : Enemy
 
         LookInDirectionTarget(_target.transform.position, 8f);
 
-        Vector3 dir = (transform.position - _target.transform.position).normalized;
-        rBody.velocity = dir;
+        Vector3 dir = (_target.transform.position - transform.position).normalized;
+        dir.y = rBody.velocity.y;
 
+        print("Prepare for id " + (corId + 1));
         startScratchSpeed = 10f;
+        rBody.velocity = dir*startScratchSpeed;
+        baseDirSpeed = rBody.velocity;
+
         _isMoving = true;
 
-        StartCoroutine(EaseScratch());
+        _timeBeforeDecision = Mathf.Infinity;
+
+        corId += 1;
+        StartCoroutine(EaseScratch(rBody, corId));
     }
 
-    IEnumerator EaseScratch()
+    IEnumerator EaseScratch(Rigidbody rBody, int id)
     {
-        while (startScratchSpeed > 0)
+        print($"{id} - Start");
+        while (rBody.velocity.magnitude > 0.01f)
         {
-            EaseOutCubic(5f);
+            Vector3 v = rBody.velocity;
+            /*rBody.velocity = new Vector3(
+                Mathf.Lerp(baseDirSpeed.x, 0, EaseOutCubic(Mathf.Clamp01(v.x / baseDirSpeed.x))),
+                v.y,
+                Mathf.Lerp(baseDirSpeed.z, 0, EaseOutCubic(Mathf.Clamp01(v.z / baseDirSpeed.z)))
+            );*/
+            print($"{id} - Reaper velocity: {v}");
+            print(_timeBeforeDecision);
+            //_timeBeforeDecision += 1f;
             yield return null;
         }
+        print($"{id} - Done");
+        rBody.velocity = Vector3.zero;
+        baseDirSpeed = Vector3.zero;
+        startScratchSpeed = -1f;
+
+        _isMoving = false;
+        rBody.isKinematic = true;
+        _agent.enabled = true;
+        _timeBeforeDecision = 3f;
+        corId -= 1;
     }
 
     float EaseOutCubic(float t) => 1 - Mathf.Pow(1 - t, 3);
