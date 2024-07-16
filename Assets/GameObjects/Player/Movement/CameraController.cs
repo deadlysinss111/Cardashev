@@ -93,7 +93,7 @@ public class CameraController : MonoBehaviour
                 break;
             default:
                 move = new Vector3(0, 0, 0);
-                print("how the fuck is that possibl??");
+                print("how the fuck is that possibl *komoji* ??");
                 break;
         }
 
@@ -123,7 +123,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    private void RotateToLeft(InputAction.CallbackContext context)
+    public void RotateToLeft(InputAction.CallbackContext context)
     {
         if (_offsetID == 0)
         {
@@ -142,7 +142,7 @@ public class CameraController : MonoBehaviour
         _curRotation *= Quaternion.AngleAxis(45, Vector3.right);
     }
 
-    private void RotateToRight(InputAction.CallbackContext context)
+    public void RotateToRight(InputAction.CallbackContext context)
     {
         if (_offsetID == 3)
         {
