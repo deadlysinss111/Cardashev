@@ -10,9 +10,16 @@ using UnityEngine.AI;
 public class Mastodon : Enemy
 {
     [SerializeField] GameObject _swipeHitbox;
+    [SerializeField] GameObject _biteHitbox;
     int _dmg;
+    float _diveTime = 2;
     GameObject[] _barrels;
     GameObject[] _diveSpots;
+
+    float _divePathTime;
+    NavMeshPath[] _divePaths;
+    bool _isDiveShorter;
+    Vector3 _nextMoveDirection;
 
     private new void Start()
     {
@@ -31,7 +38,10 @@ public class Mastodon : Enemy
         _barrels = GameObject.FindGameObjectsWithTag("Spillable");
         _diveSpots = GameObject.FindGameObjectsWithTag("DiveSpot");
 
-        GameObject closestBarrel = FindClosestBarrel(out float distToBarrel);
+        IsDiveShorstestThanDirectWalk();
+
+        GameObject closestBarrel = FindClosestBarrelWithAngleRestriction(_target.transform.position, 45,  out float distToBarrel);
+        //GameObject closestBarrel = FindClosestBarrel(out float distToBarrel);
         if(distToBarrel <= 20)
         {
             Barrel barrelScript = HierarchySearcher.FindChildRecursively(closestBarrel.transform, "Body").GetComponent<Barrel>();
@@ -51,27 +61,17 @@ public class Mastodon : Enemy
         float dist = Vector3.Magnitude(_target.transform.position - transform.position);
         if (dist < 4)
         {
-            StartCoroutine(Swipe());
+            if (Random.Range(0, 3) == 0)
+                StartCoroutine(Bite());
+            else
+                StartCoroutine(Swipe());
+
             return;
         }
-        if (gameObject.GetComponent<StatManager>()._armor == 0)
-        {
-            if (Random.Range(0, 2) == 0)
-            {
-                StartCoroutine(ArmoreUp());
-            }
-            else
-            {
-                Move();
-            }
-        }
-        else
-        {
-            Move();
-        }
+        Move();
     }
 
-    // Melee attack
+    // Melee attacks
     private IEnumerator Swipe()
     {
         _timeBeforeDecision = 3;
@@ -82,7 +82,20 @@ public class Mastodon : Enemy
         {
             yield return null;
         }
-        Instantiate(_swipeHitbox, transform.position + dir * _swipeHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<AOEVisual>()._dmg = _dmg;
+        Instantiate(_swipeHitbox, transform.position + dir * _swipeHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<Swipe>()._dmg = _dmg;
+    }
+
+    private IEnumerator Bite()
+    {
+        _timeBeforeDecision = 3.5f;
+        // ANIM HERE
+        Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
+        LookInDirectionTarget(dir, 8f);
+        while (_timeBeforeDecision > 1.5f)
+        {
+            yield return null;
+        }
+        Instantiate(_biteHitbox, transform.position + dir * _swipeHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<Bite>()._dmg = _dmg;
     }
 
     // Gain armor
@@ -128,11 +141,33 @@ public class Mastodon : Enemy
     GameObject FindClosestBarrel(out float dist)
     {
         GameObject closestBarrel = null;
-        float closestDist = 100;
+        float closestDist = 1000;
         foreach(GameObject barrel in _barrels)
         {
             dist = Vector3.Magnitude(barrel.transform.position - transform.position);
             if( dist < closestDist)
+            {
+                closestBarrel = barrel;
+                closestDist = dist;
+            }
+        }
+        dist = closestDist;
+        return closestBarrel;
+    }
+
+    // This function is meant to find the closest barrel that is not too far from the enemy to target path
+    // degree is the margin of permission the angle between the barrel and the targe tmust have
+    GameObject FindClosestBarrelWithAngleRestriction(Vector3 targetPos, float degree, out float dist)
+    {
+        GameObject closestBarrel = null;
+        float closestDist = 1000;
+        foreach (GameObject barrel in _barrels)
+        {
+            if (Vector3.Angle(barrel.transform.position - transform.position, _nextMoveDirection) > degree)
+                continue;
+
+            dist = Vector3.Magnitude(barrel.transform.position - transform.position);
+            if (dist < closestDist)
             {
                 closestBarrel = barrel;
                 closestDist = dist;
@@ -177,6 +212,21 @@ public class Mastodon : Enemy
     // Whole movement logic below
     //
 
+    GameObject FindClosestTileFromTargetArg(List<GameObject> competings, GameObject target, out float dist)
+    {
+        GameObject closest = null;
+        dist = 1000;
+        foreach (GameObject competing in competings)
+        {
+            if(Vector3.Magnitude(competing.transform.position - target.transform.position) < dist)
+            {
+                dist = Vector3.Magnitude(competing.transform.position - target.transform.position);
+                closest = competing;
+            }
+        }
+        return closest;
+    }
+
     GameObject FindClosestDivSpotFromMe(out float time)
     {
         GameObject closestSpot = null;
@@ -184,15 +234,12 @@ public class Mastodon : Enemy
         float closestTime = 1000;
         foreach (GameObject spot in _diveSpots)
         {
-            if(Physics.Raycast(spot.transform.position + new Vector3(0, 2f, 0) - Vector3.Normalize(spot.transform.position - transform.position) * 2, Vector3.down, out RaycastHit hit))
+            NavMesh.CalculatePath(transform.position, FindClosestTileFromTargetArg(spot.GetComponent<DiveSpot>()._linkedTiles, _target, out _).transform.position, NavMesh.AllAreas, path);
+            time = GetPathTime(path);
+            if (time < closestTime && time != 0)
             {
-                NavMesh.CalculatePath(transform.position, hit.transform.position, NavMesh.AllAreas, path);
-                time = GetPathTime(path);
-                if (time < closestTime && time != 0)
-                {
-                    closestSpot = spot;
-                    closestTime = time;
-                }
+                closestSpot = spot;
+                closestTime = time;
             }
         }
         time = closestTime;
@@ -207,7 +254,10 @@ public class Mastodon : Enemy
         float closestTime = 1000;
         foreach (GameObject spot in _diveSpots)
         {
-            NavMesh.CalculatePath(spot.transform.position + new Vector3(0, 0.5f, 0) - Vector3.Normalize(_target.transform.position - spot.transform.position) * 2, _target.transform.position, NavMesh.AllAreas, path);
+            NavMesh.SamplePosition(FindClosestTileFromTargetArg(spot.GetComponent<DiveSpot>()._linkedTiles, _target, out _).transform.position, out NavMeshHit firstHit, 10, NavMesh.AllAreas);
+            NavMesh.SamplePosition(_target.transform.position, out NavMeshHit secondHit, 10, NavMesh.AllAreas);
+            NavMesh.CalculatePath(firstHit.position, secondHit.position, NavMesh.AllAreas, path);
+
             time = GetPathTime(path);
             if (time < closestTime && time != 0)
             {
@@ -226,7 +276,8 @@ public class Mastodon : Enemy
         paths[1] = new NavMeshPath();
         GameObject closestFromMe = FindClosestDivSpotFromMe(out _);
         GameObject closestFromTarget = FindClosestDivSpotFromTarget(out _);
-        print("isnull? : "+ closestFromMe);
+        //print("isnull? : "+ closestFromMe);
+        //print("isnull2? : "+ closestFromTarget);
         if (closestFromMe == null || closestFromMe == closestFromTarget) return -1;
 
         NavMesh.CalculatePath(transform.position, closestFromMe.transform.position + new Vector3(0, 0.5f, 0) - Vector3.Normalize(closestFromMe.transform.position - transform.position) * 2, NavMesh.AllAreas, paths[0]);
@@ -234,10 +285,10 @@ public class Mastodon : Enemy
             closestFromTarget.transform.position + new Vector3(0, 0.5f, 0) - Vector3.Normalize(closestFromTarget.transform.position - _target.transform.position) * 2, 
             _target.transform.position + new Vector3(0, 0.5f, 0) ,
             NavMesh.AllAreas, paths[1]);
-        print("time 1 : " + GetPathTime(paths[0]));
-        print("time 2 : " + GetPathTime(paths[1]));
+        //print("time 1 : " + GetPathTime(paths[0]));
+        //print("time 2 : " + GetPathTime(paths[1]));
 
-        return (GetPathTime(paths[0]) + GetPathTime(paths[1]));
+        return (GetPathTime(paths[0]) + GetPathTime(paths[1]) + _diveTime);
     }
 
     IEnumerator MoveWithDive(NavMeshPath[] paths)
@@ -258,10 +309,24 @@ public class Mastodon : Enemy
             yield return null;
         }
 
+        pathTime = _diveTime / 2;
+        while (pathTime > 0)
+        {
+            pathTime -= Time.deltaTime;
+            yield return null;
+        }
+
         // Dive there
         _agent.enabled = false;
         transform.position = destTwo;
         _agent.enabled = true;
+
+        pathTime = _diveTime / 2;
+        while (pathTime > 0)
+        {
+            pathTime -= Time.deltaTime;
+            yield return null;
+        }
 
         _agent.SetDestination(destTwo);
         LookInDirectionTarget(destTwo, 8f);
@@ -304,20 +369,32 @@ public class Mastodon : Enemy
         LookInDirectionTarget(dest, 8f);
     }
 
+    void IsDiveShorstestThanDirectWalk()
+    {
+        NavMeshPath directPath = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, _target.transform.position, NavMesh.AllAreas, directPath);
+
+        _divePathTime = GetDivePath(out _divePaths);
+
+        if (_divePathTime != -1 && _divePathTime < GetPathTime(directPath))
+        {
+            _nextMoveDirection = _divePaths[0].corners[_divePaths[0].corners.Length - 1] - transform.position;
+            _isDiveShorter =  true;
+            return;
+        }
+
+        _nextMoveDirection = _target.transform.position - transform.position;
+        _isDiveShorter = false;
+    }
+
     protected override void Move()
     {
         _isMoving = true;
 
-        NavMeshPath directPath = new NavMeshPath();
-        NavMesh.CalculatePath(transform.position, _target.transform.position, NavMesh.AllAreas, directPath);
-
-        float divePathTime = GetDivePath(out NavMeshPath[] divePaths);
-        print("dive : "+ divePathTime);
-        print("direct : "+ GetPathTime(directPath));
-        if (divePathTime != -1 && divePathTime < GetPathTime(directPath))
+        if (_isDiveShorter)
         {
-            _timeBeforeDecision = divePathTime;
-            StartCoroutine(MoveWithDive(divePaths));
+            _timeBeforeDecision = _divePathTime;
+            StartCoroutine(MoveWithDive(_divePaths));
         }
         else
             MoveDirectly();
