@@ -5,63 +5,79 @@ using UnityEngine;
 
 public class SimpleShot : Card
 {
-    List<GameObject> _selectableTiles = new();
+    Vector3 _direction;
+    Vector3 _startingPosition;
+    int _damage = 10;
 
-    // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
-        int[] stats = new int[1] { 13 };
-        base.Init(1.5f, 4, 50, stats, $"Take aim and perform a powerfull shot that deals {stats[0]} dmg.");
+        // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
+        int[] stats = new int[0];
+        /* stats fill there */
+        base.Init(1, 2, 60, stats);
 
-        while (PlayerManager.AddState("shot" + _id.ToString(), EnterAimState, ExitState) == false) _id++;
 
-        if (TryGetComponent(out _selectableArea) == false)
-            _selectableArea = gameObject.AddComponent<SelectableArea>();
+        // Add a unique state + id to play the correct card and  not the first of its kind
+        while (PlayerManager.AddState("SimpleShot" + _id.ToString(), EnterState, ExitState) == false) _id++;
+
+        if (gameObject.TryGetComponent(out _rotationArrow) == false)
+            _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
     }
 
-    public override void Effect()
+    void EnterState()
     {
-        if (_target == null) return;
-        base.Effect();
-        _target.GetComponent<Enemy>().TakeDamage(_stats[0]);
-    }
-
-    void EnterAimState()
-    {
-        // Sets up the settings for the area
-        _selectableArea.SetGroundColor(new Color(0.3f, 0.3f, 0.3f));
-        _selectableArea.SetSelectableEntites(false, false, true, false);
-        _selectableTiles = _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 4);
+        _rotationArrow.SetArrow(true);
 
         PlayerManager manager = GI._PManFetcher();
-        manager.SetLeftClickTo(() => {
-            if (_selectableArea.CastLeftClick(out GameObject obj))
-            {
-                print("You got hit by a smooth " + obj.name);
-                if (obj.TryGetComponent<Enemy>(out _) == false)
-                {
-                    throw new MissingComponentException($"The object {obj.name} ({obj.GetType()}) the card aimed at does not have a Enemy script.");
-                }
-                _target = obj;
-                base.PlayCard();
-                GI._PManFetcher().SetToDefault();
-            }
-            else
-                print("R u ok?");
-        });
-        manager.SetRightClickTo(() => { ExitState(); GI._PManFetcher().SetToDefault(); });
-        manager.SetHoverTo(() => { });
-        GI.UpdateCursors("Bow", (byte)(GI.CursorRestriction.S_ENEMIES));
-        GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_ENEMIES));
+        manager.SetLeftClickTo(LeftClick);
+        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        manager.SetHoverTo(DisplayRange);
+        GI.UpdateCursorsInverted("Bow", (byte)(GI.CursorRestriction.S_TILES));
+    }
+
+    void LeftClick()
+    {
+        PlayerManager manager = GI._PManFetcher();
+        manager.SetToDefault();
+
+        if (manager._lastHit.transform == null) return;
+
+        _direction = Vector3.Normalize(manager._lastHit.point - manager._virtualPos);
+        _direction.y = 0;
+        _startingPosition = manager._virtualPos;
+
+        base.PlayCard();
     }
 
     void ExitState()
     {
-        _selectableArea.ResetSelectable();
+        _rotationArrow.SetArrow(false);
+        ClearPath();
+    }
+
+    void DisplayRange()
+    {
+
+    }
+
+    public override void Effect()
+    {
+        GameObject bullet = Instantiate((GameObject)Resources.Load("Bullet"));
+
+        bullet.GetComponent<Bullet>().SetDirection(_direction);
+        _startingPosition.y += 1.5f;
+        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 10, _damage);
+
+        base.Effect();
     }
 
     public override void PlayCard()
     {
-        GI._PManFetcher().SetToState("shot" + _id.ToString());
+        GI._PManFetcher().SetToState("SimpleShot" + _id.ToString());
+    }
+
+    public override void OnUpgrade()
+    {
+        base.OnUpgrade();
     }
 }
