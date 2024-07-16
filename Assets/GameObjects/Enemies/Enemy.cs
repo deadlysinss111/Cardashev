@@ -120,6 +120,7 @@ abstract public class Enemy : MonoBehaviour
 
     protected void CheckPlayerDistance()
     {
+        if (_agent.enabled == false) return;
         // If the enemy is too close to the player, he will stop to move
         if( _isMoving && Vector3.Magnitude(GI._PlayerFetcher().transform.position - transform.position) < 2)
         {

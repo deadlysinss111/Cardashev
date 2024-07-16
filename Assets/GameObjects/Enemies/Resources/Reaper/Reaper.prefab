@@ -214,6 +214,73 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &3422565167668558724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6035692521052628459}
+  - component: {fileID: 5798269180895017813}
+  - component: {fileID: 864122691672388566}
+  m_Layer: 0
+  m_Name: AOE
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6035692521052628459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3422565167668558724}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8414062284024191334}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5798269180895017813
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3422565167668558724}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.56, y: 1.08, z: 2.76}
+  m_Center: {x: -0.03, y: 2.2, z: 1.56}
+--- !u!114 &864122691672388566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3422565167668558724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a3c849d56851c04285691a0c42f632c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _self: {fileID: 6663536012571686431}
 --- !u!1 &5261209654958643857
 GameObject:
   m_ObjectHideFlags: 0
@@ -5395,6 +5462,7 @@ Transform:
   - {fileID: 1110386059902966823}
   - {fileID: 3356631509274793003}
   - {fileID: 3609819807950528751}
+  - {fileID: 6035692521052628459}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &6574048331765704344
@@ -5478,6 +5546,10 @@ MonoBehaviour:
   _health: 30
   _hurtParticles: {fileID: 6722658780053182816}
   _deathParticles: {fileID: 5814882056630226403}
+  _dmg: 777
+  _changeOfStateScratch:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!136 &257931772629749424
 CapsuleCollider:
   m_ObjectHideFlags: 0

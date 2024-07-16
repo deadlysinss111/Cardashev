@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class Reaper : Enemy
 {
-    int _dmg = 777;
+    public int _dmg = 777;
 
     float startScratchSpeed = -1f;
     Vector3 baseDirSpeed = Vector3.zero;
@@ -15,6 +16,8 @@ public class Reaper : Enemy
 
     DebugRayCaster.DebugRayCast _debugCurrentDest;
 
+    public UnityEvent _changeOfStateScratch;
+
     // Start is called before the first frame update
     new void Start()
     {
@@ -22,6 +25,8 @@ public class Reaper : Enemy
         _name = "Reaper";
         _agent.speed = 5.5f;
         _dmg = 777;
+
+        _changeOfStateScratch = new UnityEvent();
     }
 
     override protected void Act()
@@ -67,6 +72,8 @@ public class Reaper : Enemy
         // TODO: Decide of a tile to snap too, to ensure we don't stop in the middle of the board
         StartCoroutine(reOrient(_timeBeforeDecision / 2));
     }
+
+    protected new void CheckPlayerDistance() { }
 
     private IEnumerator reOrient(float time)
     {
@@ -179,6 +186,7 @@ public class Reaper : Enemy
     IEnumerator EaseScratch(Rigidbody rBody, int id)
     {
         print($"{id} - Start");
+        _changeOfStateScratch.Invoke();
         while (rBody.velocity.magnitude > 0.01f)
         {
             Vector3 v = rBody.velocity;
@@ -202,6 +210,7 @@ public class Reaper : Enemy
         _agent.enabled = true;
         _timeBeforeDecision = 3f;
         corId -= 1;
+        _changeOfStateScratch.Invoke();
     }
 
     float EaseOutCubic(float t) => 1 - Mathf.Pow(1 - t, 3);

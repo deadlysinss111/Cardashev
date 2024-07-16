@@ -35,7 +35,7 @@ public class DebugRayCaster : MonoBehaviour
     }
     public static DebugRayCast CreateDebugRayCast(Vector3 position, Vector3 direction, float distance, Color color)
     {
-        DebugRayCast d = new DebugRayCast
+        DebugRayCast d = new()
         {
             position = position,
             direction = direction,
@@ -46,5 +46,10 @@ public class DebugRayCaster : MonoBehaviour
         _rays.Add(d);
 
         return d;
+    }
+
+    public static void RemoveRay(DebugRayCast ray)
+    {
+        _rays.Remove(ray);
     }
 }
