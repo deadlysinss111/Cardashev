@@ -18,7 +18,7 @@ public abstract class Interactible : MonoBehaviour
     protected static PlayerManager _playerManager;
     [SerializeField] protected bool _isHiglightable = true;
     bool _selectable = false;
-    public bool _inRange = false;
+    [NonSerialized] public bool _inRange = false;
 
     [SerializeField] public int _health = 0;
     [SerializeField] protected string _inRangeCursor = "Interactible";

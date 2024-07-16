@@ -18,13 +18,15 @@ public class Room : MonoBehaviour
      FIELDS
     */
     // Clarifies the Zone's type to pull the correct asset and match the aesthetic
-    private ZoneType _zoneType = ZoneType.Debug;
+    private ZoneType _zoneType = ZoneType.Radioactive;
 
     // Essential struct
     private static RoomPrefabEncyclopedia ROOM_ENCYCLOPEDIA = new RoomPrefabEncyclopedia
     (
         new Dictionary<ZoneType, string> {
-            { ZoneType.Debug, "Debug" }},
+            { ZoneType.Debug, "Debug" },
+            { ZoneType.Radioactive, "Radioactive" },
+        },
 
         new Dictionary<string, RoomPrefabDesc> { }
     );

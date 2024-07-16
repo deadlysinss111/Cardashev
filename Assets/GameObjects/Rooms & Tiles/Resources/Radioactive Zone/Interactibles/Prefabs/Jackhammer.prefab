@@ -60,8 +60,8 @@ Rigidbody:
   m_GameObject: {fileID: 7882376885734965360}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 1
+  m_Drag: 1000
+  m_AngularDrag: 1000
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -112,8 +112,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isHiglightable: 1
+  _inRange: 0
   _health: 5
-  _cursor: Interactible
+  _inRangeCursor: Interactible
+  _outOfRangeCursor: Cross
   _UeOnRaycastHit:
     m_PersistentCalls:
       m_Calls: []
@@ -172,7 +174,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &200306645853506028
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -186,6 +188,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -344,7 +347,7 @@ PrefabInstance:
       value: Body
       objectReference: {fileID: 0}
     - target: {fileID: 7678431666921866782, guid: 596d5202bf8cfc24f833e486d40fd626, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 43d525a9af771704cb34b09715e1878e, type: 2}
     m_RemovedComponents:

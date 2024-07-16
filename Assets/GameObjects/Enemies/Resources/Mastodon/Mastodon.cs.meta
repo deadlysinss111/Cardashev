@@ -4,7 +4,10 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
+  - _hurtParticles: {instanceID: 0}
+  - _deathParticles: {instanceID: 0}
   - _swipeHitbox: {fileID: 9203003672801310520, guid: 77995b837d8565040ab2b6a1602f163a, type: 3}
+  - _biteHitbox: {fileID: 9203003672801310520, guid: 6dc2afbd04ea51842bd06b5b35467101, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

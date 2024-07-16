@@ -3,7 +3,8 @@ using System.Collections.Generic;
 // Determines what Zone the Tileset is based on
 public enum ZoneType
 {
-    Debug = -1
+    Debug = -1,
+    Radioactive
 }
 
 

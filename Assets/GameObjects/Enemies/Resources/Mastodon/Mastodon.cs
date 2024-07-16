@@ -42,7 +42,7 @@ public class Mastodon : Enemy
 
         GameObject closestBarrel = FindClosestBarrelWithAngleRestriction(_target.transform.position, 45,  out float distToBarrel);
         //GameObject closestBarrel = FindClosestBarrel(out float distToBarrel);
-        if(distToBarrel <= 20)
+        if(distToBarrel < Vector3.Magnitude(_target.transform.position - transform.position))
         {
             Barrel barrelScript = HierarchySearcher.FindChildRecursively(closestBarrel.transform, "Body").GetComponent<Barrel>();
             if (barrelScript._targetedBy == null || barrelScript._targetedBy == gameObject)
@@ -95,7 +95,7 @@ public class Mastodon : Enemy
         {
             yield return null;
         }
-        Instantiate(_biteHitbox, transform.position + dir * _swipeHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<Bite>()._dmg = _dmg;
+        Instantiate(_biteHitbox, transform.position + dir * _biteHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<Bite>()._dmg = _dmg;
     }
 
     // Gain armor

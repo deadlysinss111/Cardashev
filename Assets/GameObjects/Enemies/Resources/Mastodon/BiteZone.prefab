@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2743264695762997516}
   - component: {fileID: 679667760672004805}
   - component: {fileID: 3380913911204995582}
+  - component: {fileID: 4479929499239453335}
   m_Layer: 0
   m_Name: BiteZone
   m_TagString: Untagged
@@ -65,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9d9f151d458265d4291b2526c398a3e1, type: 2}
+  - {fileID: 2100000, guid: a17c953dbb832bc48a1e3b09b87bbddf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -135,3 +136,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4479929499239453335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9203003672801310520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4433f9895d5564c9fa9e5f4477b496, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dmg: 0

@@ -94,7 +94,7 @@ MonoBehaviour:
   _hurtParticles: {fileID: 5777088147295073990}
   _deathParticles: {fileID: 1361006574819885947}
   _swipeHitbox: {fileID: 9203003672801310520, guid: 77995b837d8565040ab2b6a1602f163a, type: 3}
-  _biteHitbox: {fileID: 0}
+  _biteHitbox: {fileID: 9203003672801310520, guid: 6dc2afbd04ea51842bd06b5b35467101, type: 3}
 --- !u!54 &4401395458358623120
 Rigidbody:
   m_ObjectHideFlags: 0
