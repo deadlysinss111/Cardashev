@@ -20,14 +20,14 @@ public class Ebouillantueur : Enemy
         _name = "Ebouillantueur";
         _agent.speed = 3f;
         _player = GI._PManFetcher();
-        ACID = (GameObject)Resources.Load("Debug Zone/Interactibles/Prefabs/Acid");
+        ACID = (GameObject)Resources.Load("Radioactive Zone/Interactibles/Prefabs/Acid");
     }
 
 
     // Enemy's decision
     override protected void Act()
     {
-        _isMoving = true; // DO NOT REMOVE THIS LINE
+        _isMoving = false; // DO NOT REMOVE THIS LINE
         _meleeCooldown -= Time.deltaTime;
 
         float playerDist = DistanceToPlayer();
@@ -38,13 +38,7 @@ public class Ebouillantueur : Enemy
 
             //GameObject closestMonster = GameObject.Find("Mastodon(Clone)");
 
-            if (playerDist < 2 && _meleeCooldown <= 0)
-            {
-                print("Meleed player");
-                _meleeCooldown = 10;
-                StartCoroutine(MeleeAttack());
-            }
-            else // if (perc >= 20 || closestMonster == null)
+            //else // if (perc >= 20 || closestMonster == null)
             {
                 print("Shot at player");
                 StartCoroutine(ShootPlayer());
@@ -57,7 +51,13 @@ public class Ebouillantueur : Enemy
         }
         else
         {
-            if (playerDist > 20)
+            if (playerDist < 5 && _meleeCooldown <= 0)
+            {
+                print("Meleed player");
+                _meleeCooldown = 10;
+                StartCoroutine(MeleeAttack());
+            }
+            else if (playerDist > 20)
             {
                 _fleeing = false;
                 Move();
@@ -78,14 +78,14 @@ public class Ebouillantueur : Enemy
     IEnumerator MeleeAttack()
     {
         Collider[] temp = Physics.OverlapSphere(transform.position - Vector3.up * 2, 0.1f);
-        print(temp[0]);
+        _timeBeforeDecision = 9 * .2f + .5f;
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                // TODO : FIX FLYING ACID PLACED ON EMPTY SPACE 
+                // TODO : FIX FLYING ACID PLACED ON EMPTY SPACE
                 Instantiate(ACID, temp[0].transform.position + new Vector3(i * 2, 1.1f, j * 2), Quaternion.identity);
-                yield return new WaitForSeconds(.3f);
+                yield return new WaitForSeconds(.2f);
             }
         }
     }
@@ -96,7 +96,7 @@ public class Ebouillantueur : Enemy
         {
             //GameObject target
         }*/
-        _timeBeforeDecision = 2f;
+        _timeBeforeDecision = 4f;
         while( _timeBeforeDecision < 1.5f )
         {
             yield return null;
@@ -115,7 +115,7 @@ public class Ebouillantueur : Enemy
         {
             //GameObject target
         }*/
-        _timeBeforeDecision = 2f;
+        _timeBeforeDecision = 4f;
         while (_timeBeforeDecision < 1.5f)
         {
             yield return null;
@@ -137,14 +137,14 @@ public class Ebouillantueur : Enemy
 
         if (_fleeing)
         {
-            targetArea = new Vector3(0, 1, 0);
+            targetArea = Vector3.Normalize(transform.position - _player.transform.position) * 10;
         }
         else
         {
-            targetArea = new Vector3(0, 1, 0);
+            targetArea = Vector3.Normalize(_player.transform.position - transform.position) * (DistanceToPlayer()-20);
         }
 
-        Vector3 dest =  RandomNavmeshLocation(1, transform.position);
+        Vector3 dest =  RandomNavmeshLocation(1, targetArea);
         _agent.SetDestination(dest);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);

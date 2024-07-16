@@ -131,7 +131,7 @@ abstract public class Enemy : MonoBehaviour
     public virtual void Defeat()
     {
         //TODO: ue there
-        HierarchySearcher.FindChildRecursively(GameObject.Find("ExitTile(Clone)").transform, "ExitPlate").GetComponent<EscapeTile>().TriggerCondition(_name);
+        HierarchySearcher.FindChildRecursively(GameObject.Find("ExitTile(Clone)").transform, "Plate").GetComponent<EscapeTile>().TriggerCondition(_name);
 
         if (_lookAtCoroutine != null)
             StopCoroutine(_lookAtCoroutine);
