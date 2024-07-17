@@ -28,11 +28,7 @@ public class SceneLoadingAnimation : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(.5f);
 
-        print("before" + roomIcon1.sprite);
-
         animator.SetTrigger("Fade Out");
-
-        print("after" + roomIcon1.sprite);
     }
 
     public void StartAnimation(string sceneType)
