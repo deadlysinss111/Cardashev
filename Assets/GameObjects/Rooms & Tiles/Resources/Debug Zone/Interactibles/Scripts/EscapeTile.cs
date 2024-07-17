@@ -56,7 +56,7 @@ public class EscapeTile : Interactible
         // TODO: change sprite or smth
         // & trigger rewards
         Reward._content = new Reward.Content(10, 20, 0);
-        gameObject.GetComponent<MeshRenderer>().material.color = Color.green;
+        gameObject.GetComponentInParent<MeshRenderer>().material.color = Color.green;
         OnWalk = ()=> {
             GI._PlayerFetcher().GetComponent<DeckManager>().UnloadDeck();
             GI._loader.LoadScene("Room", "Reward"); 

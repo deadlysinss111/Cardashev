@@ -40,7 +40,7 @@ public class Ebouillantueur : Enemy
 
             //else // if (perc >= 20 || closestMonster == null)
             {
-                print("Shot at player");
+                //print("Shot at player");
                 StartCoroutine(ShootPlayer());
             }
             /*else
@@ -53,7 +53,7 @@ public class Ebouillantueur : Enemy
         {
             if (playerDist < 5 && _meleeCooldown <= 0)
             {
-                print("Meleed player");
+                //print("Meleed player");
                 _meleeCooldown = 10;
                 StartCoroutine(MeleeAttack());
             }
