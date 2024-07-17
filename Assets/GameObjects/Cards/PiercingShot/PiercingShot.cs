@@ -30,6 +30,7 @@ public class PiercingShot : Card
         manager.SetLeftClickTo(LeftClick);
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(DisplayRange);
+        GI.UpdateCursorsInverted("Bow", (byte)(GI.CursorRestriction.S_TILES));
     }
 
     void LeftClick()

@@ -29,8 +29,8 @@ public class GrenadeScript : MonoBehaviour
         {
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
             {
-                manager.TakeDamage(_dmg);
-                //break;
+                DoDamage(c.gameObject);
+                continue;
             }
             GameObject target = HierarchySearcher.FindParentdRecursively(c.transform, "Body");
             if (target != null)
@@ -41,11 +41,22 @@ public class GrenadeScript : MonoBehaviour
                     print("altered");
                     target = HierarchySearcher.FindParentdRecursively(target.transform, "Animator");
                 }
-                if(target.transform.parent.gameObject.TryGetComponent<StatManager>(out StatManager statManager))
-                    statManager.TakeDamage(_dmg);
+                DoDamage(target.transform.parent.gameObject);
             }
         }
         Destroy(gameObject);
+    }
+
+    void DoDamage(GameObject target)
+    {
+        if(target.TryGetComponent(out Enemy enemy))
+        {
+            enemy.TakeDamage(_dmg);
+        }
+        else
+        {
+            target.GetComponent<StatManager>().TakeDamage(_dmg);
+        }
     }
 
     IEnumerator LaunchTheGrenadeFromHand()

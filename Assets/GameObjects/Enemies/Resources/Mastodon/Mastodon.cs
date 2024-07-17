@@ -40,7 +40,7 @@ public class Mastodon : Enemy
 
         IsDiveShorstestThanDirectWalk();
 
-        GameObject closestBarrel = FindClosestBarrelWithAngleRestriction(_target.transform.position, 45,  out float distToBarrel);
+        GameObject closestBarrel = FindClosestBarrelWithAngleRestriction(_target.transform.position, 30,  out float distToBarrel);
         //GameObject closestBarrel = FindClosestBarrel(out float distToBarrel);
         if(distToBarrel < Vector3.Magnitude(_target.transform.position - transform.position))
         {
@@ -181,9 +181,9 @@ public class Mastodon : Enemy
     {
         _isMoving = true;
 
-        _target = FindClosestBarrel(out float dist);
+        GameObject target = FindClosestBarrel(out float dist);
         Vector3 dest;
-        dest = _target.transform.position;
+        dest = target.transform.position;
         dest -= 2* Vector3.Normalize(dest - transform.position);
         dest += new Vector3(0, 2, 0);
 
@@ -202,7 +202,6 @@ public class Mastodon : Enemy
     {
         GameObject body = HierarchySearcher.FindChildRecursively(barrel.transform, "Body");
         body.GetComponent<Barrel>().Spill(barrel.transform.position - transform.position);
-        _target = GI._PlayerFetcher();
         barrel.tag = "Untagged";
         _timeBeforeDecision = 2;
     }

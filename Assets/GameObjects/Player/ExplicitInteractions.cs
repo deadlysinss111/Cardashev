@@ -18,7 +18,7 @@ public class ExplicitInteractions : MonoBehaviour
     {
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         _manager = GI._PManFetcher();
-        PlayerManager.AddState("InteractibleTargeting", OnEnterState, OnExitState);
+        PlayerManager.AddOrOverrideState("InteractibleTargeting", OnEnterState, OnExitState);
     }
 
     // Pair of Action for State changes

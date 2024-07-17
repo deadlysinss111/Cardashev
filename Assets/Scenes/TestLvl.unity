@@ -1140,7 +1140,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.5
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -3827,7 +3827,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 107.5}
+  m_AnchoredPosition: {x: 0, y: 60}
   m_SizeDelta: {x: 1600, y: 215}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1484209909

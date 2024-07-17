@@ -164,7 +164,7 @@ public abstract class Interactible : MonoBehaviour
 
             // Changes the PlayerManager state and tells it it should do a MouseHover check since what's under the mouse just changed
             _playerManager.SetToState("InteractibleTargeting");
-            _playerManager.TriggerMouseHovering();
+            //_playerManager.TriggerMouseHovering();
             GI.UpdateCursors(_inRangeCursor, (byte)GI.CursorRestriction.S_INTERACTIBLES);
             GI.UpdateCursors(_outOfRangeCursor, (byte)GI.CursorRestriction.INTERACTIBLES);
         }

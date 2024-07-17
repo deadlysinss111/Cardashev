@@ -58,21 +58,21 @@ public class RotationSelectArrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_arrowCanvas.activeSelf)
-        {
-            _arrowCanvas.transform.position = GI._PManFetcher()._virtualPos;
-            Vector3 mPos = Input.mousePosition;
-            mPos.z = Camera.main.WorldToScreenPoint(GI._PManFetcher()._virtualPos).z;
-            //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity) == false) return;
-            Vector3 wPos = Camera.main.ScreenToWorldPoint(mPos);
-            //print("PosMouse: "+wPos);
+        //if (_arrowCanvas.activeSelf)
+        //{
+        //    _arrowCanvas.transform.position = GI._PManFetcher()._virtualPos;
+        //    Vector3 mPos = Input.mousePosition;
+        //    mPos.z = Camera.main.WorldToScreenPoint(GI._PManFetcher()._virtualPos).z;
+        //    //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity) == false) return;
+        //    Vector3 wPos = Camera.main.ScreenToWorldPoint(mPos);
+        //    //print("PosMouse: "+wPos);
 
-            //BetterDebug.Log(Input.mousePosition, _arrowCanvas.transform.rotation);
-            Quaternion rot = Quaternion.LookRotation(wPos - GI._PManFetcher()._virtualPos);
-            rot.eulerAngles = new Vector3(0, rot.eulerAngles.y, rot.eulerAngles.z);
+        //    //BetterDebug.Log(Input.mousePosition, _arrowCanvas.transform.rotation);
+        //    Quaternion rot = Quaternion.LookRotation(wPos - GI._PManFetcher()._virtualPos);
+        //    rot.eulerAngles = new Vector3(0, rot.eulerAngles.y, rot.eulerAngles.z);
 
-            _arrowCanvas.transform.rotation = rot;
-        }
+        //    _arrowCanvas.transform.rotation = rot;
+        //}
     }
 
     public void SetArrow(bool value)
