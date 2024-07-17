@@ -251,7 +251,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool SetToState(string name)
     {
-        print("set to : " + name);
+        //print("set to : " + name);
         if (name == _currentState) return false;
 
         if(_states.TryGetValue(name, out Action[] func))
