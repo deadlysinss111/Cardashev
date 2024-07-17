@@ -155,7 +155,6 @@ public class StatManager : MonoBehaviour
 
         for (int i = _modifiers.Count-1; i >= 0; i--)
         {
-            print(i);
             Modifier mod = _modifiers[i];
             switch (mod._type)
             {

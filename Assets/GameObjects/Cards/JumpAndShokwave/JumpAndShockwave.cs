@@ -13,7 +13,7 @@ public class JumpAndShockwave : Card
     private void Awake()
     {
         int[] stats = new int[3] { 15, 8, 4 };
-        base.Init(2, 4, 80, stats, $"perform a jump to the target tile, generating a shockwave that deals {stats[0]} dmg to ennemies in range");
+        base.Init(3, 4, 80, stats, $"perform a jump to the target tile, generating a shockwave that deals {stats[0]} dmg to ennemies in range");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("jumpAndShockwave" + _id.ToString(), EnterJumpShockwaveState, ExitState) == false) _id++;
