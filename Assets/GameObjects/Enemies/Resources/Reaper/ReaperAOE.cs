@@ -6,6 +6,7 @@ public class ReaperAOE : MonoBehaviour
 {
     [SerializeField] Reaper _self;
     BoxCollider _boxCollider;
+    [SerializeField] GameObject _visualIndicator;
 
     public List<Collider> _colliders;
 
@@ -25,6 +26,7 @@ public class ReaperAOE : MonoBehaviour
     {
         print((_boxCollider.enabled ? "Disable " : "Activate ") + "BoxCollider");
         _boxCollider.enabled = !_boxCollider.enabled;
+        _visualIndicator.SetActive(_boxCollider.enabled);
     }
 
     private void OnTriggerEnter(Collider other)
