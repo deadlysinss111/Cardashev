@@ -42,6 +42,11 @@ public class Card : MonoBehaviour
     public Action _trigger;         // Called when the Queue sets it to be active
     public Action _clickEffect;     // Called when the card is clicked in the HUD
 
+    // Used for previews
+    [SerializeField] protected GameObject _ghostHitbox = null;
+    [SerializeField] protected bool _shotForPreview = false;
+    [SerializeField] protected bool _trajectoryForPreview = false;
+
     // Level related
     public int _currLv;
     public int _maxLv;
@@ -290,4 +295,54 @@ public class Card : MonoBehaviour
     public virtual void OnLoad() { }
 
     public virtual void OnUnload() { }
+
+    // ------
+    // METHODS TO HANDLE GHOSTS / PREVIEW
+    // ------
+    protected void Preview()
+    {
+        // Useful for preview positioning
+        Vector3 selTilePos = GI._PManFetcher()._lastHit.transform.position + new Vector3(0.0f, 0.5f, 0.0f);
+        float shoulderHeight = 1.0f;
+
+        // Shows the ghost hitbox at selected tile
+        if (_ghostHitbox != null)
+        {
+            // Makes the preview dissapear if the play would be invalid
+            if (false == _selectableArea.CheckForSelectableTile(selTilePos))
+                _ghostHitbox.SetActive(false);
+
+            // Updates and shows the ghost hitbox
+            else
+            {
+                _ghostHitbox.transform.position = selTilePos;
+                _ghostHitbox.SetActive(true);
+            }
+        }
+
+        // Shows the ghost ray at selected tile
+        if (_shotForPreview)
+        {
+            // IMMENSE ratilo
+        }
+
+        // Show the trajectory at selected tile
+        if (_trajectoryForPreview)
+        {
+            // Makes the preview dissapear if the play would be invalid
+            if (false == _selectableArea.CheckForSelectableTile(selTilePos))
+                ClearPath();
+
+            // Updates and shows the trajectory
+            Vector3 curveOrigin = GI._PManFetcher()._virtualPos;
+            Vector3 curveTarget = selTilePos + new Vector3(0.0f, shoulderHeight, 0.0f);
+            Vector3 curveInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(curveOrigin, curveTarget, 10.0f);
+            TrajectoryToolbox.BellCurve(curveOrigin, curveInitVelocity, ref _lineRenderer);
+        }
+    }
+
+    public void DestroyPreview()
+    {
+        throw new NotImplementedException();
+    }
 }

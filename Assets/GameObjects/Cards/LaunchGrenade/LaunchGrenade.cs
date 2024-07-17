@@ -12,8 +12,6 @@ public class LaunchGrenade : Card
 {
     Vector3 _grenadeInitVelocity;
     Vector3 _grenadeOrigine;
-    GameObject _previwRadius;
-
     GameObject _grenadePrefab;
 
     private void Awake()
@@ -42,14 +40,12 @@ public class LaunchGrenade : Card
         manager.SetLeftClickTo(FireGrenade);
         manager.SetRightClickTo(()=> { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(Preview);
-        _previwRadius.SetActive(true);
         GI.UpdateCursors("Bomb", (byte)(GI.CursorRestriction.S_TILES));
         GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_TILES));
     }
 
     void ExitState()
     {
-        _previwRadius.SetActive(false);
         _selectableArea.ResetSelectable();
         ClearPath();
     }
@@ -70,27 +66,6 @@ public class LaunchGrenade : Card
         GI._PManFetcher().SetToState("grenade" + _id.ToString());
     }
 
-    private void Preview()
-    {
-        PlayerManager manager = GI._PManFetcher();
-        // Crop the destination to the center of the target tile
-        Vector3 alteredPos = manager._lastHit.transform.position;
-        alteredPos.y += 0.5f;
-        if (_selectableArea.CheckForSelectableTile(alteredPos) == false)
-        {
-            ClearPath();
-            _previwRadius.SetActive(false);
-            return;
-        }
-        _previwRadius.SetActive(true);
-
-        _previwRadius.transform.position = alteredPos;
-
-        _grenadeOrigine = manager._virtualPos;
-        _grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(_grenadeOrigine + new Vector3(0, 1, 0), alteredPos, 10.0f);
-        TrajectoryToolbox.BellCurve(_grenadeOrigine + new Vector3(0, 1, 0), _grenadeInitVelocity, ref _lineRenderer);
-    }
-
     protected void FireGrenade()
     {
         //ClearPath();
@@ -107,13 +82,6 @@ public class LaunchGrenade : Card
 
     public override void OnLoad()
     {
-        UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
-        _previwRadius = (GameObject)Instantiate(RADIUS);
-        _previwRadius.SetActive(false);
+        _ghostHitbox = (GameObject) Resources.Load("RadiusPreview");
     }
-    public override void OnUnload()
-    {
-        Destroy(_previwRadius);
-    }
-
 }
