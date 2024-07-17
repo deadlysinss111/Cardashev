@@ -4998,6 +4998,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 2010212477}
+  roomIcon1: {fileID: 1793097405}
+  roomIcon2: {fileID: 249440400}
 --- !u!225 &2010212476
 CanvasGroup:
   m_ObjectHideFlags: 0

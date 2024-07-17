@@ -27,6 +27,7 @@ public class MapNode : MonoBehaviour
     // Objects for the room icon
     [SerializeField] GameObject _ScaleParent;
     public GameObject _RoomIcon3D;
+    public Sprite _roomIconSprite;
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
@@ -124,13 +125,9 @@ public class MapNode : MonoBehaviour
 
     public void SelectNode()
     {
-        /*foreach (GameObject node in _nextNodes)
+        if (gameObject.name != "Original Node")
         {
-            if (node == null) continue;
-            if (node.GetComponent<MapNode>().IsLockedByBlocker()) continue;
-        }*/
-        if(gameObject.name != "Original Node")
-        {
+            GI._currentRoomIcon = _roomIconSprite;
             GameObject.Find("Transition Effect").GetComponent<SceneLoadingAnimation>().StartAnimation(_stringType);
         }
 
@@ -142,12 +139,8 @@ public class MapNode : MonoBehaviour
     public void UnselectNode()
     {
         GetComponent<MeshRenderer>().material.color = _defaultColor;
-        if ( !_playerCameThrough ) _RoomIcon3D.GetComponent<MeshRenderer>().enabled = true;
-        /*foreach (GameObject node in _nextNodes)
-        {
-            if (node == null) continue;
-            node.GetComponent<MapNode>().IsSelectable(false);
-        }*/
+        if ( !_playerCameThrough )
+            _RoomIcon3D.GetComponent<MeshRenderer>().enabled = true;
     }
 
     public void SetRoomTypeTo(RoomType roomType, MapResourceLoader resources)
@@ -160,6 +153,7 @@ public class MapNode : MonoBehaviour
         {
             case RoomType.Shop:
                 {
+                    _roomIconSprite = resources.SHOP_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.SHOP_ICON;
                     Transform temp = _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
@@ -173,6 +167,7 @@ public class MapNode : MonoBehaviour
                 }
             case RoomType.Boss:
                 {
+                    _roomIconSprite = resources.BOSS_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.BOSS_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().materials[0].SetFloat("_Hologram_Density", 16);
                     _ScaleParent.transform.localScale *= 2;
@@ -183,6 +178,7 @@ public class MapNode : MonoBehaviour
                 }
             case RoomType.Rest:
                 {
+                    _roomIconSprite = resources.REST_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.REST_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
                     _ScaleParent.transform.localScale *= 0.5f;
@@ -195,6 +191,7 @@ public class MapNode : MonoBehaviour
                 }
             case RoomType.Event:
                 {
+                    _roomIconSprite = resources.EVENT_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.EVENT_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
                     _ScaleParent.transform.localScale *= 0.3f;
@@ -204,6 +201,7 @@ public class MapNode : MonoBehaviour
                 }
             case RoomType.Combat:
                 {
+                    _roomIconSprite = resources.COMBAT_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.COMBAT_ICON;
                     SetDefaultColorTo(Color.red);
                     _stringType = "Combat";
@@ -211,6 +209,7 @@ public class MapNode : MonoBehaviour
                 }
             case RoomType.Elite:
                 {
+                    _roomIconSprite = resources.ELITE_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.ELITE_ICON;
                     _ScaleParent.transform.localScale *= 0.3f;
                     _RoomIcon3D.transform.position += Vector3.up;

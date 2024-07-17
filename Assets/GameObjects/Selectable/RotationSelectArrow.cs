@@ -58,7 +58,7 @@ public class RotationSelectArrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_arrowCanvas.activeSelf)
+        /*if (_arrowCanvas.activeSelf)
         {
             _arrowCanvas.transform.position = GI._PManFetcher()._virtualPos;
             Vector3 mPos = Input.mousePosition;
@@ -72,7 +72,7 @@ public class RotationSelectArrow : MonoBehaviour
             rot.eulerAngles = new Vector3(0, rot.eulerAngles.y, rot.eulerAngles.z);
 
             _arrowCanvas.transform.rotation = rot;
-        }
+        }*/
     }
 
     public void SetArrow(bool value)

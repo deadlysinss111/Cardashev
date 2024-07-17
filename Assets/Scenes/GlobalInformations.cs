@@ -64,6 +64,8 @@ static public class GI
         { "Reward", "RewardScene" },
         { "MainMenu", "MenuScene"}};
 
+    static public Sprite _currentRoomIcon;
+
     // UnityEvents on scene load
     static public UnityEngine.Events.UnityEvent _UeOnMapSceneLoad = new();
     static public List<UnityEngine.Events.UnityEvent> _SceneLoadUEventList = new List<UnityEngine.Events.UnityEvent> { _UeOnMapSceneLoad };

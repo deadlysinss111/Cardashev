@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class MapResourceLoader : MonoBehaviour
 {
-    // ICONS
+    // ICONS' Mesh
+    [Header("Icon Mesh")]
     [SerializeField] private Mesh _bossIcon;
     public Mesh BOSS_ICON { get => _bossIcon; }
 
@@ -20,6 +21,27 @@ public class MapResourceLoader : MonoBehaviour
 
     [SerializeField] private Mesh _restIcon;
     public Mesh REST_ICON { get => _restIcon; }
+
+    // ICONS' Sprite
+    [Header("Icon Sprite")]
+    [SerializeField] private Sprite _bossIconSprite;
+    public Sprite BOSS_ICON_SPRITE { get => _bossIconSprite; }
+
+    [SerializeField] private Sprite _combatIconSprite;
+    public Sprite COMBAT_ICON_SPRITE { get => _combatIconSprite; }
+
+    [SerializeField] private Sprite _eliteIconSprite;
+    public Sprite ELITE_ICON_SPRITE { get => _eliteIconSprite; }
+
+    [SerializeField] private Sprite _eventIconSprite;
+    public Sprite EVENT_ICON_SPRITE { get => _eventIconSprite; }
+
+    [SerializeField] private Sprite _shopIconSprite;
+    public Sprite SHOP_ICON_SPRITE { get => _shopIconSprite; }
+
+    [SerializeField] private Sprite _restIconSprite;
+    public Sprite REST_ICON_SPRITE { get => _restIconSprite; }
+
 
     /*void Start()
     {
