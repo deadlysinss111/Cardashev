@@ -46,7 +46,7 @@ public class Reaper : Enemy
             return;
         }    
 
-        if (GetComponent<StatManager>().Health < GetComponent<StatManager>().BaseHealth/4 && dist >= 5)
+        if (GetComponent<StatManager>().Health <= GetComponent<StatManager>().BaseHealth/4 && dist <= 5)
         {
             //BitchSlap();
             Scratch(true);
