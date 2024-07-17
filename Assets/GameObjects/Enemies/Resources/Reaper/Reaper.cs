@@ -26,7 +26,7 @@ public class Reaper : Enemy
         base.Start();
         _name = "Reaper";
         _agent.speed = 5.5f;
-        _dmg = 777;
+        _dmg = 8;
 
         _runHits = new RaycastHit[255];
 
