@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Bullet : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class Bullet : MonoBehaviour
     Vector3 _direction;
     Vector3 _lastPosition;
     float _lifetime;
+
+    // Those 3 are meant for the offset stuff which is temporary
+    float _offsetTime = 0;
+    Vector3 _launchPos;
+    bool _readyToGo = false;
+    
 
     void Start()
     {
@@ -23,6 +30,17 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
+        if(_offsetTime > 0)
+        {
+            _offsetTime -= Time.deltaTime;
+            return;
+        }
+        if (_readyToGo)
+        {
+            transform.position = _launchPos;
+            _readyToGo = false;
+        }
+
         _lifetime -= Time.deltaTime;
         if (_lifetime <= 0) Destroy(gameObject);
 
@@ -57,7 +75,7 @@ public class Bullet : MonoBehaviour
         {
             print($"hit an Obstacle: {collider.gameObject.name}, tunel: {tunel}");
 
-            collider.GetComponent<MeshRenderer>().material.color = Color.red;
+            //collider.GetComponent<MeshRenderer>().material.color = Color.red;
             
             Destroy(gameObject);
             return;
@@ -70,10 +88,18 @@ public class Bullet : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(_direction);
     }
 
-    public void SetInitialValues(Vector3 position, int velocity, int damage)
+    public void SetInitialValues(Vector3 position, int velocity, int damage, float offset = 0)
     {
-        transform.position = position;
         _damage = damage;
         _velocity = velocity;
+        _offsetTime = offset;
+        _launchPos = position;
+        if(_offsetTime > 0)
+        {
+            _readyToGo = true;
+            transform.position = position + new Vector3(0, 4, 0);
+        }
+        else
+            transform.position = position;
     }
 }

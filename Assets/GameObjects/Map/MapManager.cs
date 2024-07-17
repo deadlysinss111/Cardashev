@@ -116,8 +116,9 @@ public class MapManager : MonoBehaviour
             {
                 if (ReferenceEquals(targetNode, nextNode))
                 {
-                    if (targetNode.GetComponent<MapNode>().IsLockedByBlocker()) return;
+                    if (targetNode.GetComponent<MapNode>().IsLockedByBlocker() || false == GI._canClickOnNode) return;
                     // Triggers the click animation
+                    GI._canClickOnNode = false;
                     StartCoroutine(AnimationDuration(targetNode));
                     LockAllNodes();
                     RecursiveUnlock(_playerLocation, true);
