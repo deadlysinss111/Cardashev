@@ -32,7 +32,7 @@ public class Card : MonoBehaviour
     protected Vector3 _lastPos;
     protected Action _timeStopedEvent = ()=> { };
     protected Action _timeStopedClick = ()=> { };
-    protected bool _isCollectible;
+    [NonSerialized] public bool _isCollectible;
 
     [SerializeField] protected LayerMask _clickableLayers;
     public Color _actionColor;

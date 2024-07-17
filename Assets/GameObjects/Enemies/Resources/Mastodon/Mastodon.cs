@@ -25,7 +25,7 @@ public class Mastodon : Enemy
     {
         base.Start();
         _name = "Mastodon";
-        _agent.speed = 5.5f;
+        _agent.speed = 4f;
         _dmg = 15;
         
     }
@@ -375,7 +375,7 @@ public class Mastodon : Enemy
 
         _divePathTime = GetDivePath(out _divePaths);
 
-        if (_divePathTime != -1 && _divePathTime < GetPathTime(directPath))
+        if (_divePathTime != -1 && _divePathTime < GetPathTime(directPath) && _divePaths[0].corners.Length != 0)
         {
             _nextMoveDirection = _divePaths[0].corners[_divePaths[0].corners.Length - 1] - transform.position;
             _isDiveShorter =  true;
