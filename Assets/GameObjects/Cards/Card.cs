@@ -45,8 +45,12 @@ public class Card : MonoBehaviour
     // Used for previews
     [SerializeField] protected bool _shotForPreview = false;
     [SerializeField] protected bool _trajectoryForPreview = false;
-    [SerializeField] protected UnityEngine.Object _ghostHitboxPrefab = null;
+    protected UnityEngine.Object _ghostHitboxPrefab;
     protected GameObject _ghostHitbox = null;
+    protected Vector3 _velocityFromLastBellCurveCalculated;
+    protected Vector3 _originFromLastBellCurveCalculated;
+    protected Vector3 _destinationFromLastBellCurveCalculated;
+    protected float _apex = 10.0f;
 
     // Level related
     public int _currLv;
@@ -59,6 +63,13 @@ public class Card : MonoBehaviour
         BACKTOPLAYABLE,
         ADDTODECKANDBACKTOPLAY
     }
+
+    public enum PreviewZoneType
+    {
+        NONE = -1,
+        SPHERE = 0,
+    }
+
     [NonSerialized] public GameObject _target;
 
     /*
@@ -73,7 +84,7 @@ public class Card : MonoBehaviour
         _isCollectible = false;
     }
 
-    protected void Init(float duration, byte maxLvl, int goldValue, int[] stats, string description = "")
+    protected void Init(float duration, byte maxLvl, int goldValue, int[] stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
     {
         _timeStopedEvent = TimeStopedMouseEnter;
 
@@ -87,6 +98,20 @@ public class Card : MonoBehaviour
             _lineRenderer = renderer;
         else
             _lineRenderer = null;
+
+        switch(previewType)
+        {
+            case PreviewZoneType.NONE:
+                _ghostHitboxPrefab = Resources.Load("NullPreview");
+                print(_ghostHitboxPrefab);
+                break;
+            case PreviewZoneType.SPHERE:
+                _ghostHitboxPrefab = Resources.Load("SpherePreview");
+                break;
+            default:
+                Debug.LogError("error in preview type for your card : " + _name);
+                break;
+        }
     }
 
     // ~~~(> GETTERS
@@ -132,6 +157,9 @@ public class Card : MonoBehaviour
     public virtual void Effect()
     {
         _cardEndTimestamp = Time.time + _duration;
+        
+        if(_ghostHitbox != null)
+            Destroy(_ghostHitbox);
     }
 
     // Need that stuff to make the card interract as if the time wasn't stop when it is //
@@ -314,7 +342,7 @@ public class Card : MonoBehaviour
         {
             // First instantiation
             if (_ghostHitbox == null)
-                _ghostHitbox = Instantiate((GameObject) _ghostHitboxPrefab);
+                _ghostHitbox = Instantiate((GameObject)_ghostHitboxPrefab);
 
             // Makes the preview dissapear if the play would be invalid
             if (shouldCullPreview)
@@ -346,9 +374,12 @@ public class Card : MonoBehaviour
             //Vector3 curveInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(curveOrigin + shoulderOffset, selTilePos, 10.0f);
             //TrajectoryToolbox.BellCurve(curveOrigin, curveInitVelocity, ref _lineRenderer);
 
-            Vector3 grenadeOrigine = GI._PManFetcher()._virtualPos;
-            Vector3 grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(grenadeOrigine + new Vector3(0, 1, 0), selTilePos, 10.0f);
-            TrajectoryToolbox.BellCurve(grenadeOrigine + new Vector3(0, 1, 0), grenadeInitVelocity, ref _lineRenderer);
+            _originFromLastBellCurveCalculated = GI._PManFetcher()._virtualPos;
+            _velocityFromLastBellCurveCalculated = TrajectoryToolbox.BellCurveInitialVelocity(_originFromLastBellCurveCalculated + new Vector3(0, 1, 0), selTilePos, _apex);
+            _destinationFromLastBellCurveCalculated = selTilePos;
+
+            if (_ghostHitbox != null)
+                TrajectoryToolbox.BellCurve(_originFromLastBellCurveCalculated + new Vector3(0, 1, 0), _velocityFromLastBellCurveCalculated, ref _ghostHitbox.GetComponent<AOEPreviewScript>()._lineRenderer);
         }
     }
 

@@ -46,7 +46,7 @@ public class Jump : Card
         player.GetComponent<Rigidbody>().isKinematic = false;
 
         // The velocity is the last calcaulated one from the preview
-        player.GetComponent<Rigidbody>().velocity = _initVelocity;
+        player.GetComponent<Rigidbody>().velocity = _velocityFromLastBellCurveCalculated;
 
         // We need to set back the player to its normal state once it landed;
         player.AddComponent<AgentBackOnLanding>();
@@ -59,32 +59,32 @@ public class Jump : Card
         GI._PManFetcher().SetToState("jump" + _id.ToString());
     }
 
-    private void Preview()
-    {
-        PlayerManager manager = GI._PManFetcher();
-        // Crop the destination to the center of the target tile
-        Vector3 alteredPos = manager._lastHit.transform.position;
-        alteredPos.y += 0.5f;
+    //private void Preview()
+    //{
+    //    PlayerManager manager = GI._PManFetcher();
+    //    // Crop the destination to the center of the target tile
+    //    Vector3 alteredPos = manager._lastHit.transform.position;
+    //    alteredPos.y += 0.5f;
 
-        _lastDest = alteredPos;
-        if (_selectableArea.CheckForSelectableTile(alteredPos) == false)
-        {
-            ClearPath();
-            return;
-        }
+    //    _lastDest = alteredPos;
+    //    if (_selectableArea.CheckForSelectableTile(alteredPos) == false)
+    //    {
+    //        ClearPath();
+    //        return;
+    //    }
 
-        Vector3 playerPos = manager._virtualPos;
-        _initVelocity = TrajectoryToolbox.BellCurveInitialVelocity(playerPos, alteredPos, 5.0f);
-        TrajectoryToolbox.BellCurve(playerPos, _initVelocity, ref _lineRenderer);
-    }
+    //    Vector3 playerPos = manager._virtualPos;
+    //    _initVelocity = TrajectoryToolbox.BellCurveInitialVelocity(playerPos, alteredPos, 5.0f);
+    //    TrajectoryToolbox.BellCurve(playerPos, _initVelocity, ref _lineRenderer);
+    //}
 
     protected void TriggerJump()
     {
-        if (_selectableArea.CheckForSelectableTile(_lastDest) == false) return;
+        if (_selectableArea.CheckForSelectableTile(_destinationFromLastBellCurveCalculated) == false) return;
         _selectableArea.ResetSelectable();
         //ClearPath();
         PlayerManager manager = GI._PManFetcher();
-        manager._virtualPos = _lastDest;
+        manager._virtualPos = _destinationFromLastBellCurveCalculated;
         manager.SetToDefault();
         // Trigger the card play event
         base.PlayCard();

@@ -44,6 +44,7 @@ public class GrenadeScript : MonoBehaviour
                 DoDamage(target.transform.parent.gameObject);
             }
         }
+        Instantiate((GameObject)Resources.Load("GrenadeAOE")).transform.position = transform.position;
         Destroy(gameObject);
     }
 

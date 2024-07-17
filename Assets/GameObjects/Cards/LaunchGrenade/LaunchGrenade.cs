@@ -10,9 +10,7 @@ using UnityEngine.UIElements;
 
 public class LaunchGrenade : Card
 {
-    Vector3 _grenadeInitVelocity;
-    Vector3 _grenadeOrigine;
-    GameObject _previwRadius;
+    //GameObject _previwRadius;
 
     GameObject _grenadePrefab;
 
@@ -22,7 +20,7 @@ public class LaunchGrenade : Card
         int[] stats = new int[1];
         stats[0] = 15;
         string desc = $"launch a grenade exploding on ground contact, dealing {stats[0]} to enemies in range of explosion";
-        base.Init(1, 2, 60, stats, desc);
+        base.Init(1, 2, 60, stats, desc, PreviewZoneType.SPHERE);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("grenade" + _id.ToString(), EnterGrenadeState, ExitState) == false) _id++;
@@ -40,26 +38,33 @@ public class LaunchGrenade : Card
         _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 15, 8);
 
         manager.SetLeftClickTo(FireGrenade);
-        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        manager.SetRightClickTo(() => { 
+            ExitState();
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+            if (_ghostHitbox != null)
+                Destroy(_ghostHitbox);
+        });
         manager.SetHoverTo(Preview);
-        _previwRadius.SetActive(true);
+        //_previwRadius.SetActive(true);
         GI.UpdateCursors("Bomb", (byte)(GI.CursorRestriction.S_TILES));
         GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_TILES));
+
+        //_ghostHitbox = (GameObject)Instantiate(_ghostHitboxPrefab);
     }
 
     void ExitState()
     {
-        _previwRadius.SetActive(false);
+        //_previwRadius.SetActive(false);
         _selectableArea.ResetSelectable();
     }
 
     public override void Effect()
     {
         GameObject grenade = Instantiate(_grenadePrefab);
-        grenade.GetComponent<Rigidbody>().transform.position = _grenadeOrigine + new Vector3(0, 5, 0);
-        grenade.GetComponent<GrenadeScript>()._velocity = _grenadeInitVelocity;
+        grenade.GetComponent<Rigidbody>().transform.position = _originFromLastBellCurveCalculated + new Vector3(0, 5, 0);
+        grenade.GetComponent<GrenadeScript>()._velocity = _velocityFromLastBellCurveCalculated;
         grenade.GetComponent<GrenadeScript>()._dmg = _stats[0];
-        grenade.GetComponent<GrenadeScript>()._origin = _grenadeOrigine + new Vector3(0, 1, 0);
+        grenade.GetComponent<GrenadeScript>()._origin = _originFromLastBellCurveCalculated + new Vector3(0, 1, 0);
 
         base.Effect();
     }
@@ -69,28 +74,28 @@ public class LaunchGrenade : Card
         GI._PManFetcher().SetToState("grenade" + _id.ToString());
     }
 
-    /*
-    private void Preview()
-    {
-        PlayerManager manager = GI._PManFetcher();
-        // Crop the destination to the center of the target tile
-        Vector3 alteredPos = manager._lastHit.transform.position;
-        alteredPos.y += 0.5f;
-        if (_selectableArea.CheckForSelectableTile(alteredPos) == false)
-        {
-            ClearPath();
-            _previwRadius.SetActive(false);
-            return;
-        }
-        _previwRadius.SetActive(true);
+    
+    //private void Preview()
+    //{
+    //    PlayerManager manager = GI._PManFetcher();
+    //    // Crop the destination to the center of the target tile
+    //    Vector3 alteredPos = manager._lastHit.transform.position;
+    //    alteredPos.y += 0.5f;
+    //    if (_selectableArea.CheckForSelectableTile(alteredPos) == false)
+    //    {
+    //        ClearPath();
+    //        _previwRadius.SetActive(false);
+    //        return;
+    //    }
+    //    _previwRadius.SetActive(true);
 
-        _previwRadius.transform.position = alteredPos;
+    //    _previwRadius.transform.position = alteredPos;
 
-        _grenadeOrigine = manager._virtualPos;
-        _grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(_grenadeOrigine + new Vector3(0, 1, 0), alteredPos, 10.0f);
-        TrajectoryToolbox.BellCurve(_grenadeOrigine + new Vector3(0, 1, 0), _grenadeInitVelocity, ref _lineRenderer);
-    }
-    */
+    //    _grenadeOrigine = manager._virtualPos;
+    //    _grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(_grenadeOrigine + new Vector3(0, 1, 0), alteredPos, 10.0f);
+    //    TrajectoryToolbox.BellCurve(_grenadeOrigine + new Vector3(0, 1, 0), _grenadeInitVelocity, ref _lineRenderer);
+    //}
+    
 
     protected void FireGrenade()
     {
@@ -109,12 +114,12 @@ public class LaunchGrenade : Card
     public override void OnLoad()
     {
         UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
-        _previwRadius = (GameObject)Instantiate(RADIUS);
-        _previwRadius.SetActive(false);
+        //_previwRadius = (GameObject)Instantiate(RADIUS);
+        //_previwRadius.SetActive(false);
     }
     public override void OnUnload()
     {
-        Destroy(_previwRadius);
+        //Destroy(_previwRadius);
     }
 
 }

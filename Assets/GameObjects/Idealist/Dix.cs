@@ -12,13 +12,13 @@ public class Dix : Idealist
         _startingDeck = new List<string> 
         {
             "LaunchGrenadeCard",
-            "PiercingShotCard",/*
-            "SimpleShotCard",
+            //"PiercingShotCard",
+            //"SimpleShotCard",
             "JumpCard",
-            "JumpAndShockwaveCard",
-            "OverdriveCard",
-            "ResilienceCard",*/
-            "SecondSleeve"
+            //"JumpAndShockwaveCard",
+            //"OverdriveCard",
+            //"ResilienceCard",
+            //"SecondSleeve"
             //"CoverCard",
         };
     }
