@@ -30,6 +30,7 @@ public class PiercingShot : Card
         manager.SetLeftClickTo(LeftClick);
         manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
         manager.SetHoverTo(DisplayRange);
+        GI.UpdateCursorsInverted("Bow", (byte)(GI.CursorRestriction.S_TILES));
     }
 
     void LeftClick()
@@ -63,9 +64,20 @@ public class PiercingShot : Card
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
         _startingPosition.y += 1.5f;
-        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 100, _stats[1]);
+        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 100, _stats[1], 1.5f);
 
         base.Effect();
+    }
+
+    IEnumerator Shoot()
+    {
+        bool offset = true;
+        while (offset)
+        {
+            yield return new WaitForSeconds(1.5f);
+            offset = true;
+        }
+
     }
 
     public override void PlayCard()

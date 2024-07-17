@@ -15,7 +15,7 @@ public class DeckManager : MonoBehaviour
 
     GameObject _cardBar;
 
-    Vector3 virtualPosition = new Vector3(1000, 75, 0); // Virtual position off-screen to the right
+    Vector3 virtualPosition = new Vector3(1000, -50, 0); // Virtual position off-screen to the right
     float transitionDuration = 1.0f; // Duration for the transition
     bool isTransitioning = false; // Flag to check if a card is currently being moved
 
@@ -117,7 +117,7 @@ public class DeckManager : MonoBehaviour
             _remainsInDeck.RemoveAt(rdm);
 
             // Place the card at the virtual position
-            obj.transform.localPosition = new Vector3(-400 + 200 * i, 75, 0);
+            obj.transform.localPosition = new Vector3(-400 + 200 * i, -50, 0);
         }
     }
 
@@ -125,7 +125,7 @@ public class DeckManager : MonoBehaviour
     {
         isTransitioning = true;
         Vector3 startPosition = card.transform.localPosition;
-        Vector3 endPosition = new Vector3(-400 + 200 * index, 75, 0);
+        Vector3 endPosition = new Vector3(-400 + 200 * index, -50, 0);
         float elapsedTime = 0;
 
         while (elapsedTime < transitionDuration)
@@ -159,7 +159,7 @@ public class DeckManager : MonoBehaviour
         for (int i = 0; i < _hand.Count; i++)
         {
             startPositions.Add(_hand[i].transform.localPosition);
-            endPositions.Add(new Vector3(-400 + 200 * i, 75, 0));
+            endPositions.Add(new Vector3(-400 + 200 * i, -50, 0));
         }
 
         float elapsedTime = 0;
@@ -215,6 +215,8 @@ public class DeckManager : MonoBehaviour
             _remainsInDeck.Add(card);
             card.transform.SetParent(GameObject.Find("background UI").transform, false);
             card.GetComponent<Card>().OnLoad();
+            if(card.TryGetComponent(out RotationSelectArrow arrow))
+                arrow.InitArrow();
         }
     }
 

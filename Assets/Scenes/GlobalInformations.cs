@@ -50,6 +50,8 @@ static public class GI
     static public bool _changeStateOnHUDExit = false;
     static public bool temp { set { _changeStateOnHUDExit = value; } }
 
+    static public bool _canClickOnNode = true;
+
 
     // ------
     // SCENE LOADING UTILS
@@ -171,6 +173,7 @@ static public class GI
             case "Map":
                 // Instantiate, save and cull
                 _map.SetActive(true);
+                _canClickOnNode = true;
                 break;
 
             default:

@@ -11254,6 +11254,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8555640716382039774}
     m_Modifications:
+    - target: {fileID: 492172777547080000, guid: 2b93b60402bdf844cbbeb4b9cd75ba82, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3482821847019497329, guid: 2b93b60402bdf844cbbeb4b9cd75ba82, type: 3}
       propertyPath: m_Name
       value: Barrel
