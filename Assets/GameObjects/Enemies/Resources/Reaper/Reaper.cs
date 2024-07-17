@@ -1,6 +1,6 @@
-using NUnit.Framework.Internal;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -18,6 +18,8 @@ public class Reaper : Enemy
 
     public UnityEvent _changeOfStateScratch;
 
+    RaycastHit[] _runHits;
+
     // Start is called before the first frame update
     new void Start()
     {
@@ -25,6 +27,8 @@ public class Reaper : Enemy
         _name = "Reaper";
         _agent.speed = 5.5f;
         _dmg = 777;
+
+        _runHits = new RaycastHit[255];
 
         _changeOfStateScratch = new UnityEvent();
     }
@@ -34,7 +38,7 @@ public class Reaper : Enemy
         _isMoving = false;
 
         float dist = Vector3.Distance(_target.transform.position, transform.position);
-        print($"Reaper distance: {dist}");
+        //print($"Reaper distance: {dist}");
 
         if (dist > 20)
         {
@@ -42,13 +46,15 @@ public class Reaper : Enemy
             return;
         }    
 
-        if (GetComponent<StatManager>().Health < GetComponent<StatManager>().BaseHealth/4)
+        if (GetComponent<StatManager>().Health < GetComponent<StatManager>().BaseHealth/4 && dist >= 5)
         {
-
+            //BitchSlap();
+            Scratch(true);
+            return;
         }
         else
         {
-            Scratch(); // Attack 1
+            Scratch(false); // Attack 1
         }
     }
 
@@ -59,7 +65,6 @@ public class Reaper : Enemy
         Vector3 dest;
         dest = _target.transform.position + Random.onUnitSphere * 30;
         _debugCurrentDest = DebugRayCaster.CreateDebugRayCast(dest, Vector3.up, Color.green);
-        print("Choose move");
 
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
@@ -71,6 +76,25 @@ public class Reaper : Enemy
         // Once the half of the movement done, we want the enemy to refresh his destination to match target's movments
         // TODO: Decide of a tile to snap too, to ensure we don't stop in the middle of the board
         StartCoroutine(reOrient(_timeBeforeDecision / 2));
+    }
+
+    protected void Move(Vector3 dest)
+    {
+        _isMoving = true;
+
+        _debugCurrentDest = DebugRayCaster.CreateDebugRayCast(dest, Vector3.up, Color.green);
+
+        NavMeshPath path = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
+        _agent.SetDestination(dest);
+        LookInDirectionTarget(dest, 8f);
+
+        _timeBeforeDecision = GetPathTime(path);
+
+        // Once the half of the movement done, we want the enemy to refresh his destination to match target's movments
+        // TODO: Decide of a tile to snap too, to ensure we don't stop in the middle of the board
+        StartCoroutine(reOrient(_timeBeforeDecision / 2));
+        print("Move End - " + _timeBeforeDecision);
     }
 
     protected new void CheckPlayerDistance() { }
@@ -159,7 +183,7 @@ public class Reaper : Enemy
         GetComponent<Rigidbody>().isKinematic = true;
     }
 
-    void Scratch()
+    void Scratch(bool runAwayAfter)
     {
         _agent.enabled = false;
         Rigidbody rBody = GetComponent<Rigidbody>();
@@ -170,7 +194,6 @@ public class Reaper : Enemy
         Vector3 dir = (_target.transform.position - transform.position).normalized;
         dir.y = rBody.velocity.y;
 
-        print("Prepare for id " + (corId + 1));
         startScratchSpeed = 10f;
         rBody.velocity = dir*startScratchSpeed;
         baseDirSpeed = rBody.velocity;
@@ -180,27 +203,18 @@ public class Reaper : Enemy
         _timeBeforeDecision = Mathf.Infinity;
 
         corId += 1;
-        StartCoroutine(EaseScratch(rBody, corId));
+        StartCoroutine(EaseScratch(rBody, corId, runAwayAfter));
     }
 
-    IEnumerator EaseScratch(Rigidbody rBody, int id)
+    IEnumerator EaseScratch(Rigidbody rBody, int id, bool run)
     {
-        print($"{id} - Start");
+        //print($"{id} - Start");
         _changeOfStateScratch.Invoke();
         while (rBody.velocity.magnitude > 0.01f)
         {
-            Vector3 v = rBody.velocity;
-            /*rBody.velocity = new Vector3(
-                Mathf.Lerp(baseDirSpeed.x, 0, EaseOutCubic(Mathf.Clamp01(v.x / baseDirSpeed.x))),
-                v.y,
-                Mathf.Lerp(baseDirSpeed.z, 0, EaseOutCubic(Mathf.Clamp01(v.z / baseDirSpeed.z)))
-            );*/
-            print($"{id} - Reaper velocity: {v}");
-            print(_timeBeforeDecision);
-            //_timeBeforeDecision += 1f;
             yield return null;
         }
-        print($"{id} - Done");
+        //print($"{id} - Done");
         rBody.velocity = Vector3.zero;
         baseDirSpeed = Vector3.zero;
         startScratchSpeed = -1f;
@@ -211,7 +225,69 @@ public class Reaper : Enemy
         _timeBeforeDecision = 3f;
         corId -= 1;
         _changeOfStateScratch.Invoke();
+
+        if (run)
+        {
+            //print($"{id} - RUN");
+            float dist = 10f;
+
+            int hitLen = Physics.SphereCastNonAlloc(transform.position, dist, Vector3.back, _runHits, dist, LayerMask.NameToLayer("TMTopology"));
+            if (hitLen == 0)
+            {
+                Debug.LogWarning("[Reaper] No cases to run away to were found!");
+                yield break;
+            }
+            Transform farestTrans = _runHits[0].transform;
+            float currDist = Vector3.Distance(transform.position, farestTrans.position);
+
+            for (int i = 0; i < hitLen; i++)
+            {
+                RaycastHit hit = _runHits[i];
+                float newDist = Vector3.Distance(transform.position, hit.transform.position);
+                if (newDist > currDist)
+                {
+                    currDist = newDist;
+                    farestTrans = hit.transform;
+                }
+            }
+
+            /*while (Vector3.Equals(endPos, Vector3.negativeInfinity))
+            {
+                // Set up a hard limit like NASA engineers :D
+                limit++;
+                if (limit > 100)
+                {
+                    Debug.LogException(new System.StackOverflowException("[Reaper] while loop went over the set limit! Stoping it by force!"));
+                    endPos = transform.position + new Vector3(5, 0, 5);
+                    break;
+                }
+                if (Physics.Raycast(targetPos, Vector3.down, out RaycastHit hit, dist * 2) == false) continue;
+
+                if (hit.collider.gameObject.CompareTag("TMTopology"))
+                {
+                    endPos = hit.collider.gameObject.transform.position;
+                    break;
+                }
+                dist += 5;
+            }*/
+
+            Move(farestTrans.position);
+        }
     }
 
     float EaseOutCubic(float t) => 1 - Mathf.Pow(1 - t, 3);
+
+    void BitchSlap()
+    {
+        List<Collider> colliders = GetComponentInChildren<ReaperAOE>()._colliders;
+        // If the player is already in the collider, let's not attack them
+        bool skipAttack = false;
+        foreach (Collider collider in colliders)
+        {
+            if (collider.gameObject.CompareTag("Player"))
+            {
+                skipAttack = true;
+            }
+        }
+    }
 }

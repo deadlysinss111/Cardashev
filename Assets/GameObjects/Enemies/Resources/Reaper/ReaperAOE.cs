@@ -7,6 +7,8 @@ public class ReaperAOE : MonoBehaviour
     [SerializeField] Reaper _self;
     BoxCollider _boxCollider;
 
+    public List<Collider> _colliders;
+
     private void Start()
     {
         // If for some reason in the future, _self is not defined in the inspector, try to set its parent as _self as a fallback
@@ -27,9 +29,15 @@ public class ReaperAOE : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        _colliders.Add(other);
         if (other.gameObject.CompareTag("Player") && other.gameObject.TryGetComponent(out StatManager _stats))
         {
             _stats.TakeDamage(_self._dmg);
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        _colliders.Remove(other);
     }
 }
