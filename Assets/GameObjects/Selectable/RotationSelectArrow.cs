@@ -12,6 +12,11 @@ public class RotationSelectArrow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    public void InitArrow()
+    {
         RectTransform rt;
 
         if (GI._PlayerFetcher().transform.Find("arrowCanvas"))
