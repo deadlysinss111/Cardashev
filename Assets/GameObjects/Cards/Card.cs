@@ -30,8 +30,8 @@ public class Card : MonoBehaviour
     protected LineRenderer _lineRenderer;
     protected Vector3 _lastScale;
     protected Vector3 _lastPos;
-    protected Action _timeStopedEvent = ()=> { };
-    protected Action _timeStopedClick = ()=> { };
+    protected Action _timeStopedEvent = () => { };
+    protected Action _timeStopedClick = () => { };
     protected bool _isCollectible;
 
     [SerializeField] protected LayerMask _clickableLayers;
@@ -43,9 +43,10 @@ public class Card : MonoBehaviour
     public Action _clickEffect;     // Called when the card is clicked in the HUD
 
     // Used for previews
-    [SerializeField] protected GameObject _ghostHitbox = null;
     [SerializeField] protected bool _shotForPreview = false;
     [SerializeField] protected bool _trajectoryForPreview = false;
+    [SerializeField] protected UnityEngine.Object _ghostHitboxPrefab = null;
+    protected GameObject _ghostHitbox = null;
 
     // Level related
     public int _currLv;
@@ -303,13 +304,20 @@ public class Card : MonoBehaviour
     {
         // Useful for preview positioning
         Vector3 selTilePos = GI._PManFetcher()._lastHit.transform.position + new Vector3(0.0f, 0.5f, 0.0f);
-        float shoulderHeight = 1.0f;
+        Vector3 shoulderOffset = new Vector3(0, 1, 0);
+
+        // For some reason duplciating this code breaks some culling actions lmao
+        bool shouldCullPreview = !_selectableArea.CheckForSelectableTile(selTilePos);
 
         // Shows the ghost hitbox at selected tile
-        if (_ghostHitbox != null)
+        if (_ghostHitboxPrefab != null)
         {
+            // First instantiation
+            if (_ghostHitbox == null)
+                _ghostHitbox = Instantiate((GameObject) _ghostHitboxPrefab);
+
             // Makes the preview dissapear if the play would be invalid
-            if (false == _selectableArea.CheckForSelectableTile(selTilePos))
+            if (shouldCullPreview)
                 _ghostHitbox.SetActive(false);
 
             // Updates and shows the ghost hitbox
@@ -330,14 +338,17 @@ public class Card : MonoBehaviour
         if (_trajectoryForPreview)
         {
             // Makes the preview dissapear if the play would be invalid
-            if (false == _selectableArea.CheckForSelectableTile(selTilePos))
+            if (shouldCullPreview)
                 ClearPath();
 
-            // Updates and shows the trajectory
-            Vector3 curveOrigin = GI._PManFetcher()._virtualPos;
-            Vector3 curveTarget = selTilePos + new Vector3(0.0f, shoulderHeight, 0.0f);
-            Vector3 curveInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(curveOrigin, curveTarget, 10.0f);
-            TrajectoryToolbox.BellCurve(curveOrigin, curveInitVelocity, ref _lineRenderer);
+            //// Updates and shows the trajectory
+            //Vector3 curveOrigin = GI._PManFetcher()._virtualPos;
+            //Vector3 curveInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(curveOrigin + shoulderOffset, selTilePos, 10.0f);
+            //TrajectoryToolbox.BellCurve(curveOrigin, curveInitVelocity, ref _lineRenderer);
+
+            Vector3 grenadeOrigine = GI._PManFetcher()._virtualPos;
+            Vector3 grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(grenadeOrigine + new Vector3(0, 1, 0), selTilePos, 10.0f);
+            TrajectoryToolbox.BellCurve(grenadeOrigine + new Vector3(0, 1, 0), grenadeInitVelocity, ref _lineRenderer);
         }
     }
 
