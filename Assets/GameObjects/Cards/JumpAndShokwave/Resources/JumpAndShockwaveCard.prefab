@@ -516,6 +516,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5494236654954561655}
+  - component: {fileID: 4401497422304717832}
   m_Layer: 0
   m_Name: Price
   m_TagString: Untagged
@@ -544,6 +545,18 @@ RectTransform:
   m_AnchoredPosition: {x: 24, y: -88}
   m_SizeDelta: {x: 48.73, y: 24.365005}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &4401497422304717832
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3774889344435437826}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5188945694851738593
 GameObject:
   m_ObjectHideFlags: 0

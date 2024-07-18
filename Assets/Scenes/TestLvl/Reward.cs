@@ -109,7 +109,7 @@ public class Reward : MonoBehaviour
     void GenerateBooster()
     {
         GameObject button = GenerateItem(true);
-        button.GetComponent<Button>().onClick.AddListener(() => { DisplayCards(button); _cardSelectionPanel.GetComponent<CanvasGroup>().alpha = 0.4f;});
+        button.GetComponent<Button>().onClick.AddListener(() => { DisplayCards(button); _cardSelectionPanel.GetComponent<CanvasGroup>().alpha = 0.4f; Destroy(button); });
         button.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Pick a card");
     }
 
@@ -131,8 +131,9 @@ public class Reward : MonoBehaviour
         GameObject[] cards = new GameObject[3];
 
         GameObject upgrade = GenerateItem(false);
-        upgrade.GetComponent<Button>().onClick.AddListener(() => { foreach (GameObject slot in cards) { Destroy(slot); }; DisplayUpgradableCards(); });
-        upgrade.transform.localPosition = new Vector3(0, -100, -0.1f);
+        upgrade.GetComponent<Button>().onClick.AddListener(() => { foreach (GameObject slot in cards) { Destroy(slot); }; DisplayUpgradableCards(); Destroy(upgrade); });
+        upgrade.transform.localPosition = new Vector3(0, -170, -0.1f);
+        upgrade.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Upgrade");
 
         Collection._unlocked.TryGetValue(Idealist._instance._name, out List<string> pool);
 
@@ -182,7 +183,7 @@ public class Reward : MonoBehaviour
 
             card.SetActive(true);
             card.transform.SetParent(GameObject.Find("Canvas").transform, false);
-            card.transform.localPosition = new Vector3(150 * (i - 1), 0, -0.1f);
+            card.transform.localPosition = new Vector3(200 * (i - 1), -50, -0.1f);
 
             card.GetComponent<Card>().SetToCollectible(() =>
             {

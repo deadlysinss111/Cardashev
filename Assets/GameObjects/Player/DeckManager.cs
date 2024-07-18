@@ -16,7 +16,7 @@ public class DeckManager : MonoBehaviour
     GameObject _cardBar;
 
     Vector3 virtualPosition = new Vector3(1000, -50, 0); // Virtual position off-screen to the right
-    float transitionDuration = 1.0f; // Duration for the transition
+    float transitionDuration = 0.3f; // Duration for the transition
     bool isTransitioning = false; // Flag to check if a card is currently being moved
 
     void Start()
@@ -36,7 +36,8 @@ public class DeckManager : MonoBehaviour
 
     private void Update()
     {
-        _drawCooldown -= Time.deltaTime;
+        if(_hand.Count < 5)
+            _drawCooldown -= Time.deltaTime;
         if (_drawCooldown <= 0)
         {
             if (_hand.Count < 5 && !isTransitioning)
@@ -242,7 +243,7 @@ public class DeckManager : MonoBehaviour
     // Method to display the draw cooldown in the UI with _cardBar
     private void CooldownBarScale()
     {
-        if (_hand.Count < 4)
+        if (_hand.Count < 5)
         {
             _cardBar.GetComponent<Slider>().value = _drawCooldown / 3;
         }

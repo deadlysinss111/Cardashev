@@ -22,6 +22,7 @@ public class Merchant : Interactible
             _shopSupply[i] = Card.Instantiate(pool[Random.Range(0, pool.Count)], true);
             _shopSupply[i].transform.SetParent(_interface.transform, false);
             _shopSupply[i].transform.localPosition = new Vector3(-300 + i*200, 100, 0.1f);
+            _shopSupply[i].GetComponentInChildren<CanvasGroup>().alpha = 1;
             
             Card cardComp = _shopSupply[i].GetComponent<Card>();
 
@@ -34,6 +35,7 @@ public class Merchant : Interactible
                     CurrentRunInformations._goldAmount -= cardComp._goldValue;
                     //Destroy(cardObj);
                     _canvasData._shopPlayerCredits.text = CurrentRunInformations._goldAmount.ToString();
+                    cardComp.gameObject.GetComponentInChildren<CanvasGroup>().alpha = 0;
                     return Card.CollectibleState.ADDTODECKANDBACKTOPLAY;
                 }
                 curCard.GetComponent<Animator>().SetTrigger("Shake");

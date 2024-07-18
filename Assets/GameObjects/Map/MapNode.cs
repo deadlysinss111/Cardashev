@@ -33,7 +33,7 @@ public class MapNode : MonoBehaviour
     [NonSerialized] public int _startingXCoord;
     string _stringType;
     //string _linkedScene = "Shop";
-    bool _playerCameThrough;
+    public bool _playerCameThrough;
     bool _isLocked;
 
     Color _defaultColor;
@@ -123,16 +123,19 @@ public class MapNode : MonoBehaviour
         return _blocker && _blocker._IsLocked;
     }
 
-    public void SelectNode()
+    public void LoadRoom()
     {
         if (gameObject.name != "Original Node")
         {
             GI._currentRoomIcon = _roomIconSprite;
             GameObject.Find("Transition Effect").GetComponent<SceneLoadingAnimation>().StartAnimation(_stringType);
         }
+    }
 
+    public void SelectNode()
+    {
         GetComponent<MeshRenderer>().material.color = Color.cyan;
-        _RoomIcon3D.GetComponent<MeshRenderer>().enabled = false; // play a glitch animation + fade transition
+        //_RoomIcon3D.GetComponent<MeshRenderer>().enabled = false; // play a glitch animation + fade transition
         _playerCameThrough = true;
     }
 
@@ -186,7 +189,8 @@ public class MapNode : MonoBehaviour
                     _defaultHoloColor = new Color(0f, 3f, 0f);
                     _defaultFresnelColor = new Color(0.092f, 1.5f, 0.43f);
                     SetDefaultColorTo(Color.white);
-                    _stringType = "Rest";
+                    //_stringType = "Rest";
+                    _stringType = "Combat";
                     break;
                 }
             case RoomType.Event:
@@ -196,7 +200,8 @@ public class MapNode : MonoBehaviour
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
                     _ScaleParent.transform.localScale *= 0.3f;
                     SetDefaultColorTo(Color.green);
-                    _stringType = "Event";
+                    //_stringType = "Event";
+                    _stringType = "Combat";
                     break;
                 }
             case RoomType.Combat:
@@ -214,7 +219,8 @@ public class MapNode : MonoBehaviour
                     _ScaleParent.transform.localScale *= 0.3f;
                     _RoomIcon3D.transform.position += Vector3.up;
                     SetDefaultColorTo(Color.magenta);
-                    _stringType = "Elite";
+                    //_stringType = "Elite";
+                    _stringType = "Combat";
                     break;
                 }
 
