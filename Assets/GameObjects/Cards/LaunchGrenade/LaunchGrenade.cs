@@ -73,33 +73,10 @@ public class LaunchGrenade : Card
     {
         GI._PManFetcher().SetToState("grenade" + _id.ToString());
     }
-
-    
-    //private void Preview()
-    //{
-    //    PlayerManager manager = GI._PManFetcher();
-    //    // Crop the destination to the center of the target tile
-    //    Vector3 alteredPos = manager._lastHit.transform.position;
-    //    alteredPos.y += 0.5f;
-    //    if (_selectableArea.CheckForSelectableTile(alteredPos) == false)
-    //    {
-    //        ClearPath();
-    //        _previwRadius.SetActive(false);
-    //        return;
-    //    }
-    //    _previwRadius.SetActive(true);
-
-    //    _previwRadius.transform.position = alteredPos;
-
-    //    _grenadeOrigine = manager._virtualPos;
-    //    _grenadeInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(_grenadeOrigine + new Vector3(0, 1, 0), alteredPos, 10.0f);
-    //    TrajectoryToolbox.BellCurve(_grenadeOrigine + new Vector3(0, 1, 0), _grenadeInitVelocity, ref _lineRenderer);
-    //}
     
 
     protected void FireGrenade()
     {
-        //ClearPath();
         _selectableArea.ResetSelectable();
         GI._PManFetcher().SetToDefault();
         // Trigger the card play event
@@ -113,13 +90,7 @@ public class LaunchGrenade : Card
 
     public override void OnLoad()
     {
-        UnityEngine.Object RADIUS = Resources.Load("RadiusPreview");
-        //_previwRadius = (GameObject)Instantiate(RADIUS);
-        //_previwRadius.SetActive(false);
-    }
-    public override void OnUnload()
-    {
-        //Destroy(_previwRadius);
+
     }
 
 }

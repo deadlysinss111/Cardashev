@@ -186,7 +186,8 @@ public class MapNode : MonoBehaviour
                     _defaultHoloColor = new Color(0f, 3f, 0f);
                     _defaultFresnelColor = new Color(0.092f, 1.5f, 0.43f);
                     SetDefaultColorTo(Color.white);
-                    _stringType = "Rest";
+                    //_stringType = "Rest";
+                    _stringType = "Combat";
                     break;
                 }
             case RoomType.Event:
@@ -196,7 +197,8 @@ public class MapNode : MonoBehaviour
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
                     _ScaleParent.transform.localScale *= 0.3f;
                     SetDefaultColorTo(Color.green);
-                    _stringType = "Event";
+                    //_stringType = "Event";
+                    _stringType = "Combat";
                     break;
                 }
             case RoomType.Combat:
@@ -214,7 +216,8 @@ public class MapNode : MonoBehaviour
                     _ScaleParent.transform.localScale *= 0.3f;
                     _RoomIcon3D.transform.position += Vector3.up;
                     SetDefaultColorTo(Color.magenta);
-                    _stringType = "Elite";
+                    //_stringType = "Elite";
+                    _stringType = "Combat";
                     break;
                 }
 
