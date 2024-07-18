@@ -213,7 +213,7 @@ public class DeckManager : MonoBehaviour
         foreach (GameObject card in toLoad)
         {
             _remainsInDeck.Add(card);
-            card.transform.SetParent(GameObject.Find("background UI").transform, false);
+            card.transform.SetParent(GameObject.Find("PlayerHand").transform, false);
             card.GetComponent<Card>().OnLoad();
             if(card.TryGetComponent(out RotationSelectArrow arrow))
                 arrow.InitArrow();
