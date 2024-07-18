@@ -20,6 +20,7 @@ public class CameraController : MonoBehaviour
     // Clockwise positions around player starting behind him
     Vector3[] _offsetPositions;
     byte _offsetID;
+    float _zoomScale = 1.0f;
 
     private void Awake()
     {
@@ -62,11 +63,23 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         _currentMode();
+        if (Input.mouseScrollDelta.y != 0)
+        {
+            if (Input.mouseScrollDelta.y > 0)
+            {
+                _zoomScale -= 0.1f;
+            }
+            else
+            {
+                _zoomScale += 0.1f;
+            }
+            _zoomScale = Math.Clamp(_zoomScale, 0.5f, 2.5f);
+        }
     }
 
     private void LockedMode()
     {
-        Vector3 desiredPosition = _target.position + _curOffset;
+        Vector3 desiredPosition = _target.position + _curOffset * _zoomScale; ;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, _smoothSpeed * Time.unscaledDeltaTime);
         transform.position = smoothedPosition;
         Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, _curRotation, _smoothSpeed * Time.unscaledDeltaTime);
@@ -80,16 +93,16 @@ public class CameraController : MonoBehaviour
         switch (_offsetID)
         {
             case 0:
-                move = new Vector3(_moveInput.x, 0, _moveInput.y);
+                move = new Vector3(_moveInput.y, 0, -_moveInput.x);
                 break;
             case 1:
-                move = new Vector3(-_moveInput.y, 0, _moveInput.x);
+                move = new Vector3(_moveInput.x, 0, _moveInput.y);
                 break;
             case 2:
-                move = new Vector3(-_moveInput.x, 0, -_moveInput.y);
+                move = new Vector3(-_moveInput.y, 0, _moveInput.x);
                 break;
             case 3:
-                move = new Vector3(_moveInput.y, 0, -_moveInput.x);
+                move = new Vector3(-_moveInput.x, 0, -_moveInput.y);
                 break;
             default:
                 move = new Vector3(0, 0, 0);
@@ -101,7 +114,7 @@ public class CameraController : MonoBehaviour
 
         _target.Translate(move * Time.unscaledDeltaTime * _smoothSpeed);
 
-        Vector3 desiredPosition = _target.position + _curOffset;
+        Vector3 desiredPosition = _target.position + _curOffset * _zoomScale;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, _smoothSpeed * Time.unscaledDeltaTime);
         transform.position = smoothedPosition;
         Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, _curRotation, _smoothSpeed * Time.unscaledDeltaTime);

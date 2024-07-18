@@ -135,16 +135,21 @@ public class Ebouillantueur : Enemy
         _isMoving = true;
         Vector3 targetArea;
 
+        // TODO: one of those two logics
         if (_fleeing)
         {
-            targetArea = Vector3.Normalize(transform.position - _player.transform.position) * 10;
+            targetArea = transform.position + Vector3.Normalize(transform.position - _player.transform.position) * 8;
         }
         else
         {
-            targetArea = Vector3.Normalize(_player.transform.position - transform.position) * (DistanceToPlayer()-20);
+            targetArea = transform.position + Vector3.Normalize(_player.transform.position - transform.position) * 8;
         }
 
-        Vector3 dest =  RandomNavmeshLocation(1, targetArea);
+
+        Vector3 dest =  RandomNavmeshLocation(4, targetArea);
+
+        if (dest == Vector3.zero) throw new Exception("error in targeting AI for ebouillantueur");
+
         _agent.SetDestination(dest);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);

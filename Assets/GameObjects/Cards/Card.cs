@@ -104,7 +104,6 @@ public class Card : MonoBehaviour
         {
             case PreviewZoneType.NONE:
                 _ghostHitboxPrefab = Resources.Load("NullPreview");
-                print(_ghostHitboxPrefab);
                 break;
             case PreviewZoneType.SPHERE:
                 _ghostHitboxPrefab = Resources.Load("SpherePreview");

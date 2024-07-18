@@ -467,6 +467,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   _actionColor: {r: 0, g: 0, b: 0, a: 0}
+  _shotForPreview: 0
+  _trajectoryForPreview: 0
+  _apex: 10
   _currLv: 1
   _maxLv: 3
 --- !u!95 &-1250704725877493980
@@ -932,6 +935,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7166496391266086480}
+  - component: {fileID: 5006325851075573614}
   m_Layer: 0
   m_Name: Price
   m_TagString: Untagged
@@ -960,3 +964,15 @@ RectTransform:
   m_AnchoredPosition: {x: 24, y: -88}
   m_SizeDelta: {x: 48.73, y: 24.365005}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &5006325851075573614
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7931311405265527371}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

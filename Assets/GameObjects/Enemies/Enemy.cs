@@ -85,6 +85,10 @@ abstract public class Enemy : MonoBehaviour
         {
             finalPosition = hit.position;
         }
+        else
+        {
+            throw new Exception("sample position error");
+        }
         return finalPosition;
     }
 
