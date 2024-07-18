@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.XR;
 using Random = UnityEngine.Random;
 
 public class MapManager : MonoBehaviour
@@ -92,7 +94,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    void RecursiveUnlock(GameObject node, bool firstCall)
+    void RecursiveUnlock(GameObject node, bool firstCall=true)
     {
         MapNode curNode = node.GetComponent<MapNode>();
         if (ReferenceEquals(curNode, _bossRoom)) return;
@@ -101,6 +103,44 @@ public class MapManager : MonoBehaviour
         {
             if (!nextNode || nextNode.GetComponent<MapNode>().IsLockedByBlocker()) continue;
             RecursiveUnlock(nextNode, false);
+        }
+    }
+
+    IEnumerator PathLocker(GameObject targetNode)
+    {
+        List<GameObject> nodes = new List<GameObject>();
+
+        // Add every existing node to a list (appart from the _bossRoom)
+        for (int i = 0; i < _mapGrid.Count; i++)
+        {
+            for (int j = 0; j < _mapGrid[i].Count; j++)
+            {
+                if (_mapGrid[i][j] == null || _mapGrid[i][j].GetComponent<MapNode>()._playerCameThrough) continue;
+                nodes.Add(_mapGrid[i][j]);
+            }
+        }
+
+        // Remove every node accessible by the player
+        RecursivePathing(ref nodes, _playerLocation.GetComponent<MapNode>());
+
+        // Play the lock animation on every remaining nodes
+        foreach (GameObject n in nodes)
+        {
+            n.GetComponent<MapNode>().LockNode();
+            yield return new WaitForSeconds(.1f);
+        }
+
+        targetNode.GetComponent<MapNode>().LoadRoom();
+    }
+
+    void RecursivePathing(ref List<GameObject> nodes, MapNode curNode)
+    {
+        if (ReferenceEquals(curNode, _bossRoom)) return;
+        nodes.Remove(curNode.gameObject);
+        foreach (GameObject nextNode in curNode._nextNodes)
+        {
+            if (!nextNode || nextNode.GetComponent<MapNode>().IsLockedByBlocker()) continue;
+            RecursivePathing(ref nodes, nextNode.GetComponent<MapNode>());
         }
     }
 
@@ -120,8 +160,6 @@ public class MapManager : MonoBehaviour
                     // Triggers the click animation
                     GI._canClickOnNode = false;
                     StartCoroutine(AnimationDuration(targetNode));
-                    LockAllNodes();
-                    RecursiveUnlock(_playerLocation, true);
                     break;
                 }
             }
@@ -131,8 +169,9 @@ public class MapManager : MonoBehaviour
     IEnumerator AnimationDuration(GameObject targetNode)
     {
         targetNode.GetComponent<MapNode>()._RoomIcon3D.GetComponent<RoomIconAnim>().Select();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1f);
         MovePlayerTo(targetNode);
+        StartCoroutine(PathLocker(targetNode));
     }
 
     void MoveCloud()

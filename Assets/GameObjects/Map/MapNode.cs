@@ -33,7 +33,7 @@ public class MapNode : MonoBehaviour
     [NonSerialized] public int _startingXCoord;
     string _stringType;
     //string _linkedScene = "Shop";
-    bool _playerCameThrough;
+    public bool _playerCameThrough;
     bool _isLocked;
 
     Color _defaultColor;
@@ -123,16 +123,19 @@ public class MapNode : MonoBehaviour
         return _blocker && _blocker._IsLocked;
     }
 
-    public void SelectNode()
+    public void LoadRoom()
     {
         if (gameObject.name != "Original Node")
         {
             GI._currentRoomIcon = _roomIconSprite;
             GameObject.Find("Transition Effect").GetComponent<SceneLoadingAnimation>().StartAnimation(_stringType);
         }
+    }
 
+    public void SelectNode()
+    {
         GetComponent<MeshRenderer>().material.color = Color.cyan;
-        _RoomIcon3D.GetComponent<MeshRenderer>().enabled = false; // play a glitch animation + fade transition
+        //_RoomIcon3D.GetComponent<MeshRenderer>().enabled = false; // play a glitch animation + fade transition
         _playerCameThrough = true;
     }
 

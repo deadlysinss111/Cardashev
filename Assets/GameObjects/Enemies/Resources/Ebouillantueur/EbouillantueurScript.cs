@@ -141,13 +141,13 @@ public class Ebouillantueur : Enemy
         }
         else
         {
-            targetArea = Vector3.Normalize(_player.transform.position - transform.position) * (DistanceToPlayer()-20);
+            targetArea = Vector3.Normalize(_player.transform.position - transform.position) * 10;
         }
 
         Vector3 dest =  RandomNavmeshLocation(1, targetArea);
         _agent.SetDestination(dest);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
-        _timeBeforeDecision = GetPathTime(path);
+        _timeBeforeDecision = 10 / _agent.speed;
     }
 }
