@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 8246218456926542464}
   - component: {fileID: 3956462982571305848}
   - component: {fileID: 2466659126777004021}
-  - component: {fileID: 2758612034920929711}
-  - component: {fileID: 428984802675289082}
+  - component: {fileID: 8218846310301607855}
+  - component: {fileID: -966048621323712255}
   m_Layer: 0
-  m_Name: SpherePreview
+  m_Name: EllipsisPreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.33, y: -0.16, z: 4.52}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalScale: {x: 6.8496165, y: 2.5416188, z: 6.8496165}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -87,7 +87,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!120 &2758612034920929711
+--- !u!120 &8218846310301607855
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
@@ -193,7 +193,7 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &428984802675289082
+--- !u!114 &-966048621323712255
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -205,4 +205,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aadde07131e52f347b15b5d7fa32942c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lineRenderer: {fileID: 2758612034920929711}
+  _lineRenderer: {fileID: 8218846310301607855}

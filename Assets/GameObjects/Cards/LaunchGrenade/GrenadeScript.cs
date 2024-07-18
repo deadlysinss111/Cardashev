@@ -54,9 +54,13 @@ public class GrenadeScript : MonoBehaviour
         {
             enemy.TakeDamage(_dmg);
         }
+        else if(target.TryGetComponent(out StatManager manager))
+        {
+            manager.TakeDamage(_dmg);
+        }
         else
         {
-            target.GetComponent<StatManager>().TakeDamage(_dmg);
+            print("error in dealing dmg with target : "+target.name);
         }
     }
 

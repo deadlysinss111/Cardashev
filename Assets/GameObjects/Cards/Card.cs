@@ -50,7 +50,7 @@ public class Card : MonoBehaviour
     protected Vector3 _velocityFromLastBellCurveCalculated;
     protected Vector3 _originFromLastBellCurveCalculated;
     protected Vector3 _destinationFromLastBellCurveCalculated;
-    protected float _apex = 10.0f;
+    [SerializeField] protected float _apex = 10.0f;
 
     // Level related
     public int _currLv;
@@ -68,6 +68,7 @@ public class Card : MonoBehaviour
     {
         NONE = -1,
         SPHERE = 0,
+        ELLIPSIS,
     }
 
     [NonSerialized] public GameObject _target;
@@ -107,6 +108,9 @@ public class Card : MonoBehaviour
                 break;
             case PreviewZoneType.SPHERE:
                 _ghostHitboxPrefab = Resources.Load("SpherePreview");
+                break;
+            case PreviewZoneType.ELLIPSIS:
+                _ghostHitboxPrefab = Resources.Load("EllipsisPreview");
                 break;
             default:
                 Debug.LogError("error in preview type for your card : " + _name);

@@ -834,6 +834,14 @@ PrefabInstance:
       propertyPath: _slowdownDuration
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 3076447450888996372, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: m_Speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3076447450888996372, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: avoidancePriority
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 6497200372588378017, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
       propertyPath: _cooldownSprite
       value: 

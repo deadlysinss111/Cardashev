@@ -25,7 +25,12 @@ public class Jump : Card
 
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(TriggerJump);
-        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        manager.SetRightClickTo(() => { 
+            ExitState(); 
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+            if (_ghostHitbox != null)
+                Destroy(_ghostHitbox);
+        });
         manager.SetHoverTo(Preview);
         GI.UpdateCursors("Jump", (byte)(GI.CursorRestriction.S_TILES));
         GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_TILES));
