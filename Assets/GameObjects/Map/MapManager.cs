@@ -159,19 +159,24 @@ public class MapManager : MonoBehaviour
                     if (targetNode.GetComponent<MapNode>().IsLockedByBlocker() || false == GI._canClickOnNode) return;
                     // Triggers the click animation
                     GI._canClickOnNode = false;
-                    StartCoroutine(AnimationDuration(targetNode));
+                    StartCoroutine(EnterRoom(targetNode));
                     break;
                 }
             }
         }
     }
 
-    IEnumerator AnimationDuration(GameObject targetNode)
+    IEnumerator EnterRoom(GameObject targetNode)
     {
         targetNode.GetComponent<MapNode>()._RoomIcon3D.GetComponent<RoomIconAnim>().Select();
         yield return new WaitForSeconds(1f);
+        GameObject previousNode = _playerLocation;
         MovePlayerTo(targetNode);
-        StartCoroutine(PathLocker(targetNode));
+        print(previousNode.GetComponent<MapNode>().NumberOfNextNode());
+        if (previousNode.GetComponent<MapNode>().NumberOfNextNode() > 1)
+            StartCoroutine(PathLocker(targetNode));
+        else
+            targetNode.GetComponent<MapNode>().LoadRoom();
     }
 
     void MoveCloud()
