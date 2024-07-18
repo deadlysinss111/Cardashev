@@ -63,6 +63,7 @@ public class RotationSelectArrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gameObject.GetComponent<Card>()._isCollectible) return;
         if (_arrowCanvas.activeSelf)
         {
             _arrowCanvas.transform.position = GI._PManFetcher()._virtualPos;

@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SceneLoadingAnimation : MonoBehaviour
 {
     [SerializeField] Animator animator;
+    [SerializeField] Image roomIcon1;
+    [SerializeField] Image roomIcon2;
     string _sceneType;
 
     // Start is called before the first frame update
@@ -20,6 +23,9 @@ public class SceneLoadingAnimation : MonoBehaviour
 
     IEnumerator StartFadeOut()
     {
+        roomIcon1.sprite = GI._currentRoomIcon;
+        roomIcon2.sprite = GI._currentRoomIcon;
+
         yield return new WaitForSecondsRealtime(.5f);
 
         animator.SetTrigger("Fade Out");
@@ -27,6 +33,8 @@ public class SceneLoadingAnimation : MonoBehaviour
 
     public void StartAnimation(string sceneType)
     {
+        roomIcon1.sprite = GI._currentRoomIcon;
+        roomIcon2.sprite = GI._currentRoomIcon;
         _sceneType = sceneType;
         animator.SetTrigger("Fade In");
     }

@@ -6,12 +6,40 @@ using UnityEngine;
 public class Merchant : Interactible
 {
     GameObject _interface;
+    CanvasScript _canvasData;
+    GameObject[] _shopSupply;
 
     private void Start()
     {
-        _interface = GameObject.Find("Canvas").GetComponent<CanvasScript>()._shopInterface;
+        _interface = GameObject.Find("ShopInterface");
+        _canvasData = GameObject.Find("Canvas").GetComponent<CanvasScript>();
         _RaycastHitDist = 4;
         _inRangeCursor = "Dialog";
+        _shopSupply = new GameObject[4];
+        Collection._unlocked.TryGetValue(Idealist._instance._name, out List<string> pool);
+        for (int i=0; i<4; i++)
+        {
+            _shopSupply[i] = Card.Instantiate(pool[Random.Range(0, pool.Count)], true);
+            _shopSupply[i].transform.SetParent(_interface.transform, false);
+            _shopSupply[i].transform.localPosition = new Vector3(-300 + i*200, 100, 0.1f);
+            
+            Card cardComp = _shopSupply[i].GetComponent<Card>();
+
+            _shopSupply[i].GetComponent<CardData>()._priceText.text = cardComp._goldValue.ToString();
+            GameObject curCard = _shopSupply[i];
+            cardComp.SetToCollectible(() =>
+            {
+                if (CurrentRunInformations._goldAmount >= cardComp._goldValue)
+                {
+                    CurrentRunInformations._goldAmount -= cardComp._goldValue;
+                    //Destroy(cardObj);
+                    _canvasData._shopPlayerCredits.text = CurrentRunInformations._goldAmount.ToString();
+                    return Card.CollectibleState.ADDTODECKANDBACKTOPLAY;
+                }
+                curCard.GetComponent<Animator>().SetTrigger("Shake");
+                return Card.CollectibleState.NOTHING;
+            });
+        }
     }
 
     public override void OnRaycastHit()
@@ -36,56 +64,13 @@ public class Merchant : Interactible
     void DrawOfferedCards()
     {
         GI._PManFetcher().SetToState("Empty");
-        _interface.SetActive(true);
-        Collection._unlocked.TryGetValue(Idealist._instance._name, out List<string> pool);
-        int x = -300;
+        CanvasGroup shopInterface = _interface.GetComponent<CanvasGroup>();
+        shopInterface.alpha = 1;
+        shopInterface.blocksRaycasts = true;
+        shopInterface.interactable = true;
+        _canvasData._shopPlayerCreditIcon.SetActive(true);
 
         // Show to the player his current money
-        GameObject playerGoldbagObj = new GameObject();
-        TextMesh playerGoldbagTxt = playerGoldbagObj.AddComponent<TextMesh>();
-        playerGoldbagObj.transform.SetParent(_interface.transform, false);
-        playerGoldbagTxt.text = CurrentRunInformations._goldAmount.ToString();
-        playerGoldbagTxt.color = Color.red;
-        playerGoldbagTxt.fontSize = 300;
-        playerGoldbagObj.transform.localPosition = new Vector3(-500, 200, 0.1f);
-
-        for (int i = 0; i < 4; i++)
-        {
-            // We first create the card object
-            GameObject cardObj = Card.Instantiate(pool[Random.Range(0, pool.Count)], true);
-            cardObj.transform.SetParent(_interface.transform, false);
-            cardObj.transform.localPosition = new Vector3(x, 100, 0.1f);
-
-            // We set it's gold value
-            Card cardComp = cardObj.GetComponent<Card>();
-            int variation = UnityEngine.Random.Range(-10, 11);
-            int amount = cardComp._goldValue + variation;
-
-            // We then write the price
-            GameObject priceObj = new GameObject();
-            priceObj.transform.SetParent(_interface.transform, false);
-            TextMesh priceTxt = priceObj.AddComponent<TextMesh>();
-            priceTxt.text = amount.ToString();
-            priceTxt.color = Color.red;
-            priceTxt.fontSize = 200;
-            priceObj.transform.localPosition = new Vector3(x - 5, 60, 0.1f);
-
-            // We set the card as a collectible with a price
-            cardComp.SetToCollectible(() =>
-            {
-                if (CurrentRunInformations._goldAmount >= amount)
-                {
-                    CurrentRunInformations._goldAmount -= amount;
-                    //Destroy(cardObj);
-                    Destroy(priceObj);
-                    playerGoldbagTxt.text = CurrentRunInformations._goldAmount.ToString();
-                    return Card.CollectibleState.ADDTODECKANDBACKTOPLAY;
-                }
-                cardObj.GetComponent<Animator>().SetTrigger("Shake");
-                return Card.CollectibleState.NOTHING;
-            });
-
-            x += 200;
-        }
+        _canvasData._shopPlayerCredits.text = CurrentRunInformations._goldAmount.ToString();
     }
 }

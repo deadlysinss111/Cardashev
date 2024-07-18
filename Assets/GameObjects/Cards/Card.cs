@@ -32,7 +32,7 @@ public class Card : MonoBehaviour
     protected Vector3 _lastPos;
     protected Action _timeStopedEvent = ()=> { };
     protected Action _timeStopedClick = ()=> { };
-    protected bool _isCollectible;
+    [NonSerialized] public bool _isCollectible;
 
     [SerializeField] protected LayerMask _clickableLayers;
     public Color _actionColor;
@@ -41,6 +41,16 @@ public class Card : MonoBehaviour
     public Action _onDiscard;       // Called when the card's duration reached 0 after activation
     public Action _trigger;         // Called when the Queue sets it to be active
     public Action _clickEffect;     // Called when the card is clicked in the HUD
+
+    // Used for previews
+    [SerializeField] protected bool _shotForPreview = false;
+    [SerializeField] protected bool _trajectoryForPreview = false;
+    protected UnityEngine.Object _ghostHitboxPrefab;
+    protected GameObject _ghostHitbox = null;
+    protected Vector3 _velocityFromLastBellCurveCalculated;
+    protected Vector3 _originFromLastBellCurveCalculated;
+    protected Vector3 _destinationFromLastBellCurveCalculated;
+    [SerializeField] protected float _apex = 10.0f;
 
     // Level related
     public int _currLv;
@@ -53,6 +63,14 @@ public class Card : MonoBehaviour
         BACKTOPLAYABLE,
         ADDTODECKANDBACKTOPLAY
     }
+
+    public enum PreviewZoneType
+    {
+        NONE = -1,
+        SPHERE = 0,
+        ELLIPSIS,
+    }
+
     [NonSerialized] public GameObject _target;
 
     /*
@@ -67,7 +85,7 @@ public class Card : MonoBehaviour
         _isCollectible = false;
     }
 
-    protected void Init(float duration, byte maxLvl, int goldValue, int[] stats, string description = "")
+    protected void Init(float duration, byte maxLvl, int goldValue, int[] stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
     {
         _timeStopedEvent = TimeStopedMouseEnter;
 
@@ -81,6 +99,23 @@ public class Card : MonoBehaviour
             _lineRenderer = renderer;
         else
             _lineRenderer = null;
+
+        switch(previewType)
+        {
+            case PreviewZoneType.NONE:
+                _ghostHitboxPrefab = Resources.Load("NullPreview");
+                print(_ghostHitboxPrefab);
+                break;
+            case PreviewZoneType.SPHERE:
+                _ghostHitboxPrefab = Resources.Load("SpherePreview");
+                break;
+            case PreviewZoneType.ELLIPSIS:
+                _ghostHitboxPrefab = Resources.Load("EllipsisPreview");
+                break;
+            default:
+                Debug.LogError("error in preview type for your card : " + _name);
+                break;
+        }
     }
 
     // ~~~(> GETTERS
@@ -126,6 +161,9 @@ public class Card : MonoBehaviour
     public virtual void Effect()
     {
         _cardEndTimestamp = Time.time + _duration;
+        
+        if(_ghostHitbox != null)
+            Destroy(_ghostHitbox);
     }
 
     // Need that stuff to make the card interract as if the time wasn't stop when it is //
@@ -290,4 +328,67 @@ public class Card : MonoBehaviour
     public virtual void OnLoad() { }
 
     public virtual void OnUnload() { }
+
+    // ------
+    // METHODS TO HANDLE GHOSTS / PREVIEW
+    // ------
+    protected void Preview()
+    {
+        // Useful for preview positioning
+        Vector3 selTilePos = GI._PManFetcher()._lastHit.transform.position + new Vector3(0.0f, 0.5f, 0.0f);
+        Vector3 shoulderOffset = new Vector3(0, 1, 0);
+
+        // For some reason duplciating this code breaks some culling actions lmao
+        bool shouldCullPreview = !_selectableArea.CheckForSelectableTile(selTilePos);
+
+        // Shows the ghost hitbox at selected tile
+        if (_ghostHitboxPrefab != null)
+        {
+            // First instantiation
+            if (_ghostHitbox == null)
+                _ghostHitbox = Instantiate((GameObject)_ghostHitboxPrefab);
+
+            // Makes the preview dissapear if the play would be invalid
+            if (shouldCullPreview)
+                _ghostHitbox.SetActive(false);
+
+            // Updates and shows the ghost hitbox
+            else
+            {
+                _ghostHitbox.transform.position = selTilePos;
+                _ghostHitbox.SetActive(true);
+            }
+        }
+
+        // Shows the ghost ray at selected tile
+        if (_shotForPreview)
+        {
+            // IMMENSE ratilo
+        }
+
+        // Show the trajectory at selected tile
+        if (_trajectoryForPreview)
+        {
+            // Makes the preview dissapear if the play would be invalid
+            if (shouldCullPreview)
+                ClearPath();
+
+            //// Updates and shows the trajectory
+            //Vector3 curveOrigin = GI._PManFetcher()._virtualPos;
+            //Vector3 curveInitVelocity = TrajectoryToolbox.BellCurveInitialVelocity(curveOrigin + shoulderOffset, selTilePos, 10.0f);
+            //TrajectoryToolbox.BellCurve(curveOrigin, curveInitVelocity, ref _lineRenderer);
+
+            _originFromLastBellCurveCalculated = GI._PManFetcher()._virtualPos;
+            _velocityFromLastBellCurveCalculated = TrajectoryToolbox.BellCurveInitialVelocity(_originFromLastBellCurveCalculated + new Vector3(0, 1, 0), selTilePos, _apex);
+            _destinationFromLastBellCurveCalculated = selTilePos;
+
+            if (_ghostHitbox != null)
+                TrajectoryToolbox.BellCurve(_originFromLastBellCurveCalculated + new Vector3(0, 1, 0), _velocityFromLastBellCurveCalculated, ref _ghostHitbox.GetComponent<AOEPreviewScript>()._lineRenderer);
+        }
+    }
+
+    public void DestroyPreview()
+    {
+        throw new NotImplementedException();
+    }
 }
