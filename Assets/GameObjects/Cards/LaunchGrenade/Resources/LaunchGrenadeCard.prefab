@@ -145,6 +145,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6438812664358344388}
+  - component: {fileID: 8232904325605888478}
   m_Layer: 0
   m_Name: Price
   m_TagString: Untagged
@@ -173,6 +174,18 @@ RectTransform:
   m_AnchoredPosition: {x: 24, y: -88}
   m_SizeDelta: {x: 48.73, y: 24.365005}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &8232904325605888478
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450561449555909593}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &966117502255826863
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,7 +528,7 @@ MonoBehaviour:
   _actionColor: {r: 0, g: 0, b: 0, a: 0}
   _shotForPreview: 0
   _trajectoryForPreview: 1
-  _ghostHitboxPrefab: {fileID: 4116504399230057216, guid: cc21249c84a1c42459f4178032b29352, type: 3}
+  _apex: 10
   _currLv: 1
   _maxLv: 3
 --- !u!65 &7929307895490609558
