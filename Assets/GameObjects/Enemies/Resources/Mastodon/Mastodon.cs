@@ -25,7 +25,7 @@ public class Mastodon : Enemy
     {
         base.Start();
         _name = "Mastodon";
-        _agent.speed = 4f;
+        _agent.speed = 2f;
         _dmg = 15;
         
     }
