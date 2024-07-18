@@ -30,9 +30,9 @@ public class Card : MonoBehaviour
     protected LineRenderer _lineRenderer;
     protected Vector3 _lastScale;
     protected Vector3 _lastPos;
-    protected Action _timeStopedEvent = () => { };
-    protected Action _timeStopedClick = () => { };
-    protected bool _isCollectible;
+    protected Action _timeStopedEvent = ()=> { };
+    protected Action _timeStopedClick = ()=> { };
+    [NonSerialized] public bool _isCollectible;
 
     [SerializeField] protected LayerMask _clickableLayers;
     public Color _actionColor;
