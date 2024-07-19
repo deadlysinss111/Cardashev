@@ -25,6 +25,6 @@ public class MobAndWincon : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(.5f);
 
-        GameObject.Find("Transition Effect").GetComponent<Animator>().SetTrigger("Fade Out");
+        //GameObject.Find("Transition Effect").GetComponent<Animator>().SetTrigger("Fade Out");
     }
 }
