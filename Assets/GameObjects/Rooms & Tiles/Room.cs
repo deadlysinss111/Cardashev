@@ -76,7 +76,6 @@ public class Room : MonoBehaviour
                     populationLayers.Add(tilemap);
                     continue;
                 }
-
                 LoadHeight(tilemap, newTilemap);
             }
             heightLevel++;
@@ -132,7 +131,7 @@ public class Room : MonoBehaviour
             }
             //Debug.Log("Attempt to load the prefab " + roomGOpath);
 
-            //print(roomGOpath);
+            print(roomGOpath);
             // We use the ROOMGO to get the local position of the object, and the roomGO for the global transform
             GameObject ROOMGO = (GameObject)Resources.Load(roomGOpath);
 

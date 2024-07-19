@@ -13,7 +13,7 @@ public class Merchant : Interactible
     {
         _interface = GameObject.Find("ShopInterface");
         _canvasData = GameObject.Find("Canvas").GetComponent<CanvasScript>();
-        _RaycastHitDist = 4;
+        _RaycastHitDist = 10;
         _inRangeCursor = "Dialog";
         _shopSupply = new GameObject[4];
         Collection._unlocked.TryGetValue(Idealist._instance._name, out List<string> pool);
