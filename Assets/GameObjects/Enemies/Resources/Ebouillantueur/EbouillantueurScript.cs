@@ -79,12 +79,14 @@ public class Ebouillantueur : Enemy
     {
         Collider[] temp = Physics.OverlapSphere(transform.position - Vector3.up * 2, 0.1f);
         _timeBeforeDecision = 9 * .2f + .5f;
+        LayerMask mask = LayerMask.NameToLayer("TMTopology");
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
                 // TODO : FIX FLYING ACID PLACED ON EMPTY SPACE
-                Instantiate(ACID, temp[0].transform.position + new Vector3(i * 2, 1.1f, j * 2), Quaternion.identity);
+                if (Physics.OverlapSphere(temp[0].transform.position + new Vector3(i * 2 - 2, 1.1f, j * 2 - 2), .1f, mask).Length == 0) continue;
+                Instantiate(ACID, temp[0].transform.position + new Vector3(i * 2 - 2, 1.1f, j * 2 - 2), Quaternion.identity);
                 yield return new WaitForSeconds(.2f);
             }
         }
