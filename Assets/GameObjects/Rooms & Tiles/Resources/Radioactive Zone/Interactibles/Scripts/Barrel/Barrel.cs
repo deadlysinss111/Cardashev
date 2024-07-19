@@ -72,7 +72,7 @@ public class Barrel : MonoBehaviour
 
     void SpawnAcidOnTile(Vector3 pos)
     {
-        Physics.Raycast(pos, Vector3.down, out RaycastHit hit);
-        Instantiate(Resources.Load("Radioactive Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, 1.1f, 0), Quaternion.identity);
+        if(Physics.Raycast(pos, Vector3.down, out RaycastHit hit))
+            Instantiate(Resources.Load("Radioactive Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, 1.1f, 0), Quaternion.identity);
     }
 }

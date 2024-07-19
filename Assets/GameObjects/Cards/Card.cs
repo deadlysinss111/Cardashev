@@ -104,7 +104,6 @@ public class Card : MonoBehaviour
         {
             case PreviewZoneType.NONE:
                 _ghostHitboxPrefab = Resources.Load("NullPreview");
-                print(_ghostHitboxPrefab);
                 break;
             case PreviewZoneType.SPHERE:
                 _ghostHitboxPrefab = Resources.Load("SpherePreview");
@@ -346,7 +345,10 @@ public class Card : MonoBehaviour
         {
             // First instantiation
             if (_ghostHitbox == null)
+            {
                 _ghostHitbox = Instantiate((GameObject)_ghostHitboxPrefab);
+                EnsureSelectableTilesByRain();
+            }
 
             // Makes the preview dissapear if the play would be invalid
             if (shouldCullPreview)
@@ -379,11 +381,23 @@ public class Card : MonoBehaviour
             //TrajectoryToolbox.BellCurve(curveOrigin, curveInitVelocity, ref _lineRenderer);
 
             _originFromLastBellCurveCalculated = GI._PManFetcher()._virtualPos;
-            _velocityFromLastBellCurveCalculated = TrajectoryToolbox.BellCurveInitialVelocity(_originFromLastBellCurveCalculated + new Vector3(0, 1, 0), selTilePos, _apex);
+            _velocityFromLastBellCurveCalculated = TrajectoryToolbox.BellCurveInitialVelocity(_originFromLastBellCurveCalculated + new Vector3(0, 1, 0), selTilePos + new Vector3(0, 1, 0), _apex);
             _destinationFromLastBellCurveCalculated = selTilePos;
 
             if (_ghostHitbox != null)
                 TrajectoryToolbox.BellCurve(_originFromLastBellCurveCalculated + new Vector3(0, 1, 0), _velocityFromLastBellCurveCalculated, ref _ghostHitbox.GetComponent<AOEPreviewScript>()._lineRenderer);
+        }
+    }
+
+    protected void EnsureSelectableTilesByRain()
+    {
+        List<GameObject> tiles = _selectableArea.GetSelectableTiles();
+        foreach(GameObject tile in tiles)
+        {
+            if(TrajectoryToolbox.RaycastBellCurve(GI._PManFetcher()._virtualPos + new Vector3(0, 1, 0), tile.transform.position + new Vector3(0, 1, 0), _apex).gameObject != tile)
+            {
+                tile.GetComponent<Tile>().SetSelected(false);
+            }
         }
     }
 
