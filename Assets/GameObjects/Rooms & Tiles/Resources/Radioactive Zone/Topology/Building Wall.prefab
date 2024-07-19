@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 9099410370513784297}
   - component: {fileID: -8385629782037469278}
   - component: {fileID: -6709748631891636370}
+  - component: {fileID: 3000432245737264536}
   m_Layer: 9
   m_Name: Building Wall
   m_TagString: TMTopology
@@ -148,3 +149,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!208 &3000432245737264536
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6959527034630702259}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

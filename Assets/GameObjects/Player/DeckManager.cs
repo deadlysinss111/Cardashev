@@ -26,7 +26,7 @@ public class DeckManager : MonoBehaviour
         _remainsInDeck = new List<GameObject>();
         _drawCooldown = 0;
         _curHandSize = 0;
-        _cardBar = GameObject.Find("CardBar");
+        _cardBar = GameObject.Find("DrawCardBar");
 
 
         LoadDeck();
