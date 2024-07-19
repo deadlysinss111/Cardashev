@@ -81,7 +81,7 @@ abstract public class Enemy : MonoBehaviour
         randomDirection += pos;
         NavMeshHit hit;
         Vector3 finalPosition = Vector3.zero;
-        if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1))
+        if (NavMesh.SamplePosition(randomDirection, out hit, radius*100, 1))
         {
             finalPosition = hit.position;
         }

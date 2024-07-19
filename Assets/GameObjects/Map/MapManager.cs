@@ -172,7 +172,6 @@ public class MapManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         GameObject previousNode = _playerLocation;
         MovePlayerTo(targetNode);
-        print(previousNode.GetComponent<MapNode>().NumberOfNextNode());
         if (previousNode.GetComponent<MapNode>().NumberOfNextNode() > 1)
             StartCoroutine(PathLocker(targetNode));
         else
