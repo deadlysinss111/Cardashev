@@ -132,7 +132,7 @@ public class SelectableArea : MonoBehaviour
     /// <param name="inner_radius">How many cases from inside should be excluded. DO NOT COUNT THE RADIUS</param>
     /// <param name="ignore_interactable">Whether the area should include the tiles below interactables or not</param>
     /// <returns>A list of tiles that are part of the selectable area</returns>
-    public List<GameObject> FindSelectableArea(Vector3 origin, int radius, int inner_radius, bool hitWall = false)
+    public List<GameObject> FindSelectableArea(Vector3 origin, int inner_radius, int radius, bool hitWall = false)
     {
         if (inner_radius >= radius)
         {
