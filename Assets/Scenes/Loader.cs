@@ -102,7 +102,9 @@ public class Loader : MonoBehaviour
     public void LoadRoom(string roomType)
     {
         string path = "Assets/GameObjects/Rooms & Tiles/Resources/" + ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/RoomPrefabs/" + GI._roomType;
-        int size = Directory.GetFiles(path).Length;
+        int metaFilesAmount = Directory.GetFiles(path, "*.meta", SearchOption.TopDirectoryOnly).Length;
+        int size = Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly).Length;
+        size -= metaFilesAmount;
 
         SceneManager.LoadScene(ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + GI._roomType + UnityEngine.Random.Range(1, size).ToString(), LoadSceneMode.Single);
     }

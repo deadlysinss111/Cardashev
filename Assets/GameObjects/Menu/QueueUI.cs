@@ -70,7 +70,8 @@ public class QueueUI : MonoBehaviour
         }
 
         Vector3 pos = segment.transform.localPosition;
-        pos.x = -400 + offset;
+        // Look at here if the original position of segments have an issue (the -800 is half the size of the queubar, maybe it has been rescaled or smth)
+        pos.x = -800 + offset;
         segment.transform.localPosition = pos;
         offset += segment.GetComponent<RectTransform>().rect.width * segment.transform.localScale.x;
     }
