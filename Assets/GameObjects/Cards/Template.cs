@@ -42,7 +42,12 @@ public class TEMPLATE : Card
         _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 0, 0);
 
         manager.SetLeftClickTo(Template);
-        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        manager.SetRightClickTo(() => { 
+            ExitState(); 
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+            if (_ghostHitbox != null)
+                Destroy(_ghostHitbox);
+        });
         manager.SetHoverTo(Template);
     }
 
