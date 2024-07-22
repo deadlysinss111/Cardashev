@@ -26,15 +26,10 @@ public class LaunchGrenade : Card
         };
 
         string desc = $"Launch an impact grenade dealing {stats["damage"]}";
-        base.Init(1, 2, 60, stats, desc, PreviewZoneType.SPHERE);
+        base.Init("Grenade", 1, 2, 60, stats, desc, PreviewZoneType.SPHERE);
 
-        // Add a unique state + id to play the correct card and  not the first of its kind
-        while (PlayerManager.AddState("grenade" + _id.ToString(), EnterGrenadeState, ExitState) == false) _id++;
 
         _grenadePrefab = (GameObject)Resources.Load("Grenade");
-
-        if (TryGetComponent(out _selectableArea) == false)
-            _selectableArea = gameObject.AddComponent<SelectableArea>();
     }
 
     void EnterGrenadeState()

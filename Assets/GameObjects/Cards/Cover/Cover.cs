@@ -27,7 +27,7 @@ public class Cover : Card
             {"duration", 6}
         };
         /* stats fill there */
-        base.Init(2, 4, 60, stats, $"Summon a protection tanking {stats["health"]} dmg for {stats["duration"]}");
+        base.Init("Cover", 2, 4, 60, stats, $"Summon a protection tanking {stats["health"]} dmg for {stats["duration"]}");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("Cover" + _id.ToString(), EnterState, ExitState) == false) _id++;

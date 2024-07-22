@@ -15,7 +15,7 @@ public class HeavyCover : Card
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
         Dictionary<string, int> stats = new Dictionary<string, int>();
         /* stats fill there */
-        base.Init(2, 2, 60, stats);
+        base.Init("HeavyCover", 2, 2, 60, stats);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("HeavyCover" + _id.ToString(), EnterState, ExitState) == false) _id++;

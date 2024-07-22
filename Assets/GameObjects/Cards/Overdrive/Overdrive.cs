@@ -12,7 +12,7 @@ class Overdrive : Card
             {"duration", 10}
         };
 
-        base.Init(2, 4, 80, stats, $"Activate the Critical status for {stats["duration"]} seconds");
+        base.Init("Overdrive", 2, 4, 80, stats, $"Activate the Critical status for {stats["duration"]} seconds");
     }
 
     public override void Effect()

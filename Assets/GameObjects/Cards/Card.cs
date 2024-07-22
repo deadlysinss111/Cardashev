@@ -87,10 +87,11 @@ public class Card : MonoBehaviour
         _isCollectible = false;
     }
 
-    protected void Init(float duration, byte maxLvl, int goldValue, Dictionary<string, int> stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
+    protected void Init(string name, float duration, byte maxLvl, int goldValue, Dictionary<string, int> stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
     {
         _timeStopedEvent = TimeStopedMouseEnter;
 
+        _name = name;
         _duration = duration;
         _maxLv = maxLvl;
         _goldValue = goldValue;
@@ -133,8 +134,26 @@ public class Card : MonoBehaviour
         return _cardEndTimestamp - Time.time;
     }
 
-    virtual protected void EnterState() { }
-    virtual protected void ExitState() { }
+    virtual protected void EnterState() 
+    {
+        PlayerManager manager = GI._PManFetcher();
+
+        manager.SetLeftClickTo(OnLeftClick);
+        manager.SetRightClickTo(() => {
+            ExitState();
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+            if (_ghostHitbox != null)
+                Destroy(_ghostHitbox);
+        });
+        manager.SetHoverTo(Preview);
+    }
+
+    virtual protected void ExitState() 
+    {
+        _selectableArea.ResetSelectable();
+    }
+
+    virtual protected void OnLeftClick() { }
 
     // In shop & rewards behaviour
     // TODO => move it to its own, new class
@@ -280,6 +299,7 @@ public class Card : MonoBehaviour
 
     public virtual void PlayCard()
     {
+        GI._PManFetcher().SetToState(_name + _id.ToString());
         GI._PlayerFetcher().GetComponent<DeckManager>().Play(this);
     }
 
