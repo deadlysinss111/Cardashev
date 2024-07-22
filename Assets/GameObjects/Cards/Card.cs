@@ -20,7 +20,7 @@ public class Card : MonoBehaviour
     public string _name;
     public string _description;
     public float _duration;
-    public int[] _stats;
+    public Dictionary<string, int> _stats;
     public int _goldValue;
 
     // Utilities
@@ -87,7 +87,7 @@ public class Card : MonoBehaviour
         _isCollectible = false;
     }
 
-    protected void Init(float duration, byte maxLvl, int goldValue, int[] stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
+    protected void Init(float duration, byte maxLvl, int goldValue, Dictionary<string, int> stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
     {
         _timeStopedEvent = TimeStopedMouseEnter;
 
@@ -294,10 +294,7 @@ public class Card : MonoBehaviour
     // ------
     public virtual void OnUpgrade()
     {
-        for (int i = 0; i < _stats.Length; i++)
-        {
-            _stats[i] += 2 * _currLv;
-        }
+       
     }
 
     public bool CanUpgrade()

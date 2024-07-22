@@ -53,6 +53,7 @@ public class StatManager : MonoBehaviour
     private int _health; // now read-only to force everyone to use TakeDamage()
     public float _moveSpeed;
     public float _attack;
+    public bool _isCriting;
     [NonSerialized] public int _armor;
     [NonSerialized] public int _maxArmor;
 
@@ -152,6 +153,7 @@ public class StatManager : MonoBehaviour
 
         //_health = _baseHealth;
         _moveSpeed = _baseMoveSpeed;
+        _isCriting = false;
 
         for (int i = _modifiers.Count-1; i >= 0; i--)
         {
@@ -169,8 +171,7 @@ public class StatManager : MonoBehaviour
                     _health += (int)math.floor(_baseHealth * mod._value);
                     break;
                 case Modifier.ModifierType.Critical:
-                    _attack += _baseAttack * mod._value;
-                    _moveSpeed += _baseMoveSpeed * mod._value;
+                    _isCriting = true;
                     //_criticalBar.ActivateBuff(mod._duration);
                     break;
                 case Modifier.ModifierType.Armor:
