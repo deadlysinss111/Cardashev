@@ -42,7 +42,7 @@ public class SceneLoadingAnimation : MonoBehaviour
     void LoadScene()
     {
         GI._roomType = _sceneType;
-        GI._loader.LoadScene("Map", "Room");
+        GI._loader.LoadRoom("Map");
     }
 
     // Update is called once per frame
