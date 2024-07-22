@@ -143,7 +143,8 @@ abstract public class Enemy : MonoBehaviour
         _agent.enabled = false;
         _isMoving = false;
 
-        _animator?.Play("Dying");
+        if (_animator != null)
+            _animator.Play("Dying");
         _deathParticles.Play();
         _eff = ParticleHandle;
 
