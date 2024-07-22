@@ -18,18 +18,24 @@ public class PiercingShot : Card
 
         while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterState, ExitState) == false) _id++;
 
-        if (gameObject.TryGetComponent(out _rotationArrow) == false)
-            _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
+        //if (gameObject.TryGetComponent(out _rotationArrow) == false)
+        //    _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
     }
 
     void EnterState()
     {
-        _rotationArrow.SetArrow(true);
+        //_rotationArrow.SetArrow(true);
 
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(LeftClick);
-        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
-        manager.SetHoverTo(DisplayRange);
+        manager.SetRightClickTo(() => {
+            ExitState();
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+            if (_ghostHitbox != null)
+                Destroy(_ghostHitbox);
+        });
+        manager.SetHoverTo(Preview);
+        manager.SetWallsAsClickable(true);
         GI.UpdateCursorsInverted("Bow", (byte)(GI.CursorRestriction.S_TILES));
     }
 
@@ -49,7 +55,8 @@ public class PiercingShot : Card
 
     void ExitState()
     {
-        _rotationArrow.SetArrow(false);
+        //_rotationArrow.SetArrow(false);
+        GI._PManFetcher().SetWallsAsClickable(false);
         ClearPath();
     }
 

@@ -30,12 +30,14 @@ public class Spit : MonoBehaviour
             }
 
             // Summons an Interactible if it hits the ground
-            else if(HierarchySearcher.FindParentdRecursively(c.gameObject.transform, "Topology") != null)
+            else if(c.gameObject.CompareTag("TMTopology"))
             {
                 RaycastHit hit;
-                Physics.Raycast(transform.position, Vector3.down, out hit);
-                Instantiate(Resources.Load("Radioactive Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, 1.1f, 0), Quaternion.identity);
-                break;
+                if(Physics.Raycast(transform.position + new Vector3(0, 1, 0), Vector3.down, out hit))
+                {
+                    Instantiate(Resources.Load("Radioactive Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, -0.2f, 0), Quaternion.identity);
+                    break;
+                }
             }
         }
         Destroy(gameObject);

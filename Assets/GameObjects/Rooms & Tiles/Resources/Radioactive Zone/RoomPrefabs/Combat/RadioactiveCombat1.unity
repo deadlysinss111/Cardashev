@@ -2406,6 +2406,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 543623654442305885, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _clickableLayers.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 604694692948147374, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
       propertyPath: m_Height
       value: 1.8528099

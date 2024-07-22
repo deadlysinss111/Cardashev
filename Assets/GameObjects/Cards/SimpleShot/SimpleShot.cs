@@ -20,18 +20,24 @@ public class SimpleShot : Card
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("SimpleShot" + _id.ToString(), EnterState, ExitState) == false) _id++;
 
-        if (gameObject.TryGetComponent(out _rotationArrow) == false)
-            _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
+        //if (gameObject.TryGetComponent(out _rotationArrow) == false)
+        //    _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
     }
 
     void EnterState()
     {
-        _rotationArrow.SetArrow(true);
+        //_rotationArrow.SetArrow(true);
 
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(LeftClick);
-        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
-        manager.SetHoverTo(DisplayRange);
+        manager.SetRightClickTo(() => { 
+            ExitState(); 
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+            if (_ghostHitbox != null)
+                Destroy(_ghostHitbox);
+        });
+        manager.SetWallsAsClickable(true);
+        manager.SetHoverTo(Preview);
         GI.UpdateCursorsInverted("Bow", (byte)(GI.CursorRestriction.S_TILES));
     }
 
@@ -43,15 +49,16 @@ public class SimpleShot : Card
         if (manager._lastHit.transform == null) return;
 
         _direction = Vector3.Normalize(manager._lastHit.point - manager._virtualPos);
-        _direction.y = 0;
-        _startingPosition = manager._virtualPos;
+        //_direction.y = 0;
+        _startingPosition = manager._virtualPos+ new Vector3(0, 1, 0);
 
         base.PlayCard();
     }
 
     void ExitState()
     {
-        _rotationArrow.SetArrow(false);
+        //_rotationArrow.SetArrow(false);
+        GI._PManFetcher().SetWallsAsClickable(false);
         ClearPath();
     }
 
