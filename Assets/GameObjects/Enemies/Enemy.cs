@@ -136,14 +136,15 @@ abstract public class Enemy : MonoBehaviour
     public virtual void Defeat()
     {
         //TODO: ue there
-        HierarchySearcher.FindChildRecursively(GameObject.Find("ExitTile(Clone)").transform, "ExitePlate").GetComponent<EscapeTile>().TriggerCondition(_name);
+        HierarchySearcher.FindChildRecursively(GameObject.Find("ExitTile").transform, "ExitePlate").GetComponent<EscapeTile>().TriggerCondition(_name);
 
         if (_lookAtCoroutine != null)
             StopCoroutine(_lookAtCoroutine);
         _agent.enabled = false;
         _isMoving = false;
 
-        _animator.Play("Dying");
+        if (_animator != null)
+            _animator.Play("Dying");
         _deathParticles.Play();
         _eff = ParticleHandle;
 
@@ -154,7 +155,7 @@ abstract public class Enemy : MonoBehaviour
     // Needs to be called every frame after defeat so that the GO is detroyed correctly after the animation
     protected void ParticleHandle()
     {
-        if (_deathParticles.isStopped && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > _animator.GetCurrentAnimatorStateInfo(0).length/2) // Pretty shake condition methinks
+        if (_deathParticles.isStopped /*&& _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > _animator.GetCurrentAnimatorStateInfo(0).length/2*/) // Pretty shake condition methinks
         {
             Destroy(gameObject);
         }
