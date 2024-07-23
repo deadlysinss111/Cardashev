@@ -30,6 +30,30 @@ public class Mastodon : Enemy
         
     }
 
+    // Might be reused later, might be not
+    /*AnimationClip GetClipFromHash(int hash)
+    {
+        AnimationClip clip;
+        if (_hashToClip.TryGetValue(hash, out clip))
+            return clip;
+        else
+            return null;
+    }
+
+    private float getAnimationTime(int layer = 0)
+    {
+        AnimatorStateInfo animState = _animator.GetCurrentAnimatorStateInfo(layer);
+        //Get the current animation hash
+        int currentAnimHash = animState.fullPathHash;
+
+        //Convert the animation hash to animation clip
+        AnimationClip clip = GetClipFromHash(currentAnimHash);
+
+        //Get the current time
+        float currentTime = clip.length * animState.normalizedTime;
+        return currentTime;
+    }*/
+
     // Enemy's decision
     override protected void Act()
     {
@@ -316,6 +340,16 @@ public class Mastodon : Enemy
             yield return null;
         }
 
+        _animator.Play("DiveDown");
+
+        _timeBeforeDecision = 0.5f;
+        while (_timeBeforeDecision > 0)
+        {
+            _timeBeforeDecision -= Time.deltaTime;
+            BetterDebug.Log(_timeBeforeDecision);
+            yield return null;
+        }
+
         // Dive there
         _agent.enabled = false;
         transform.position = destTwo;
@@ -335,6 +369,16 @@ public class Mastodon : Enemy
         while (pathTime > 0)
         {
             pathTime -= Time.deltaTime;
+            yield return null;
+        }
+
+        _animator.Play("DiveUp");
+
+        _timeBeforeDecision = 0.5f;
+        while (_timeBeforeDecision > 0)
+        {
+            _timeBeforeDecision -= Time.deltaTime;
+            BetterDebug.Log(_timeBeforeDecision);
             yield return null;
         }
     }

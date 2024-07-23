@@ -97,6 +97,8 @@ MonoBehaviour:
   _animator: {fileID: 123812801789384745}
   _swipeHitbox: {fileID: 9203003672801310520, guid: 77995b837d8565040ab2b6a1602f163a, type: 3}
   _biteHitbox: {fileID: 9203003672801310520, guid: 6dc2afbd04ea51842bd06b5b35467101, type: 3}
+  _diveDownAnim: {fileID: 7400000, guid: 4b4736c1e626d1a4693f502807d1472d, type: 2}
+  _diveUpAnim: {fileID: 7400000, guid: 381ed8414f929774a8dbdf37fbb40073, type: 2}
 --- !u!54 &4401395458358623120
 Rigidbody:
   m_ObjectHideFlags: 0
