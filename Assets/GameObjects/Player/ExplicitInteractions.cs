@@ -37,6 +37,7 @@ public class ExplicitInteractions : MonoBehaviour
     {
         // Updates the current Interactible
         //_currentInteractible = FindPrefabOriginRecur(_manager._lastHit.collider.gameObject);
+        if (_manager._lastHit.transform == null) return;
         _currentInteractible = FindPrefabOriginRecur(_manager._lastHit.transform.gameObject);
         //print("target is : "+ _currentInteractible.name);
         print(_currentInteractible);

@@ -81,4 +81,18 @@ public class Merchant : Interactible
         // Show to the player his current money
         _canvasData._shopPlayerCredits.text = CurrentRunInformations._goldAmount.ToString();
     }
+
+    public void ExitInterface()
+    {
+        foreach (GameObject go in _shopSupply)
+        {
+            go.SetActive(false);
+        }
+        CanvasGroup shopInterface = GameObject.Find("ShopInterface").GetComponent<CanvasGroup>();
+        shopInterface.alpha = 0;
+        shopInterface.blocksRaycasts = false;
+        shopInterface.interactable = false;
+        GameObject.Find("Credit Icon").SetActive(false);
+        GI._PManFetcher().SetToDefault();
+    }
 }

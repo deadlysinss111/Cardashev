@@ -12140,6 +12140,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Marchand
       objectReference: {fileID: 0}
+    - target: {fileID: 4478475613054005229, guid: 0fc675b6cffe7b74bb61a84973a454ef, type: 3}
+      propertyPath: m_TagString
+      value: InteractibleObject
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12147,6 +12151,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4478475613054005229, guid: 0fc675b6cffe7b74bb61a84973a454ef, type: 3}
       insertIndex: -1
       addedObject: {fileID: 691338590}
+    - targetCorrespondingSourceObject: {fileID: 4478475613054005229, guid: 0fc675b6cffe7b74bb61a84973a454ef, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 691338591}
   m_SourcePrefab: {fileID: 100100000, guid: 0fc675b6cffe7b74bb61a84973a454ef, type: 3}
 --- !u!4 &691338588 stripped
 Transform:
@@ -12177,6 +12184,27 @@ MonoBehaviour:
   _UeOnRaycastHit:
     m_PersistentCalls:
       m_Calls: []
+--- !u!65 &691338591
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691338589}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.14286828, y: 0.2755912, z: 0.1565813}
+  m_Center: {x: -0.03166117, y: 0.16542226, z: 0.018683484}
 --- !u!1001 &695410499
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26023,46 +26051,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 54666149}
-        m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
-        m_MethodName: set_alpha
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 54666149}
-        m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
-        m_MethodName: set_blocksRaycasts
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 54666149}
-        m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
-        m_MethodName: set_interactable
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1937503757}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 691338590}
+        m_TargetAssemblyTypeName: Merchant, Assembly-CSharp
+        m_MethodName: ExitInterface
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
