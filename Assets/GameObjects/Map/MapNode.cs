@@ -241,8 +241,10 @@ public class MapNode : MonoBehaviour
         if (_playerCameThrough) return;
         _isLocked = true;
         GetComponent<MeshRenderer>().material.color = Color.grey;
-        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Primary_Color", new Color(0.114f, 0.114f, 0.114f));
-        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Fresnel_Color", new Color(0.114f, 0.114f, 0.114f));
+        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Secondary_Color", new Color(0.209226f, 0.3180681f, 0.509838f));
+        //_RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Fresnel_Color", new Color(0.114f, 0.114f, 0.114f));
+        _RoomIcon3D.GetComponent<RoomIconAnim>().Lock();
+
     }
 
     public void UnlockNode()

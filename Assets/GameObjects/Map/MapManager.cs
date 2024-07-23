@@ -127,7 +127,7 @@ public class MapManager : MonoBehaviour
         foreach (GameObject n in nodes)
         {
             n.GetComponent<MapNode>().LockNode();
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.2f);
         }
 
         targetNode.GetComponent<MapNode>().LoadRoom();

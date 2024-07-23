@@ -61,6 +61,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -100,8 +102,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nextNodes: []
   _blocker: {fileID: 0}
-  _RoomIcon3D: {fileID: 2875149575880311625}
   _ScaleParent: {fileID: 3769874635027132194}
+  _RoomIcon3D: {fileID: 2875149575880311625}
+  _roomIconSprite: {fileID: 0}
+  _playerCameThrough: 0
   _roomType: 0
 --- !u!65 &871618019776157058
 BoxCollider:
@@ -184,6 +188,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -223,7 +229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
 --- !u!95 &8255252093213431436
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -237,6 +243,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
