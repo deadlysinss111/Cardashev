@@ -77,6 +77,7 @@ public class Ebouillantueur : Enemy
 
     IEnumerator MeleeAttack()
     {
+        _animator.Play("Puke");
         Collider[] temp = Physics.OverlapSphere(transform.position - Vector3.up * 2, 0.1f);
         _timeBeforeDecision = 9 * .2f + .5f;
         LayerMask mask = LayerMask.NameToLayer("TMTopology");
@@ -99,6 +100,7 @@ public class Ebouillantueur : Enemy
             //GameObject target
         }*/
         _timeBeforeDecision = 4f;
+        _animator.Play("Shooting");
         while( _timeBeforeDecision < 1.5f )
         {
             yield return null;
@@ -156,5 +158,6 @@ public class Ebouillantueur : Enemy
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _timeBeforeDecision = GetPathTime(path);
+        _animator.Play("Walking");
     }
 }

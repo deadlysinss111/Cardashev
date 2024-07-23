@@ -155,7 +155,7 @@ abstract public class Enemy : MonoBehaviour
     // Needs to be called every frame after defeat so that the GO is detroyed correctly after the animation
     protected void ParticleHandle()
     {
-        if (_deathParticles.isStopped /*&& _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > _animator.GetCurrentAnimatorStateInfo(0).length/2*/) // Pretty shake condition methinks
+        if (_deathParticles.isStopped && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > _animator.GetCurrentAnimatorStateInfo(0).length/2) // Pretty shaky condition methinks
         {
             Destroy(gameObject);
         }

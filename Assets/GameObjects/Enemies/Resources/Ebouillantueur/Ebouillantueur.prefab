@@ -10207,7 +10207,7 @@ MonoBehaviour:
   _health: 30
   _hurtParticles: {fileID: 7889270962362218549}
   _deathParticles: {fileID: 5195263641888954999}
-  _animator: {fileID: 0}
+  _animator: {fileID: 2087583024169921763}
   _bullet: {fileID: 3204624112210869285, guid: d763c541be426c146bd0681da929da78, type: 3}
 --- !u!1001 &3208833943100812635
 PrefabInstance:
