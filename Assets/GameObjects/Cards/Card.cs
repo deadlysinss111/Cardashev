@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer.Internal;
 using UnityEngine;
 using UnityEngine.Events;
@@ -102,15 +101,7 @@ public class Card : MonoBehaviour
         else
             _lineRenderer = null;
 
-        // Add a unique state + id to play the correct card and  not the first of its kind
-        while (PlayerManager.AddState(_name + _id.ToString(), EnterState, ExitState) == false) _id++;
-
-        if (TryGetComponent(out _selectableArea) == false)
-            _selectableArea = gameObject.AddComponent<SelectableArea>();
-        else
-            _selectableArea = GetComponent<SelectableArea>();
-
-        switch (previewType)
+        switch(previewType)
         {
             case PreviewZoneType.NONE:
                 _ghostHitboxPrefab = Resources.Load("NullPreview");
@@ -132,9 +123,6 @@ public class Card : MonoBehaviour
     {
         return _cardEndTimestamp - Time.time;
     }
-
-    virtual protected void EnterState() { }
-    virtual protected void ExitState() { }
 
     // In shop & rewards behaviour
     // TODO => move it to its own, new class
