@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Windows.Speech;
 
 // replace all TEMPLATE
 
@@ -12,9 +15,13 @@ public class SecondSleeve : Card
     private void Awake()
     {
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
-        int[] stats = new int[0];
+        //int[] stats = new int[2];
+        Dictionary<string, int> stats = new Dictionary<string, int>()
+        {
+            {"damage", 32}
+        };
         /* stats fill there */
-        base.Init(1, 2, 60, stats);
+        base.Init(1, 2, 60, stats, "");
 
 
         // Add a unique state + id to play the correct card and  not the first of its kind
