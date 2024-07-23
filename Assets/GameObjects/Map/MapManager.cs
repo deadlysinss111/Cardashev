@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.XR;
 using Random = UnityEngine.Random;
 
 public class MapManager : MonoBehaviour
@@ -127,10 +125,13 @@ public class MapManager : MonoBehaviour
         foreach (GameObject n in nodes)
         {
             n.GetComponent<MapNode>().LockNode();
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(.15f);
         }
 
-        targetNode.GetComponent<MapNode>().LoadRoom();
+        if (targetNode.GetComponent<MapNode>()._stringType == "Event")
+            GenerateRandomEvent();
+        else
+            targetNode.GetComponent<MapNode>().LoadRoom();
     }
 
     void RecursivePathing(ref List<GameObject> nodes, MapNode curNode)
@@ -176,6 +177,12 @@ public class MapManager : MonoBehaviour
             StartCoroutine(PathLocker(targetNode));
         else
             targetNode.GetComponent<MapNode>().LoadRoom();
+    }
+
+    void GenerateRandomEvent()
+    {
+        // generate the event via a coroutine
+        // display the event prompt on the canvas while the event is generating.
     }
 
     void MoveCloud()
