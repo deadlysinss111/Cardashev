@@ -41,6 +41,7 @@ public class Merchant : Interactible
                 curCard.GetComponent<Animator>().SetTrigger("Shake");
                 return Card.CollectibleState.NOTHING;
             });
+            _shopSupply[i].SetActive(false);
         }
     }
 
@@ -66,6 +67,10 @@ public class Merchant : Interactible
 
     void DrawOfferedCards()
     {
+        foreach(GameObject go in _shopSupply)
+        {
+            go.SetActive(true);
+        }
         GI._PManFetcher().SetToState("Empty");
         CanvasGroup shopInterface = _interface.GetComponent<CanvasGroup>();
         shopInterface.alpha = 1;
