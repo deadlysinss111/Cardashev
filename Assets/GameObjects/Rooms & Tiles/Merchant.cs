@@ -46,6 +46,7 @@ public class Merchant : Interactible
 
     public override void OnRaycastHit()
     {
+        print("hitted");
         if (Vector3.Distance(this.transform.position, _playerRef.transform.position) <= _RaycastHitDist)
             StartCoroutine(BandAidOffsetDrawing());
         else

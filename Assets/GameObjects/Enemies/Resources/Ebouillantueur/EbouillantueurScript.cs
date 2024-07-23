@@ -152,8 +152,14 @@ public class Ebouillantueur : Enemy
 
         if (dest == Vector3.zero) throw new Exception("error in targeting AI for ebouillantueur");
 
-        _agent.SetDestination(dest);
         NavMeshPath path = new NavMeshPath();
+
+        if( false == Physics.Raycast(dest + new Vector3(0, 2, 0), Vector3.down, out RaycastHit hit))
+            throw new Exception("error in targeting raycast for ebouillantueur");
+
+        dest = hit.transform.position + new Vector3(0, 1, 0);
+        _agent.SetDestination(dest);
+
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _timeBeforeDecision = GetPathTime(path);
     }

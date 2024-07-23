@@ -49,7 +49,7 @@ public class JackLever : Interactible
             yield return null;
         }
 
-        HierarchySearcher.FindParentdRecursively(transform, "Jackhammer(Clone)").GetComponent<JackHammer>().Operating(true);
+        HierarchySearcher.FindParentdRecursively(transform, "Jackhammer").GetComponent<JackHammer>().Operating(true);
     }
 
     public override void Kill()

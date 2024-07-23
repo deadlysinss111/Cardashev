@@ -7,7 +7,7 @@ public class AnimatorJackHammer : MonoBehaviour
 {
     public void Move()
     {
-        HierarchySearcher.FindParentdRecursively(transform, "Jackhammer(Clone)").GetComponent<JackHammer>().Move();
+        HierarchySearcher.FindParentdRecursively(transform, "Jackhammer").GetComponent<JackHammer>().Move();
     }
     public void Bake()
     {
