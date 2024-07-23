@@ -13,14 +13,8 @@ public class PiercingShot : Card
     void Awake()
     {
         _duration = 4f;
-        Dictionary<string, int> stats = new Dictionary<string, int>()
-        {
-            {"damage", 8},
-            {"critDamage", 18 },
-            {"speed", 20 },
-            {"critSpeed", 100 },
-        };
-        base.Init(3, 4, 85, stats, $"Shoot a powerful bullet dealing {stats["damage"]} dmg. Critical: Damage and speed increased.");
+        int[] stats = new int[2] { 6, 24 };
+        base.Init(3, 4, 85, stats, $"Take aim and perform a powerfull shot that deals {stats[0]} dmg. Deals {stats[1]} instead if it is a critical strike");
 
         while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterState, ExitState) == false) _id++;
 
@@ -77,15 +71,8 @@ public class PiercingShot : Card
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
         _startingPosition.y += 1.5f;
+        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 100, _stats[1], 1.5f);
 
-        if (GI._PManFetcher()._statManagerRef._isCriting)
-        {
-            bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, _stats["critSpeed"], _stats["critDamage"], 1.5f);
-        }
-        else
-        {
-            bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, _stats["speed"], _stats["damage"], 1.5f);
-        }
         base.Effect();
     }
 

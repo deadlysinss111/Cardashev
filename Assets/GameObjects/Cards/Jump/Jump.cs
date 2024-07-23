@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Rendering.Universal;
 
 public class Jump : Card
 {
@@ -10,13 +8,8 @@ public class Jump : Card
 
     private void Awake()
     {
-        Dictionary<string, int> stats = new Dictionary<string, int>()
-        {
-            {"innerRange", 4},
-            {"outerRange", 10}
-        };
-
-        base.Init(2.4f, 4, 40, stats, $"Perform a jump in a radius of {stats["innerRange"]}-{stats["outerRange"]} tiles.");
+        int[] stats = new int[2] { 10, 4 };
+        base.Init(2.4f, 4, 40, stats, $"perform a jump to the target tile in a radius of {stats[0]} cases.");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("jump" + _id.ToString(), EnterJumpState, ExitState) == false) _id++;
@@ -28,7 +21,7 @@ public class Jump : Card
     void EnterJumpState()
     {
         _selectableArea.SetSelectableEntites(false, false, false, true);
-        _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, _stats["innerRange"], _stats["outerRange"]);
+        _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, _stats[0], _stats[1]);
 
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(TriggerJump);

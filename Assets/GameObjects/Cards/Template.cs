@@ -21,11 +21,7 @@ public class TEMPLATE : Card
     private void Awake()
     {
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
-        Dictionary<string, int> stats = new Dictionary<string, int>()
-        {
-            {"", 0}
-        };
-        
+        int[] stats = new int[0];
         /* stats fill there */
         base.Init(2, 2, 60, stats);
 

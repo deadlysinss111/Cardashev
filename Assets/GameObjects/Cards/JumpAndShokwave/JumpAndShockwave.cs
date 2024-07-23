@@ -8,13 +8,8 @@ public class JumpAndShockwave : Card
 {
     private void Awake()
     {
-        Dictionary<string, int> stats = new Dictionary<string, int>()
-        {
-            {"damage", 15},
-            {"innerRange", 4},
-            {"outerRange", 8}
-        };
-        base.Init(3, 4, 80, stats, $"Jump to a nearby, dealing {stats["damage"]} dmg on landing", PreviewZoneType.ELLIPSIS);
+        int[] stats = new int[3] { 15, 8, 4 };
+        base.Init(3, 4, 80, stats, $"perform a jump to the target tile, generating a shockwave that deals {stats[0]} dmg to ennemies in range", PreviewZoneType.ELLIPSIS);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("jumpAndShockwave" + _id.ToString(), EnterJumpShockwaveState, ExitState) == false) _id++;
@@ -26,7 +21,7 @@ public class JumpAndShockwave : Card
     void EnterJumpShockwaveState()
     {
         _selectableArea.SetSelectableEntites(false, false, false, true);
-        _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, _stats["innerRange"], _stats["outerRange"]);
+        _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, _stats[1], _stats[2]);
 
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(TriggerJump);

@@ -7,14 +7,12 @@ public class SimpleShot : Card
 {
     Vector3 _direction;
     Vector3 _startingPosition;
+    int _damage = 10;
 
     private void Awake()
     {
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
-        Dictionary<string, int> stats = new Dictionary<string, int>()
-        {
-            {"damage", 10}
-        };
+        int[] stats = new int[0];
         /* stats fill there */
         base.Init(1, 2, 60, stats);
 
@@ -75,7 +73,7 @@ public class SimpleShot : Card
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
         _startingPosition.y += 1.5f;
-        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 10, _stats["damage"]);
+        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 10, _damage);
 
         base.Effect();
     }

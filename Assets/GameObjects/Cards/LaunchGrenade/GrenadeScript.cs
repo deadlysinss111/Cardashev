@@ -8,7 +8,6 @@ public class GrenadeScript : MonoBehaviour
     public Vector3 _velocity;
     public Vector3 _origin;
     public int _dmg;
-    public int _explosionRadius;
 
     private void Start()
     {
@@ -25,7 +24,7 @@ public class GrenadeScript : MonoBehaviour
         //    return;
 
         // Grenade explosion on ground hit
-        Collider[] hits = Physics.OverlapSphere(transform.position, _explosionRadius);
+        Collider[] hits = Physics.OverlapSphere(transform.position, 3);
         foreach (Collider c in hits)
         {
             if (c.gameObject.TryGetComponent<StatManager>(out manager))
@@ -45,9 +44,7 @@ public class GrenadeScript : MonoBehaviour
                 DoDamage(target.transform.parent.gameObject);
             }
         }
-        GameObject temp = Instantiate((GameObject)Resources.Load("GrenadeAOE"));
-        temp.transform.position = transform.position;
-        temp.transform.localScale = new Vector3(_explosionRadius, _explosionRadius, _explosionRadius);
+        Instantiate((GameObject)Resources.Load("GrenadeAOE")).transform.position = transform.position;
         Destroy(gameObject);
     }
 
