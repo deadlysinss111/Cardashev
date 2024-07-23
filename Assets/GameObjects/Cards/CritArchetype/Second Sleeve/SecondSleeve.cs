@@ -21,7 +21,7 @@ public class SecondSleeve : Card
             {"damage", 32}
         };
         /* stats fill there */
-        base.Init("SecondSleeve", 1, 2, 60, stats, "");
+        base.Init(1, 2, 60, stats, "");
 
 
         // Add a unique state + id to play the correct card and  not the first of its kind

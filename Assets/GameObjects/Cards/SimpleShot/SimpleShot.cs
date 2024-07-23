@@ -16,21 +16,34 @@ public class SimpleShot : Card
             {"damage", 10}
         };
         /* stats fill there */
-        base.Init("SimpleShot", 1, 2, 60, stats);
+        base.Init(1, 2, 60, stats);
+
+
+        // Add a unique state + id to play the correct card and  not the first of its kind
+        while (PlayerManager.AddState("SimpleShot" + _id.ToString(), EnterState, ExitState) == false) _id++;
 
         //if (gameObject.TryGetComponent(out _rotationArrow) == false)
         //    _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
     }
 
-    override protected void EnterState()
+    void EnterState()
     {
         //_rotationArrow.SetArrow(true);
-        GI._PManFetcher().SetWallsAsClickable(true);
 
-        base.EnterState();
+        PlayerManager manager = GI._PManFetcher();
+        manager.SetLeftClickTo(LeftClick);
+        manager.SetRightClickTo(() => { 
+            ExitState(); 
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+            if (_ghostHitbox != null)
+                Destroy(_ghostHitbox);
+        });
+        manager.SetWallsAsClickable(true);
+        manager.SetHoverTo(Preview);
+        GI.UpdateCursorsInverted("Bow", (byte)(GI.CursorRestriction.S_TILES));
     }
 
-    override protected void OnLeftClick()
+    void LeftClick()
     {
         PlayerManager manager = GI._PManFetcher();
         manager.SetToDefault();
@@ -44,11 +57,11 @@ public class SimpleShot : Card
         base.PlayCard();
     }
 
-    override protected void ExitState()
+    void ExitState()
     {
+        //_rotationArrow.SetArrow(false);
         GI._PManFetcher().SetWallsAsClickable(false);
-
-        base.ExitState();
+        ClearPath();
     }
 
     void DisplayRange()
@@ -65,6 +78,11 @@ public class SimpleShot : Card
         bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 10, _stats["damage"]);
 
         base.Effect();
+    }
+
+    public override void PlayCard()
+    {
+        GI._PManFetcher().SetToState("SimpleShot" + _id.ToString());
     }
 
     public override void OnUpgrade()
