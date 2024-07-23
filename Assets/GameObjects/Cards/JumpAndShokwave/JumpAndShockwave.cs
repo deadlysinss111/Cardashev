@@ -41,13 +41,6 @@ public class JumpAndShockwave : Card
         GI.UpdateCursorsInverted("Cross", (byte)(GI.CursorRestriction.S_TILES));
     }
 
-    new protected void Preview()
-    {
-        base.Preview();
-
-        _ghostHitbox.transform.localScale = new Vector3(10, 2, 10);
-    }
-
     void ExitState()
     {
         _selectableArea.ResetSelectable();
