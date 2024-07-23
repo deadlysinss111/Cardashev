@@ -23,7 +23,9 @@ public class EventManager : MonoBehaviour
 
     public RandomEvent[] events;
 
-    // <========== Function Library ==========> //
+    // <========== Event Function Library ==========> //
+    // Here you can code any function that would be used by an event that doesn't fit in any class in particular.
+
     public void ChangeGoldAmount(int amount)
     {
         CurrentRunInformations._goldAmount += amount;
