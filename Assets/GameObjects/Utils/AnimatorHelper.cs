@@ -30,6 +30,14 @@ public static class AnimatorHelper
         return clip.length * animState.normalizedTime;
     }
 
+    // https://discussions.unity.com/t/getting-the-current-frame-of-an-animation-clip/610627
+    public static int GetAnimationCurrentFrame(Animator animator, int layer = 0)
+    {
+        AnimatorClipInfo clip = animator.GetCurrentAnimatorClipInfo(layer)[0];
+
+        return (int)(GetAnimationCurrentTime(animator, layer)*clip.clip.frameRate);
+    }
+
     public static string GetCurrentAnimationName(Animator animator, int layer = 0)
     {
         foreach (var clip in GetArrayAnimationClips(animator))

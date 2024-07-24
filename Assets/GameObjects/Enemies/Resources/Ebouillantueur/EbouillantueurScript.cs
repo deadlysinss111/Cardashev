@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -53,8 +54,9 @@ public class Ebouillantueur : Enemy
         {
             if (playerDist < 5 && _meleeCooldown <= 0)
             {
-                //print("Meleed player");
-                _meleeCooldown = 10;
+                print("Meleed player");
+                _meleeCooldown = 10 + AnimatorHelper.GetAnimationLength(_animator, "momithrewup");
+                _timeBeforeDecision = _meleeCooldown;
                 StartCoroutine(MeleeAttack());
             }
             else if (playerDist > 20)
@@ -78,6 +80,16 @@ public class Ebouillantueur : Enemy
     IEnumerator MeleeAttack()
     {
         _animator.Play("Puke");
+
+        yield return new WaitForNextFrameUnit();
+
+        print(AnimatorHelper.GetAnimationCurrentFrame(_animator));
+        while (AnimatorHelper.GetAnimationCurrentFrame(_animator) <= 55)
+        {
+            print(AnimatorHelper.GetAnimationCurrentFrame(_animator));
+            yield return null;
+        }
+
         Collider[] temp = Physics.OverlapSphere(transform.position - Vector3.up * 2, 0.1f);
         _timeBeforeDecision = 9 * .2f + .5f;
         LayerMask mask = LayerMask.NameToLayer("TMTopology");
@@ -91,6 +103,11 @@ public class Ebouillantueur : Enemy
                 yield return new WaitForSeconds(.2f);
             }
         }
+
+        while (AnimatorHelper.GetAnimationCurrentTime(_animator) <= _animator.GetCurrentAnimatorStateInfo(0).length)
+        {
+            yield return null;
+        }
     }
 
     IEnumerator ShootPlayer()
@@ -99,10 +116,12 @@ public class Ebouillantueur : Enemy
         {
             //GameObject target
         }*/
-        _timeBeforeDecision = 4f;
+        _timeBeforeDecision = 4f + AnimatorHelper.GetAnimationLength(_animator, "Shooting");
         _animator.Play("Shooting");
-        while( _timeBeforeDecision < 1.5f )
+        print(AnimatorHelper.GetAnimationCurrentFrame(_animator)); // TODO: Why 127??
+        while( AnimatorHelper.GetAnimationCurrentFrame(_animator) < 40 )
         {
+            print(AnimatorHelper.GetAnimationCurrentFrame(_animator));
             yield return null;
         }
 
