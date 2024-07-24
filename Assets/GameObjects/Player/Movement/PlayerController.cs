@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 internal struct ANIMSTATES
 {
@@ -40,6 +41,10 @@ public class PlayerController : MonoBehaviour
     public float _baseSpeed;
     public bool _resetMoveMult;
 
+    [SerializeField] GameObject _destinationParticlePrefab;
+    List<GameObject> _movementParticleInstances;
+    List<Vector3> _plannedDestinations;
+
 
     /*
      METHODS
@@ -52,6 +57,9 @@ public class PlayerController : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
         _previewLineRenderer = GameObject.Find("RoomAnchor").GetComponent<LineRenderer>();
         _paths = new List<List<Vector3>>();
+
+        _plannedDestinations = new List<Vector3>();
+        _movementParticleInstances = new List<GameObject>();
 
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         GI._PManFetcher()._virtualPos = _agent.transform.position;
@@ -143,6 +151,9 @@ public class PlayerController : MonoBehaviour
         
         // Data duplication so that the closure takes the right data
         Vector3 vect = _virtualDestination;
+        vect.y += 0.51f;
+
+        _plannedDestinations.Add(vect);
 
         // We need to dynamically create a card in order to subscribe it to the Queue
         List<Vector3> slicedPath = new List<Vector3>();
@@ -153,6 +164,9 @@ public class PlayerController : MonoBehaviour
         {
             _agent.destination = vect;
             StartCoroutine(UpdatePath(slicedPath));
+
+            GameObject movementParticleInstance = Instantiate(_destinationParticlePrefab, vect, Quaternion.identity);
+            _movementParticleInstances.Add(movementParticleInstance);
         };
         moveCard._duration = _lastCalculatedWalkTime;
 
@@ -209,13 +223,13 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         _paths.RemoveAt(0);
-
+        ClearRipples();
     }
 
     // ------
     // HANDLES HOW THE PLAYER LOOKS (ANIMS N SHIT)
     // ------
-    
+
     // Rotate the player to face the target destination
     private void FaceTarget()
     {
@@ -260,5 +274,30 @@ public class PlayerController : MonoBehaviour
             time += Vector3.Distance(start, end) / _agent.speed;
         }
         return time;
+    }
+
+    void ClearRipples()
+    {
+        int i = 0;
+        foreach (GameObject movementParticleInstance in _movementParticleInstances)
+        {
+            if (i < 1)
+            {
+                i++;
+                Destroy(movementParticleInstance);
+            }
+        }      
+        _movementParticleInstances.Clear();
+    }
+
+    void CreateRipples(List<Vector3> positions)
+    {
+        foreach (Vector3 position in positions)
+        {
+            Vector3 ripplePosition = position;
+            ripplePosition.y += 0.51f;
+            GameObject movementParticleInstance = Instantiate(_destinationParticlePrefab, ripplePosition, Quaternion.identity);
+            _movementParticleInstances.Add(movementParticleInstance);
+        }
     }
 }

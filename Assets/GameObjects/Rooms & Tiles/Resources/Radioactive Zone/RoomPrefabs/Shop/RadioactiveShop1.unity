@@ -29923,6 +29923,10 @@ PrefabInstance:
       propertyPath: _takeDamageEffect
       value: 
       objectReference: {fileID: 441014475}
+    - target: {fileID: 9070945487576146490, guid: 7b43b61571be86445b27d80fb4caf581, type: 3}
+      propertyPath: _destinationParticlePrefab
+      value: 
+      objectReference: {fileID: 6500486944387539853, guid: 336e7f9ea6d0e6b41bd2bd1d071e24d8, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

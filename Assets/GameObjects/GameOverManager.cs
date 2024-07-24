@@ -72,7 +72,7 @@ public class GameOverManager : MonoBehaviour
     public void Quit()
     {
         _inGameOver = true;
-        SceneManager.LoadScene("Room & Tile tests");
+        SceneManager.LoadScene("EntryPoint");
     }
 
     void StopGame()
@@ -84,5 +84,10 @@ public class GameOverManager : MonoBehaviour
     void DisableAllScripts()
     {
         _playerManager.SetToState("Empty");
+    }
+
+    void DeckDisplay()
+    {
+
     }
 }
