@@ -27,6 +27,7 @@ abstract public class Enemy : MonoBehaviour
     [SerializeField] protected ParticleSystem _hurtParticles;
     [SerializeField] protected ParticleSystem _deathParticles;
     //// Everything else
+    [SerializeField] protected Animator _animator;
     protected bool _waitForDestroy;
     protected string _name;
     private Type _type;
@@ -81,7 +82,7 @@ abstract public class Enemy : MonoBehaviour
         randomDirection += pos;
         NavMeshHit hit;
         Vector3 finalPosition = Vector3.zero;
-        if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1))
+        if (NavMesh.SamplePosition(randomDirection, out hit, radius*100, 1))
         {
             finalPosition = hit.position;
         }
@@ -135,13 +136,15 @@ abstract public class Enemy : MonoBehaviour
     public virtual void Defeat()
     {
         //TODO: ue there
-        HierarchySearcher.FindChildRecursively(GameObject.Find("ExitTile(Clone)").transform, "ExitePlate").GetComponent<EscapeTile>().TriggerCondition(_name);
+        HierarchySearcher.FindChildRecursively(GameObject.Find("ExitTile").transform, "ExitePlate").GetComponent<EscapeTile>().TriggerCondition(_name);
 
         if (_lookAtCoroutine != null)
             StopCoroutine(_lookAtCoroutine);
         _agent.enabled = false;
         _isMoving = false;
 
+        if (_animator != null)
+            _animator.Play("Dying");
         _deathParticles.Play();
         _eff = ParticleHandle;
 
@@ -152,7 +155,7 @@ abstract public class Enemy : MonoBehaviour
     // Needs to be called every frame after defeat so that the GO is detroyed correctly after the animation
     protected void ParticleHandle()
     {
-        if (_deathParticles.isStopped)
+        if (_deathParticles.isStopped /*&& _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > _animator.GetCurrentAnimatorStateInfo(0).length/2*/) // Pretty shake condition methinks
         {
             Destroy(gameObject);
         }

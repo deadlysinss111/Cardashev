@@ -269,4 +269,79 @@ public static class TrajectoryToolbox
 
         return null;
     }
+
+    // Trajectories for line rendering (such as shoots)
+
+    static public List<Vector3> LineRenderWithDirection(Vector3 origin, Vector3 direction, ref LineRenderer lineRenderer)
+    {
+        List<Vector3> pathPoints = new List<Vector3>();
+
+        // We initialize base values
+        float step = 0.01f;
+        Vector3 virtualPos = origin;
+        Vector3 nextPos;
+        float overlap;
+
+        // This loop will calculate next position, check if we hit something and add point to draw in prediction each iteration 
+        for (int i = 1; i < 500; i++)
+        {
+            nextPos = virtualPos + direction * step;
+            pathPoints.Add(virtualPos);
+            // Overlap our rays by small margin to ensure we never miss a surface
+            overlap = Vector3.Distance(virtualPos, nextPos) * 1.1f;
+
+            //When hitting a surface we want to show the surface marker and stop updating our line
+            if (Physics.Raycast(virtualPos, direction.normalized, out RaycastHit hit, overlap))
+            {
+                break;
+            }
+
+            virtualPos = nextPos;
+        }
+
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
+
+        return pathPoints;
+    }
+
+    static public List<Vector3> LineRenderWithTarget(Vector3 origin, Vector3 target, ref LineRenderer lineRenderer, bool StopAtTarget = false)
+    {
+        List<Vector3> pathPoints = new List<Vector3>();
+
+        // We initialize base values
+        float step = 0.01f;
+        Vector3 virtualPos = origin;
+        Vector3 nextPos;
+        float overlap;
+        Vector3 direction = target - origin;
+        float closestDistanceUntilNow = 100f;
+
+        // This loop will calculate next position, check if we hit something and add point to draw in prediction each iteration 
+        for (int i = 1; i < 500; i++)
+        {
+            nextPos = virtualPos + direction * step;
+            pathPoints.Add(virtualPos);
+            // Overlap our rays by small margin to ensure we never miss a surface
+            overlap = Vector3.Distance(virtualPos, nextPos) * 1.1f;
+
+            if (Vector3.Distance(virtualPos, target) < closestDistanceUntilNow)
+                closestDistanceUntilNow = Vector3.Distance(virtualPos, target);
+            else
+                break;
+
+            //When hitting a surface we want to show the surface marker and stop updating our line
+            if (Physics.Raycast(virtualPos, direction.normalized, out RaycastHit hit, overlap))
+            {
+                break;
+            }
+
+            virtualPos = nextPos;
+        }
+
+        lineRenderer.positionCount = pathPoints.Count;
+        lineRenderer.SetPositions(pathPoints.ToArray());// Update the line renderer positions
+
+        return pathPoints;
+    }
 }

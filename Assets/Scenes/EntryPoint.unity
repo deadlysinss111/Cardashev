@@ -212,7 +212,7 @@ Transform:
   m_GameObject: {fileID: 267506910}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.592285, y: 15.81027, z: -18.099161}
+  m_LocalPosition: {x: 1000, y: 1000, z: 1000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -336,6 +336,146 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].name
+      value: The Shopkeeper's offer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[1].name
+      value: Marchant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].description
+      value: 'The Shopkeeper is handing a free purse of gold towards you.
+
+        Do
+        you accept ?'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[1].description
+      value: 'The merchant wants to give you gold.
+
+        Do you accept ?'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[1].choices.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].name
+      value: Yes
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].name
+      value: No
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[1].choices.Array.data[0].name
+      value: Yes
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[1].choices.Array.data[1].name
+      value: No
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].description
+      value: The Shopkeeper tricked you and struck you with a tazer when you tried
+        to take his gift. You wake up a few minutes later with 80 less gold in your
+        pockets...
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].description
+      value: The Shopkeeper acknowleges your wisedom and leaves the purse behind
+        him. You find 40 gold pieces inside it.
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].subsequentEvent.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].result.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[1].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].subsequentEvent.Array.data[0].choices.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].result.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 754862409}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].result.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 754862409}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].result.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[1].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangeGoldAmount
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].result.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangeGoldAmount
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: EventManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].result.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: EventManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: -80
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].result.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].result.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 8183554543826387389, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
       propertyPath: m_Name
       value: Map
@@ -346,6 +486,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+--- !u!114 &754862409 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+  m_PrefabInstance: {fileID: 754862408}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdfb58bbc31ceca41abea158a0dd16e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &855544024
 GameObject:
   m_ObjectHideFlags: 0

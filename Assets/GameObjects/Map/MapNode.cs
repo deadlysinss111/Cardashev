@@ -31,7 +31,7 @@ public class MapNode : MonoBehaviour
 
     [NonSerialized] public bool _isStartingNode;
     [NonSerialized] public int _startingXCoord;
-    string _stringType;
+    public string _stringType;
     //string _linkedScene = "Shop";
     public bool _playerCameThrough;
     bool _isLocked;
@@ -125,6 +125,7 @@ public class MapNode : MonoBehaviour
 
     public void LoadRoom()
     {
+        if (_stringType == "Event") return;
         if (gameObject.name != "Original Node")
         {
             GI._currentRoomIcon = _roomIconSprite;
@@ -200,8 +201,7 @@ public class MapNode : MonoBehaviour
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
                     _ScaleParent.transform.localScale *= 0.3f;
                     SetDefaultColorTo(Color.green);
-                    //_stringType = "Event";
-                    _stringType = "Combat";
+                    _stringType = "Event";
                     break;
                 }
             case RoomType.Combat:
@@ -209,7 +209,7 @@ public class MapNode : MonoBehaviour
                     _roomIconSprite = resources.COMBAT_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.COMBAT_ICON;
                     SetDefaultColorTo(Color.red);
-                    _stringType = "Combat";
+                    _stringType = "Shop";
                     break;
                 }
             case RoomType.Elite:
@@ -240,9 +240,11 @@ public class MapNode : MonoBehaviour
     {
         if (_playerCameThrough) return;
         _isLocked = true;
-        GetComponent<MeshRenderer>().material.color = Color.grey;
-        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Primary_Color", new Color(0.114f, 0.114f, 0.114f));
-        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Fresnel_Color", new Color(0.114f, 0.114f, 0.114f));
+        //GetComponent<MeshRenderer>().material.color = Color.grey;
+        _RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Secondary_Color", new Color(0.209226f, 0.3180681f, 0.509838f));
+        //_RoomIcon3D.GetComponent<MeshRenderer>().material.SetColor("_Fresnel_Color", new Color(0.114f, 0.114f, 0.114f));
+        _RoomIcon3D.GetComponent<RoomIconAnim>().Lock();
+
     }
 
     public void UnlockNode()

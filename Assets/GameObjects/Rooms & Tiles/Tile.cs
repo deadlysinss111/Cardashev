@@ -12,17 +12,17 @@ public class Tile : MonoBehaviour
 
     void OnMouseEnter()
     {
-        _startcolor = GetComponent<MeshRenderer>().material.color;
+        //_startcolor = GetComponent<MeshRenderer>().material.color;
 
-        if (gameObject.layer == 9)
+        if (gameObject.layer == 9 && false == GI._PManFetcher()._isWallClickable)
             return;
 
-        GetComponent<MeshRenderer>().material.color = Color.yellow;
-        //GI._PManFetcher().TriggerMouseHovering();
+        //GetComponent<MeshRenderer>().material.color = Color.yellow;
+        GI._PManFetcher().TriggerMouseHovering();
     }
     void OnMouseExit()
     {
-        GetComponent<MeshRenderer>().material.color = _startcolor;
+        //GetComponent<MeshRenderer>().material.color = _startcolor;
     }
 
     public void SetSelected(bool value, bool hitWall = false)

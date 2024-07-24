@@ -36,7 +36,8 @@ public class PlayerManager : MonoBehaviour
     [NonSerialized] public PlayerInput _pInput;
     [NonSerialized] public Vector3 _virtualPos;
     [NonSerialized] public RaycastHit _lastHit;
-    [SerializeField] LayerMask _clickableLayers;    // TODO: Implement that
+    [SerializeField] LayerMask _clickableLayers;
+    public bool _isWallClickable = false;
 
 
     /*
@@ -153,6 +154,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _lastHit, 100,  _clickableLayers))
         {
+            //print(_lastHit.transform.gameObject.name);
             if (_disablingState)
             {
                 SetToLastState();
@@ -333,5 +335,20 @@ public class PlayerManager : MonoBehaviour
     private void PlayerDeath()
     {
         print("u dead");
+    }
+
+    // Ultra unsafe function for now
+    public void SetWallsAsClickable(bool value)
+    {
+        if (value && false == _isWallClickable)
+        {
+            _isWallClickable = true;
+            _clickableLayers = LayerMask.GetMask(new string[2] { "Default", "Wall" });
+        }
+        else
+        {
+            _isWallClickable = false;
+            _clickableLayers = 1;
+        }
     }
 }

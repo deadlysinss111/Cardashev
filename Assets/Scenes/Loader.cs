@@ -4,6 +4,7 @@ using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using System.IO;
 using UnityEngine.Windows.Speech;
 
 public class Loader : MonoBehaviour
@@ -14,6 +15,18 @@ public class Loader : MonoBehaviour
     //    { "Map", "MapNavigation" },
     //    { "Room", "TestLvl" },
     //    { "MainMenu", "MenuScene" }};
+
+    private static RoomPrefabEncyclopedia ROOM_ENCYCLOPEDIA = new RoomPrefabEncyclopedia
+    (
+        new Dictionary<ZoneType, string> {
+            { ZoneType.Debug, "Debug" },
+            { ZoneType.Radioactive, "Radioactive" },
+        },
+
+        new Dictionary<string, RoomPrefabDesc> { }
+    );
+
+    private ZoneType _zoneType = ZoneType.Radioactive;
 
     /* 
      EVENTS
@@ -84,5 +97,15 @@ public class Loader : MonoBehaviour
         // ! This MIGHT cause issues in the future, idrk
         foreach (UnityEvent UEvent in GI._SceneLoadUEventList)
             UEvent.Invoke();
+    }
+
+    public void LoadRoom(string roomType)
+    {
+        string path = "Assets/GameObjects/Rooms & Tiles/Resources/" + ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + " Zone/RoomPrefabs/" + GI._roomType;
+        int metaFilesAmount = Directory.GetFiles(path, "*.meta", SearchOption.TopDirectoryOnly).Length;
+        int size = Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly).Length;
+        size -= metaFilesAmount;
+
+        SceneManager.LoadScene(ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + GI._roomType + UnityEngine.Random.Range(1, size).ToString(), LoadSceneMode.Single);
     }
 }

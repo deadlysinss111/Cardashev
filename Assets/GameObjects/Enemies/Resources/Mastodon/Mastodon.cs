@@ -78,6 +78,7 @@ public class Mastodon : Enemy
         // ANIM HERE
         Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
         LookInDirectionTarget(dir, 8f);
+        _animator.Play("Melee");
         while (_timeBeforeDecision > 1)
         {
             yield return null;
@@ -352,6 +353,8 @@ public class Mastodon : Enemy
         // Once the half of the movement done, we want the enemy to refresh his destination to match target's movments
         // TODO: Decide of a tile to snap too, to ensure we don't stop in the middle of the board
         StartCoroutine(reOrient(_timeBeforeDecision / 2));
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Walking") == false)
+            _animator.Play("Walking");
     }
 
     private IEnumerator reOrient(float time)

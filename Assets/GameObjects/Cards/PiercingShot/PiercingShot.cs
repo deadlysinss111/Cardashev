@@ -13,23 +13,35 @@ public class PiercingShot : Card
     void Awake()
     {
         _duration = 4f;
-        int[] stats = new int[2] { 6, 24 };
-        base.Init(3, 4, 85, stats, $"Take aim and perform a powerfull shot that deals {stats[0]} dmg. Deals {stats[1]} instead if it is a critical strike");
+        Dictionary<string, int> stats = new Dictionary<string, int>()
+        {
+            {"damage", 8},
+            {"critDamage", 18 },
+            {"speed", 20 },
+            {"critSpeed", 100 },
+        };
+        base.Init(3, 4, 85, stats, $"Shoot a powerful bullet dealing {stats["damage"]} dmg. Critical: Damage and speed increased.");
 
         while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterState, ExitState) == false) _id++;
 
-        if (gameObject.TryGetComponent(out _rotationArrow) == false)
-            _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
+        //if (gameObject.TryGetComponent(out _rotationArrow) == false)
+        //    _rotationArrow = gameObject.AddComponent<RotationSelectArrow>();
     }
 
     void EnterState()
     {
-        _rotationArrow.SetArrow(true);
+        //_rotationArrow.SetArrow(true);
 
         PlayerManager manager = GI._PManFetcher();
         manager.SetLeftClickTo(LeftClick);
-        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
-        manager.SetHoverTo(DisplayRange);
+        manager.SetRightClickTo(() => {
+            ExitState();
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+            if (_ghostHitbox != null)
+                Destroy(_ghostHitbox);
+        });
+        manager.SetHoverTo(Preview);
+        manager.SetWallsAsClickable(true);
         GI.UpdateCursorsInverted("Bow", (byte)(GI.CursorRestriction.S_TILES));
     }
 
@@ -40,7 +52,7 @@ public class PiercingShot : Card
 
         if (manager._lastHit.transform == null) return;
 
-        _direction = Vector3.Normalize(manager._lastHit.point - manager._virtualPos);
+        _direction = Vector3.Normalize(manager._lastHit.transform.position - manager._virtualPos);
         _direction.y = 0;
         _startingPosition = manager._virtualPos;
 
@@ -49,7 +61,8 @@ public class PiercingShot : Card
 
     void ExitState()
     {
-        _rotationArrow.SetArrow(false);
+        //_rotationArrow.SetArrow(false);
+        GI._PManFetcher().SetWallsAsClickable(false);
         ClearPath();
     }
 
@@ -64,8 +77,15 @@ public class PiercingShot : Card
 
         bullet.GetComponent<Bullet>().SetDirection(_direction);
         _startingPosition.y += 1.5f;
-        bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, 100, _stats[1], 1.5f);
 
+        if (GI._PManFetcher()._statManagerRef._isCriting)
+        {
+            bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, _stats["critSpeed"], _stats["critDamage"], 1.5f);
+        }
+        else
+        {
+            bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, _stats["speed"], _stats["damage"], 1.5f);
+        }
         base.Effect();
     }
 

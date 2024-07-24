@@ -44,8 +44,8 @@ public class CameraController : MonoBehaviour
         _pInput.actions["CameraMode"].performed += OnChangeModePerformed;
         _pInput.actions["CameraMove"].performed += OnMovePerformed;
         _pInput.actions["CameraMove"].canceled += OnMoveCanceled;
-        _pInput.actions["CameraRotateLeft"].performed += RotateToLeft;
-        _pInput.actions["CameraRotateRight"].performed += RotateToRight;
+        _pInput.actions["CameraRotateLeft"].performed += RotateToRight;
+        _pInput.actions["CameraRotateRight"].performed += RotateToLeft;
     }
 
     private void OnDisable()

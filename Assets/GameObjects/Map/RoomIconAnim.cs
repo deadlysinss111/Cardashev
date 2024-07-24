@@ -27,4 +27,9 @@ public class RoomIconAnim : MonoBehaviour
     {
         _animator.SetBool("MouseHover", false);
     }
+
+    public void Lock()
+    {
+        _animator.SetTrigger("Lock");
+    }
 }

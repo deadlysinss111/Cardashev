@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9085308487072249226}
   - component: {fileID: 7208130103788098209}
   - component: {fileID: 4283898566725274688}
+  - component: {fileID: 5682441886744515104}
   m_Layer: 0
   m_Name: dead_tree
   m_TagString: Map Tree
@@ -59,6 +60,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -105,3 +108,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.06138611, y: 0.15496266, z: 0.06299591}
   m_Center: {x: 0.01285553, y: 0.07748133, z: -0.016376495}
+--- !u!208 &5682441886744515104
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295304997142249686}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.085, y: 0.096, z: 0.08400001}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.002, y: 0.096, z: -0.006}
+  m_TimeToStationary: 0.5

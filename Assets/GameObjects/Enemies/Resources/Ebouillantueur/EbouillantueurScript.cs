@@ -79,12 +79,14 @@ public class Ebouillantueur : Enemy
     {
         Collider[] temp = Physics.OverlapSphere(transform.position - Vector3.up * 2, 0.1f);
         _timeBeforeDecision = 9 * .2f + .5f;
+        LayerMask mask = LayerMask.NameToLayer("TMTopology");
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
                 // TODO : FIX FLYING ACID PLACED ON EMPTY SPACE
-                Instantiate(ACID, temp[0].transform.position + new Vector3(i * 2, 1.1f, j * 2), Quaternion.identity);
+                if (Physics.OverlapSphere(temp[0].transform.position + new Vector3(i * 2 - 2, 1.1f, j * 2 - 2), .1f, mask).Length == 0) continue;
+                Instantiate(ACID, temp[0].transform.position + new Vector3(i * 2 - 2, 1.1f, j * 2 - 2), Quaternion.identity);
                 yield return new WaitForSeconds(.2f);
             }
         }
@@ -150,8 +152,14 @@ public class Ebouillantueur : Enemy
 
         if (dest == Vector3.zero) throw new Exception("error in targeting AI for ebouillantueur");
 
-        _agent.SetDestination(dest);
         NavMeshPath path = new NavMeshPath();
+
+        if( false == Physics.Raycast(dest + new Vector3(0, 2, 0), Vector3.down, out RaycastHit hit))
+            throw new Exception("error in targeting raycast for ebouillantueur");
+
+        dest = hit.transform.position + new Vector3(0, 1, 0);
+        _agent.SetDestination(dest);
+
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _timeBeforeDecision = GetPathTime(path);
     }
