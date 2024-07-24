@@ -30,30 +30,6 @@ public class Mastodon : Enemy
         
     }
 
-    // Might be reused later, might be not
-    /*AnimationClip GetClipFromHash(int hash)
-    {
-        AnimationClip clip;
-        if (_hashToClip.TryGetValue(hash, out clip))
-            return clip;
-        else
-            return null;
-    }
-
-    private float getAnimationTime(int layer = 0)
-    {
-        AnimatorStateInfo animState = _animator.GetCurrentAnimatorStateInfo(layer);
-        //Get the current animation hash
-        int currentAnimHash = animState.fullPathHash;
-
-        //Convert the animation hash to animation clip
-        AnimationClip clip = GetClipFromHash(currentAnimHash);
-
-        //Get the current time
-        float currentTime = clip.length * animState.normalizedTime;
-        return currentTime;
-    }*/
-
     // Enemy's decision
     override protected void Act()
     {
@@ -317,6 +293,7 @@ public class Mastodon : Enemy
 
     IEnumerator MoveWithDive(NavMeshPath[] paths)
     {
+        float animWaitTime;
 
         Vector3 destOne, destTwo;
         GameObject spotOne = FindClosestDivSpotFromMe(out _);
@@ -342,11 +319,11 @@ public class Mastodon : Enemy
 
         _animator.Play("DiveDown");
 
-        _timeBeforeDecision = 0.5f;
-        while (_timeBeforeDecision > 0)
+        yield return new WaitForNextFrameUnit();
+
+        animWaitTime = _animator.GetCurrentAnimatorStateInfo(0).length;
+        while (AnimatorHelper.GetAnimationCurrentTime(_animator) <= animWaitTime)
         {
-            _timeBeforeDecision -= Time.deltaTime;
-            BetterDebug.Log(_timeBeforeDecision);
             yield return null;
         }
 
@@ -374,11 +351,9 @@ public class Mastodon : Enemy
 
         _animator.Play("DiveUp");
 
-        _timeBeforeDecision = 0.5f;
-        while (_timeBeforeDecision > 0)
+        animWaitTime = _animator.GetCurrentAnimatorStateInfo(0).length;
+        while (AnimatorHelper.GetAnimationCurrentTime(_animator) <= animWaitTime)
         {
-            _timeBeforeDecision -= Time.deltaTime;
-            BetterDebug.Log(_timeBeforeDecision);
             yield return null;
         }
     }
@@ -439,7 +414,7 @@ public class Mastodon : Enemy
 
         if (_isDiveShorter)
         {
-            _timeBeforeDecision = _divePathTime;
+            _timeBeforeDecision = _divePathTime + (AnimatorHelper.GetAnimationLength(_animator, "DiveDown") + AnimatorHelper.GetAnimationLength(_animator, "DiveUp"));
             StartCoroutine(MoveWithDive(_divePaths));
         }
         else
