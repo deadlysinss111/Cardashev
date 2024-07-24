@@ -129,7 +129,10 @@ public class MapManager : MonoBehaviour
         }
 
         if (targetNode.GetComponent<MapNode>()._stringType == "Event")
-            GenerateRandomEvent();
+        {
+            print("eh connard nan ?");
+            GetComponent<EventManager>().StartEvent();
+        }
         else
             targetNode.GetComponent<MapNode>().LoadRoom();
     }
@@ -176,7 +179,14 @@ public class MapManager : MonoBehaviour
         if (previousNode.GetComponent<MapNode>().NumberOfNextNode() > 1)
             StartCoroutine(PathLocker(targetNode));
         else
-            targetNode.GetComponent<MapNode>().LoadRoom();
+        {
+            if (targetNode.GetComponent<MapNode>()._stringType == "Event")
+            {
+                GetComponent<EventManager>().StartEvent();
+            }
+            else
+                targetNode.GetComponent<MapNode>().LoadRoom();
+        }
     }
 
     void GenerateRandomEvent()
