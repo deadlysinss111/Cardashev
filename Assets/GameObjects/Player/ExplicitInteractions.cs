@@ -40,7 +40,7 @@ public class ExplicitInteractions : MonoBehaviour
         if (_manager._lastHit.transform == null) return;
         _currentInteractible = FindPrefabOriginRecur(_manager._lastHit.transform.gameObject);
         //print("target is : "+ _currentInteractible.name);
-        print(_currentInteractible);
+        //print(_currentInteractible);
 
         // "Raises" a RaycastHit event, given the Interactible isn't null for some reason
         if (_currentInteractible != null)

@@ -22,7 +22,7 @@ static public class CurrentRunInformations
         if (ARGIncomingCards.Count > _deckMaxCapacity)
             Debug.LogError("_Deck was passed with a List too large ! ALL CARDS REFUSED");
 
-        // Cards fit in the deck, so we had them all
+        // Cards fit in the deck, so we add them all
         else
             foreach (string name in ARGIncomingCards)
             {
