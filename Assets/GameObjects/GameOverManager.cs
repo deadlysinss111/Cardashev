@@ -56,7 +56,7 @@ public class GameOverManager : MonoBehaviour
         group.blocksRaycasts = true;
 
         _inGameOver = true;
-        //_text.text = "Time spend: "+GameObject.Find("Game Timer").GetComponent<GameTimer>().GetFormattedTime();
+        //_text.text = "Time spend: "+GameObject.Find("GlobalTimer").GetComponent<GameTimer>().GetFormattedTime();
         StopGame();
         _deckManager.UnloadDeck();
         DisableAllScripts();

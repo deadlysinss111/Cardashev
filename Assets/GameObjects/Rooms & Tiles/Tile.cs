@@ -16,7 +16,7 @@ public class Tile : MonoBehaviour
     {
         //_startcolor = GetComponent<MeshRenderer>().material.color;
 
-        if (gameObject.layer == 9 && false == GI._PManFetcher()._isWallClickable)
+        if ((gameObject.layer == 9 && false == GI._PManFetcher()._isWallClickable)|| GI._PManFetcher()._currentState=="Empty")
             return;
 
         //GetComponent<MeshRenderer>().material.color = Color.yellow;
@@ -38,6 +38,7 @@ public class Tile : MonoBehaviour
             outline.OutlineColor = Color.blue;
             outline.OutlineWidth = 7.7f;
         }
+
     }
     void OnMouseExit()
     {

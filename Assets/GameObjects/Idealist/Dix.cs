@@ -7,7 +7,7 @@ public class Dix : Idealist
     public Dix()
     {
         _name = "Dix";
-        _baseHP = 6000;
+        _baseHP = 6;//put it back to 6000 when done testion GOver
         _instance = this;
         _startingDeck = new List<string> 
         {

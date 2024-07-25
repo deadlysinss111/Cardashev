@@ -41,9 +41,9 @@ public class PlayerController : MonoBehaviour
     public float _baseSpeed;
     public bool _resetMoveMult;
 
-    [SerializeField] GameObject _destinationParticlePrefab;
-    List<GameObject> _movementParticleInstances;
     List<Vector3> _plannedDestinations;
+
+    RipplesManager _ripplesManager;
 
 
     /*
@@ -59,7 +59,8 @@ public class PlayerController : MonoBehaviour
         _paths = new List<List<Vector3>>();
 
         _plannedDestinations = new List<Vector3>();
-        _movementParticleInstances = new List<GameObject>();
+
+        _ripplesManager = GameObject.Find("EventSystem").GetComponent<RipplesManager>();
 
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         GI._PManFetcher()._virtualPos = _agent.transform.position;
@@ -165,8 +166,7 @@ public class PlayerController : MonoBehaviour
             _agent.destination = vect;
             StartCoroutine(UpdatePath(slicedPath));
 
-            GameObject movementParticleInstance = Instantiate(_destinationParticlePrefab, vect, Quaternion.identity);
-            _movementParticleInstances.Add(movementParticleInstance);
+            _ripplesManager.CreateRipples(_plannedDestinations);
         };
         moveCard._duration = _lastCalculatedWalkTime;
 
@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         _paths.RemoveAt(0);
-        ClearRipples();
+        //_ripplesManager.ClearRipples();
     }
 
     // ------
@@ -274,30 +274,5 @@ public class PlayerController : MonoBehaviour
             time += Vector3.Distance(start, end) / _agent.speed;
         }
         return time;
-    }
-
-    void ClearRipples()
-    {
-        int i = 0;
-        foreach (GameObject movementParticleInstance in _movementParticleInstances)
-        {
-            if (i < 1)
-            {
-                i++;
-                Destroy(movementParticleInstance);
-            }
-        }      
-        _movementParticleInstances.Clear();
-    }
-
-    void CreateRipples(List<Vector3> positions)
-    {
-        foreach (Vector3 position in positions)
-        {
-            Vector3 ripplePosition = position;
-            ripplePosition.y += 0.51f;
-            GameObject movementParticleInstance = Instantiate(_destinationParticlePrefab, ripplePosition, Quaternion.identity);
-            _movementParticleInstances.Add(movementParticleInstance);
-        }
     }
 }
