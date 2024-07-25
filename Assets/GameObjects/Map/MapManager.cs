@@ -107,29 +107,38 @@ public class MapManager : MonoBehaviour
     IEnumerator PathLocker(GameObject targetNode)
     {
         List<GameObject> nodes = new List<GameObject>();
+        List<float> waitTime = new List<float>();
 
         // Add every existing node to a list (appart from the _bossRoom)
-        for (int i = 0; i < _mapGrid.Count; i++)
+        for (int j = 0; j < MAP_SIZE_Y; j++)
         {
-            for (int j = 0; j < _mapGrid[i].Count; j++)
-            {
+            for (int i = 0; i < MAP_SIZE_X; i++)
+            {            
                 if (_mapGrid[i][j] == null || _mapGrid[i][j].GetComponent<MapNode>()._playerCameThrough) continue;
+                waitTime.Add(0);
                 nodes.Add(_mapGrid[i][j]);
             }
+            waitTime.Add(.5f);
         }
 
         // Remove every node accessible by the player
         RecursivePathing(ref nodes, _playerLocation.GetComponent<MapNode>());
 
         // Play the lock animation on every remaining nodes
+        int index = 0;
         foreach (GameObject n in nodes)
         {
             n.GetComponent<MapNode>().LockNode();
-            yield return new WaitForSeconds(.15f);
+            if (waitTime[index+1] == 1)
+            {
+                index++;
+            }
+            yield return new WaitForSeconds(waitTime[index]);
+            index++;
         }
 
         if (targetNode.GetComponent<MapNode>()._stringType == "Event")
-            GenerateRandomEvent();
+            GetComponent<EventManager>().StartEvent();
         else
             targetNode.GetComponent<MapNode>().LoadRoom();
     }
@@ -176,7 +185,12 @@ public class MapManager : MonoBehaviour
         if (previousNode.GetComponent<MapNode>().NumberOfNextNode() > 1)
             StartCoroutine(PathLocker(targetNode));
         else
-            targetNode.GetComponent<MapNode>().LoadRoom();
+        {
+            if (targetNode.GetComponent<MapNode>()._stringType == "Event")
+                GetComponent<EventManager>().StartEvent();
+            else
+                targetNode.GetComponent<MapNode>().LoadRoom();
+        }
     }
 
     void GenerateRandomEvent()

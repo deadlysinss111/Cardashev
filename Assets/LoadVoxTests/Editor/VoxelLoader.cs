@@ -48,7 +48,59 @@ public class VoxelLoader : MonoBehaviour
         switch(vox.colorIndex)
         {
             case 250:
-                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\Art\\test import\\tiles\\tile block\\rouille\\Prefab_Tile_block_rouille.prefab");
+                //found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\Art\\test import\\tiles\\tile block\\rouille\\Prefab_Tile_block_rouille.prefab");
+                switch(UnityEngine.Random.Range(0, 5))
+                {
+                    case 0:
+                        switch (UnityEngine.Random.Range(0, 5))
+                        {
+                            case 0:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille.prefab");
+                                break;
+                            case 1:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 1.prefab");
+                                break;
+                            case 2:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 2.prefab");
+                                break;
+                            case 3:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 3.prefab");
+                                break;
+                            case 4:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 4.prefab");
+                                break;
+                        }
+                        break;
+                    case 1:
+                        switch (UnityEngine.Random.Range(0, 5))
+                        {
+                            case 0:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille.prefab");
+                                break;
+                            case 1:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 1.prefab");
+                                break;
+                            case 2:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 2.prefab");
+                                break;
+                            case 3:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 3.prefab");
+                                break;
+                            case 4:
+                                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 4.prefab");
+                                break;
+                        }
+                        break;
+                    case 2:
+                        found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 2.prefab");
+                        break;
+                    case 3:
+                        found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 3.prefab");
+                        break;
+                    case 4:
+                        found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_rouille 4.prefab");
+                        break;
+                }
                 break;
             case 240:
                 found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Interactibles\\Prefabs\\ExitTile.prefab");
@@ -58,6 +110,9 @@ public class VoxelLoader : MonoBehaviour
                 break;
             case 220:
                 found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\Art\\test import\\tiles\\tile slope\\rouille\\tile_slope_prefab.prefab");
+                break;
+            case 79:
+                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\Art\\test import\\tiles\\tile block\\rouille\\tile_slope_prefab.prefab");
                 break;
             default:
                 print("you probably missed somewhere with color index : "+vox.colorIndex);

@@ -15,6 +15,8 @@ using UnityEngine;
 
 public class Outline : MonoBehaviour {
   private static HashSet<Mesh> registeredMeshes = new HashSet<Mesh>();
+  private static HashSet<Mesh> registeredSingleMesh = new HashSet<Mesh>();
+    public bool isSingle = false;
 
   public enum Mode {
     OutlineAll,
@@ -22,7 +24,8 @@ public class Outline : MonoBehaviour {
     OutlineHidden,
     OutlineAndSilhouette,
     SilhouetteOnly,
-    OutlineFuckAround
+    OutlineFuckAround,
+    Test,
   }
 
   public Mode OutlineMode {
@@ -79,16 +82,26 @@ public class Outline : MonoBehaviour {
   private Material outlineMaskMaterial;
   private Material outlineFillMaterial;
 
-  private bool needsUpdate;
+  public bool needsUpdate;
 
   void Awake() {
 
     // Cache renderers
     renderers = GetComponentsInChildren<Renderer>();
 
-    // Instantiate outline materials
-    outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
-    outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+        // Instantiate outline materials
+        if (GetComponent<Tile>()._isSingle)
+        {
+            outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask 1"));
+            outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill 1"));
+            print("oe");
+        }
+        else
+        {
+            outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
+            outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+        }
+    
 
     outlineMaskMaterial.name = "OutlineMask (Instance)";
     outlineFillMaterial.name = "OutlineFill (Instance)";
@@ -183,10 +196,23 @@ public class Outline : MonoBehaviour {
     // Retrieve or generate smooth normals
     foreach (var meshFilter in GetComponentsInChildren<MeshFilter>()) {
 
-      // Skip if smooth normals have already been adopted
-      if (!registeredMeshes.Add(meshFilter.sharedMesh)) {
-        continue;
-      }
+            if (isSingle)
+            {
+                // Skip if smooth normals have already been adopted
+                if (!registeredMeshes.Add(meshFilter.sharedMesh))
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                // Skip if smooth normals have already been adopted
+                if (!registeredSingleMesh.Add(meshFilter.sharedMesh))
+                {
+                    continue;
+                }
+            }
+      
 
       // Retrieve or generate smooth normals
       var index = bakeKeys.IndexOf(meshFilter.sharedMesh);
@@ -271,7 +297,6 @@ public class Outline : MonoBehaviour {
   }
 
   void UpdateMaterialProperties() {
-
     // Apply properties according to mode
     outlineFillMaterial.SetColor("_OutlineColor", outlineColor);
 
@@ -311,6 +336,11 @@ public class Outline : MonoBehaviour {
          outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.LessEqual);
          outlineFillMaterial.SetFloat("_OutlineWidth", outlineWidth);
          break;
-     }
+        case Mode.Test:
+            outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Equal);
+            outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.LessEqual);
+            outlineFillMaterial.SetFloat("_OutlineWidth", outlineWidth);
+            break;
+        }
   }
 }
