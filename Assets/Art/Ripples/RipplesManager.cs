@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RipplesManager : MonoBehaviour
 {
-    public GameObject ripplePrefab; // Assign the ripple prefab in the Inspector
+    public GameObject ripplePrefab;
     private List<GameObject> rippleInstances = new List<GameObject>();
 
     public void CreateRipples(List<Vector3> positions)
@@ -24,5 +24,14 @@ public class RipplesManager : MonoBehaviour
             Destroy(rippleInstance);
         }
         rippleInstances.Clear();
+    }
+
+    public void RemoveRipple(GameObject rippleInstance)
+    {
+        if (rippleInstances.Contains(rippleInstance))
+        {
+            Destroy(rippleInstance);
+            rippleInstances.Remove(rippleInstance);
+        }
     }
 }

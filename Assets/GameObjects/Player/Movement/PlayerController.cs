@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         _paths.RemoveAt(0);
-        //_ripplesManager.ClearRipples();
+        _ripplesManager.ClearRipples();
     }
 
     // ------
