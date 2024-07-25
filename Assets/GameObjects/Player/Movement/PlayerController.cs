@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
     {
         // Loads in the fields useful data and references
         _agent = GetComponent<NavMeshAgent>();
-        _animator = GetComponent<Animator>();
+        _animator = GetComponent<PlayerModelLoader>().GetModelAnimator();
         _lineRenderer = GetComponent<LineRenderer>();
         _previewLineRenderer = GameObject.Find("RoomAnchor").GetComponent<LineRenderer>();
         _paths = new List<List<Vector3>>();
