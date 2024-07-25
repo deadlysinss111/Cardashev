@@ -59,7 +59,6 @@ public class Loader : MonoBehaviour
     {
         string curScene = GI._SceneNameEncyclopedia[ARGcurScene];
         string targetScene = GI._SceneNameEncyclopedia[ARGtargetScene];
-        
 
         // Check if the scene we are leaving is persistent (if it is, we need to do more work)
         if (true == GI.IsSceneContainerPersistent(curScene) && ARGloadMode == LoadSceneMode.Single)

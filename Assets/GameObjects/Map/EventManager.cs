@@ -34,6 +34,8 @@ public class EventManager : MonoBehaviour
 
     public void StartEvent()
     {
+        currentChoices = new List<GameObject>();
+
         title = GameObject.Find("Event Title").GetComponent<TextMeshProUGUI>();
         description = GameObject.Find("Event Description").GetComponent<TextMeshProUGUI>();
         choicesList = GameObject.Find("Choices List");
@@ -45,20 +47,25 @@ public class EventManager : MonoBehaviour
         title.text = e.name;
         description.text = e.description;
         // splashArt = e.
-        for (int i = 0; i < e.choices.Length; i++)
+        AddChoices(e.choices);
+        
+    }
+
+    void AddChoices(EventChoice[] choices)
+    {
+        for (int i = 0; i < choices.Length; i++)
         {
             GameObject button = Instantiate(CHOICE_BUTTON, choicesList.transform);
             currentChoices.Add(button);
-            button.GetComponent<RectTransform>().localPosition = new Vector3(-300 + 300*i, 38, 0);
-            button.GetComponentInChildren<TextMeshProUGUI>().text = e.choices[i].name;
-            UnityEvent func = e.choices[i].result;
+            button.GetComponent<RectTransform>().localPosition = new Vector3(-300 + 300 * i, 38, 0);
+            button.GetComponentInChildren<TextMeshProUGUI>().text = choices[i].name;
+            UnityEvent func = choices[i].result;
             button.GetComponent<Button>().onClick.AddListener(() => { func?.Invoke(); });
-            if (e.choices[i].subsequentChoices.Length > 0)
+            if (choices[i].subsequentChoices.Length > 0)
             {
-                EventChoice temp = e.choices[i];
+                EventChoice temp = choices[i];
                 button.GetComponent<Button>().onClick.AddListener(() => { NextPrompt(temp); });
             }
-
         }
     }
 
@@ -83,6 +90,8 @@ public class EventManager : MonoBehaviour
     public void CloseEvent()
     {
         GameObject.Find("Canvas").GetComponent<Animator>().SetTrigger("Slide Out");
+
+        GI._canClickOnNode = true;
     }
 
     void NextPrompt(EventChoice eventChoice)
@@ -92,6 +101,10 @@ public class EventManager : MonoBehaviour
             Destroy(button);
         }
         currentChoices.Clear();
+
+        title.text = eventChoice.name;
+        description.text = eventChoice.description;
+        AddChoices(eventChoice.subsequentChoices);
     }
 
     public void Debug(string msg)
