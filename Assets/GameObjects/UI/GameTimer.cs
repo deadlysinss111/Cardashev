@@ -17,6 +17,7 @@ public class GameTimer : MonoBehaviour
     private void OnDestroy()
     {
         GI._gameTimer += _timePassed;
+        GI._lastRoomTimer = _timePassed;
     }
 
     void Update()

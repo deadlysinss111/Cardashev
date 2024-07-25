@@ -90,17 +90,17 @@ public class Outline : MonoBehaviour {
     renderers = GetComponentsInChildren<Renderer>();
 
         // Instantiate outline materials
-        if (GetComponent<Tile>()._isSingle)
-        {
-            outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask 1"));
-            outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill 1"));
-            print("oe");
-        }
-        else
-        {
+        //if (GetComponent<Tile>()._isSingle)
+        //{
+        //    outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask 1"));
+        //    outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill 1"));
+        //    //print("oe");
+        //}
+        //else
+        //{
             outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
             outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
-        }
+        //}
     
 
     outlineMaskMaterial.name = "OutlineMask (Instance)";
