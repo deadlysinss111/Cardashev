@@ -86,8 +86,8 @@ public class GameOverManager : MonoBehaviour
         _playerManager.SetToState("Empty");
     }
 
-    void DeckDisplay()
+    public void DeckDisplay()
     {
-
+        _deckManager.LoadDeck();
     }
 }

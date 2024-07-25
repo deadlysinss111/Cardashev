@@ -209,7 +209,7 @@ public class MapNode : MonoBehaviour
                     _roomIconSprite = resources.COMBAT_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.COMBAT_ICON;
                     SetDefaultColorTo(Color.red);
-                    _stringType = "Shop";
+                    _stringType = "Combat";
                     break;
                 }
             case RoomType.Elite:
