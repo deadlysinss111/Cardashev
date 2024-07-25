@@ -356,7 +356,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (card.name.Contains("Shot"))
                 _animator.Play(ANIMSTATES.SHOOT);
-            else if (card.name.Contains("Overdrive") || card._name.Contains("TakeAim"))
+            else if (card.name.Contains("Overdrive") || card.name.Contains("TakeAim"))
                 _animator.Play(ANIMSTATES.OVERDRIVE);
             return;
         }
