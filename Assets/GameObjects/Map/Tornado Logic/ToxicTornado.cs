@@ -38,6 +38,8 @@ public class ToxicTornado : DynamicMapObj
 
         _direction = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
         _direction = Vector3.Normalize(_direction);
+
+        transform.position = new Vector3(UnityEngine.Random.Range(_xMin, _xMax), transform.position.y, UnityEngine.Random.Range(_zMin, _zMax));
     }
 
     private void Update()

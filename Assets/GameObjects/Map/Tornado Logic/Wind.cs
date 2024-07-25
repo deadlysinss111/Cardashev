@@ -12,7 +12,6 @@ public class Wind : MonoBehaviour
     {
         // Movement transformations
         float dist = Vector3.Magnitude(_particleOrigin.position - _anchor.position);
-        print("dist is : " + dist);
         _particleOrigin.position = _anchor.position - Vector3.Normalize(direction) * dist;
 
         // Rotation transformations
