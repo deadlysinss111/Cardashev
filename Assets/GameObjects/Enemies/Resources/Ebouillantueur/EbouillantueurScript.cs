@@ -118,10 +118,11 @@ public class Ebouillantueur : Enemy
         }*/
         _timeBeforeDecision = 4f + AnimatorHelper.GetAnimationLength(_animator, "Shooting");
         _animator.Play("Shooting");
-        print(AnimatorHelper.GetAnimationCurrentFrame(_animator)); // TODO: Why 127??
+
+        yield return new WaitForNextFrameUnit();
+
         while( AnimatorHelper.GetAnimationCurrentFrame(_animator) < 40 )
         {
-            print(AnimatorHelper.GetAnimationCurrentFrame(_animator));
             yield return null;
         }
 
