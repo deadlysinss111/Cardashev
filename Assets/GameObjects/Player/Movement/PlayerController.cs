@@ -7,14 +7,6 @@ using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
 
-internal struct ANIMSTATES
-{
-    public const string IDLE = "Idle";
-    public const string WALK = "Running";
-    public const string JUMP = "JumpStart";
-    public const string END_JUMP = "JumpEnd";
-}
-
 public class PlayerController : MonoBehaviour
 {
     /*
@@ -67,7 +59,6 @@ public class PlayerController : MonoBehaviour
     {
         // TODO: Make them not spam Console to de-comment them
         //FaceTarget();
-        SetAnimations();
 
         if (_resetMoveMult == false) return;
         if (GI._PlayerFetcher().GetComponent<QueueComponent>().GetActiveCard() is not null) return;
@@ -229,30 +220,6 @@ public class PlayerController : MonoBehaviour
 
         // Smoothly rotate the player
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _lookRotationSpeed);
-    }
-
-    // Set animations based on certain conditions
-    // Might be replaced later?
-    private void SetAnimations()
-    {
-        if (_agent.enabled == false && AnimatorHelper.GetCurrentAnimationName(_animator).StartsWith("Jump") == false)
-        {
-            _animator.Play(ANIMSTATES.JUMP);
-        }
-        else if (_agent.enabled && _animator.GetCurrentAnimatorStateInfo(0).IsName("JumpLoop"))
-            _animator.Play(ANIMSTATES.END_JUMP);
-
-        if (AnimatorHelper.GetCurrentAnimationName(_animator).StartsWith("Jump"))
-            return;
-
-        else if (_agent.velocity == Vector3.zero)
-        {
-            _animator.Play(ANIMSTATES.IDLE);
-        }
-        else
-        {
-            _animator.Play(ANIMSTATES.WALK);
-        }
     }
 
     // ------
