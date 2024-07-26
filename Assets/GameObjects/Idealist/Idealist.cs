@@ -26,6 +26,7 @@ public abstract class Idealist
         func();
 
         CurrentRunInformations.AddCardsToDeck(_instance._startingDeck);
+        CurrentRunInformations._playerHP = _instance._baseHP;
     }
 
     static private Dictionary<string, Action> _idealistEncyclopedia = new Dictionary<string, Action>()
