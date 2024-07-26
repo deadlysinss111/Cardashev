@@ -1,16 +1,21 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
-using static UnityEditorInternal.VersionControl.ListControl;
+
+internal struct ANIMSTATES
+{
+    public const string IDLE = "Idle";
+    public const string WALK = "Running";
+    public const string JUMP = "JumpStart";
+    public const string END_JUMP = "JumpEnd";
+    public const string SHOOT = "Shooting";
+    public const string OVERDRIVE = "Overdrive";
+    public const string THROWGRENADE = "Throwing";
+}
 
 public class PlayerManager : MonoBehaviour
 {
@@ -33,6 +38,8 @@ public class PlayerManager : MonoBehaviour
     Action _leftClick = () => { /*print("left wtf");*/ };
     Action _rightClick = () => { /*print("right wtf");*/ };
 
+    NavMeshAgent _agent;
+    public Animator _animator;
     [NonSerialized] public PlayerInput _pInput;
     [NonSerialized] public Vector3 _virtualPos;
     [NonSerialized] public RaycastHit _lastHit;
@@ -65,6 +72,8 @@ public class PlayerManager : MonoBehaviour
         // Fetching some refs
         _pInput = GetComponent<PlayerInput>();
         _statManagerRef = GetComponent<StatManager>();
+        _animator = GetComponent<PlayerModelLoader>().GetModelAnimator();
+        _agent = GetComponent<NavMeshAgent>();
 
         // Deck initialization
 
@@ -104,6 +113,7 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         TriggerMouseHovering();
+        SetAnimations();
     }
 
 
@@ -330,6 +340,50 @@ public class PlayerManager : MonoBehaviour
     public List<GameObject> GetDeck()
     {
         return CurrentRunInformations._deck;
+    }
+
+    // Set animations based on certain conditions
+    // Might be replaced later?
+    private void SetAnimations()
+    {
+        // Jumping conditions
+        if (_agent.enabled == false && AnimatorHelper.GetCurrentAnimationName(_animator).StartsWith("Jump") == false)
+        {
+            _animator.Play(ANIMSTATES.JUMP);
+            return;
+        }
+        else if (_agent.enabled && _animator.GetCurrentAnimatorStateInfo(0).IsName("JumpLoop"))
+        {
+            _animator.Play(ANIMSTATES.END_JUMP);
+            return;
+        }
+
+        Card card = GI._PlayerFetcher().GetComponent<QueueComponent>().GetActiveCard();
+
+        // Card specific conditions
+        if (card && card._name is not null)
+        {
+            if (card.name.Contains("Shot"))
+                _animator.Play(ANIMSTATES.SHOOT);
+            else if (card.name.Contains("Overdrive") || card.name.Contains("TakeAim"))
+                _animator.Play(ANIMSTATES.OVERDRIVE);
+            else if (card.name.Contains("Grenade"))
+                _animator.Play(ANIMSTATES.THROWGRENADE);
+            return;
+        }
+
+        if (AnimatorHelper.GetCurrentAnimationName(_animator).StartsWith("Jump"))
+            return;
+
+        // Normal conditons
+        if (_agent.velocity == Vector3.zero)
+        {
+            _animator.Play(ANIMSTATES.IDLE);
+        }
+        else
+        {
+            _animator.Play(ANIMSTATES.WALK);
+        }
     }
 
     private void PlayerDeath()
