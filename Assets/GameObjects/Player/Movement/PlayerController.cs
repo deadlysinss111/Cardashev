@@ -7,12 +7,6 @@ using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
 
-internal struct ANIMSTATES
-{
-    public const string IDLE = "Idle";
-    public const string WALK = "Walk";
-}
-
 public class PlayerController : MonoBehaviour
 {
     /*
@@ -48,7 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         // Loads in the fields useful data and references
         _agent = GetComponent<NavMeshAgent>();
-        _animator = GetComponent<Animator>();
+        _animator = GetComponent<PlayerModelLoader>().GetModelAnimator();
         _lineRenderer = GetComponent<LineRenderer>();
         _previewLineRenderer = GameObject.Find("RoomAnchor").GetComponent<LineRenderer>();
         _paths = new List<List<Vector3>>();
@@ -64,8 +58,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // TODO: Make them not spam Console to de-comment them
-        //FaceTarget();
-        //SetAnimations();
+        FaceTarget();
 
         if (_resetMoveMult == false) return;
         if (GI._PlayerFetcher().GetComponent<QueueComponent>().GetActiveCard() is not null) return;
@@ -219,27 +212,20 @@ public class PlayerController : MonoBehaviour
     // Rotate the player to face the target destination
     private void FaceTarget()
     {
-        // Calculate the direction to the target destination
-        Vector3 direction = (_agent.destination - transform.position).normalized;
+        if(_paths.Count == 0) { return; }
+
+        Vector3 direction;
+        if (_paths[0].Count >= 3)
+            // Calculate the direction to the target destination
+            direction = (_paths[0][_paths[0].Count - 3] - transform.position).normalized;
+        else
+            direction = (_agent.destination - transform.position).normalized; 
 
         // Rotate the player towards the target destination
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
 
         // Smoothly rotate the player
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _lookRotationSpeed);
-    }
-
-    // Set animations based on agent velocity
-    private void SetAnimations()
-    {
-        if (_agent.velocity == Vector3.zero)
-        {
-            _animator.Play(ANIMSTATES.IDLE);
-        }
-        else
-        {
-            _animator.Play(ANIMSTATES.WALK);
-        }
     }
 
     // ------
