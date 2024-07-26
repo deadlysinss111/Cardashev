@@ -44,10 +44,10 @@ public class ToxicTornado : DynamicMapObj
 
     private void Update()
     {
-        if(Input.anyKeyDown)
-        {
-            GI._UeOnMapSceneLoad.Invoke();
-        }
+        //if(Input.anyKeyDown)
+        //{
+        //    GI._UeOnMapSceneLoad.Invoke();
+        //}
     }
 
 
@@ -70,8 +70,9 @@ public class ToxicTornado : DynamicMapObj
 
     void Move()
     {
-        //transform.Translate(_direction * GI._lastRoomTimer * 0.6f);
-        transform.Translate(_direction * 10);
+        // TODO: tweak that 0.6f for balancing
+        transform.Translate(_direction * GI._lastRoomTimer * 0.6f);
+        //transform.Translate(_direction * 10);
         CheckForBoundaries();
     }
 

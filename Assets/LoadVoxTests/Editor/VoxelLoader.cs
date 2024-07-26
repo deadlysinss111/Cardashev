@@ -114,8 +114,26 @@ public class VoxelLoader : MonoBehaviour
             case 79:
                 found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\Art\\test import\\tiles\\tile block\\rouille\\tile_slope_prefab.prefab");
                 break;
+            case 32:
+                switch (UnityEngine.Random.Range(0, 2))
+                {
+                    case 0:
+                        found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_sable.prefab");
+                        break;
+                    case 1:
+                        found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_sable_foncé.prefab");
+                        break;
+                }
+                break;
+            case 8:
+                break;
+            case 41:
+                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Interactibles\\Prefabs\\DiveSpot.prefab");
+                break;
+            case 72:
+                break;
             default:
-                print("you probably missed somewhere with color index : "+vox.colorIndex);
+                print("you probably missed somewhere with color index : " + vox.colorIndex);
                 break;
         }
         return found;
