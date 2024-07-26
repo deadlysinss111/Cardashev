@@ -8,6 +8,7 @@ using UnityEngine;
 static public class CurrentRunInformations
 {
     static public int _goldAmount = 100;
+    static public int _playerHP;
 
     // Deck related (serves as storage for DeckManager to prepare itself for a room)
     static int _deckMaxCapacity = 100;

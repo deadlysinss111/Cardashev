@@ -54,6 +54,7 @@ public class MapNode : MonoBehaviour
     private void Awake()
     {
         //_animator = GetComponent<Animator>();
+        HierarchySearcher.FindChildRecursively(transform, "Maps_N"+UnityEngine.Random.Range(1, 5).ToString()).SetActive(true);
     }
 
     private void Start()

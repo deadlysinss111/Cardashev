@@ -19,6 +19,9 @@ abstract public class Enemy : MonoBehaviour
     protected float _timeBeforeDecision;
     protected bool _isMoving;
     protected Coroutine _lookAtCoroutine;
+    protected float _lookRotationSpeed;
+    protected Vector3 _targetLookAtVector;
+    protected bool _lookAtTarget;
 
     // Death related
     [SerializeField] public int _health = 30;
@@ -55,6 +58,7 @@ abstract public class Enemy : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _target = GI._PlayerFetcher();
         _timeBeforeDecision = 0.0f;
+        _lookRotationSpeed = 1.5f;
 
         _waitForDestroy = false;
 
@@ -72,6 +76,7 @@ abstract public class Enemy : MonoBehaviour
         }
 
         CheckSelectable();
+        UpdateFaceTarget();
         //print("Enemy is selectable: "+_selectable);
     }
 
@@ -133,6 +138,39 @@ abstract public class Enemy : MonoBehaviour
         }
     }
 
+    // Might be temporary? Might not be? Is less coroutine good or bad? Works a bit better than the coroutine version I think??
+    protected void FaceTarget()
+    {
+        FaceTarget(_target.transform.position);
+    }
+    protected void FaceTarget(Vector3 target)
+    {
+        _lookAtTarget = true;
+        _targetLookAtVector = target;
+    }
+
+    protected void UpdateFaceTarget()
+    {
+        if (_lookAtTarget == false) return;
+        // Calculate the direction to the target destination
+        Vector3 direction = (_targetLookAtVector - transform.position).normalized;
+
+        // Rotate the player towards the target destination
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+
+        // Smoothly rotate the player
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _lookRotationSpeed);
+
+        if (
+            Mathf.Approximately(transform.rotation.x, lookRotation.x) &&
+            Mathf.Approximately(transform.rotation.y, lookRotation.y) &&
+            Mathf.Approximately(transform.rotation.z, lookRotation.z)
+       )
+        {
+            _lookAtTarget = false;
+        }
+    }
+
     public virtual void Defeat()
     {
         //TODO: ue there
@@ -155,7 +193,7 @@ abstract public class Enemy : MonoBehaviour
     // Needs to be called every frame after defeat so that the GO is detroyed correctly after the animation
     protected void ParticleHandle()
     {
-        if (_deathParticles.isStopped /*&& _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > _animator.GetCurrentAnimatorStateInfo(0).length/2*/) // Pretty shake condition methinks
+        if (_deathParticles.isStopped && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > _animator.GetCurrentAnimatorStateInfo(0).length/2) // Pretty shaky condition methinks
         {
             Destroy(gameObject);
         }
@@ -211,6 +249,7 @@ abstract public class Enemy : MonoBehaviour
         }
     }
 
+    [Obsolete("Not really deprecated but definitely have a problem with rotation that FaceTarget doesn't seem to have?? (Not as bad at least)")]
     protected void LookInDirectionTarget(Vector3 target, float speed)
     {
         if (_lookAtCoroutine != null)
@@ -218,6 +257,7 @@ abstract public class Enemy : MonoBehaviour
         _lookAtCoroutine = StartCoroutine(LookInDirectionTargetCoroutine(target, speed));
     }
 
+    [Obsolete("Not really deprecated but definitely have a problem with rotation that FaceTarget doesn't seem to have?? (Not as bad at least)")]
     private IEnumerator LookInDirectionTargetCoroutine(Vector3 target, float speed)
     {
         Quaternion lookRotation = new();

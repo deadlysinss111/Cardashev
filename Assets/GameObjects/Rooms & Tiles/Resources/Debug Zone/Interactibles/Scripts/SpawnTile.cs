@@ -18,6 +18,7 @@ public class SpawnTile : Interactible
             camera.RotateToRight(new());
 
         player.GetComponent<NavMeshAgent>().enabled = true;
+        player.GetComponent<PlayerModelLoader>().LoadModel();
         StartCoroutine(ThinkingTime());
     }
 
