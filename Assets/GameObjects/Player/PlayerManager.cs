@@ -1,16 +1,10 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
-using static UnityEditorInternal.VersionControl.ListControl;
 
 internal struct ANIMSTATES
 {
@@ -20,6 +14,7 @@ internal struct ANIMSTATES
     public const string END_JUMP = "JumpEnd";
     public const string SHOOT = "Shooting";
     public const string OVERDRIVE = "Overdrive";
+    public const string THROWGRENADE = "Throwing";
 }
 
 public class PlayerManager : MonoBehaviour
@@ -370,6 +365,8 @@ public class PlayerManager : MonoBehaviour
                 _animator.Play(ANIMSTATES.SHOOT);
             else if (card.name.Contains("Overdrive") || card.name.Contains("TakeAim"))
                 _animator.Play(ANIMSTATES.OVERDRIVE);
+            else if (card.name.Contains("Grenade"))
+                _animator.Play(ANIMSTATES.THROWGRENADE);
             return;
         }
 
