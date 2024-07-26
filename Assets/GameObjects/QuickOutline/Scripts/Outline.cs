@@ -94,7 +94,7 @@ public class Outline : MonoBehaviour {
         {
             outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask 1"));
             outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill 1"));
-            print("oe");
+            //print("oe");
         }
         else
         {

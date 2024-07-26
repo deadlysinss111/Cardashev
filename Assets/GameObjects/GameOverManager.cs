@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -24,6 +25,10 @@ public class GameOverManager : MonoBehaviour
 
     DeckManager _deckManager;
 
+    GameObject _menu;
+    GameObject _collection;
+    GameObject _cardsCollection;
+
     void Start()
     {
         _instance = this;
@@ -36,6 +41,14 @@ public class GameOverManager : MonoBehaviour
         //_text = GameObject.Find("GameTimer").GetComponent<TMP_Text>();
 
         _hud = GameObject.Find("HUD");
+
+        _menu = GameObject.Find("Menu");
+
+        _collection = GameObject.Find("Collection");
+
+        _cardsCollection = GameObject.Find("CardsCollection");
+
+        _collection.SetActive(false);
 
         GameObject player = GameObject.Find("Player");
         _playerManager = player.GetComponent<PlayerManager>();
@@ -88,6 +101,15 @@ public class GameOverManager : MonoBehaviour
 
     public void DeckDisplay()
     {
-        _deckManager.LoadDeck();
+        _menu.SetActive(false);
+        GI._deckContainer.SetActive(true);
+        GI._deckContainer.transform.SetParent(_cardsCollection.transform);
+        _collection.SetActive(true);
+    }
+
+    public void ExitButton()
+    {
+        _menu.SetActive(true);
+        _collection.SetActive(false);
     }
 }

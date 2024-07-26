@@ -41,8 +41,6 @@ public class PlayerController : MonoBehaviour
     public float _baseSpeed;
     public bool _resetMoveMult;
 
-    List<Vector3> _plannedDestinations;
-
     RipplesManager _ripplesManager;
 
 
@@ -57,9 +55,6 @@ public class PlayerController : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
         _previewLineRenderer = GameObject.Find("RoomAnchor").GetComponent<LineRenderer>();
         _paths = new List<List<Vector3>>();
-
-        _plannedDestinations = new List<Vector3>();
-
         _ripplesManager = GameObject.Find("EventSystem").GetComponent<RipplesManager>();
 
         // Loading in PlayerManager a new state and its Action to change what the controls will do
@@ -154,8 +149,6 @@ public class PlayerController : MonoBehaviour
         Vector3 vect = _virtualDestination;
         vect.y += 0.51f;
 
-        _plannedDestinations.Add(vect);
-
         // We need to dynamically create a card in order to subscribe it to the Queue
         List<Vector3> slicedPath = new List<Vector3>();
         GameObject moveCardObj = new GameObject();
@@ -166,7 +159,7 @@ public class PlayerController : MonoBehaviour
             _agent.destination = vect;
             StartCoroutine(UpdatePath(slicedPath));
 
-            _ripplesManager.CreateRipples(_plannedDestinations);
+            _ripplesManager.CreateRipples(new List<Vector3>() { vect });
         };
         moveCard._duration = _lastCalculatedWalkTime;
 
@@ -212,7 +205,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator UpdatePath(List<Vector3> path)
     {
         // Wait for the agent to reach the destination
-        while (path.Count > 1)
+        while (path.Count > 2)
         {
             if (Vector3.Magnitude(path[path.Count - 1] - GI._PlayerFetcher().transform.position) > 0.1)
             {

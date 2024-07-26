@@ -10,6 +10,7 @@ public class RipplesManager : MonoBehaviour
     {
         foreach (Vector3 position in positions)
         {
+            print("hh");
             Vector3 ripplePosition = position;
             ripplePosition.y += 0.51f;
             GameObject rippleInstance = Instantiate(ripplePrefab, ripplePosition, Quaternion.identity);
@@ -19,19 +20,7 @@ public class RipplesManager : MonoBehaviour
 
     public void ClearRipples()
     {
-        foreach (GameObject rippleInstance in rippleInstances)
-        {
-            Destroy(rippleInstance);
-        }
-        rippleInstances.Clear();
-    }
-
-    public void RemoveRipple(GameObject rippleInstance)
-    {
-        if (rippleInstances.Contains(rippleInstance))
-        {
-            Destroy(rippleInstance);
-            rippleInstances.Remove(rippleInstance);
-        }
+        Destroy(rippleInstances[0]);
+        rippleInstances.RemoveAt(0);
     }
 }
