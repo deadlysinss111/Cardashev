@@ -7,17 +7,22 @@ public class Dix : Idealist
     public Dix()
     {
         _name = "Dix";
-        _baseHP = 6000;//put it back to 6000 when done testion GOver
+        _baseHP = 100;
         _instance = this;
         _startingDeck = new List<string> 
         {
-            "LaunchGrenadeCard",
-            "PiercingShotCard",
             "SimpleShotCard",
+            "SimpleShotCard",
+            "SimpleShotCard",
+            "SimpleShotCard",
+            "LaunchGrenadeCard",
+            "LaunchGrenadeCard",
             "JumpCard",
-            "JumpAndShockwaveCard",
-            "OverdriveCard",
             "ResilienceCard",
+            //"LaunchGrenadeCard",
+            //"PiercingShotCard",
+            //"JumpAndShockwaveCard",
+            //"OverdriveCard",
             //"SecondSleeve"
             //"CoverCard",
         };

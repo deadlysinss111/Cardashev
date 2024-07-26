@@ -154,6 +154,12 @@ public class Card : MonoBehaviour
         };
     }
 
+    public void SetToPlayable()
+    {
+        _clickEffect = PlayCard;
+        _isCollectible = false;
+    }
+
 
     // -----
     // ACTIONS, FUNCS AND CALLBACKS

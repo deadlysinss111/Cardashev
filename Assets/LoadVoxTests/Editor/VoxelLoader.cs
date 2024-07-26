@@ -28,7 +28,7 @@ public class VoxelLoader : MonoBehaviour
         GameObject.Find("Main Camera").GetComponent<CameraController>()._target = GameObject.Find("CameraAnchor").transform;
 
 
-        foreach (Voxel voxel in VoxelReader.Read("Assets/LoadVoxTests/src.vox"))
+        foreach (Voxel voxel in VoxelReader.Read("Assets/LoadVoxTests/untitled.vox"))
         {
             GameObject prefab = FindAdaptedPrefab(voxel);
             if(prefab != null)
@@ -39,7 +39,7 @@ public class VoxelLoader : MonoBehaviour
             }
         }
         print("yup");
-        EditorSceneManager.SaveScene(newScene, "Assets/LoadVoxTests/myScene.unity");
+        EditorSceneManager.SaveScene(newScene, "Assets/LoadVoxTests/myNewScene.unity");
     }
 
     private static GameObject FindAdaptedPrefab(Voxel vox)
@@ -114,8 +114,28 @@ public class VoxelLoader : MonoBehaviour
             case 79:
                 found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\Art\\test import\\tiles\\tile block\\rouille\\tile_slope_prefab.prefab");
                 break;
+            case 32:
+                switch (UnityEngine.Random.Range(0, 2))
+                {
+                    case 0:
+                        found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_sable.prefab");
+                        break;
+                    case 1:
+                        found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Prefab_tile_block_sable_foncé.prefab");
+                        break;
+                }
+                break;
+            case 41:
+                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Interactibles\\Prefabs\\DiveSpot.prefab");
+                break;
+            case 8:
+                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\ConcreteGround.prefab");
+                break;
+            case 72:
+                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\ConcreteWall.prefab");
+                break;
             default:
-                print("you probably missed somewhere with color index : "+vox.colorIndex);
+                print("you probably missed somewhere with color index : " + vox.colorIndex);
                 break;
         }
         return found;

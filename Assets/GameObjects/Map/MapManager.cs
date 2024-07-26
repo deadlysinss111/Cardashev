@@ -69,10 +69,6 @@ public class MapManager : MonoBehaviour
             RaycastTarget();
         }
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            MoveCloud();
-        }
     }
 
     void MovePlayerTo(GameObject nodeToMoveTo)
@@ -197,16 +193,6 @@ public class MapManager : MonoBehaviour
     {
         // generate the event via a coroutine
         // display the event prompt on the canvas while the event is generating.
-    }
-
-    void MoveCloud()
-    {
-        RaycastHit hit;
-        // Use a Raycast to get the map node that was targeted
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, _clickableLayers))
-        {
-            _radioactiveCloud.GetComponent<ToxicTornado>().UpdTarget(hit.transform.position);
-        }
     }
 
     void InitMapGrid()

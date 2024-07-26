@@ -77,6 +77,7 @@ static public class GI
 
     static public GameObject _map; // maybe not correctly written (should be an array ?)
     static public float _gameTimer;
+    static public float _lastRoomTimer;
 
     static public string _cursorVoid = null;
     static public string _cursorTiles = null;

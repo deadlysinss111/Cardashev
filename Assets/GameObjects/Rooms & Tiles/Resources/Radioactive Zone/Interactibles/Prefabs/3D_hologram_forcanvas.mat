@@ -47,11 +47,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _Ambient_Occlusion: 0
-    - _Dessolve_Amount: 0.15
+    - _Dessolve_Amount: 0.1
     - _Dessolve_Noise_Density: 200
-    - _Dessolve_Noise_Speed: 0.1
+    - _Dessolve_Noise_Speed: 0.12
     - _Flickering_Frequency: 0.9
-    - _Flickering_Intensity: 0.2
+    - _Flickering_Intensity: 0.1
     - _Fresnel_Power: 0.4
     - _Glitch_Amount: 0.5
     - _Glitch_Frequency: 20
@@ -68,10 +68,10 @@ Material:
     m_Colors:
     - _Base_Color: {r: 0.10980394, g: 0.38477045, b: 0.7921569, a: 1}
     - _Dessolve_Noise_Tiling: {r: 0, g: 1, b: 0, a: 0}
-    - _Fresnel_Color: {r: 0, g: 0.4112266, b: 2.9960787, a: 0}
+    - _Fresnel_Color: {r: 0, g: 0.102806635, b: 0.74901956, a: 0}
     - _General_Offset: {r: 0, g: 0, b: 0, a: 0}
     - _Hologram_Color: {r: 0, g: 0.2510171, b: 0.7264151, a: 1}
-    - _Primary_Color: {r: 0, g: 0.51765645, b: 1.4980392, a: 1}
+    - _Primary_Color: {r: 0, g: 0, b: 0, a: 1}
     - _Secondary_Color: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

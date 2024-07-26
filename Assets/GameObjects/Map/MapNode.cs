@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.U2D;
@@ -159,10 +160,9 @@ public class MapNode : MonoBehaviour
                 {
                     _roomIconSprite = resources.SHOP_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.SHOP_ICON;
-                    Transform temp = _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
-                    _ScaleParent.transform.localScale *= 0.3f;
-                    _RoomIcon3D.transform.localPosition = new Vector3(0, 1.5f, 0);
+                    _ScaleParent.transform.localPosition = new Vector3(0, 1.1f, 0);
+                    _ScaleParent.transform.localScale = new Vector3(.3f, .3f, .3f);
                     _defaultHoloColor = new Color(1.498f, 1.073f, 0f);
                     _defaultFresnelColor = new Color(2.996f, 2.3f, 0f);
                     SetDefaultColorTo(Color.yellow);
@@ -174,8 +174,9 @@ public class MapNode : MonoBehaviour
                     _roomIconSprite = resources.BOSS_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.BOSS_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().materials[0].SetFloat("_Hologram_Density", 16);
-                    _ScaleParent.transform.localScale *= 2;
-                    _RoomIcon3D.transform.localPosition = new Vector3(0, 1f, 0);
+                    _ScaleParent.transform.localPosition = new Vector3(-0.07f, -0.2f, 0);
+                    _ScaleParent.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
+                    GetComponent<BoxCollider>().size = new Vector3(2, 4.8f, 0);
                     SetDefaultColorTo(Color.black);
                     _stringType = "Boss";
                     break;
@@ -185,12 +186,11 @@ public class MapNode : MonoBehaviour
                     _roomIconSprite = resources.REST_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.REST_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
-                    _ScaleParent.transform.localScale *= 0.5f;
-                    _RoomIcon3D.transform.localPosition = new Vector3(0, 1.5f, 0);
+                    _ScaleParent.transform.localPosition = new Vector3(0, 1.1f, 0);
+                    _ScaleParent.transform.localScale = new Vector3(.45f, .45f, .45f);
                     _defaultHoloColor = new Color(0f, 3f, 0f);
                     _defaultFresnelColor = new Color(0.092f, 1.5f, 0.43f);
                     SetDefaultColorTo(Color.white);
-                    //_stringType = "Rest";
                     _stringType = "Combat";
                     break;
                 }
@@ -199,7 +199,8 @@ public class MapNode : MonoBehaviour
                     _roomIconSprite = resources.EVENT_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.EVENT_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
-                    _ScaleParent.transform.localScale *= 0.3f;
+                    _ScaleParent.transform.localPosition = new Vector3(-.1f, .4f, 0);
+                    _ScaleParent.transform.localScale = new Vector3(.3f, .3f, .3f);
                     SetDefaultColorTo(Color.green);
                     _stringType = "Event";
                     break;
@@ -216,8 +217,8 @@ public class MapNode : MonoBehaviour
                 {
                     _roomIconSprite = resources.ELITE_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.ELITE_ICON;
-                    _ScaleParent.transform.localScale *= 0.3f;
-                    _RoomIcon3D.transform.position += Vector3.up;
+                    _ScaleParent.transform.localPosition = new Vector3(-.04f, 1.25f, 0);
+                    _ScaleParent.transform.localScale = new Vector3(.3f, .3f, .3f);
                     SetDefaultColorTo(Color.magenta);
                     //_stringType = "Elite";
                     _stringType = "Combat";
@@ -263,5 +264,24 @@ public class MapNode : MonoBehaviour
     private void OnMouseExit()
     {
         _RoomIcon3D.GetComponent<RoomIconAnim>().MouseExit();
+    }
+
+    public void Contaminate(bool value)
+    {
+        switch (value)
+        {
+            case true:
+                Outline outline = gameObject.AddComponent<Outline>();
+                outline.OutlineColor = new Color(91, 255, 0);
+                outline.OutlineWidth = 5;
+                break;
+
+            case false:
+                if(gameObject.TryGetComponent<Outline>(out Outline target))
+                {
+                    Destroy(target);
+                }
+                break;
+        }
     }
 }

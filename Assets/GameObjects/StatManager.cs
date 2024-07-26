@@ -46,7 +46,7 @@ public class StatManager : MonoBehaviour
     /*
      FIELDS
     */
-    int _baseHealth;
+    public int _baseHealth;
     float _baseMoveSpeed;
     float _baseAttack;
 
@@ -94,7 +94,7 @@ public class StatManager : MonoBehaviour
     void Start()
     {
         if (gameObject.TryGetComponent<PlayerManager>(out PlayerManager manager))
-            _health = Idealist._instance._baseHP;
+            _health = CurrentRunInformations._playerHP;
         else if (gameObject.TryGetComponent<Enemy>(out Enemy enemy))
             _health = enemy._health;
         else if (gameObject.TryGetComponent<Interactible>(out Interactible interactible))
@@ -102,7 +102,10 @@ public class StatManager : MonoBehaviour
         else
             throw new Exception("are you trying to have a stat manager on a non player / enemy / interactible object?");
 
-        _baseHealth = _health;
+        if (gameObject.TryGetComponent<PlayerManager>(out _))
+            _baseHealth = Idealist._instance._baseHP;
+        else
+            _baseHealth = _health;
         _moveSpeed = 1.5f;
         _baseMoveSpeed = _moveSpeed;
         _attack = 1;
@@ -220,6 +223,11 @@ public class StatManager : MonoBehaviour
                 player._UeOnDefeat.Invoke();
                 _gameOverManager.StartGameOver();
             }
+        }
+        else
+        {
+            if (gameObject.TryGetComponent<PlayerManager>(out _))
+                CurrentRunInformations._playerHP = _health;
         }
     }
 
