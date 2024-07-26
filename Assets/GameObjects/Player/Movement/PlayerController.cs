@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // TODO: Make them not spam Console to de-comment them
-        //FaceTarget();
+        FaceTarget();
 
         if (_resetMoveMult == false) return;
         if (GI._PlayerFetcher().GetComponent<QueueComponent>().GetActiveCard() is not null) return;
@@ -212,8 +212,14 @@ public class PlayerController : MonoBehaviour
     // Rotate the player to face the target destination
     private void FaceTarget()
     {
-        // Calculate the direction to the target destination
-        Vector3 direction = (_agent.destination - transform.position).normalized; //TODO: Orient based on the path, not the destination if possible
+        if(_paths.Count == 0) { return; }
+
+        Vector3 direction;
+        if (_paths[0].Count >= 3)
+            // Calculate the direction to the target destination
+            direction = (_paths[0][_paths[0].Count - 3] - transform.position).normalized;
+        else
+            direction = (_agent.destination - transform.position).normalized; 
 
         // Rotate the player towards the target destination
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
