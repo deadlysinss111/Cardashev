@@ -80,6 +80,7 @@ public class Ebouillantueur : Enemy
     IEnumerator MeleeAttack()
     {
         _animator.Play("Puke");
+        FaceTarget();
 
         yield return new WaitForNextFrameUnit();
 
@@ -118,6 +119,7 @@ public class Ebouillantueur : Enemy
         }*/
         _timeBeforeDecision = 4f + AnimatorHelper.GetAnimationLength(_animator, "Shooting");
         _animator.Play("Shooting");
+        FaceTarget();
 
         yield return new WaitForNextFrameUnit();
 
@@ -173,6 +175,8 @@ public class Ebouillantueur : Enemy
         Vector3 dest =  RandomNavmeshLocation(4, targetArea);
 
         if (dest == Vector3.zero) throw new Exception("error in targeting AI for ebouillantueur");
+
+        FaceTarget(dest);
 
         _agent.SetDestination(dest);
         NavMeshPath path = new NavMeshPath();

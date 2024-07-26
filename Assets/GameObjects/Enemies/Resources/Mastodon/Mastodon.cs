@@ -27,7 +27,8 @@ public class Mastodon : Enemy
         _name = "Mastodon";
         _agent.speed = 2f;
         _dmg = 15;
-        
+        _lookRotationSpeed = 8f;
+
     }
 
     // Enemy's decision
@@ -77,7 +78,7 @@ public class Mastodon : Enemy
         _timeBeforeDecision = 3;
         // ANIM HERE
         Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
-        LookInDirectionTarget(dir, 8f);
+        FaceTarget(dir);
         _animator.Play("Melee");
         while (_timeBeforeDecision > 1)
         {
@@ -91,7 +92,7 @@ public class Mastodon : Enemy
         _timeBeforeDecision = 3.5f;
         // ANIM HERE
         Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
-        LookInDirectionTarget(dir, 8f);
+        FaceTarget(dir);
         while (_timeBeforeDecision > 1.5f)
         {
             yield return null;
@@ -194,7 +195,7 @@ public class Mastodon : Enemy
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _agent.SetDestination(dest);
-        LookInDirectionTarget(dest, 8f);
+        FaceTarget(dest);
 
         _timeBeforeDecision = GetPathTime(path);
     }
@@ -283,7 +284,7 @@ public class Mastodon : Enemy
         NavMesh.CalculatePath(transform.position, closestFromMe.transform.position + new Vector3(0, 0.5f, 0) - Vector3.Normalize(closestFromMe.transform.position - transform.position) * 2, NavMesh.AllAreas, paths[0]);
         NavMesh.CalculatePath(
             closestFromTarget.transform.position + new Vector3(0, 0.5f, 0) - Vector3.Normalize(closestFromTarget.transform.position - _target.transform.position) * 2, 
-            _target.transform.position + new Vector3(0, 0.5f, 0) ,
+            _target.transform.position + new Vector3(0, 0.5f, 0),
             NavMesh.AllAreas, paths[1]);
         //print("time 1 : " + GetPathTime(paths[0]));
         //print("time 2 : " + GetPathTime(paths[1]));
@@ -301,7 +302,7 @@ public class Mastodon : Enemy
         destTwo = FindClosestDivSpotFromTarget(out _).transform.position + new Vector3(0, 0.5f, 0);
 
         _agent.SetDestination(destOne);
-        LookInDirectionTarget(destOne, 8f);
+        FaceTarget(destOne);
 
         float pathTime = GetPathTime(paths[0]);
         while(pathTime > 0)
@@ -340,7 +341,7 @@ public class Mastodon : Enemy
         }
 
         _agent.SetDestination(destTwo);
-        LookInDirectionTarget(destTwo, 8f);
+        FaceTarget(destTwo); 
 
         pathTime = GetPathTime(paths[1]);
         while (pathTime > 0)
@@ -365,7 +366,7 @@ public class Mastodon : Enemy
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _agent.SetDestination(dest);
-        LookInDirectionTarget(dest, 8f);
+        FaceTarget(dest);
 
         _timeBeforeDecision = GetPathTime(path);
 
@@ -387,7 +388,7 @@ public class Mastodon : Enemy
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
         _agent.SetDestination(dest);
-        LookInDirectionTarget(dest, 8f);
+        FaceTarget(dest);
     }
 
     void IsDiveShorstestThanDirectWalk()
