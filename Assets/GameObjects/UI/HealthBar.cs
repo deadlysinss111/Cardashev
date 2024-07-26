@@ -18,7 +18,7 @@ public class HealthBar : MonoBehaviour
         _healthBar = GameObject.Find("HealthBar");
         GameObject player = GameObject.Find("Player");
         _statManager = player.GetComponent<StatManager>();
-        _MaxHealth = _statManager.Health;
+        _MaxHealth = _statManager._baseHealth;
 
         _defaultColor = _healthBar.GetComponent<Slider>().fillRect.gameObject.GetComponent<Image>().color;
     }
