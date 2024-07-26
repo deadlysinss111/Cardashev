@@ -41,11 +41,13 @@ public class Merchant : Interactible
                 curCard.GetComponent<Animator>().SetTrigger("Shake");
                 return Card.CollectibleState.NOTHING;
             });
+            _shopSupply[i].SetActive(false);
         }
     }
 
     public override void OnRaycastHit()
     {
+        //print("hitted");
         if (Vector3.Distance(this.transform.position, _playerRef.transform.position) <= _RaycastHitDist)
             StartCoroutine(BandAidOffsetDrawing());
         else
@@ -65,6 +67,10 @@ public class Merchant : Interactible
 
     void DrawOfferedCards()
     {
+        foreach(GameObject go in _shopSupply)
+        {
+            go.SetActive(true);
+        }
         GI._PManFetcher().SetToState("Empty");
         CanvasGroup shopInterface = _interface.GetComponent<CanvasGroup>();
         shopInterface.alpha = 1;
@@ -74,5 +80,19 @@ public class Merchant : Interactible
 
         // Show to the player his current money
         _canvasData._shopPlayerCredits.text = CurrentRunInformations._goldAmount.ToString();
+    }
+
+    public void ExitInterface()
+    {
+        foreach (GameObject go in _shopSupply)
+        {
+            go.SetActive(false);
+        }
+        CanvasGroup shopInterface = GameObject.Find("ShopInterface").GetComponent<CanvasGroup>();
+        shopInterface.alpha = 0;
+        shopInterface.blocksRaycasts = false;
+        shopInterface.interactable = false;
+        GameObject.Find("Credit Icon").SetActive(false);
+        GI._PManFetcher().SetToDefault();
     }
 }

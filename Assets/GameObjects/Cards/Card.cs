@@ -19,7 +19,7 @@ public class Card : MonoBehaviour
     public string _name;
     public string _description;
     public float _duration;
-    public int[] _stats;
+    public Dictionary<string, int> _stats;
     public int _goldValue;
 
     // Utilities
@@ -43,7 +43,7 @@ public class Card : MonoBehaviour
     public Action _clickEffect;     // Called when the card is clicked in the HUD
 
     // Used for previews
-    [SerializeField] protected bool _shotForPreview = false;
+    [SerializeField] protected bool _shotForPreview;// = false;
     [SerializeField] protected bool _trajectoryForPreview = false;
     protected UnityEngine.Object _ghostHitboxPrefab;
     protected GameObject _ghostHitbox = null;
@@ -51,6 +51,7 @@ public class Card : MonoBehaviour
     protected Vector3 _originFromLastBellCurveCalculated;
     protected Vector3 _destinationFromLastBellCurveCalculated;
     [SerializeField] protected float _apex = 10.0f;
+    bool isMovementCard = false;
 
     // Level related
     public int _currLv;
@@ -85,7 +86,7 @@ public class Card : MonoBehaviour
         _isCollectible = false;
     }
 
-    protected void Init(float duration, byte maxLvl, int goldValue, int[] stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
+    protected void Init(float duration, byte maxLvl, int goldValue, Dictionary<string, int> stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
     {
         _timeStopedEvent = TimeStopedMouseEnter;
 
@@ -281,10 +282,7 @@ public class Card : MonoBehaviour
     // ------
     public virtual void OnUpgrade()
     {
-        for (int i = 0; i < _stats.Length; i++)
-        {
-            _stats[i] += 2 * _currLv;
-        }
+       
     }
 
     public bool CanUpgrade()
@@ -297,7 +295,7 @@ public class Card : MonoBehaviour
         if (CanUpgrade())
         {
             _currLv++;
-            GameObject frame = (GameObject)Instantiate(Resources.Load("lvl" + _currLv+"sprite"), gameObject.transform);
+            GameObject frame = (GameObject)Instantiate(Resources.Load("lvl" + _currLv + "sprite"), gameObject.transform);
             print("frame : " + frame);
             OnUpgrade();
             UpdateDescription();
@@ -337,8 +335,11 @@ public class Card : MonoBehaviour
         Vector3 selTilePos = GI._PManFetcher()._lastHit.transform.position + new Vector3(0.0f, 0.5f, 0.0f);
         Vector3 shoulderOffset = new Vector3(0, 1, 0);
 
+        bool shouldCullPreview = false;
+
         // For some reason duplciating this code breaks some culling actions lmao
-        bool shouldCullPreview = !_selectableArea.CheckForSelectableTile(selTilePos);
+        if (_selectableArea != null)
+            shouldCullPreview = !_selectableArea.CheckForSelectableTile(selTilePos);
 
         // Shows the ghost hitbox at selected tile
         if (_ghostHitboxPrefab != null)
@@ -347,7 +348,8 @@ public class Card : MonoBehaviour
             if (_ghostHitbox == null)
             {
                 _ghostHitbox = Instantiate((GameObject)_ghostHitboxPrefab);
-                EnsureSelectableTilesByRain();
+                if(_selectableArea != null)
+                    EnsureSelectableTilesByRain();
             }
 
             // Makes the preview dissapear if the play would be invalid
@@ -365,7 +367,10 @@ public class Card : MonoBehaviour
         // Shows the ghost ray at selected tile
         if (_shotForPreview)
         {
-            // IMMENSE ratilo
+            if (shouldCullPreview)
+                ClearPath();
+            if (_ghostHitbox != null)
+                TrajectoryToolbox.LineRenderWithTarget(GI._PManFetcher()._virtualPos + new Vector3(0, 1.8f, 0), selTilePos + new Vector3(0, 1.5f, 0), ref _ghostHitbox.GetComponent<AOEPreviewScript>()._lineRenderer);
         }
 
         // Show the trajectory at selected tile

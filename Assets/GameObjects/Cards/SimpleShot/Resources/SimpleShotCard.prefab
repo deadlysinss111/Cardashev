@@ -517,7 +517,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   _actionColor: {r: 0, g: 0, b: 0, a: 0}
-  _shotForPreview: 0
+  _shotForPreview: 1
   _trajectoryForPreview: 0
   _apex: 10
   _currLv: 1

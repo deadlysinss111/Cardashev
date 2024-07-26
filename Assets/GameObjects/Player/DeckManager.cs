@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -211,6 +212,7 @@ public class DeckManager : MonoBehaviour
     public void LoadDeck()
     {
         List<GameObject> toLoad = GI._PManFetcher().GetDeck();
+        //List<GameObject> toLoad = GameObject.Find("DeckContainer").GetComponentsInChildren<GameObject>().ToList();
         foreach (GameObject card in toLoad)
         {
             _remainsInDeck.Add(card);

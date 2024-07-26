@@ -14,6 +14,7 @@ public class RoomIconAnim : MonoBehaviour
     public void Select()
     {
         _animator.SetTrigger("Select");
+        _animator.SetBool("LockState", true);
     }
 
     public void MouseEnter()
@@ -26,5 +27,11 @@ public class RoomIconAnim : MonoBehaviour
     public void MouseExit()
     {
         _animator.SetBool("MouseHover", false);
+    }
+
+    public void Lock()
+    {
+        _animator.SetTrigger("Lock");
+        _animator.SetBool("LockState", true);
     }
 }

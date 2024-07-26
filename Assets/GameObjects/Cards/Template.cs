@@ -21,7 +21,11 @@ public class TEMPLATE : Card
     private void Awake()
     {
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
-        int[] stats = new int[0];
+        Dictionary<string, int> stats = new Dictionary<string, int>()
+        {
+            {"", 0}
+        };
+        
         /* stats fill there */
         base.Init(2, 2, 60, stats);
 
@@ -38,7 +42,12 @@ public class TEMPLATE : Card
         _selectableArea.FindSelectableArea(GI._PManFetcher()._virtualPos, 0, 0);
 
         manager.SetLeftClickTo(Template);
-        manager.SetRightClickTo(() => { ExitState(); GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault(); });
+        manager.SetRightClickTo(() => { 
+            ExitState(); 
+            GameObject.Find("Player").GetComponent<PlayerManager>().SetToDefault();
+            if (_ghostHitbox != null)
+                Destroy(_ghostHitbox);
+        });
         manager.SetHoverTo(Template);
     }
 

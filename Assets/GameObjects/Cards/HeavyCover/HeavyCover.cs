@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HeavyCover : Card
@@ -12,7 +13,7 @@ public class HeavyCover : Card
     private void Awake()
     {
         // Call the Card Initialization method with arguments as following (duration, maxLvl, goldValue, Stats)
-        int[] stats = new int[0];
+        Dictionary<string, int> stats = new Dictionary<string, int>();
         /* stats fill there */
         base.Init(2, 2, 60, stats);
 
