@@ -187,7 +187,7 @@ public class MapNode : MonoBehaviour
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.REST_ICON;
                     _RoomIcon3D.GetComponent<MeshRenderer>().gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
                     _ScaleParent.transform.localPosition = new Vector3(0, 1.1f, 0);
-                    _ScaleParent.transform.localScale = new Vector3(.35f, .35f, .35f);
+                    _ScaleParent.transform.localScale = new Vector3(.45f, .45f, .45f);
                     _defaultHoloColor = new Color(0f, 3f, 0f);
                     _defaultFresnelColor = new Color(0.092f, 1.5f, 0.43f);
                     SetDefaultColorTo(Color.white);
