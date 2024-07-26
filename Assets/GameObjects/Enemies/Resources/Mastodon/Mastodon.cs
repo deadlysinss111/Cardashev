@@ -93,6 +93,7 @@ public class Mastodon : Enemy
         // ANIM HERE
         Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
         FaceTarget(dir);
+        _animator.Play("Bite");
         while (_timeBeforeDecision > 1.5f)
         {
             yield return null;
