@@ -511,7 +511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
       propertyPath: events.Array.data[0].choices.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
       propertyPath: events.Array.data[1].choices.Array.size
@@ -556,6 +556,22 @@ PrefabInstance:
     - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
       propertyPath: events.Array.data[0].choices.Array.data[0].subsequentEvent.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].subsequentChoices.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].subsequentChoices.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[0].subsequentChoices.Array.data[0].name
+      value: Leave
+      objectReference: {fileID: 0}
+    - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
+      propertyPath: events.Array.data[0].choices.Array.data[1].subsequentChoices.Array.data[0].name
+      value: Leave
       objectReference: {fileID: 0}
     - target: {fileID: 5330618245984815193, guid: d5d4d514fe420934bb787430a6baba19, type: 3}
       propertyPath: events.Array.data[0].choices.Array.data[0].result.m_PersistentCalls.m_Calls.Array.size

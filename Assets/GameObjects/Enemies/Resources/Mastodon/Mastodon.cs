@@ -136,7 +136,7 @@ public class Mastodon : Enemy
             timeLeft -= Time.deltaTime;
             yield return null;
         }
-        _dmg = 15;
+        _dmg = 35;
     }
 
     GameObject FindClosestBarrel(out float dist)
