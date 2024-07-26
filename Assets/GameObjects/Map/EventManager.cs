@@ -16,21 +16,37 @@ public class EventManager : MonoBehaviour
             public UnityEvent result;
             [TextArea] public string description;
             public EventChoice[] subsequentChoices = new EventChoice[0];
+
+            [Range(0,100)] public int succesPercentage;
+            public EventChoice[] success;
+            public EventChoice[] fail;
         }
 
         public string name;
+
+        public bool isActive;
 
         [TextArea] public string description;
         public EventChoice[] choices;
     }
 
     public RandomEvent[] events;
+    List<RandomEvent> availableEvents;
     TextMeshProUGUI title;
     TextMeshProUGUI description;
     GameObject choicesList;
     List<GameObject> currentChoices;
     [SerializeField] GameObject CHOICE_BUTTON;
     Image splashArt;
+
+    private void Awake()
+    {
+        foreach (var item in events)
+        {
+            if (item.isActive)
+                availableEvents.Add(item);
+        }
+    }
 
     public void StartEvent()
     {
@@ -42,7 +58,7 @@ public class EventManager : MonoBehaviour
         splashArt = GameObject.Find("Event Splash Art").GetComponent<Image>();
 
         GameObject.Find("Canvas").GetComponent<Animator>().SetTrigger("Slide In");
-        RandomEvent e = events[Random.Range(0, events.Length)];
+        RandomEvent e = availableEvents[Random.Range(0, events.Length)];
 
         title.text = e.name;
         description.text = e.description;
@@ -61,11 +77,47 @@ public class EventManager : MonoBehaviour
             button.GetComponentInChildren<TextMeshProUGUI>().text = choices[i].name;
             UnityEvent func = choices[i].result;
             button.GetComponent<Button>().onClick.AddListener(() => { func?.Invoke(); });
-            if (choices[i].subsequentChoices.Length > 0)
+            if (choices[i].succesPercentage > 0)
+            {
+                int successPerc = choices[i].succesPercentage;
+                EventChoice success = choices[i].success[0];
+                EventChoice fail = choices[i].fail[0];
+                button.GetComponent<Button>().onClick.AddListener(() => { RandomBooleanSuccess(successPerc, success, fail); });
+            }
+            else if (choices[i].subsequentChoices.Length > 0)
             {
                 EventChoice temp = choices[i];
                 button.GetComponent<Button>().onClick.AddListener(() => { NextPrompt(temp); });
             }
+        }
+    }
+
+    void NextPrompt(EventChoice eventChoice)
+    {
+        foreach (GameObject button in currentChoices)
+        {
+            Destroy(button);
+        }
+        currentChoices.Clear();
+
+        title.text = eventChoice.name;
+        description.text = eventChoice.description;
+        AddChoices(eventChoice.subsequentChoices);
+    }
+
+    public void RandomBooleanSuccess(int successPerc, EventChoice successResult, EventChoice failResult)
+    {
+        if (Random.Range(1, 101) < successPerc)
+        {
+            // Successful result
+            NextPrompt(successResult);
+            successResult.result.Invoke();
+        }
+        else
+        {
+            // Failed result
+            NextPrompt(failResult);
+            failResult.result.Invoke();
         }
     }
 
@@ -92,23 +144,5 @@ public class EventManager : MonoBehaviour
         GameObject.Find("Canvas").GetComponent<Animator>().SetTrigger("Slide Out");
 
         GI._canClickOnNode = true;
-    }
-
-    void NextPrompt(EventChoice eventChoice)
-    {
-        foreach (GameObject button in currentChoices)
-        {
-            Destroy(button);
-        }
-        currentChoices.Clear();
-
-        title.text = eventChoice.name;
-        description.text = eventChoice.description;
-        AddChoices(eventChoice.subsequentChoices);
-    }
-
-    public void Debug(string msg)
-    {
-        print(msg);
     }
 }
