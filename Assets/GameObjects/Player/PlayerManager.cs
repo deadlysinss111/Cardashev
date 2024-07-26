@@ -349,6 +349,18 @@ public class PlayerManager : MonoBehaviour
     // Might be replaced later?
     private void SetAnimations()
     {
+        // Jumping conditions
+        if (_agent.enabled == false && AnimatorHelper.GetCurrentAnimationName(_animator).StartsWith("Jump") == false)
+        {
+            _animator.Play(ANIMSTATES.JUMP);
+            return;
+        }
+        else if (_agent.enabled && _animator.GetCurrentAnimatorStateInfo(0).IsName("JumpLoop"))
+        {
+            _animator.Play(ANIMSTATES.END_JUMP);
+            return;
+        }
+
         Card card = GI._PlayerFetcher().GetComponent<QueueComponent>().GetActiveCard();
 
         // Card specific conditions
@@ -360,14 +372,6 @@ public class PlayerManager : MonoBehaviour
                 _animator.Play(ANIMSTATES.OVERDRIVE);
             return;
         }
-
-        // Jumping conditions
-        if (_agent.enabled == false && AnimatorHelper.GetCurrentAnimationName(_animator).StartsWith("Jump") == false)
-        {
-            _animator.Play(ANIMSTATES.JUMP);
-        }
-        else if (_agent.enabled && _animator.GetCurrentAnimatorStateInfo(0).IsName("JumpLoop"))
-            _animator.Play(ANIMSTATES.END_JUMP);
 
         if (AnimatorHelper.GetCurrentAnimationName(_animator).StartsWith("Jump"))
             return;
