@@ -29,6 +29,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/GameObjects/Rooms & Tiles/Resources/Radioactive Zone/RoomPrefabs/Shop/RadioactiveShop1.unity
     guid: 7e14b034b07e7c84c92a2d2f94f421b4
+  - enabled: 1
+    path: Assets/Scenes/AnimDebug.unity
+    guid: cf6bc65cd019ec24c86e8ba9d31b7d34
+  - enabled: 1
+    path: Assets/Scenes/ScaleTest.unity
+    guid: 66d74680fb3f4b54abc82dbcc2996469
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 29bc7528342786d449f23dc7b1c50b14, type: 2}
   m_UseUCBPForAssetBundles: 0

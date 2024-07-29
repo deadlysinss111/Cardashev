@@ -7,12 +7,14 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using UnityEngine.VFX;
 
 public class LaunchGrenade : Card
 {
     //GameObject _previwRadius;
 
     GameObject _grenadePrefab;
+    [SerializeField] GameObject _explosion;
 
     private void Awake()
     {
@@ -80,6 +82,7 @@ public class LaunchGrenade : Card
         grenadeScript._dmg = _stats["damage"];
         grenadeScript._origin = _originFromLastBellCurveCalculated + new Vector3(0, 1, 0);
         grenadeScript._explosionRadius = _stats["explosionRadius"];
+        grenadeScript._explosionEffect = _explosion;
 
         base.Effect();
     }

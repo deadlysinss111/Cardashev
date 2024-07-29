@@ -518,7 +518,6 @@ MonoBehaviour:
   _name: 
   _description: 
   _duration: 0
-  _stats: 
   _goldValue: 0
   _cardEndTimestamp: 0
   _id: 0
@@ -531,6 +530,7 @@ MonoBehaviour:
   _apex: 10
   _currLv: 1
   _maxLv: 3
+  _explosion: {fileID: 8802047266448463153, guid: 0185aa431911f7249aa2c128193d339f, type: 3}
 --- !u!65 &7929307895490609558
 BoxCollider:
   m_ObjectHideFlags: 0
