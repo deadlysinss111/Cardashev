@@ -33283,7 +33283,11 @@ PrefabInstance:
     - target: {fileID: 323525526620373287, guid: 475d99e80f530f94ebfe578cb7e520aa, type: 3}
       propertyPath: m_NavMeshData
       value: 
-      objectReference: {fileID: 23800000, guid: c34b77b98b8b67541993474576cad88a, type: 2}
+      objectReference: {fileID: 23800000, guid: 41f0d5c596533694caf76c6e58ac9edc, type: 2}
+    - target: {fileID: 323525526620373287, guid: 475d99e80f530f94ebfe578cb7e520aa, type: 3}
+      propertyPath: m_UseGeometry
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1374791434764442654, guid: 475d99e80f530f94ebfe578cb7e520aa, type: 3}
       propertyPath: m_Name
       value: RoomAnchor

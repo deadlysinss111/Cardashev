@@ -199,8 +199,10 @@ public class Card : MonoBehaviour
 
         foreach (RaycastResult result in results)
         {
-            if (HierarchySearcher.FindParentdRecursively(result.gameObject.transform, gameObject.name))
+            GameObject cardObj = HierarchySearcher.FindParentdRecursively(result.gameObject.transform, gameObject.name);
+            if (cardObj != null)
             {
+                if (cardObj.GetComponent<Card>()._id != _id) continue;
                 OnMouseEnter();
                 _timeStopedEvent = TimeStopedMouseExit;
                 _timeStopedClick = ()=> { _clickEffect(); GI.temp = false; };
@@ -222,8 +224,10 @@ public class Card : MonoBehaviour
 
         foreach (RaycastResult result in results)
         {
-            if (HierarchySearcher.FindParentdRecursively(result.gameObject.transform, gameObject.name))
+            GameObject cardObj = HierarchySearcher.FindParentdRecursively(result.gameObject.transform, gameObject.name);
+            if (cardObj != null)
             {
+                if (cardObj.GetComponent<Card>()._id != _id) continue;
                 return;
             }
         }
