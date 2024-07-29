@@ -29,7 +29,6 @@ public class DeckManager : MonoBehaviour
         _curHandSize = 0;
         _cardBar = GameObject.Find("DrawCardBar");
 
-
         LoadDeck();
 
         DrawInit();

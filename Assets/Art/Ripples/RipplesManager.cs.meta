@@ -1,2 +1,12 @@
 fileFormatVersion: 2
 guid: 8a8020f1208562f438c095f1a8175828
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ripplePrefab: {fileID: 6500486944387539853, guid: 336e7f9ea6d0e6b41bd2bd1d071e24d8, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
