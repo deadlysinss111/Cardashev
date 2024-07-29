@@ -17,7 +17,7 @@ public class EventManager : MonoBehaviour
             [TextArea] public string description;
             public EventChoice[] subsequentChoices = new EventChoice[0];
 
-            [Range(0,100)] public int succesPercentage;
+            [Range(0,100)] public int successPercentage;
             public EventChoice[] success;
             public EventChoice[] fail;
         }
@@ -31,6 +31,7 @@ public class EventManager : MonoBehaviour
     }
 
     public RandomEvent[] events;
+    public RandomEvent[] stormEvents;
     List<RandomEvent> availableEvents;
     TextMeshProUGUI title;
     TextMeshProUGUI description;
@@ -41,6 +42,7 @@ public class EventManager : MonoBehaviour
 
     private void Awake()
     {
+        availableEvents = new List<RandomEvent>();
         foreach (var item in events)
         {
             if (item.isActive)
@@ -58,13 +60,33 @@ public class EventManager : MonoBehaviour
         splashArt = GameObject.Find("Event Splash Art").GetComponent<Image>();
 
         GameObject.Find("Canvas").GetComponent<Animator>().SetTrigger("Slide In");
-        RandomEvent e = availableEvents[Random.Range(0, events.Length)];
+        RandomEvent e = availableEvents[Random.Range(0, availableEvents.Count)];
 
         title.text = e.name;
         description.text = e.description;
         // splashArt = e.
         AddChoices(e.choices);
         
+    }
+    void LoadEvents()
+    {
+        RandomEvent newEvent;
+
+        // ---------- New Event Template ----------
+        if (true)
+        {
+            newEvent = new RandomEvent();
+            newEvent.name = "";
+            newEvent.description = "";
+
+            // Adding a new choice 
+            newEvent.choices[0].name = "";
+            newEvent.choices[0].description = "";
+            newEvent.choices[0].result = new UnityEvent();
+            newEvent.choices[0].result.AddListener(() => { });
+
+            // Subsequent choices
+        }
     }
 
     void AddChoices(EventChoice[] choices)
@@ -76,10 +98,10 @@ public class EventManager : MonoBehaviour
             button.GetComponent<RectTransform>().localPosition = new Vector3(-300 + 300 * i, 38, 0);
             button.GetComponentInChildren<TextMeshProUGUI>().text = choices[i].name;
             UnityEvent func = choices[i].result;
-            button.GetComponent<Button>().onClick.AddListener(() => { func?.Invoke(); });
-            if (choices[i].succesPercentage > 0)
+            button.GetComponent<Button>().onClick.AddListener(() => { func.Invoke(); });
+            if (choices[i].successPercentage > 0)
             {
-                int successPerc = choices[i].succesPercentage;
+                int successPerc = choices[i].successPercentage;
                 EventChoice success = choices[i].success[0];
                 EventChoice fail = choices[i].fail[0];
                 button.GetComponent<Button>().onClick.AddListener(() => { RandomBooleanSuccess(successPerc, success, fail); });
@@ -91,6 +113,7 @@ public class EventManager : MonoBehaviour
             }
         }
     }
+
 
     void NextPrompt(EventChoice eventChoice)
     {
@@ -111,17 +134,17 @@ public class EventManager : MonoBehaviour
         {
             // Successful result
             NextPrompt(successResult);
-            successResult.result.Invoke();
+            //successResult.result.Invoke();
         }
         else
         {
             // Failed result
             NextPrompt(failResult);
-            failResult.result.Invoke();
+            //failResult.result.Invoke();
         }
     }
 
-    // <========== Event Function Library ==========> //
+    // <=============== Event Function Library ===============> //
     // Here you can code any function that would be used by an event that doesn't fit in any class in particular.
 
     public void ChangeGoldAmount(int amount)
