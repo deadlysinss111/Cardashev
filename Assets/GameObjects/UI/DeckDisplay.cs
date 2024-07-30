@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +7,7 @@ public class DeckDisplay : MonoBehaviour
 {
     GameObject _deckContainer;
     public GameObject _cardsCollection;
-
+    
     GameObject _collection;
 
     public GameObject _cardRowPrefab; // Prefab for a row of cards
@@ -43,7 +44,7 @@ public class DeckDisplay : MonoBehaviour
             clonedCard.SetActive(true);
             clonedCard.transform.localScale = new Vector3(2,2,2);
             clonedCard.transform.localPosition = Vector3.zero;
-
+            clonedCard.GetComponent<BoxCollider>().enabled = false;
             // Disable all scripts on the cloned card
             MonoBehaviour[] scripts = clonedCard.GetComponents<MonoBehaviour>();
             foreach (MonoBehaviour script in scripts)

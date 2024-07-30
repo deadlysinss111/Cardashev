@@ -27,7 +27,8 @@ public class GameOverManager : MonoBehaviour
 
     GameObject _menu;
     GameObject _collection;
-    GameObject _cardsCollection;
+
+    DeckDisplay _deckDisplay;
 
     void Start()
     {
@@ -43,12 +44,6 @@ public class GameOverManager : MonoBehaviour
         _hud = GameObject.Find("HUD");
 
         _menu = GameObject.Find("Menu");
-
-        _collection = GameObject.Find("Collection");
-
-        _cardsCollection = GameObject.Find("CardsCollection");
-
-        _collection.SetActive(false);
 
         GameObject player = GameObject.Find("Player");
         _playerManager = player.GetComponent<PlayerManager>();
@@ -94,22 +89,18 @@ public class GameOverManager : MonoBehaviour
         _hud.SetActive(false);
     }
 
+    public void Display()
+    {
+        _menu.SetActive(false);
+    }
+
     void DisableAllScripts()
     {
         _playerManager.SetToState("Empty");
     }
 
-    public void DeckDisplay()
-    {
-        _menu.SetActive(false);
-        GI._deckContainer.SetActive(true);
-        GI._deckContainer.transform.SetParent(_cardsCollection.transform);
-        _collection.SetActive(true);
-    }
-
     public void ExitButton()
     {
         _menu.SetActive(true);
-        _collection.SetActive(false);
     }
 }
