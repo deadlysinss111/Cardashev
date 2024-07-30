@@ -215,7 +215,7 @@ public class PlayerController : MonoBehaviour
         if(_paths.Count == 0) { return; }
 
         Vector3 direction;
-        if (_paths[0].Count >= 3)
+        if (_paths[0].Count >= 5)
             // Calculate the direction to the target destination
             direction = (_paths[0][_paths[0].Count - 3] - transform.position).normalized;
         else

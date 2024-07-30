@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7389181323828256387}
   m_Layer: 0
   m_Name: "Prefab_tile_block_sable_fonc\xE9"
-  m_TagString: Untagged
+  m_TagString: TMTopology
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

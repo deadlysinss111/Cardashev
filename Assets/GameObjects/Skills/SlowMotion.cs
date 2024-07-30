@@ -27,7 +27,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
         _pInput = GetComponent<PlayerInput>(); // Ensure PlayerInput component is attached
 
         // Initialize the radial progress bar
-        _radialProgressBar = _focusBar.transform.Find("RadialProgressBar").GetComponent<Image>();
+        //_radialProgressBar = _focusBar.transform.Find("RadialProgressBar").GetComponent<Image>();
     }
 
     private void Update()
@@ -47,7 +47,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
             {
 
                 _indicatorTimer += Time.unscaledDeltaTime / 4;
-                _radialProgressBar.fillAmount = Mathf.Lerp(_radialProgressBar.fillAmount, _indicatorTimer / _maxIndicatorTimer, _lerpSpeed * Time.unscaledDeltaTime);
+                //_radialProgressBar.fillAmount = Mathf.Lerp(_radialProgressBar.fillAmount, _indicatorTimer / _maxIndicatorTimer, _lerpSpeed * Time.unscaledDeltaTime);
 
                 IncreaseTimer();
 
@@ -56,7 +56,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
                 {
                     _isRefilling = false;
                     _indicatorTimer = _maxIndicatorTimer;
-                    _radialProgressBar.fillAmount = 1f;
+                    //_radialProgressBar.fillAmount = 1f;
                     _slowdownDuration = _maxIndicatorTimer;
 
 
@@ -66,7 +66,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
             else
             {
                 _indicatorTimer -= Time.unscaledDeltaTime;
-                _radialProgressBar.fillAmount = _indicatorTimer / _maxIndicatorTimer;
+                //_radialProgressBar.fillAmount = _indicatorTimer / _maxIndicatorTimer;
 
                 if (_indicatorTimer <= 0)
                 {
@@ -132,7 +132,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
         _progressBarIsActive = true;
         _isRefilling = false;
 
-        _focusBar.SetActive(true);
+        //_focusBar.SetActive(true);
         ActivateCountdown(_slowdownDuration);
     }
 

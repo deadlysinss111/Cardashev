@@ -11,7 +11,7 @@ public class DiveSpot : MonoBehaviour
     {
         Destroy(GetComponent<MeshRenderer>());
 
-        Collider[] hits = Physics.OverlapBox(transform.position, new Vector3(2, 2, 2));
+        Collider[] hits = Physics.OverlapBox(transform.position, new Vector3(3, 3, 3));
         foreach (Collider hit in hits)
         {
             if (hit.gameObject.CompareTag("TMTopology"))
@@ -27,6 +27,10 @@ public class DiveSpot : MonoBehaviour
                 //    }
                 //}
             }
+        }
+        if(_linkedTiles.Count == 0)
+        {
+            print("you got a problem in there");
         }
     }
 

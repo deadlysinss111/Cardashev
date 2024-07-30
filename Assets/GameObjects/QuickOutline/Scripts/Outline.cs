@@ -92,18 +92,18 @@ public class Outline : MonoBehaviour {
         // Instantiate outline materials
         //if (GetComponent<Tile>()._isSingle)
         //{
-        //    outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask 1"));
-        //    outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill 1"));
+        outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask 1"));
+        outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill 1"));
         //    //print("oe");
         //}
         //else
         //{
-            outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
-            outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
+        //outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));
+        //outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineFill"));
         //}
-    
 
-    outlineMaskMaterial.name = "OutlineMask (Instance)";
+
+        outlineMaskMaterial.name = "OutlineMask (Instance)";
     outlineFillMaterial.name = "OutlineFill (Instance)";
 
     // Retrieve or generate smooth normals
