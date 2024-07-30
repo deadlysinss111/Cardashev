@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI;
@@ -89,15 +91,18 @@ public class StatManager : MonoBehaviour
         _UeDebuffListChange.AddListener(ApplyModifiers);
 
         _modifiers = new List<Modifier>();  // ←- should this go into Start() ?
+
+        _gameOverManager = GameObject.Find("Canvas").GetComponentInChildren<GameOverManager>();
+        _takeDamageEffect = GameObject.Find("Canvas").GetComponentInChildren<OutlineEffectScript>();
     }
 
     void Start()
     {
-        if (gameObject.TryGetComponent<PlayerManager>(out PlayerManager manager))
+        if (gameObject.TryGetComponent(out PlayerManager manager))
             _health = CurrentRunInformations._playerHP;
-        else if (gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+        else if (gameObject.TryGetComponent(out Enemy enemy))
             _health = enemy._health;
-        else if (gameObject.TryGetComponent<Interactible>(out Interactible interactible))
+        else if (gameObject.TryGetComponent(out Interactible interactible))
             _health = interactible._health;
         else
             throw new Exception("are you trying to have a stat manager on a non player / enemy / interactible object?");
@@ -180,6 +185,7 @@ public class StatManager : MonoBehaviour
                 case Modifier.ModifierType.Armor:
                     _armor = (int)mod._value;
                     _maxArmor = _armor;
+                    ChangeVignetteColor(new Color32(17, 200, 245, 255));
                     _modifiers.Remove(mod); // No need to keep it any longer once the value is set
                     break;
             }
@@ -190,18 +196,19 @@ public class StatManager : MonoBehaviour
 
     public void TakeDamage(int amount, bool ignore_armor=false)
     {
+        if (_takeDamageEffect) _takeDamageEffect.TakeDamageEffect();
         if (HasArmor() && ignore_armor == false)
         {
             int diff = _armor - amount;
             _armor = diff;
             if (diff >= 0)
                 return;
+            ChangeVignetteColor(Color.red);
             amount -= Math.Abs(diff);
             
         }
 
         _health -= amount;
-        if (_takeDamageEffect) _takeDamageEffect.TakeDamageEffect();
 
         if ( _health <= 0)
         {
@@ -281,5 +288,13 @@ public class StatManager : MonoBehaviour
     public bool HasArmor()
     {
         return _armor > 0;
+    }
+
+    void ChangeVignetteColor(Color color)
+    {
+        if (_takeDamageEffect.gameObject.TryGetComponent(out Volume vol) == false) return;
+        if (vol.profile.TryGet(out Vignette vignette) == false) return;
+        
+        vignette.color.value = color;
     }
 }
