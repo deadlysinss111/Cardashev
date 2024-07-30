@@ -282,4 +282,12 @@ public class StatManager : MonoBehaviour
     {
         return _armor > 0;
     }
+
+    public bool IsUnderStatusEffect(Modifier.ModifierType ARGstatusEffecyType)
+    {
+        foreach (Modifier mod in _modifiers)
+            if (mod._type == ARGstatusEffecyType)
+                return true;
+        return false;
+    }
 }
