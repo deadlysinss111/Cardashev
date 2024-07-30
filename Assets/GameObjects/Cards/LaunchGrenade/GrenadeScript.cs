@@ -46,12 +46,15 @@ public class GrenadeScript : MonoBehaviour
                 DoDamage(target.transform.parent.gameObject);
             }
         }
-        GameObject temp = Instantiate((GameObject)Resources.Load("GrenadeAOE"));
-        temp.transform.position = transform.position;
-        temp.transform.localScale = new Vector3(_explosionRadius, _explosionRadius, _explosionRadius);
+        //GameObject temp = Instantiate((GameObject)Resources.Load("GrenadeAOE"));
+        //temp.transform.position = transform.position;
+        //temp.transform.localScale = new Vector3(_explosionRadius, _explosionRadius, _explosionRadius);
         GameObject e = GameObject.Instantiate(_explosionEffect, transform.position, transform.rotation);
-        e.transform.localScale = Vector3.one * (_explosionRadius/5);
-        e.GetComponent<VisualEffect>().Play();
+        //e.transform.localScale = Vector3.one * (_explosionRadius * 2);
+        foreach (Transform item in e.transform)
+        {
+            item.gameObject.transform.localScale = Vector3.one * _explosionRadius/4;
+        }
         Destroy(gameObject);
     }
 
