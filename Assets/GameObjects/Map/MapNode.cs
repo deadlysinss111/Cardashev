@@ -51,11 +51,6 @@ public class MapNode : MonoBehaviour
         get => _uniqueNextNode;
     }
 
-    private void Awake()
-    {
-        //_animator = GetComponent<Animator>();
-    }
-
     private void Start()
     {
         _uniqueNextNode = 0;
@@ -64,6 +59,8 @@ public class MapNode : MonoBehaviour
         _isStartingNode = false;
         _playerCameThrough = false;
         _isLocked = false;
+
+        HierarchySearcher.FindChildRecursively(transform, "Maps_N" + UnityEngine.Random.Range(1, 5).ToString()).SetActive(true);
     }
 
     public void AddNextNode(int index, GameObject node)
