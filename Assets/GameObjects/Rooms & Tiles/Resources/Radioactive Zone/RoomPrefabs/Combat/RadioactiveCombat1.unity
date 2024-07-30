@@ -879,6 +879,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1219542025}
+    - target: {fileID: 6795818839435353058, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7956691913773819205, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

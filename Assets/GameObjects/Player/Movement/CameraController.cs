@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
 
     // Clockwise positions around player starting behind him
     Vector3[] _offsetPositions;
-    byte _offsetID;
+    byte _offsetID = 0;
     float _zoomScale = 1.0f;
 
     private void Awake()
@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour
         _offsetPositions[1] = new Vector3(10, 15, 0);
         _offsetPositions[2] = new Vector3(0, 15, 10);
         _offsetPositions[3] = new Vector3(-10, 15, 0);
-        _offsetID = 0;
+        //_offsetID = 0;
         _curOffset = _offsetPositions[0];
     }
 
@@ -167,6 +167,7 @@ public class CameraController : MonoBehaviour
         }
         _curOffset = _offsetPositions[_offsetID];
 
+        print(_offsetID);
         //Debug.Log(_curOffset);
 
         // Rotation transformations
