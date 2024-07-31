@@ -27,7 +27,7 @@ public class TEMPLATE : Card
         };
         
         /* stats fill there */
-        base.Init(2, 2, 60, stats);
+        base.Init(CardType.SUPPORT, 2, 2, 60, stats);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("TEMPLATE" + _id.ToString(), EnterState, ExitState) == false) _id++;

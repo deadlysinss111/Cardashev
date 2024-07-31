@@ -29,6 +29,7 @@ public class ToxicTornado : DynamicMapObj
     float _zSurplus = 0;
 
     Vector3 _desiredPos;
+    bool _needsMovement = false;
 
     /*
      METHODS
@@ -53,35 +54,39 @@ public class ToxicTornado : DynamicMapObj
         //    GI._UeOnMapSceneLoad.Invoke();
         //}
         _desiredPos.y = transform.position.y;
-        
+        if (_needsMovement)
+        {
+            transform.position = Vector3.Lerp(transform.position, _desiredPos, 0.1f);
+            if(Vector3.Distance(transform.position, _desiredPos) >=1)
+                _wind.SetToDirection(_direction);
+        }
+
     }
 
     IEnumerator WaitBeforeMoving()
     {
-        float offset = 1.6f;
+        float offset = 2.1f;
         while(offset > 0)
         {
-            offset-= Time.deltaTime;
+            offset-= Time.unscaledDeltaTime;
             yield return null;
         }
-        while (transform.position != _desiredPos)
-        {
-            transform.position = Vector3.Lerp(transform.position, _desiredPos, 0.1f);
-        }
+        _needsMovement = true;
     }
 
 
     // GreenCloud's update on Map load
     protected override void UpdDynamicMapObj()
     {
+        _needsMovement = false;
+        Move();
         do
         {
             _direction = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
             _direction = Vector3.Normalize(_direction);
         } while (CheckForBoundaries(_desiredPos + 10 * _direction));
         
-        Move();
-        _wind.SetToDirection(_direction);
+        //_wind.SetToDirection(_direction);
     }
 
     // ------
@@ -93,10 +98,14 @@ public class ToxicTornado : DynamicMapObj
         // TODO: tweak that 0.6f for balancing
         //transform.Translate(_direction * GI._lastRoomTimer * 0.6f);
         _desiredPos = transform.position + _direction * GI._lastRoomTimer * 0.6f;
-        print(_desiredPos);
+        //_desiredPos = transform.position + _direction * 66666 * 0.6f;
+        //print(_desiredPos);
         //transform.Translate(_direction * 10);
         CheckForBoundaries();
-        print(_desiredPos);
+        //print(_desiredPos);
+
+        if(gameObject.activeInHierarchy == true)
+            StartCoroutine(WaitBeforeMoving());
     }
 
     //void MoveSurplus()

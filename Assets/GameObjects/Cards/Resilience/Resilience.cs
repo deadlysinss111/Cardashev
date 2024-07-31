@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
+using static Card;
 
 class Resilience : Card
 {
@@ -12,7 +13,15 @@ class Resilience : Card
         {
             {"shield", 100}
         };
-        base.Init(1.5f, 4, 110, stats, $"Adds a second health bar of {stats["shield"]} points out of pure spite.");
+
+        _id = 0;
+        foreach (Transform t in GI._deckContainer.transform)
+        {
+            if (t.TryGetComponent<Resilience>(out _))
+                ++_id;
+        }
+
+        base.Init(CardType.SUPPORT, 1.5f, 4, 110, stats, $"Adds a second health bar of {stats["shield"]} points out of pure spite.");
     }
 
     public override void Effect()

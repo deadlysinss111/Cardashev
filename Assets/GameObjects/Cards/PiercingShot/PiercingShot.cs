@@ -20,7 +20,7 @@ public class PiercingShot : Card
             {"speed", 20 },
             {"critSpeed", 100 },
         };
-        base.Init(3, 4, 85, stats, $"Shoot a powerful bullet dealing {stats["damage"]} dmg. Critical: Damage and speed increased.");
+        base.Init(CardType.OFFENSE, 3, 4, 85, stats, $"Shoot a powerful bullet dealing {stats["damage"]} dmg. Critical: Damage and speed increased.");
 
         while (PlayerManager.AddState("PiercingShot" + _id.ToString(), EnterState, ExitState) == false) _id++;
 

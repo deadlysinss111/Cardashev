@@ -42,6 +42,24 @@ public class QueueComponent : MonoBehaviour
     public bool AddToQueue(Card c)
     {
         c._actionColor = GenerateRandomColor();
+        switch (c._cardType)
+        {
+            case Card.CardType.PARKOUR:
+                c._actionColor = Color.blue;
+                break;
+            case Card.CardType.OFFENSE:
+                c._actionColor = Color.red;
+                break;
+            case Card.CardType.SUPPORT:
+                c._actionColor = Color.yellow;
+                break;
+            case Card.CardType.MOVEMENT:
+                c._actionColor = new Color32(195, 15, 240, 255);
+                break;
+            default:
+                print("Me when I try to listen to card types   (¬ _ ¬()");
+                break;
+        }
         if (AllowCard(c))
         {
             _queue.Enqueue(c);

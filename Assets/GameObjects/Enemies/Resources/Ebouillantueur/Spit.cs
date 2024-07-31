@@ -33,9 +33,10 @@ public class Spit : MonoBehaviour
             else if(c.gameObject.CompareTag("TMTopology"))
             {
                 RaycastHit hit;
-                if(Physics.Raycast(transform.position + new Vector3(0, 1, 0), Vector3.down, out hit))
+                if(Physics.Raycast(transform.position , Vector3.down, out hit))
                 {
-                    Instantiate(Resources.Load("Radioactive Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, -0.2f, 0), Quaternion.identity);
+                    Instantiate(Resources.Load("Radioactive Zone/Interactibles/Prefabs/Acid"), hit.transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+                    //print(hit.transform.gameObject.name);
                     break;
                 }
             }
