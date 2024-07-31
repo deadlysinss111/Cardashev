@@ -3515,6 +3515,7 @@ GameObject:
   - component: {fileID: 3533556466419478622}
   - component: {fileID: 1326696642084947237}
   - component: {fileID: 2780252104279015122}
+  - component: {fileID: 2349266498427807743}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Canvas
@@ -3624,6 +3625,19 @@ MonoBehaviour:
   _shopInterface: {fileID: 4853750364741425427}
   _shopPlayerCredits: {fileID: 3757122891877933558}
   _shopPlayerCreditIcon: {fileID: 7295779617941766858}
+--- !u!114 &2349266498427807743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5897609200628916265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8020f1208562f438c095f1a8175828, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ripplePrefab: {fileID: 0}
 --- !u!1 &6193190955920809882
 GameObject:
   m_ObjectHideFlags: 0
