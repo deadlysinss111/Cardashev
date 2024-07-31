@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -24,6 +25,11 @@ public class GameOverManager : MonoBehaviour
 
     DeckManager _deckManager;
 
+    GameObject _menu;
+    GameObject _collection;
+
+    DeckDisplay _deckDisplay;
+
     void Start()
     {
         _instance = this;
@@ -36,6 +42,8 @@ public class GameOverManager : MonoBehaviour
         //_text = GameObject.Find("GameTimer").GetComponent<TMP_Text>();
 
         _hud = GameObject.Find("HUD");
+
+        _menu = GameObject.Find("Menu");
 
         GameObject player = GameObject.Find("Player");
         _playerManager = player.GetComponent<PlayerManager>();
@@ -56,7 +64,7 @@ public class GameOverManager : MonoBehaviour
         group.blocksRaycasts = true;
 
         _inGameOver = true;
-        //_text.text = "Time spend: "+GameObject.Find("Game Timer").GetComponent<GameTimer>().GetFormattedTime();
+        //_text.text = "Time spend: "+GameObject.Find("GlobalTimer").GetComponent<GameTimer>().GetFormattedTime();
         StopGame();
         _deckManager.UnloadDeck();
         DisableAllScripts();
@@ -72,7 +80,7 @@ public class GameOverManager : MonoBehaviour
     public void Quit()
     {
         _inGameOver = true;
-        SceneManager.LoadScene("Room & Tile tests");
+        SceneManager.LoadScene("EntryPoint");
     }
 
     void StopGame()
@@ -81,8 +89,18 @@ public class GameOverManager : MonoBehaviour
         _hud.SetActive(false);
     }
 
+    public void Display()
+    {
+        _menu.SetActive(false);
+    }
+
     void DisableAllScripts()
     {
         _playerManager.SetToState("Empty");
+    }
+
+    public void ExitButton()
+    {
+        _menu.SetActive(true);
     }
 }

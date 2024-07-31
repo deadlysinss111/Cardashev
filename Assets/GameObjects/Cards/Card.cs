@@ -66,6 +66,7 @@ public class Card : MonoBehaviour
         SUPPORT,
         MOVEMENT,
     }
+    AudioManager _audioManager;
 
     public enum CollectibleState
     {
@@ -260,6 +261,8 @@ public class Card : MonoBehaviour
             _lastPos = transform.localPosition;
             transform.localScale *= 2;
             transform.localPosition += new Vector3(0, 200, 0);
+            _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+            _audioManager.Play("CardSelected");
         }
         else
         {
