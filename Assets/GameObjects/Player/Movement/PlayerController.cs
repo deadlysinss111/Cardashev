@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
     public float _baseSpeed;
     public bool _resetMoveMult;
 
+    RipplesManager _ripplesManager;
+
 
     /*
      METHODS
@@ -46,6 +48,8 @@ public class PlayerController : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
         _previewLineRenderer = GameObject.Find("RoomAnchor").GetComponent<LineRenderer>();
         _paths = new List<List<Vector3>>();
+
+        _ripplesManager = GameObject.Find("Canvas").GetComponent<RipplesManager>();
 
         // Loading in PlayerManager a new state and its Action to change what the controls will do
         GI._PManFetcher()._virtualPos = _agent.transform.position;
@@ -146,6 +150,8 @@ public class PlayerController : MonoBehaviour
         {
             _agent.destination = vect;
             StartCoroutine(UpdatePath(slicedPath));
+
+            _ripplesManager.CreateRipples(new List<Vector3>() { vect });
         };
         moveCard._duration = _lastCalculatedWalkTime;
 
@@ -191,7 +197,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator UpdatePath(List<Vector3> path)
     {
         // Wait for the agent to reach the destination
-        while (path.Count > 1)
+        while (path.Count > 2)
         {
             if (Vector3.Magnitude(path[path.Count - 1] - GI._PlayerFetcher().transform.position) > 0.1)
             {
@@ -202,13 +208,13 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         _paths.RemoveAt(0);
-
+        _ripplesManager.ClearRipples();
     }
 
     // ------
     // HANDLES HOW THE PLAYER LOOKS (ANIMS N SHIT)
     // ------
-    
+
     // Rotate the player to face the target destination
     private void FaceTarget()
     {
