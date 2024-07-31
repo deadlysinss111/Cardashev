@@ -48,12 +48,13 @@ public class SceneLoadingAnimation : MonoBehaviour
 
     IEnumerator AltLoadWaitFade(string nextMap)
     {
-        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Fade In") == false)
+        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Fade In Menu") == false)
         {
+            print(AnimatorHelper.GetCurrentAnimationName(animator));
             yield return null;
         }
         yield return new WaitForNextFrameUnit(); // Wait a frame for the animation to start
-        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Fade In") && AnimatorHelper.GetAnimationCurrentTime(animator) <= AnimatorHelper.GetAnimationLength(animator, "Fade In"))
+        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Fade In Menu") && AnimatorHelper.GetAnimationCurrentTime(animator) <= AnimatorHelper.GetAnimationLength(animator, "Fade In"))
         {
             yield return null;
         }
@@ -63,7 +64,6 @@ public class SceneLoadingAnimation : MonoBehaviour
     void LoadScene()
     {
         GI._roomType = _sceneType;
-        GI._loader.LoadRoom("Map");
     }
 
     // Update is called once per frame

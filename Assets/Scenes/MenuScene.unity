@@ -1425,6 +1425,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Transition Effect
       objectReference: {fileID: 0}
+    - target: {fileID: 2476591316561552895, guid: a9cbc8b2869611848b3ebbf51f1a3f2c, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 5dfa15e4b1fb0c4498f0592bf7d64cc0, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5884,8 +5888,8 @@ SceneRoots:
   - {fileID: 408110871}
   - {fileID: 1199864437}
   - {fileID: 753705613}
-  - {fileID: 2060167066}
   - {fileID: 817265441}
   - {fileID: 915164770}
   - {fileID: 1442924219}
   - {fileID: 771109940}
+  - {fileID: 2060167066}
