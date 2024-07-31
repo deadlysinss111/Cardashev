@@ -20,6 +20,8 @@ public class DeckManager : MonoBehaviour
     float transitionDuration = 0.3f; // Duration for the transition
     bool isTransitioning = false; // Flag to check if a card is currently being moved
 
+    AudioManager _audioManager;
+
     void Start()
     {
         _hand = new List<GameObject>();
@@ -28,6 +30,8 @@ public class DeckManager : MonoBehaviour
         _drawCooldown = 0;
         _curHandSize = 0;
         _cardBar = GameObject.Find("DrawCardBar");
+
+        _audioManager= GameObject.Find("AudioManager").GetComponent<AudioManager>();
 
 
         LoadDeck();
@@ -193,6 +197,7 @@ public class DeckManager : MonoBehaviour
         if (GI._PlayerFetcher().GetComponent<QueueComponent>().AddToQueue(target) == true)
         {
             Discard(target.gameObject);
+            _audioManager.Play("CardPlayed");
         }
     }
 

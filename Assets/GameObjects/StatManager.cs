@@ -68,6 +68,8 @@ public class StatManager : MonoBehaviour
     public int Health { get { return _health; } }
     public int RealHealth { get { return _health+_armor; } }
 
+    AudioManager _audioManager;
+
 
     /*
      EVENTS
@@ -118,6 +120,8 @@ public class StatManager : MonoBehaviour
         _armor = -1;
         _maxArmor = _armor;
         _wasJustModified = false;
+
+        _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     void Update()
@@ -201,14 +205,24 @@ public class StatManager : MonoBehaviour
         {
             int diff = _armor - amount;
             _armor = diff;
+            _audioManager.Play("ShieldDamage");
             if (diff >= 0)
                 return;
             ChangeVignetteColor(Color.red);
             amount -= Math.Abs(diff);
-            
         }
 
         _health -= amount;
+
+        if (gameObject.CompareTag("Player"))
+        {
+            _audioManager.Play("HealthDamage");
+        }
+
+        if (gameObject.CompareTag("Enemy"))
+        {
+            _audioManager.Play("DealDamage");
+        }
 
         if ( _health <= 0)
         {
