@@ -342,7 +342,9 @@ public class Mastodon : Enemy
         }
 
         _agent.SetDestination(destTwo);
-        FaceTarget(destTwo); 
+        FaceTarget(destTwo);
+        _targetLookAtVector.x *= -1.0f;
+        _targetLookAtVector.y *= -1.0f;
 
         pathTime = GetPathTime(paths[1]);
         while (pathTime > 0)

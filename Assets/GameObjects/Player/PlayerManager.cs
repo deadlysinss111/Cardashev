@@ -304,7 +304,7 @@ public class PlayerManager : MonoBehaviour
 
         AddState("Empty",
             () => {
-                SetLeftClickTo(() => { print("huh"); });
+                SetLeftClickTo(() => { print("LeftClick while Empty player state"); });
                 SetRightClickTo(() => { });
                 SetHoverTo(() => { });
             }, () => { });

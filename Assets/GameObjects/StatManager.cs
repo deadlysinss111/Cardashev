@@ -113,6 +113,9 @@ public class StatManager : MonoBehaviour
         _armor = -1;
         _maxArmor = _armor;
         _wasJustModified = false;
+
+        _baseHealth = 1;
+        _health = 1;
     }
 
     void Update()
