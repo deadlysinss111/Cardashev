@@ -207,7 +207,7 @@ public class MapNode : MonoBehaviour
                     _roomIconSprite = resources.COMBAT_ICON_SPRITE;
                     _RoomIcon3D.GetComponent<MeshFilter>().mesh = resources.COMBAT_ICON;
                     SetDefaultColorTo(Color.red);
-                    _stringType = "Shop";
+                    _stringType = "Combat";
                     break;
                 }
             case RoomType.Elite:
@@ -268,6 +268,8 @@ public class MapNode : MonoBehaviour
         switch (value)
         {
             case true:
+                if (TryGetComponent<Outline>(out _)) return;
+
                 Outline outline = gameObject.AddComponent<Outline>();
                 outline.OutlineColor = new Color(91, 255, 0);
                 outline.OutlineWidth = 5;

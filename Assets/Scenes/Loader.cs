@@ -106,5 +106,6 @@ public class Loader : MonoBehaviour
         size -= metaFilesAmount;
         //print("size is " + size);
         SceneManager.LoadScene(ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + GI._roomType + UnityEngine.Random.Range(1, size+1).ToString(), LoadSceneMode.Single);
+        GI.UpdateMapState();
     }
 }

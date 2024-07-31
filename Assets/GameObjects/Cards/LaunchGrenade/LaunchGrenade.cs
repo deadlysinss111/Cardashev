@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using static Card;
 
 public class LaunchGrenade : Card
 {
@@ -26,7 +27,7 @@ public class LaunchGrenade : Card
         };
 
         string desc = $"Launch an impact grenade dealing {stats["damage"]}";
-        base.Init(1, 2, 60, stats, desc, PreviewZoneType.SPHERE);
+        base.Init(CardType.OFFENSE , 1, 2, 60, stats, desc, PreviewZoneType.SPHERE);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("grenade" + _id.ToString(), EnterGrenadeState, ExitState) == false) _id++;

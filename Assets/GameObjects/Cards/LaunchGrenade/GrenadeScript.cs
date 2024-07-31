@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using Unity.Android.Types;
 using UnityEngine;
 
 public class GrenadeScript : MonoBehaviour
@@ -33,16 +34,17 @@ public class GrenadeScript : MonoBehaviour
                 DoDamage(c.gameObject);
                 continue;
             }
-            GameObject target = HierarchySearcher.FindParentdRecursively(c.transform, "Body");
+            GameObject target = HierarchySearcher.FindParentdRecursivelyWithScript(c.transform, (Transform target) => { return target.gameObject.TryGetComponent<Enemy>(out _); });
             if (target != null)
             {
-                // Alterate the target in case we hit an object structured with an Animator (Jackhammer only atm)
-                if (HierarchySearcher.FindParentdRecursively(target.transform, "Animator") != null)
-                {
-                    print("altered");
-                    target = HierarchySearcher.FindParentdRecursively(target.transform, "Animator");
-                }
-                DoDamage(target.transform.parent.gameObject);
+                DoDamage(target);
+                continue;
+            }
+            target = HierarchySearcher.FindParentdRecursivelyWithScript(c.transform, (Transform target) => { return target.gameObject.TryGetComponent<Interactible>(out _); });
+            if (target != null)
+            {
+                DoDamage(target);
+                continue;
             }
         }
         GameObject temp = Instantiate((GameObject)Resources.Load("GrenadeAOE"));
@@ -53,6 +55,7 @@ public class GrenadeScript : MonoBehaviour
 
     void DoDamage(GameObject target)
     {
+        print(target.name);
         if(target.TryGetComponent(out Enemy enemy))
         {
             enemy.TakeDamage(_dmg);

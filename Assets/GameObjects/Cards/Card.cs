@@ -57,6 +57,16 @@ public class Card : MonoBehaviour
     public int _currLv;
     public int _maxLv;
 
+    public CardType _cardType;
+    
+    public enum CardType
+    {
+        OFFENSE = 0,
+        PARKOUR,
+        SUPPORT,
+        MOVEMENT,
+    }
+
     public enum CollectibleState
     {
         NOTHING = 0,
@@ -86,10 +96,11 @@ public class Card : MonoBehaviour
         _isCollectible = false;
     }
 
-    protected void Init(float duration, byte maxLvl, int goldValue, Dictionary<string, int> stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
+    protected void Init(CardType type, float duration, byte maxLvl, int goldValue, Dictionary<string, int> stats, string description = "", PreviewZoneType previewType = PreviewZoneType.NONE)
     {
         _timeStopedEvent = TimeStopedMouseEnter;
 
+        _cardType = type;
         _duration = duration;
         _maxLv = maxLvl;
         _goldValue = goldValue;
@@ -305,7 +316,23 @@ public class Card : MonoBehaviour
         if (CanUpgrade())
         {
             _currLv++;
+            Sprite img;
+            switch (_cardType)
+            {
+                case CardType.MOVEMENT:
+                    img = Resources.Load<Sprite>("bluelvl" + _currLv);
+                    break;
+                case CardType.SUPPORT:
+                    img = Resources.Load<Sprite>("yellowlvl" + _currLv);
+                    break;
+                case CardType.OFFENSE:
+                    img = Resources.Load<Sprite>("redlvl" + _currLv);
+                    break;
+                default:
+                    throw new Exception("what did you do...");
+            }
             GameObject frame = (GameObject)Instantiate(Resources.Load("lvl" + _currLv + "sprite"), gameObject.transform);
+            frame.GetComponent<Image>().sprite = img;
             print("frame : " + frame);
             OnUpgrade();
             UpdateDescription();

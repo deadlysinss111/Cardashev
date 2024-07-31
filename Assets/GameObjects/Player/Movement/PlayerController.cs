@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
     private void EnterMovementState()
     {
         PlayerManager manager = GI._PManFetcher();
-        manager.SetLeftClickTo(ApplyMovement);
+        manager.SetLeftClickTo(CheckForMovement);
         manager.SetRightClickTo(() => { });
         manager.SetHoverTo(Preview);
         GI.UpdateCursors("Move", (byte)(GI.CursorRestriction.TILES));
@@ -93,10 +93,17 @@ public class PlayerController : MonoBehaviour
     //Draws what path the player would take if he decided to move where the mouse is
     void Preview()
     {
-       PlayerManager manager = GI._PManFetcher();
-       // Crop the destination to the center of the target tile
-       Vector3 alteredPos = manager._lastHit.transform.position;
-       alteredPos.y += 0.5f;
+        PlayerManager manager = GI._PManFetcher();
+        // Crop the destination to the center of the target tile
+        Vector3 alteredPos = manager._lastHit.transform.position;
+        alteredPos.y += 1f;
+        if (false == NavMesh.SamplePosition(alteredPos, out NavMeshHit hit, 2, 1))
+        {
+            print("there was an error in targeting destination position");
+            return;
+        }
+        
+        alteredPos = hit.position;
 
         _agent.speed = _baseSpeed * _moveMult;
 
@@ -110,9 +117,11 @@ public class PlayerController : MonoBehaviour
             _previewPath = path.corners;
             TrajectoryToolbox.DrawPath(_previewPath, ref _previewLineRenderer);
             _lastCalculatedWalkTime = GetPathTime(path);
+            _virtualDestination = alteredPos;
         }
+        else { print("tf?"); }
 
-        _virtualDestination = alteredPos;
+        
     }
 
     // Clear the path from the line renderer
@@ -127,13 +136,21 @@ public class PlayerController : MonoBehaviour
     // MOVEMENT STUFF
     // ------
 
+    void CheckForMovement()
+    {
+        //if (Time.timeScale == 0) return;
+        if (_virtualDestination == GI._PManFetcher()._virtualPos) return;
+
+        QueueComponent queue = GetComponent<QueueComponent>();
+        if (_lastCalculatedWalkTime > queue._MaxTimeBuffer - queue.TotalQueueTime()) return;
+
+        ApplyMovement();
+    }
+
     // Method to add a "movement Card" to the Queue
     // If it succeeds, prepares everything to render the path whilst keeping the preview
      void ApplyMovement()
-     {
-        //if (Time.timeScale == 0) return;
-        if (_virtualDestination == GI._PManFetcher()._virtualPos) return;
-        
+     {        
         // Data duplication so that the closure takes the right data
         Vector3 vect = _virtualDestination;
 
@@ -148,6 +165,7 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(UpdatePath(slicedPath));
         };
         moveCard._duration = _lastCalculatedWalkTime;
+        moveCard._cardType = Card.CardType.MOVEMENT;
 
         // Check if the card's duration fit in the Queue
         if (GameObject.Find("Player").GetComponent<QueueComponent>().AddToQueue(moveCard))
@@ -222,10 +240,14 @@ public class PlayerController : MonoBehaviour
             direction = (_agent.destination - transform.position).normalized; 
 
         // Rotate the player towards the target destination
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        if(new Vector3(direction.x, 0, direction.z) != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
 
-        // Smoothly rotate the player
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _lookRotationSpeed);
+            // Smoothly rotate the player
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _lookRotationSpeed);
+        }
+        
     }
 
     // ------

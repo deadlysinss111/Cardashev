@@ -9,7 +9,7 @@ public class SelectableArea : MonoBehaviour
     readonly List<string> _ignoreLayerList = new() {
         "Player",
         "Interactable",
-        "Enemy",
+        //"Enemy",
         "Ignore Raycast"
     };
 

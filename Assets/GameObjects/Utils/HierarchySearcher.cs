@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -55,6 +56,28 @@ static public class HierarchySearcher
         foreach (Transform child in target.transform)
             if (child.name == ARGchildName)
                 return child.gameObject;
+        return null;
+    }
+
+    static public GameObject FindParentdRecursivelyWithScript(Transform target, Func<Transform, bool> func)
+    {
+        if (func(target))
+            return target.gameObject;
+        return INTERNALFindParentRecWithScript(target, func);
+    }
+
+    static private GameObject INTERNALFindParentRecWithScript(Transform child, Func<Transform, bool> func)
+    {
+        Transform parent = child.parent;
+        if (parent != null)
+        {
+            if (func(parent))
+                return parent.gameObject;
+
+            GameObject result = INTERNALFindParentRecWithScript(parent, func);
+            if (result != null)
+                return result;
+        }
         return null;
     }
 }

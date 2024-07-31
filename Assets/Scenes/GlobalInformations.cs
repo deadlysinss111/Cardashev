@@ -173,13 +173,25 @@ static public class GI
         {
             case "Map":
                 // Instantiate, save and cull
-                _map.SetActive(true);
+                UpdateMapState();
                 _canClickOnNode = true;
                 break;
 
             default:
                 Debug.LogError("how TF did you get an error in there ? õ_Ô");
                 break;
+        }
+    }
+
+    static public void UpdateMapState()
+    {
+        if (_map.activeInHierarchy)
+        {
+            _map.SetActive(false);
+        }
+        else
+        {
+            _map.SetActive(true);
         }
     }
 
