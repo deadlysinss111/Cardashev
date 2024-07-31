@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6658a6fa1b63724eb432663c0676927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isSingle: 0
 --- !u!65 &4512818747509495555
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -105,27 +106,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
       propertyPath: m_LocalRotation.w
@@ -155,10 +156,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -5754084199372789682, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4068373912626513877, guid: 1d645ad8f4f8e844194c309f3b4088cf, type: 3}
+      objectReference: {fileID: 4068373912626513877, guid: 3d73c43c7c375b7448b34e5138da0a69, type: 3}
     - target: {fileID: 919132149155446097, guid: 905607362a3cdaf488ea0121122cacae, type: 3}
       propertyPath: m_Name
       value: Tile_block_propre

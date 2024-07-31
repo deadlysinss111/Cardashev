@@ -13,7 +13,7 @@ public class SpawnTile : Interactible
         GI._PManFetcher()._virtualPos = player.transform.position;
         player.transform.rotation = transform.rotation;
         CameraController camera = Camera.main.gameObject.GetComponent<CameraController>();
-        int rotateAmount = (int)((Vector3.Angle(transform.rotation.eulerAngles, Vector3.forward) % 360)/90);
+        int rotateAmount = (int)transform.rotation.eulerAngles.y/90;
         for (int i = 0; i < rotateAmount; i++)
             camera.RotateToRight(new());
 

@@ -92,6 +92,7 @@ public class LaunchGrenade : Card
 
     protected void FireGrenade()
     {
+        if (_selectableArea.CheckForSelectableTile(_destinationFromLastBellCurveCalculated) == false) return;
         _selectableArea.ResetSelectable();
         GI._PManFetcher().SetToDefault();
         // Trigger the card play event

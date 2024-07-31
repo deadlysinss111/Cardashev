@@ -16,7 +16,7 @@ public class SimpleShot : Card
             {"damage", 10}
         };
         /* stats fill there */
-        base.Init(1, 2, 60, stats);
+        base.Init(1, 2, 60, stats, "Shoot a bullet in selected direction");
 
 
         // Add a unique state + id to play the correct card and  not the first of its kind

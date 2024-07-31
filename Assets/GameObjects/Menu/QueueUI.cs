@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,7 +38,7 @@ public class QueueUI : MonoBehaviour
     {
 
         float offset = 0;
-        foreach(GameObject segment in _segmentBars)
+        foreach(GameObject segment in _segmentBars.ToList())
         {
             UpdateSegment(segment, ref offset);
         }

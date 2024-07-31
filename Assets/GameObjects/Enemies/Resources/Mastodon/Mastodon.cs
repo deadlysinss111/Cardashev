@@ -226,6 +226,7 @@ public class Mastodon : Enemy
                 closest = competing;
             }
         }
+        //print("null?" + closest);
         return closest;
     }
 

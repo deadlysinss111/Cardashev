@@ -129,10 +129,10 @@ public class VoxelLoader : MonoBehaviour
                 found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Interactibles\\Prefabs\\DiveSpot.prefab");
                 break;
             case 8:
-                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\ConcreteGround.prefab");
+                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Concrete.prefab");
                 break;
             case 72:
-                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\ConcreteWall.prefab");
+                found = AssetDatabase.LoadAssetAtPath<GameObject>("Assets\\GameObjects\\Rooms & Tiles\\Resources\\Radioactive Zone\\Topology\\Concrete.prefab");
                 break;
             default:
                 print("you probably missed somewhere with color index : " + vox.colorIndex);
