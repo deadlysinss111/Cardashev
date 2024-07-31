@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,33 +30,12 @@ public class SceneLoadingAnimation : MonoBehaviour
         animator.SetTrigger("Fade Out");
     }
 
-    public void StartAnimation(string sceneType, bool altLoad=false)
+    public void StartAnimation(string sceneType)
     {
+        roomIcon1.sprite = GI._currentRoomIcon;
+        roomIcon2.sprite = GI._currentRoomIcon;
+        _sceneType = sceneType;
         animator.SetTrigger("Fade In");
-        if (altLoad == false)
-        {
-            roomIcon1.sprite = GI._currentRoomIcon;
-            roomIcon2.sprite = GI._currentRoomIcon;
-            _sceneType = sceneType;
-        }
-        else
-        {
-            StartCoroutine(AltLoadWaitFade(sceneType)); // One hell of a bandage
-        }
-    }
-
-    IEnumerator AltLoadWaitFade(string nextMap)
-    {
-        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Fade In") == false)
-        {
-            yield return null;
-        }
-        yield return new WaitForNextFrameUnit(); // Wait a frame for the animation to start
-        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Fade In") && AnimatorHelper.GetAnimationCurrentTime(animator) <= AnimatorHelper.GetAnimationLength(animator, "Fade In"))
-        {
-            yield return null;
-        }
-        GI._loader.LoadScene("MainMenu", nextMap); // One hell of a bandage
     }
 
     void LoadScene()
