@@ -28910,6 +28910,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 533305519842452505, guid: df4601275c7c94f4c952f62b4e15753c, type: 3}
   m_PrefabInstance: {fileID: 1262627035}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1263037246 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4838259752125610212, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+  m_PrefabInstance: {fileID: 17346044}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 868e8a8052f597f4fb34a5bf83792f2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1270030559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47942,6 +47953,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6450414398520694511, guid: a0cb6b88bc313f94f9ed5bb73456e1de, type: 3}
+      propertyPath: _gameOverManager
+      value: 
+      objectReference: {fileID: 17346047}
+    - target: {fileID: 6450414398520694511, guid: a0cb6b88bc313f94f9ed5bb73456e1de, type: 3}
+      propertyPath: _takeDamageEffect
+      value: 
+      objectReference: {fileID: 1263037246}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
