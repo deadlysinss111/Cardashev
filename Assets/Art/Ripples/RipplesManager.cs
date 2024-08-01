@@ -11,7 +11,7 @@ public class RipplesManager : MonoBehaviour
         foreach (Vector3 position in positions)
         {
             Vector3 ripplePosition = position;
-            ripplePosition.y += 0.51f;
+            //ripplePosition.y += 0.51f;
             GameObject rippleInstance = Instantiate(_ripplePrefab, ripplePosition, Quaternion.identity);
             _rippleInstances.Add(rippleInstance);
         }

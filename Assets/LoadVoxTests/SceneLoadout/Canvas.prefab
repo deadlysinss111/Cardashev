@@ -3637,7 +3637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a8020f1208562f438c095f1a8175828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ripplePrefab: {fileID: 0}
+  _ripplePrefab: {fileID: 6500486944387539853, guid: 336e7f9ea6d0e6b41bd2bd1d071e24d8, type: 3}
 --- !u!1 &6193190955920809882
 GameObject:
   m_ObjectHideFlags: 0
