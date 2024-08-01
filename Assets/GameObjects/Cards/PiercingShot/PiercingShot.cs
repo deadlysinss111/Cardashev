@@ -78,7 +78,7 @@ public class PiercingShot : Card
         bullet.GetComponent<Bullet>().SetDirection(_direction);
         _startingPosition.y += 1.5f;
 
-        if (GI._PManFetcher()._statManagerRef._isCriting)
+        if (GI._PStatFetcher().HasCritical())
         {
             bullet.GetComponent<Bullet>().SetInitialValues(_startingPosition, _stats["critSpeed"], _stats["critDamage"], 1.5f);
         }

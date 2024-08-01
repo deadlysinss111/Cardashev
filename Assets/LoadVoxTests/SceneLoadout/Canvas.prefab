@@ -165,6 +165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9206052096827052349}
+  - component: {fileID: 2390255282812792896}
   m_Layer: 0
   m_Name: GameTimer
   m_TagString: Untagged
@@ -194,6 +195,21 @@ RectTransform:
   m_AnchoredPosition: {x: -83.60004, y: -44.200012}
   m_SizeDelta: {x: 0.15, y: 0.07}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2390255282812792896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465837921685170340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9164c98373c10b6419f548575d6d4b4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _timePassed: 0
+  _timerText: {fileID: 0}
+  _winScreen: {fileID: 0}
 --- !u!1 &490481980230388420
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,7 +359,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 16777215
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -762,7 +778,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281874488
+    rgba: 3684408
   m_fontColor: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1073,7 +1089,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281874488
+    rgba: 3684408
   m_fontColor: {r: 0.21960784, g: 0.21960784, b: 0.21960784, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -2569,7 +2585,6 @@ GameObject:
   - component: {fileID: 7359475999963746545}
   - component: {fileID: 7058965866067090421}
   - component: {fileID: 1172304300604466301}
-  - component: {fileID: 5336497087423809540}
   m_Layer: 5
   m_Name: GlobalTimer
   m_TagString: Untagged
@@ -2695,21 +2710,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5336497087423809540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5052173997659915417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9164c98373c10b6419f548575d6d4b4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _timePassed: 0
-  _timerText: {fileID: 5052173997659915417}
-  _winScreen: {fileID: 0}
 --- !u!1 &5233654762554672498
 GameObject:
   m_ObjectHideFlags: 0
@@ -2721,7 +2721,6 @@ GameObject:
   - component: {fileID: 8287654363131067879}
   - component: {fileID: 4382242869462304262}
   - component: {fileID: 6417640051185808207}
-  - component: {fileID: 2844658042973169188}
   m_Layer: 5
   m_Name: RoomTimer
   m_TagString: Untagged
@@ -2847,21 +2846,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &2844658042973169188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5233654762554672498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9164c98373c10b6419f548575d6d4b4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _timePassed: 0
-  _timerText: {fileID: 5233654762554672498}
-  _winScreen: {fileID: 0}
 --- !u!1 &5274552265970297393
 GameObject:
   m_ObjectHideFlags: 0
@@ -3154,7 +3138,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190323
+    rgba: 243
   m_fontColor: {r: 0.9528302, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 1
   m_colorMode: 3
@@ -3637,7 +3621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a8020f1208562f438c095f1a8175828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ripplePrefab: {fileID: 0}
+  _ripplePrefab: {fileID: 6500486944387539853, guid: 336e7f9ea6d0e6b41bd2bd1d071e24d8, type: 3}
 --- !u!1 &6193190955920809882
 GameObject:
   m_ObjectHideFlags: 0
@@ -5076,7 +5060,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281874488
+    rgba: 3684408
   m_fontColor: {r: 0.21960784, g: 0.21960784, b: 0.21960784, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
