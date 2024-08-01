@@ -125,6 +125,11 @@ public class MainMenuManager : MonoBehaviour
     public void SelectCharacter(string name)
     {
         Idealist.StartWith(name);
+        GameObject.Find("FadeOutPannel").GetComponent<Animator>().SetTrigger("FadeOut");
+    }
+
+    public void StartFadeOutOver()
+    {
         GI._loader.LoadScene("MainMenu", "Map");
     }
 
