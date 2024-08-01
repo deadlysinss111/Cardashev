@@ -17,6 +17,9 @@ public class MainMenuManager : MonoBehaviour
     string _currentMenu;
     public GameObject _settingsUI;
 
+    [SerializeField] List<GameObject> _charactersScreen;
+    byte _currentCharacter = 0;
+
     private void Start()
     {
         _buttonsSelectMult = 1.2f;
@@ -123,5 +126,21 @@ public class MainMenuManager : MonoBehaviour
     {
         Idealist.StartWith(name);
         GI._loader.LoadScene("MainMenu", "Map");
+    }
+
+    public void NextCharactere()
+    {
+        if(_currentCharacter >= _charactersScreen.Count-1)
+        {
+            _charactersScreen[_currentCharacter].SetActive(false);
+            _currentCharacter = 0;
+            _charactersScreen[_currentCharacter].SetActive(true);
+        }
+        else
+        {
+            _charactersScreen[_currentCharacter].SetActive(false);
+            ++_currentCharacter;
+            _charactersScreen[_currentCharacter].SetActive(true);
+        }
     }
 }
