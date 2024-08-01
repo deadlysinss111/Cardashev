@@ -359,7 +359,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 16777215
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -778,7 +778,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281874488
+    rgba: 3684408
   m_fontColor: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1089,7 +1089,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281874488
+    rgba: 3684408
   m_fontColor: {r: 0.21960784, g: 0.21960784, b: 0.21960784, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -3138,7 +3138,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190323
+    rgba: 243
   m_fontColor: {r: 0.9528302, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 1
   m_colorMode: 3
@@ -3621,7 +3621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a8020f1208562f438c095f1a8175828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ripplePrefab: {fileID: 0}
+  _ripplePrefab: {fileID: 6500486944387539853, guid: 336e7f9ea6d0e6b41bd2bd1d071e24d8, type: 3}
 --- !u!1 &6193190955920809882
 GameObject:
   m_ObjectHideFlags: 0
@@ -5060,7 +5060,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281874488
+    rgba: 3684408
   m_fontColor: {r: 0.21960784, g: 0.21960784, b: 0.21960784, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
