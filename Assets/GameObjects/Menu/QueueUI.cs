@@ -88,7 +88,9 @@ public class QueueUI : MonoBehaviour
     public void AddSegment(float duration, Color color)
     {
         GameObject segment = Instantiate(_segmentPrefab, _secsBar.transform);
-        segment.GetComponent<Image>().color = color;
+        print("shader is : " + Resources.Load<Material>("ShadeBordersMaterial"));
+        segment.GetComponent<Image>().material = Instantiate(Resources.Load<Material>("ShadeBordersMaterial"));
+        segment.GetComponent<Image>().material.color = color;
         segment.transform.localScale = DurationToScale(duration);
         _segmentBars.Enqueue(segment);
     }
