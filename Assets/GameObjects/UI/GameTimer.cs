@@ -35,7 +35,7 @@ public class GameTimer : MonoBehaviour
         _runTimer.text = GetFormattedTime(GI._gameTimer);
     }
 
-    public string GetFormattedTime(float ARGtimeToFormat)
+    static public string GetFormattedTime(float ARGtimeToFormat)
     {
         int minutes = Mathf.FloorToInt(ARGtimeToFormat / 60);
         int seconds = Mathf.FloorToInt(ARGtimeToFormat % 60);
