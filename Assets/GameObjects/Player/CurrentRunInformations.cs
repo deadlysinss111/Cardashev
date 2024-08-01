@@ -67,4 +67,13 @@ static public class CurrentRunInformations
 
 
     }
+
+    static public void Reset()
+    {
+        _goldAmount = 100;
+        _playerHP = 0;
+
+        _deckMaxCapacity = 100;
+        _deck = new();
+    }
 }

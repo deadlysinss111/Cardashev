@@ -79,14 +79,14 @@ public class GameOverManager : MonoBehaviour
 
     public void Restart()
     {
-        _inGameOver = true;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        _inGameOver = false;
+        GI._loader.SoftRestart();
     }
 
     public void Quit()
     {
-        _inGameOver = true;
-        SceneManager.LoadScene("EntryPoint");
+        _inGameOver = false;
+        GI._loader.SoftRestart();
     }
 
     void StopGame()
