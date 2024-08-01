@@ -4,46 +4,41 @@ using UnityEngine;
 
 public class GameTimer : MonoBehaviour
 {
-    public float _timePassed;
+    public float _timePassedInRoom = 0.0f;
 
-    [SerializeField] GameObject _timerText;
-    [SerializeField] GameObject _winScreen;
+    TMPro.TextMeshProUGUI _roomTimer;
+    TMPro.TextMeshProUGUI _runTimer;
 
     void Start()
     {
-        _timePassed = 0;
+        // Fetching the 2 GO containing the text timer so we can update them later
+        _roomTimer = HierarchySearcher.FindChild(transform, "RoomTimer").GetComponent<TMPro.TextMeshProUGUI>();
+        _runTimer = HierarchySearcher.FindChild(transform, "GlobalTimer").GetComponent<TMPro.TextMeshProUGUI>();
+
+        Debug.Log("_roomTimer : " + _roomTimer.name);
+        Debug.Log("_runTimer : " + _runTimer.name);
     }
 
     private void OnDestroy()
     {
-        GI._gameTimer += _timePassed;
-        GI._lastRoomTimer = _timePassed;
+        GI._lastRoomTimer = _timePassedInRoom;
     }
 
     void Update()
     {
-        // Stops updating if we are on the end screen
-        //if (GameOverManager._instance._inGameOver || _winScreen.GetComponent<RoomClear>()._roomClearScreen) return;
-
         // Updates the time passed in the current run
-        _timePassed += Time.deltaTime;
-        _timerText.GetComponent<TMPro.TextMeshProUGUI>().text = GetFormattedTime();
+        _timePassedInRoom += Time.deltaTime;
+        GI._gameTimer += Time.deltaTime;
 
-        //// Debug trigger of the GameOver and Win screen
-        //if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
-        //{
-        //    GameOverManager._instance.StartGameOver();
-        //}
-        //else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
-        //{
-        //    _winScreen.SetActive(true);
-        //}
+        // Prints it out on the HUD
+        _roomTimer.text = GetFormattedTime(_timePassedInRoom);
+        _runTimer.text = GetFormattedTime(GI._gameTimer);
     }
 
-    public string GetFormattedTime()
+    public string GetFormattedTime(float ARGtimeToFormat)
     {
-        int minutes = Mathf.FloorToInt(_timePassed / 60);
-        int seconds = Mathf.FloorToInt(_timePassed % 60);
+        int minutes = Mathf.FloorToInt(ARGtimeToFormat / 60);
+        int seconds = Mathf.FloorToInt(ARGtimeToFormat % 60);
 
         return $"{minutes:D2}:{seconds:D2}";
     }
