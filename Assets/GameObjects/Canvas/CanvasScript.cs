@@ -18,7 +18,7 @@ public class CanvasScript : MonoBehaviour
     public TextMeshProUGUI _shopPlayerCredits;
     public GameObject _shopPlayerCreditIcon;
 
-    Vector3 _firstIconPos = new Vector3(69, -62, 0);    // Shittest of all time, since it assumes the shape, size and pos of GO container "StatusEffects" in the Canvas (TL;DR: Don't touch "StatusEffetcs")
+    Vector3 _firstIconPos = new Vector3(75, -65, 0);    // Shittest of all time, since it assumes the shape, size and pos of GO container "StatusEffects" in the Canvas (TL;DR: Don't touch "StatusEffetcs")
     GameObject[] _statusIconArr = new GameObject[Enum.GetNames(typeof(StatManager.Modifier.ModifierType)).Length];
     Dictionary<StatManager.Modifier.ModifierType, Color> _statusColorDict = new()
     {
@@ -41,12 +41,13 @@ public class CanvasScript : MonoBehaviour
                 if (_statusIconArr[i] == null)
                 {
                     _statusIconArr[i] = (GameObject) Instantiate(Resources.Load("StatusIcon"), GameObject.Find("StatusEffects").transform);
-                    _statusIconArr[i].GetComponent<RawImage>().color = _statusColorDict[GI._PStatFetcher()._statusEffectArr[i]._type];
-                    _statusIconArr[i].transform.localPosition = _firstIconPos + new Vector3(i*30, 0, 0);
+                    //_statusIconArr[i].GetComponent<RawImage>().color = _statusColorDict[GI._PStatFetcher()._statusEffectArr[i]._type];
+                    HierarchySearcher.FindChild(_statusIconArr[i].transform, "RawImage").GetComponent<RawImage>().color = _statusColorDict[GI._PStatFetcher()._statusEffectArr[i]._type];
+                    _statusIconArr[i].transform.localPosition = _firstIconPos + new Vector3(i*45, 0, 0);
                 }
 
                 // Updates the text of the remaining time
-                _statusIconArr[i].GetComponent<TMPro.TextMeshProUGUI>().text = GameTimer.GetFormattedTime(GI._PStatFetcher()._statusEffectArr[i]._durationLeft);
+                HierarchySearcher.FindChild(_statusIconArr[i].transform, "Text (TMP)").GetComponent<TMPro.TextMeshProUGUI>().text = GameTimer.GetFormattedTime(GI._PStatFetcher()._statusEffectArr[i]._durationLeft);
             }
             else
             {

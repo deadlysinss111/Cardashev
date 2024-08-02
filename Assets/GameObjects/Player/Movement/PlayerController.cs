@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
         // Crop the destination to the center of the target tile
         Vector3 alteredPos = manager._lastHit.transform.position;
         alteredPos.y += 1f;
-        if (false == NavMesh.SamplePosition(alteredPos, out NavMeshHit hit, 2, 1))
+        if (false == NavMesh.SamplePosition(alteredPos, out NavMeshHit hit, 3, 1))
         {
             print("there was an error in targeting destination position");
             return;
