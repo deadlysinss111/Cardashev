@@ -124,10 +124,12 @@ public class EscapeTile : Interactible
     {
         _condText.text = "Reward Conditions:\n";
         _condUIText.text = "Conditions for reward:\n";
-        foreach (KeyValuePair<string, byte> cond in _conditions)
+        /*foreach (KeyValuePair<string, byte> cond in _conditions)
         {
             _condText.text += $"- {cond.Key} (${cond.Value} left)\n";
             _condUIText.text += $"- {cond.Key} (${cond.Value} left)\n";
-        }
+        }*/
+        _condText.text += $"- Kill a Mastodon\n- Kill a Spitter";
+        _condUIText.text += $"- Kill a Mastodon\n- Kill a Spitter";
     }
 }
