@@ -373,8 +373,8 @@ static public class GI
         _UeOnMapSceneLoad = new();
         _SceneLoadUEventList = new List<UnityEngine.Events.UnityEvent> { _UeOnMapSceneLoad };
 
-        _gameTimer = float.NaN;
-        _lastRoomTimer = float.NaN;
+        _gameTimer = 0.0f;
+        _lastRoomTimer = 0.0f;
         _map = null;
 
         ResetCursorValues();
