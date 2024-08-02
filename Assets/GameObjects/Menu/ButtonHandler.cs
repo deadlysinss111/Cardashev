@@ -21,7 +21,7 @@ public class ButtonHandler : MonoBehaviour
         // TODO: Check for savefile
         if (true)
         {
-            text.text = "Continue";
+            //text.text = "Continue";
         }
     }
 
