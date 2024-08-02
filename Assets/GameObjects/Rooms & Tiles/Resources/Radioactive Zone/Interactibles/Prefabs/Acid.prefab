@@ -61,6 +61,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -105,8 +107,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 3.228679, z: 1}
+  m_Center: {x: 0, y: 1.1143394, z: 0}
 --- !u!54 &-4041937315867279451
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -147,6 +149,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isHiglightable: 0
+  _health: 0
+  _inRangeCursor: Interactible
+  _outOfRangeCursor: Cross
   _UeOnRaycastHit:
     m_PersistentCalls:
       m_Calls: []

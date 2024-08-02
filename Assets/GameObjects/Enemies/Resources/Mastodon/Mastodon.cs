@@ -76,11 +76,7 @@ public class Mastodon : Enemy
     private IEnumerator Swipe()
     {
         _timeBeforeDecision = 3;
-        Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
-        FaceTarget(dir);
-
-        Debug.Log("_target : " + _target.name);
-        Debug.Log("dir : " + dir.ToString());
+        FaceTarget(_target.transform.position);
 
         _animator.Play("Melee");
 
@@ -88,14 +84,16 @@ public class Mastodon : Enemy
         {
             yield return null;
         }
+
+        // Spghat vbolo go brr;
+        Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
         Instantiate(_swipeHitbox, transform.position + dir * _swipeHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<Swipe>()._dmg = _dmg;
     }
 
     private IEnumerator Bite()
     {
         _timeBeforeDecision = 3.5f;
-        Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
-        FaceTarget(dir);
+        FaceTarget(_target.transform.position);
 
         _animator.Play("Bite");
 
@@ -103,6 +101,9 @@ public class Mastodon : Enemy
         {
             yield return null;
         }
+
+        // Spghat vbolo go brr;
+        Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
         Instantiate(_biteHitbox, transform.position + dir * _biteHitbox.transform.localScale.z * 0.75f, Quaternion.LookRotation(dir)).GetComponent<Bite>()._dmg = _dmg;
     }
 

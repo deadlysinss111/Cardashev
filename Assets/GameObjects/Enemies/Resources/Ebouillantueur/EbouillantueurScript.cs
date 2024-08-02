@@ -15,6 +15,8 @@ public class Ebouillantueur : Enemy
     PlayerManager _player;
     GameObject ACID;
 
+    Vector3 _prevPos;
+
     private new void Start()
     {
         base.Start();
@@ -22,6 +24,8 @@ public class Ebouillantueur : Enemy
         _agent.speed = 3f;
         _player = GI._PManFetcher();
         ACID = (GameObject)Resources.Load("Radioactive Zone/Interactibles/Prefabs/Acid");
+
+        _prevPos = transform.position;
     }
 
 
@@ -63,6 +67,7 @@ public class Ebouillantueur : Enemy
             {
                 _fleeing = false;
                 Move();
+
             }
             else
             {
@@ -176,7 +181,7 @@ public class Ebouillantueur : Enemy
 
         if (dest == Vector3.zero) throw new Exception("error in targeting AI for ebouillantueur");
 
-        FaceTarget(dest);
+        FaceTarget(_agent.nextPosition);
 
         _agent.SetDestination(dest);
         NavMeshPath path = new NavMeshPath();
