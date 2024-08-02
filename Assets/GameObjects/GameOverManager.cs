@@ -51,9 +51,6 @@ public class GameOverManager : MonoBehaviour
         _playerManager = player.GetComponent<PlayerManager>();
         _deckManager = player.GetComponent<DeckManager>();
 
-        _animator = _gameOverPanel.GetComponent<Animator>();
-        _animator.enabled = false;
-
         CanvasGroup group = GetComponent<CanvasGroup>();
         group.alpha = 0f;
         group.interactable = false;
@@ -76,8 +73,6 @@ public class GameOverManager : MonoBehaviour
         //_text.text = "Time spend: "+GameObject.Find("Game Timer").GetComponent<GameTimer>().GetFormattedTime();
         HierarchySearcher.FindChildRecursively(transform, "TimeText").GetComponent<TMPro.TextMeshProUGUI>().text = "Time spent : " + GameTimer.GetFormattedTime(GI._gameTimer);
 
-        //_animator.enabled = true;
-        //_text.text = "Time spend: "+GameObject.Find("GlobalTimer").GetComponent<GameTimer>().GetFormattedTime();
         StopGame();
         _deckManager.UnloadDeck();
         DisableAllScripts();
