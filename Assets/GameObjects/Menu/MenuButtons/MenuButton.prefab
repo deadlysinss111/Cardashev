@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5647196516934949151}
   - component: {fileID: 420148109424377327}
+  - component: {fileID: 7581369803158274311}
   m_Layer: 0
   m_Name: MenuButton
   m_TagString: Untagged
@@ -58,6 +59,28 @@ CapsuleCollider:
   m_Height: 90.05832
   m_Direction: 1
   m_Center: {x: 0, y: 14.7941675, z: 0.65}
+--- !u!95 &7581369803158274311
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8647765623511603750}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e2a9fddbb7b39e3449aeba42cace2d56, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &3686245911552842633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -125,7 +148,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 25c47e2a88ae5a542a554f40e6e126c1, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: -876546973899608171, guid: baeae9c54936e88439d7b08211783877, type: 3}
+      objectReference: {fileID: 2100000, guid: 7f50a5ba57df2e3498f6940425702e91, type: 2}
     - target: {fileID: 919132149155446097, guid: 25c47e2a88ae5a542a554f40e6e126c1, type: 3}
       propertyPath: m_Name
       value: HologramHexagon
