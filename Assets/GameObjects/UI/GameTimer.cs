@@ -4,43 +4,41 @@ using UnityEngine;
 
 public class GameTimer : MonoBehaviour
 {
-    public float _timePassed;
+    public float _timePassedInRoom = 0.0f;
 
-
-    GameObject _roomTimer;
-    GameObject _globalTimer;
+    TMPro.TextMeshProUGUI _roomTimer;
+    TMPro.TextMeshProUGUI _runTimer;
 
     void Start()
     {
-        _roomTimer = GameObject.Find("RoomTimer");
-        _globalTimer = GameObject.Find("GlobalTimer");
-        _timePassed = 0;
+        // Fetching the 2 GO containing the text timer so we can update them later
+        _roomTimer = HierarchySearcher.FindChild(transform, "RoomTimer").GetComponent<TMPro.TextMeshProUGUI>();
+        _runTimer = HierarchySearcher.FindChild(transform, "GlobalTimer").GetComponent<TMPro.TextMeshProUGUI>();
+
+        Debug.Log("_roomTimer : " + _roomTimer.name);
+        Debug.Log("_runTimer : " + _runTimer.name);
     }
 
     private void OnDestroy()
     {
-        GI._lastRoomTimer = _timePassed;
+        GI._lastRoomTimer = _timePassedInRoom;
     }
 
     void Update()
     {
-        // Stops updating if we are on the end screen
-        //if (GameOverManager._instance._inGameOver || _winScreen.GetComponent<RoomClear>()._roomClearScreen) return;
-
         // Updates the time passed in the current run
-        float ratilo = Time.deltaTime;
-        _timePassed += ratilo;
-        GI._gameTimer += ratilo / 2.0f;
+        _timePassedInRoom += Time.deltaTime;
+        GI._gameTimer += Time.deltaTime;
 
-        // Updates both timers
-        _roomTimer.GetComponent<TMPro.TextMeshProUGUI>().text = GetFormattedTime(_timePassed);
-        _globalTimer.GetComponent<TMPro.TextMeshProUGUI>().text = GetFormattedTime(GI._gameTimer);
+        // Prints it out on the HUD
+        _roomTimer.text = GetFormattedTime(_timePassedInRoom);
+        _runTimer.text = GetFormattedTime(GI._gameTimer);
     }
 
-    static public string GetFormattedTime(float ARGtime)
+    static public string GetFormattedTime(float ARGtimeToFormat)
     {
-        int minutes = Mathf.FloorToInt(ARGtime / 60);
-        int seconds = Mathf.FloorToInt(ARGtime % 60);
+        int minutes = Mathf.FloorToInt(ARGtimeToFormat / 60);
+        int seconds = Mathf.FloorToInt(ARGtimeToFormat % 60);
 
         return $"{minutes:D2}:{seconds:D2}";
     }

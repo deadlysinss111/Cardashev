@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class GrenadeScript : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class GrenadeScript : MonoBehaviour
     public Vector3 _origin;
     public int _dmg;
     public int _explosionRadius;
+    public GameObject _explosionEffect;
 
     private void Start()
     {
@@ -19,7 +21,6 @@ public class GrenadeScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        StatManager manager;
         // We make sure to go down, otherwise we don't explode on contact
         //if (GetComponent<Rigidbody>().velocity.y > 0)
         //    return;
@@ -28,31 +29,39 @@ public class GrenadeScript : MonoBehaviour
         Collider[] hits = Physics.OverlapSphere(transform.position, _explosionRadius/2);
         foreach (Collider c in hits)
         {
-            if (c.gameObject.TryGetComponent<StatManager>(out manager))
+            if (c.gameObject.TryGetComponent(out StatManager _))
             {
                 DoDamage(c.gameObject);
                 continue;
             }
-            GameObject target = HierarchySearcher.FindParentdRecursively(c.transform, "Body");
+            GameObject target = HierarchySearcher.FindParentdRecursivelyWithScript(c.transform, (Transform target) => { return target.gameObject.TryGetComponent<Enemy>(out _); });
             if (target != null)
             {
-                // Alterate the target in case we hit an object structured with an Animator (Jackhammer only atm)
-                if (HierarchySearcher.FindParentdRecursively(target.transform, "Animator") != null)
-                {
-                    print("altered");
-                    target = HierarchySearcher.FindParentdRecursively(target.transform, "Animator");
-                }
-                DoDamage(target.transform.parent.gameObject);
+                DoDamage(target);
+                continue;
+            }
+            target = HierarchySearcher.FindParentdRecursivelyWithScript(c.transform, (Transform target) => { return target.gameObject.TryGetComponent<Interactible>(out _); });
+            if (target != null)
+            {
+                DoDamage(target);
+                continue;
             }
         }
-        GameObject temp = Instantiate((GameObject)Resources.Load("GrenadeAOE"));
-        temp.transform.position = transform.position;
-        temp.transform.localScale = new Vector3(_explosionRadius, _explosionRadius, _explosionRadius);
+        //GameObject temp = Instantiate((GameObject)Resources.Load("GrenadeAOE"));
+        //temp.transform.position = transform.position;
+        //temp.transform.localScale = new Vector3(_explosionRadius, _explosionRadius, _explosionRadius);
+        GameObject e = GameObject.Instantiate(_explosionEffect, transform.position, transform.rotation);
+        //e.transform.localScale = Vector3.one * (_explosionRadius * 2);
+        foreach (Transform item in e.transform)
+        {
+            item.gameObject.transform.localScale = Vector3.one * _explosionRadius/4;
+        }
         Destroy(gameObject);
     }
 
     void DoDamage(GameObject target)
     {
+        print(target.name);
         if(target.TryGetComponent(out Enemy enemy))
         {
             enemy.TakeDamage(_dmg);

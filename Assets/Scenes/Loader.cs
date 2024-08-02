@@ -57,8 +57,12 @@ public class Loader : MonoBehaviour
     // Scene loader
     public void LoadScene(string ARGcurScene, string ARGtargetScene, LoadSceneMode ARGloadMode = LoadSceneMode.Single)
     {
-        string curScene = GI._SceneNameEncyclopedia[ARGcurScene];
-        string targetScene = GI._SceneNameEncyclopedia[ARGtargetScene];
+        string curScene = ARGcurScene;
+        string targetScene = ARGtargetScene;
+        if (GI._SceneNameEncyclopedia.ContainsKey(ARGcurScene))
+            curScene = GI._SceneNameEncyclopedia[ARGcurScene];
+        if (GI._SceneNameEncyclopedia.ContainsKey(ARGtargetScene))
+            targetScene = GI._SceneNameEncyclopedia[ARGtargetScene];
 
         // Check if the scene we are leaving is persistent (if it is, we need to do more work)
         if (true == GI.IsSceneContainerPersistent(curScene) && ARGloadMode == LoadSceneMode.Single)
@@ -106,5 +110,26 @@ public class Loader : MonoBehaviour
         size -= metaFilesAmount;
         //print("size is " + size);
         SceneManager.LoadScene(ROOM_ENCYCLOPEDIA.ZoneFolderName[_zoneType] + GI._roomType + UnityEngine.Random.Range(1, size+1).ToString(), LoadSceneMode.Single);
+        GI.UpdateMapState();
+    }
+
+    /// <summary>
+    /// Removes the objects in DontDestroyOnLoad and returns to the EntryPoint scene
+    /// </summary>
+    public void SoftRestart()
+    {
+        foreach (var go in gameObject.scene.GetRootGameObjects())
+        {
+            if (go.name.Contains("Debug") == false && go != this.gameObject)
+            {
+                DestroyImmediate(go);
+            }
+        }
+        DestroyImmediate(gameObject);
+        CurrentRunInformations.Reset();
+        GI.ResetCursorValues();
+        GI.ResetData();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("EntryPoint", LoadSceneMode.Single);
     }
 }

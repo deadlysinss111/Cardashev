@@ -268,6 +268,8 @@ public class MapNode : MonoBehaviour
         switch (value)
         {
             case true:
+                if (TryGetComponent<Outline>(out _)) return;
+
                 Outline outline = gameObject.AddComponent<Outline>();
                 outline.OutlineColor = new Color(91, 255, 0);
                 outline.OutlineWidth = 5;

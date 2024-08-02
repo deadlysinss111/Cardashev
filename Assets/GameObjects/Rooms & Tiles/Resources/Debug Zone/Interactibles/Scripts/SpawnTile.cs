@@ -11,11 +11,11 @@ public class SpawnTile : Interactible
         player.GetComponent<NavMeshAgent>().enabled = false;
         player.transform.position = transform.position + new Vector3(0, 1, 0);
         GI._PManFetcher()._virtualPos = player.transform.position;
-        player.transform.rotation = transform.rotation;
-        CameraController camera = Camera.main.gameObject.GetComponent<CameraController>();
-        int rotateAmount = (int)transform.rotation.eulerAngles.y/90;
-        for (int i = 0; i < rotateAmount; i++)
-            camera.RotateToRight(new());
+        //player.transform.rotation = transform.rotation;
+        //CameraController camera = Camera.main.gameObject.GetComponent<CameraController>();
+        //int rotateAmount = (int)transform.rotation.eulerAngles.y/90;
+        //for (int i = 0; i < rotateAmount; i++)
+        //    camera.RotateToRight(new());
 
         player.GetComponent<NavMeshAgent>().enabled = true;
         player.GetComponent<PlayerModelLoader>().LoadModel();

@@ -1,15 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class SlowMotionWithProgressBar : MonoBehaviour
 {
     // Slow motion Fields
     [SerializeField] float _slowdownFactor;
-    [SerializeField] float _slowdownDuration;   // Maximum duration the slow motion can last
 
-    // Focus bar Fields
-    [SerializeField] GameObject _focusBar;
+    Volume _slowdownEffect;
 
     bool _isActive;
     PlayerInput _pInput;
@@ -25,6 +24,7 @@ public class SlowMotionWithProgressBar : MonoBehaviour
     private void Awake()
     {
         _pInput = GetComponent<PlayerInput>(); // Ensure PlayerInput component is attached
+        _slowdownEffect = GameObject.Find("TimeStopEffect").GetComponent<Volume>();
 
         // Initialize the radial progress bar
         //_radialProgressBar = _focusBar.transform.Find("RadialProgressBar").GetComponent<Image>();
@@ -32,15 +32,6 @@ public class SlowMotionWithProgressBar : MonoBehaviour
 
     private void Update()
     {
-        if (_isActive)
-        {
-            DecreaseTimer();
-            if (_slowdownDuration <= 0)
-            {
-                //StopSlowMotion();
-            }
-        }
-
         if (_progressBarIsActive)
         {
             if (_isRefilling)
@@ -49,15 +40,12 @@ public class SlowMotionWithProgressBar : MonoBehaviour
                 _indicatorTimer += Time.unscaledDeltaTime / 4;
                 //_radialProgressBar.fillAmount = Mathf.Lerp(_radialProgressBar.fillAmount, _indicatorTimer / _maxIndicatorTimer, _lerpSpeed * Time.unscaledDeltaTime);
 
-                IncreaseTimer();
-
 
                 if (_indicatorTimer >= _maxIndicatorTimer)
                 {
                     _isRefilling = false;
                     _indicatorTimer = _maxIndicatorTimer;
                     //_radialProgressBar.fillAmount = 1f;
-                    _slowdownDuration = _maxIndicatorTimer;
 
 
                     StopCountdown();
@@ -132,8 +120,9 @@ public class SlowMotionWithProgressBar : MonoBehaviour
         _progressBarIsActive = true;
         _isRefilling = false;
 
+        _slowdownEffect.weight = 1f;
+
         //_focusBar.SetActive(true);
-        ActivateCountdown(_slowdownDuration);
     }
 
     public void StopSlowMotion()
@@ -144,17 +133,9 @@ public class SlowMotionWithProgressBar : MonoBehaviour
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
 
+        _slowdownEffect.weight = 0f;
+
         StartRefill();
-    }
-
-    public void DecreaseTimer()
-    {
-        _slowdownDuration -= Time.unscaledDeltaTime;
-    }
-
-    public void IncreaseTimer()
-    {
-        _slowdownDuration += Time.unscaledDeltaTime / 4;
     }
 
     public void StartRefill()

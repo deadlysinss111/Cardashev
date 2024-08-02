@@ -429,6 +429,7 @@ GameObject:
   - component: {fileID: 7678431666921866782}
   - component: {fileID: 9099410370513784297}
   - component: {fileID: 1855163972585372097}
+  - component: {fileID: 3333811807826150188}
   m_Layer: 2
   m_Name: ExitTile
   m_TagString: InteractibleObject
@@ -553,6 +554,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3333811807826150188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6959527034630702259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6658a6fa1b63724eb432663c0676927, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isSingle: 0
 --- !u!1 &6987791163028659512
 GameObject:
   m_ObjectHideFlags: 0

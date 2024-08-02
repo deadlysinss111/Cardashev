@@ -173,13 +173,25 @@ static public class GI
         {
             case "Map":
                 // Instantiate, save and cull
-                _map.SetActive(true);
+                UpdateMapState();
                 _canClickOnNode = true;
                 break;
 
             default:
                 Debug.LogError("how TF did you get an error in there ? õ_Ô");
                 break;
+        }
+    }
+
+    static public void UpdateMapState()
+    {
+        if (_map.activeInHierarchy)
+        {
+            _map.SetActive(false);
+        }
+        else
+        {
+            _map.SetActive(true);
         }
     }
 
@@ -348,5 +360,24 @@ static public class GI
         _cursorSEnemies = null;
         _cursorTiles = null;
         _cursorVoid = null;
+    }
+
+    static public void ResetData()
+    {
+        _persistentSceneContainers = new GameObject[Enum.GetNames(typeof(PersistentSceneContainer)).Length - 1];
+        _changeStateOnHUDExit = false;
+        _canClickOnNode = true;
+        _roomType = null;
+        _currentRoomIcon = null;
+
+        _UeOnMapSceneLoad = new();
+        _SceneLoadUEventList = new List<UnityEngine.Events.UnityEvent> { _UeOnMapSceneLoad };
+
+        _gameTimer = float.NaN;
+        _lastRoomTimer = float.NaN;
+        _map = null;
+
+        ResetCursorValues();
+        ResetFetchers();
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static Card;
 using static UnityEngine.GraphicsBuffer;
 
 public class JumpAndShockwave : Card
@@ -14,7 +15,7 @@ public class JumpAndShockwave : Card
             {"innerRange", 4},
             {"outerRange", 8}
         };
-        base.Init(3, 4, 80, stats, $"Jump to a nearby, dealing {stats["damage"]} dmg on landing", PreviewZoneType.ELLIPSIS);
+        base.Init(CardType.PARKOUR, 3, 4, 80, stats, $"Jump to a nearby, dealing {stats["damage"]} dmg on landing", PreviewZoneType.ELLIPSIS);
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("jumpAndShockwave" + _id.ToString(), EnterJumpShockwaveState, ExitState) == false) _id++;

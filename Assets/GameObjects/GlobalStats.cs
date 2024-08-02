@@ -22,8 +22,8 @@ public class GlobalStats : MonoBehaviour
     {
         //DontDestroyOnLoad(gameObject);
 
-        CreateStat("mouvements", 0);
-        CreateStat("jumps", 0);
+        CreateStat("mouvements");
+        CreateStat("jumps");
     }
 
     /// <summary>
@@ -31,10 +31,10 @@ public class GlobalStats : MonoBehaviour
     /// </summary>
     /// <param name="name">The id of the stat</param>
     /// <param name="value">Its default value</param>
-    void CreateStat(string name, int value)
+    void CreateStat(string name, int value=0)
     {
-        _statsInt.Add(name, value);
-        _eventCallers.Add(name, new UnityEvent());
+        if (_statsInt.TryAdd(name, value))
+            _eventCallers.TryAdd(name, new UnityEvent());
     }
 
     private void Update()

@@ -93,16 +93,20 @@ public class CameraController : MonoBehaviour
         switch (_offsetID)
         {
             case 0:
-                move = new Vector3(_moveInput.y, 0, -_moveInput.x);
+                move = new Vector3(_moveInput.x, 0, _moveInput.y);
+                //print(0);
                 break;
             case 1:
-                move = new Vector3(_moveInput.x, 0, _moveInput.y);
+                move = new Vector3(-_moveInput.y, 0, _moveInput.x);
+                //print(1);
                 break;
             case 2:
-                move = new Vector3(-_moveInput.y, 0, _moveInput.x);
+                move = new Vector3(-_moveInput.x, 0, -_moveInput.y);
+                //print(2);
                 break;
             case 3:
-                move = new Vector3(-_moveInput.x, 0, -_moveInput.y);
+                move = new Vector3(_moveInput.y, 0, -_moveInput.x);
+                //print(3);
                 break;
             default:
                 move = new Vector3(0, 0, 0);
@@ -167,7 +171,7 @@ public class CameraController : MonoBehaviour
         }
         _curOffset = _offsetPositions[_offsetID];
 
-        print(_offsetID);
+        //print(_offsetID);
         //Debug.Log(_curOffset);
 
         // Rotation transformations

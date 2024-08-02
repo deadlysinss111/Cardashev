@@ -16,7 +16,7 @@ public class Jump : Card
             {"outerRange", 10}
         };
 
-        base.Init(2.4f, 4, 40, stats, $"Perform a jump in a radius of {stats["innerRange"]}-{stats["outerRange"]} tiles.");
+        base.Init(CardType.PARKOUR, 2.4f, 4, 40, stats, $"Perform a jump in a radius of {stats["innerRange"]}-{stats["outerRange"]} tiles.");
 
         // Add a unique state + id to play the correct card and  not the first of its kind
         while (PlayerManager.AddState("jump" + _id.ToString(), EnterJumpState, ExitState) == false) _id++;

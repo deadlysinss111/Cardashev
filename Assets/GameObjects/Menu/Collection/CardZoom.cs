@@ -63,7 +63,7 @@ public class CardManager : MonoBehaviour
         cardRect.anchorMax = new Vector2(0.5f, 0.5f);
         cardRect.pivot = new Vector2(0.5f, 0.5f);
         cardRect.anchoredPosition = Vector2.zero;
-        cardRect.sizeDelta = new Vector2(Mathf.Abs(panelRect.sizeDelta.x), Mathf.Abs(panelRect.sizeDelta.y) * 1000000f);//To keep the aspect ratio of the card with the panel values in the 0.00001f
+        cardRect.sizeDelta = new Vector2(Mathf.Abs(panelRect.sizeDelta.x), Mathf.Abs(panelRect.sizeDelta.y) + 416.5f);//To keep the aspect ratio of the card with the panel values in the 0.00001f
 
         // Bring the panel to the front
         _panel.transform.SetAsLastSibling();
