@@ -1,14 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Events;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 // TODO: Optimize the code by using Resources.Load() only once per kind-of tile rather than for every instances of tile
 

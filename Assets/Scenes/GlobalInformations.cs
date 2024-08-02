@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.InputSystem.Android;
 
 // GI stands for GlobalInformations
 static public class GI
@@ -373,8 +369,8 @@ static public class GI
         _UeOnMapSceneLoad = new();
         _SceneLoadUEventList = new List<UnityEngine.Events.UnityEvent> { _UeOnMapSceneLoad };
 
-        _gameTimer = float.NaN;
-        _lastRoomTimer = float.NaN;
+        _gameTimer = 0.0f;
+        _lastRoomTimer = 0.0f;
         _map = null;
 
         ResetCursorValues();

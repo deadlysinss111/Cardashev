@@ -1,7 +1,7 @@
-using UnityEditor.Audio;
 using System;
+using System.Collections;
 using UnityEngine;
-using Unity.VisualScripting;
+
 
 public class AudioManager : MonoBehaviour
 {
@@ -36,4 +36,29 @@ public class AudioManager : MonoBehaviour
 
         sound.source.Play();
     }
+
+    public void FadeOutAllSources(float time)
+    {
+        foreach(Sound sound in sounds)
+        {
+            StartCoroutine(FadeOutTarget(sound.source, time));
+        }
+    }
+
+
+    public static IEnumerator FadeOutTarget(AudioSource audioSource, float FadeTime)
+    {
+        float startVolume = audioSource.volume;
+
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
+
+            yield return null;
+        }
+
+        audioSource.Stop();
+        audioSource.volume = startVolume;
+    }
+
 }

@@ -52,6 +52,7 @@ public class Card : MonoBehaviour
     protected Vector3 _destinationFromLastBellCurveCalculated;
     [SerializeField] protected float _apex = 10.0f;
     bool isMovementCard = false;
+    [NonSerialized] public Vector3 _lastTarget;
 
     // Level related
     public int _currLv;
@@ -180,6 +181,8 @@ public class Card : MonoBehaviour
     {
         _cardEndTimestamp = Time.time + _duration;
         
+        GI._PManFetcher()._lastTargetPos = _lastTarget;
+
         if(_ghostHitbox != null)
             Destroy(_ghostHitbox);
     }
@@ -373,6 +376,7 @@ public class Card : MonoBehaviour
     {
         // Useful for preview positioning
         Vector3 selTilePos = GI._PManFetcher()._lastHit.transform.position + new Vector3(0.0f, 0.5f, 0.0f);
+        _lastTarget = selTilePos;
         Vector3 shoulderOffset = new Vector3(0, 1, 0);
 
         bool shouldCullPreview = false;

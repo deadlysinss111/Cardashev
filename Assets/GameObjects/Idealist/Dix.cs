@@ -9,7 +9,7 @@ public class Dix : Idealist
         _name = "Dix";
         _baseHP = 100;
         _instance = this;
-        _startingDeck = new List<string> 
+        _startingDeck = new List<string>
         {
             "SimpleShotCard",
             "SimpleShotCard",
@@ -26,8 +26,19 @@ public class Dix : Idealist
             //"SecondSleeve"
             //"CoverCard",
         };
+
+        _collection = new List<string>
+        {
+            "SimpleShotCard",
+            "LaunchGrenadeCard",
+            "JumpCard",
+            "ResilienceCard",
+            "PiercingShotCard",
+            "JumpAndShockwaveCard",
+            "OverdriveCard",
+        };
     }
-    
+
     public override void Ultimate()
     {
 

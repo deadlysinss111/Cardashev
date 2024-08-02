@@ -11,7 +11,7 @@ public class DeckDisplay : MonoBehaviour
     GameObject _collection;
 
     public GameObject _cardRowPrefab; // Prefab for a row of cards
-    public int cardsPerRow = 6; // Number of cards per row
+    public int _cardsPerRow = 6; // Number of cards per row
 
     private void Awake()
     {
@@ -34,7 +34,7 @@ public class DeckDisplay : MonoBehaviour
 
         foreach (Transform card in _deckContainer.transform)
         {
-            if (cardIndex % cardsPerRow == 0)
+            if (cardIndex % _cardsPerRow == 0)
             {
                 currentRow = Instantiate(_cardRowPrefab, _cardsCollection.transform);
             }

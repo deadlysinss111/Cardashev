@@ -819,6 +819,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 1789886927820598989, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2242232446947107273, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -839,6 +843,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3095171271363509157, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3684473544110677302, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: a0009dcbdedfc844a9f954a7bc3ddaad, type: 2}
     - target: {fileID: 4955990710430619837, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -919,6 +931,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4987846816813029490, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5897609200628916265, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
       propertyPath: m_Name
       value: Canvas
@@ -958,6 +974,26 @@ PrefabInstance:
     - target: {fileID: 7063887547323752530, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: GameOverManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7084782907210563225, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7084782907210563225, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7084782907210563225, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_fontColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7084782907210563225, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4278190080
+      objectReference: {fileID: 0}
+    - target: {fileID: 7841158112932721419, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7956691913773819205, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -29658,6 +29694,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4319955782090213970, guid: 5b2e37db365f54c4784b948cfd4fa34d, type: 3}
   m_PrefabInstance: {fileID: 1285882745}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1287579797 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7084782907210563225, guid: 4574808e8b21cef4a82c89b758516efb, type: 3}
+  m_PrefabInstance: {fileID: 17346044}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1288566840
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32710,6 +32757,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1709925742}
     m_Modifications:
+    - target: {fileID: 960657959315804730, guid: 19e9c88118eea4d49b789f962ecde3e0, type: 3}
+      propertyPath: _condUIText
+      value: 
+      objectReference: {fileID: 1287579797}
     - target: {fileID: 6865436900811316657, guid: 19e9c88118eea4d49b789f962ecde3e0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 35.067074

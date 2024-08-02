@@ -17,6 +17,8 @@ public class EscapeTile : Interactible
     [SerializeField] TextMeshProUGUI _condText;
     [SerializeField] TextMeshProUGUI _rewardText;
 
+    [SerializeField] TextMeshProUGUI _condUIText;
+
     [SerializeField] Animator _animator;
     bool _rewardScreenOn = false;
 
@@ -121,9 +123,13 @@ public class EscapeTile : Interactible
     void RegenerateConditionText()
     {
         _condText.text = "Reward Conditions:\n";
-        foreach (KeyValuePair<string, byte> cond in _conditions)
+        _condUIText.text = "Conditions for reward:\n";
+        /*foreach (KeyValuePair<string, byte> cond in _conditions)
         {
             _condText.text += $"- {cond.Key} (${cond.Value} left)\n";
-        }
+            _condUIText.text += $"- {cond.Key} (${cond.Value} left)\n";
+        }*/
+        _condText.text += $"- Kill a Mastodon\n- Kill a Spitter";
+        _condUIText.text += $"- Kill a Mastodon\n- Kill a Spitter";
     }
 }
