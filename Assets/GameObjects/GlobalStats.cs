@@ -69,11 +69,6 @@ public class GlobalStats : MonoBehaviour
         _eventCallers[id].Invoke();
     }
 
-    void Ping()
-    {
-        print("Pong");
-    }
-
     public static int GetStat(string name)
     {
         return _statsInt[name];
