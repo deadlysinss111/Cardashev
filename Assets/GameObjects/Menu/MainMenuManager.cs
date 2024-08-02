@@ -126,6 +126,7 @@ public class MainMenuManager : MonoBehaviour
     {
         Idealist.StartWith(name);
         GameObject.Find("FadeOutPannel").GetComponent<Animator>().SetTrigger("FadeOut");
+        GameObject.Find("AudioManager").GetComponent<AudioManager>().FadeOutAllSources(1.5f);
     }
 
     public void StartFadeOutOver()

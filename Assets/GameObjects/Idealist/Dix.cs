@@ -18,11 +18,11 @@ public class Dix : Idealist
             "LaunchGrenadeCard",
             "LaunchGrenadeCard",
             "JumpCard",
-            "ResilienceCard",
+            //"ResilienceCard",
             //"LaunchGrenadeCard",
             //"PiercingShotCard",
             //"JumpAndShockwaveCard",
-            //"OverdriveCard",
+            "OverdriveCard",
             //"SecondSleeve"
             //"CoverCard",
         };

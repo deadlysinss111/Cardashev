@@ -51,9 +51,6 @@ public class GameOverManager : MonoBehaviour
         _playerManager = player.GetComponent<PlayerManager>();
         _deckManager = player.GetComponent<DeckManager>();
 
-        _animator = _gameOverPanel.GetComponent<Animator>();
-        _animator.enabled = false;
-
         CanvasGroup group = GetComponent<CanvasGroup>();
         group.alpha = 0f;
         group.interactable = false;
@@ -69,24 +66,28 @@ public class GameOverManager : MonoBehaviour
         group.blocksRaycasts = true;
 
         _inGameOver = true;
-        _animator.enabled = true;
-        //_text.text = "Time spend: "+GameObject.Find("GlobalTimer").GetComponent<GameTimer>().GetFormattedTime();
+
+        // Find the animator and performs the transition
+        transform.Find("Panel").GetComponent<Animator>().SetBool("inGameOver", true);
+
+        //_text.text = "Time spend: "+GameObject.Find("Game Timer").GetComponent<GameTimer>().GetFormattedTime();
+        HierarchySearcher.FindChildRecursively(transform, "TimeText").GetComponent<TMPro.TextMeshProUGUI>().text = "Time spent : " + GameTimer.GetFormattedTime(GI._gameTimer);
+
         StopGame();
         _deckManager.UnloadDeck();
         DisableAllScripts();
-
     }
 
     public void Restart()
     {
-        _inGameOver = true;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        _inGameOver = false;
+        GI._loader.SoftRestart();
     }
 
     public void Quit()
     {
-        _inGameOver = true;
-        SceneManager.LoadScene("EntryPoint");
+        _inGameOver = false;
+        GI._loader.SoftRestart();
     }
 
     void StopGame()

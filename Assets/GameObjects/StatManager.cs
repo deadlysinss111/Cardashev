@@ -70,14 +70,17 @@ public class StatManager : MonoBehaviour
     [SerializeField] OutlineEffectScript _takeDamageEffect;
 
     // Array for each possible modifiers the player can be affected by AND for how long they have it in a row. Each index SHOULD BE RESERVED for the effects' Enum value (code example in AddModifier)
-    Modifier?[] _statusEffectArr = new Modifier[Enum.GetNames(typeof(StatManager.Modifier.ModifierType)).Length];
-    float[] _statusAgeArr = new float[Enum.GetNames(typeof(StatManager.Modifier.ModifierType)).Length];
+    public Modifier?[] _statusEffectArr = new Modifier[Enum.GetNames(typeof(StatManager.Modifier.ModifierType)).Length];
+    public float[] _statusAgeArr = new float[Enum.GetNames(typeof(StatManager.Modifier.ModifierType)).Length];
 
     [SerializeField] CriticalBar _criticalBar;
     public GameOverManager _gameOverManager;
 
     public int Health { get { return _health; } }
     public int RealHealth { get { return _health + _armor; } }
+
+    public Type _type;
+    static Type[] _typeList = { Type.GetType("Ebouillantueur"), Type.GetType("Murlock") };
 
 
     /*
@@ -227,7 +230,7 @@ public class StatManager : MonoBehaviour
             if (gameObject.TryGetComponent(out PlayerManager player))
             {
                 player._UeOnDefeat.Invoke();
-                _gameOverManager.StartGameOver();
+                GameObject.Find("GameOverScreen").GetComponent<GameOverManager>().StartGameOver();
             }
         }
     }

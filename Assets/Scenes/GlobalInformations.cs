@@ -361,4 +361,23 @@ static public class GI
         _cursorTiles = null;
         _cursorVoid = null;
     }
+
+    static public void ResetData()
+    {
+        _persistentSceneContainers = new GameObject[Enum.GetNames(typeof(PersistentSceneContainer)).Length - 1];
+        _changeStateOnHUDExit = false;
+        _canClickOnNode = true;
+        _roomType = null;
+        _currentRoomIcon = null;
+
+        _UeOnMapSceneLoad = new();
+        _SceneLoadUEventList = new List<UnityEngine.Events.UnityEvent> { _UeOnMapSceneLoad };
+
+        _gameTimer = 0.0f;
+        _lastRoomTimer = 0.0f;
+        _map = null;
+
+        ResetCursorValues();
+        ResetFetchers();
+    }
 }
