@@ -6,17 +6,19 @@ public class GameTimer : MonoBehaviour
 {
     public float _timePassed;
 
-    [SerializeField] GameObject _timerText;
-    [SerializeField] GameObject _winScreen;
+
+    GameObject _roomTimer;
+    GameObject _globalTimer;
 
     void Start()
     {
+        _roomTimer = GameObject.Find("RoomTimer");
+        _globalTimer = GameObject.Find("GlobalTimer");
         _timePassed = 0;
     }
 
     private void OnDestroy()
     {
-        GI._gameTimer += _timePassed;
         GI._lastRoomTimer = _timePassed;
     }
 
@@ -26,24 +28,19 @@ public class GameTimer : MonoBehaviour
         //if (GameOverManager._instance._inGameOver || _winScreen.GetComponent<RoomClear>()._roomClearScreen) return;
 
         // Updates the time passed in the current run
-        _timePassed += Time.deltaTime;
-        _timerText.GetComponent<TMPro.TextMeshProUGUI>().text = GetFormattedTime();
+        float ratilo = Time.deltaTime;
+        _timePassed += ratilo;
+        GI._gameTimer += ratilo / 2.0f;
 
-        //// Debug trigger of the GameOver and Win screen
-        //if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.G))
-        //{
-        //    GameOverManager._instance.StartGameOver();
-        //}
-        //else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
-        //{
-        //    _winScreen.SetActive(true);
-        //}
+        // Updates both timers
+        _roomTimer.GetComponent<TMPro.TextMeshProUGUI>().text = GetFormattedTime(_timePassed);
+        _globalTimer.GetComponent<TMPro.TextMeshProUGUI>().text = GetFormattedTime(GI._gameTimer);
     }
 
-    public string GetFormattedTime()
+    static public string GetFormattedTime(float ARGtime)
     {
-        int minutes = Mathf.FloorToInt(_timePassed / 60);
-        int seconds = Mathf.FloorToInt(_timePassed % 60);
+        int minutes = Mathf.FloorToInt(ARGtime / 60);
+        int seconds = Mathf.FloorToInt(ARGtime % 60);
 
         return $"{minutes:D2}:{seconds:D2}";
     }

@@ -56,11 +56,14 @@ public class GameOverManager : MonoBehaviour
         group.blocksRaycasts = true;
 
         _inGameOver = true;
+        // Find the animator and performs the transition
+        transform.Find("Panel").GetComponent<Animator>().SetBool("inGameOver", true);
+
         //_text.text = "Time spend: "+GameObject.Find("Game Timer").GetComponent<GameTimer>().GetFormattedTime();
+        HierarchySearcher.FindChildRecursively(transform, "TimeText").GetComponent<TMPro.TextMeshProUGUI>().text = "Time spent : " + GameTimer.GetFormattedTime(GI._gameTimer);
         StopGame();
         _deckManager.UnloadDeck();
         DisableAllScripts();
-
     }
 
     public void Restart()

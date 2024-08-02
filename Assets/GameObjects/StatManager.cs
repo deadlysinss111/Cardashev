@@ -66,6 +66,9 @@ public class StatManager : MonoBehaviour
     public int Health { get { return _health; } }
     public int RealHealth { get { return _health+_armor; } }
 
+    public Type _type;
+    static Type[] _typeList = { Type.GetType("Ebouillantueur"), Type.GetType("Murlock") };
+
 
     /*
      EVENTS
@@ -76,12 +79,6 @@ public class StatManager : MonoBehaviour
     /*
      METHODS
     */
-    public Type _type;
-
-    static Type[] _typeList = { Type.GetType("Ebouillantueur"), Type.GetType("Murlock") };
-
-    public GameOverManager _gameOverManager;
-
     private void Awake()
     {
         // Event subscribing
@@ -113,9 +110,6 @@ public class StatManager : MonoBehaviour
         _armor = -1;
         _maxArmor = _armor;
         _wasJustModified = false;
-
-        _baseHealth = 1;
-        _health = 1;
     }
 
     void Update()
@@ -224,7 +218,7 @@ public class StatManager : MonoBehaviour
             if (gameObject.TryGetComponent(out PlayerManager player))
             {
                 player._UeOnDefeat.Invoke();
-                _gameOverManager.StartGameOver();
+                GameObject.Find("GameOverScreen").GetComponent<GameOverManager>().StartGameOver();
             }
         }
         else

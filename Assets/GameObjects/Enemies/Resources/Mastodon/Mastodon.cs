@@ -76,10 +76,14 @@ public class Mastodon : Enemy
     private IEnumerator Swipe()
     {
         _timeBeforeDecision = 3;
-        // ANIM HERE
         Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
         FaceTarget(dir);
+
+        Debug.Log("_target : " + _target.name);
+        Debug.Log("dir : " + dir.ToString());
+
         _animator.Play("Melee");
+
         while (_timeBeforeDecision > 1)
         {
             yield return null;
@@ -90,10 +94,11 @@ public class Mastodon : Enemy
     private IEnumerator Bite()
     {
         _timeBeforeDecision = 3.5f;
-        // ANIM HERE
         Vector3 dir = Vector3.Normalize(new Vector3(_target.transform.position.x - transform.position.x, 0, _target.transform.position.z - transform.position.z));
         FaceTarget(dir);
+
         _animator.Play("Bite");
+
         while (_timeBeforeDecision > 1.5f)
         {
             yield return null;
