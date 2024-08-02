@@ -5,7 +5,7 @@ using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 
-// Will be Inherited by every specific .cs descirbing actual characters
+// Will be Inherited by every specific .cs describing actual characters
 // This is pretty empty since they need to share few things
 public abstract class Idealist
 {
@@ -16,8 +16,19 @@ public abstract class Idealist
     public int _baseHP;
 
     public List<string> _startingDeck;
+    public List<string> _collection;
 
     public abstract void Ultimate();
+
+    static private Dictionary<string, List<string>> _idealistCollectionFetcher = new Dictionary<string, List<string>>()
+    {
+        { "Dix", new Dix()._collection},
+    };
+
+    static private Dictionary<string, Action> _idealistEncyclopedia = new Dictionary<string, Action>()
+    {
+        { "Dix", ()=>{ _instance = new Dix(); } },
+    };
 
     static public void StartWith(string name)
     {
@@ -29,8 +40,15 @@ public abstract class Idealist
         CurrentRunInformations._playerHP = _instance._baseHP;
     }
 
-    static private Dictionary<string, Action> _idealistEncyclopedia = new Dictionary<string, Action>()
+    static public void CollectionDeck(string name)
     {
-        { "Dix", ()=>{ _instance = new Dix(); } },
-    };
+        if (_idealistCollectionFetcher.TryGetValue(name, out List<string> collec))
+        {
+            //bool ratio = true;
+            CardCollection.AddCardsToCollection(collec);
+        }
+        else
+            throw new Exception("you've got an error in the naming of your idealist: " + name);
+
+    }
 }

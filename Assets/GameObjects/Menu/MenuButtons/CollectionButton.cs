@@ -8,5 +8,7 @@ public class CollectionButton : MenuButton
     {
         GameObject.Find("Menu").GetComponent<MainMenuManager>().GoToCollection();
         base.OnMouseExit();
+
+        GameObject.Find("Collection").GetComponent<CollectionMenu>().ToggleCollectionMenu("Dix");
     }
 }
