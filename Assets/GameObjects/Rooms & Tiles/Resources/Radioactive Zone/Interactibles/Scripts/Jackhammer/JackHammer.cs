@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.AI.Navigation;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.GraphicsBuffer;
 
 public class JackHammer : MonoBehaviour
 {
