@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class ConditionStartScript : MonoBehaviour
@@ -19,7 +16,7 @@ public class ConditionStartScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print($"Update function");
+        //print($"Update function");
 
         if (Time.timeScale < 1.0f )
             transform.localPosition = Vector3.Lerp(transform.localPosition, _activePos, 5*Time.unscaledDeltaTime);

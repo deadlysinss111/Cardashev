@@ -46,6 +46,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] LayerMask _clickableLayers;
     public bool _isWallClickable = false;
 
+    public Vector3 _lastTargetPos;
+
 
     /*
      EVENTS
@@ -66,6 +68,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
+        _lastTargetPos = transform.position;
         // Event Subscribing
         _UeOnDefeat.AddListener(PlayerDeath);
 

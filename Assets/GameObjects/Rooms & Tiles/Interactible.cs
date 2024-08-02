@@ -1,12 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
 
 // Interactible's base abstract class, containing virtual effects TBD in actual classes, but every functionnality to trigger Interactbiles
 public abstract class Interactible : MonoBehaviour

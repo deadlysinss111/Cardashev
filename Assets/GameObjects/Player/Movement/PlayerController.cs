@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -222,6 +219,15 @@ public class PlayerController : MonoBehaviour
                 path.RemoveAt(path.Count - 1);
                 _paths[0] = path;
                 TrajectoryToolbox.DrawPath(_paths, ref _lineRenderer);
+
+                Vector3 direction;
+                if (_paths[0].Count >= 5)
+                    // Calculate the direction to the target destination
+                    direction = _paths[0][_paths[0].Count - 3];
+                else
+                    direction = _agent.destination;
+
+                GI._PManFetcher()._lastTargetPos = direction;
             }
             yield return null;
         }
@@ -234,16 +240,20 @@ public class PlayerController : MonoBehaviour
     // ------
 
     // Rotate the player to face the target destination
+    // no sens that function is still here but lazy to move it
     private void FaceTarget()
     {
-        if(_paths.Count == 0) { return; }
+        //if(_paths.Count == 0) 
+        //{ 
+
+        //    return;
+        //}
+
+        Vector3 target = GI._PManFetcher()._lastTargetPos;
+        if (target == transform.position || target ==null) return;
 
         Vector3 direction;
-        if (_paths[0].Count >= 5)
-            // Calculate the direction to the target destination
-            direction = (_paths[0][_paths[0].Count - 3] - transform.position).normalized;
-        else
-            direction = (_agent.destination - transform.position).normalized; 
+        direction = (target - transform.position).normalized; 
 
         // Rotate the player towards the target destination
         if(new Vector3(direction.x, 0, direction.z) != Vector3.zero)

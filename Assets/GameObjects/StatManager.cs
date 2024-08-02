@@ -1,15 +1,8 @@
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
-using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI;
 
 public class StatManager : MonoBehaviour
 {

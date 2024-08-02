@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using System.IO;
-using UnityEngine.Windows.Speech;
 
 public class Loader : MonoBehaviour
 {
