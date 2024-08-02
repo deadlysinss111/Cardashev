@@ -2,127 +2,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CollectionMenu: MonoBehaviour
+public class CollectionMenu : MonoBehaviour
 {
-    private GameObject _cardsContainer;
-    private List<GameObject> _currentUnlocked;
-    private List<GameObject> _currentLocked;
-
-    public GameObject _cardRowPrefab;
-    public GameObject _cardPrefab;
+    public GameObject _cardRowPrefab; // Prefab for a row of cards
+    public int cardsPerRow = 6; // Panel containing the collection menu UI elements
     public CardManager _cardManager;
 
-    private void Awake()
-    {
-        _cardsContainer = GameObject.Find("CardsCollection");
-    }
-
-    // Unlocked cards for each player
-    public static Dictionary<string, List<string>> _unlocked = new Dictionary<string, List<string>>()
-    {
-        { "Todd", new List<string>(){ "Geralt", "Ciri", "Yennefer", "Triss", "Keira_Metz", "Gaunt_O_Dimm", "Philippa_Eilhart" } },
-        //{ "Jack", new List<string>(){ "CardModel" } },
-    };
-
-    // Locked cards for each player
-    public static Dictionary<string, List<string>> _locked = new Dictionary<string, List<string>>()
-    {
-        { "Todd", new List<string>(){ "Gaunt_O_Dimm", "Philippa_Eilhart" } },
-        //{ "Jack", new List<string>(){ "CardModel" } },
-    };
-
-    // Load the cards for the player that fits the given name
-    private void Load(string playerName)
-    {
-        _currentUnlocked = new List<GameObject>();
-        _currentLocked = new List<GameObject>();
-
-        if (_unlocked.TryGetValue(playerName, out List<string> unlockedPool))
+    /*    private void Awake()
         {
-            AddCardsToContainer(unlockedPool, _currentUnlocked, false);
-        }
-
-        if (_locked.TryGetValue(playerName, out List<string> lockedPool))
-        {
-            AddCardsToContainer(lockedPool, _currentLocked, true);
-        }
-    }
-
-    // Add the cards to the container
-    private void AddCardsToContainer(List<string> pool, List<GameObject> targetList, bool locked)
-    {
-        byte cardsPerRow = 6;
-
-        GameObject currentRow = null;
-
-        for (int i = 0; i < pool.Count; i++)
-        {
-            if (i % cardsPerRow == 0)
+            _cardsContainer = GameObject.Find("CardsCollection");
+            if (collectionMenuPanel != null)
             {
-                currentRow = Instantiate(_cardRowPrefab, _cardsContainer.transform);
+                collectionMenuPanel.SetActive(false); // Initially hide the panel
             }
+        }
 
-            string spriteResourcePath = pool[i];
-            Sprite cardSprite = Resources.Load<Sprite>(spriteResourcePath);
+        private void AddCardsToContainer(List<GameObject> cards)
+        {
+            byte cardsPerRow = 6;
+            GameObject currentRow = null;
 
-            if (cardSprite != null)
+            for (int i = 0; i < cards.Count; i++)
             {
-                GameObject cardObj = Instantiate(_cardPrefab, currentRow.transform);
-                Image cardImage = cardObj.GetComponent<Image>();
-
-                if (cardImage != null)
+                if (i % cardsPerRow == 0)
                 {
-                    cardImage.sprite = cardSprite;
+                    currentRow = Instantiate(_cardRowPrefab, _cardsContainer.transform);
+                }
 
-                    // Gray out the card if it's locked
-                    if (locked)
+                GameObject cardObj = cards[i];
+
+                if (cardObj != null)
+                {
+                    cardObj.transform.SetParent(currentRow.transform);
+
+                    Button button = cardObj.GetComponent<Button>();
+                    if (button != null)
                     {
-                        cardImage.color = new Color(0.5f, 0.5f, 0.5f, 1f); // Adjust alpha as needed
-                        cardObj.GetComponent<Button>().interactable = false; // Make it non-interactable
+                        button.onClick.AddListener(() => _cardManager.OnCardClick(cardObj));
                     }
                     else
                     {
-                        cardImage.color = Color.white; // Reset color if unlocked
-                        cardObj.GetComponent<Button>().interactable = true; // Make it interactable
+                        Debug.LogError("Button component is not found on the card prefab.");
                     }
                 }
-
-                Debug.Log("Card created with sprite: " + spriteResourcePath);
-                targetList.Add(cardObj);
-
-                // Add the OnCardClick method to the button component of the card
-                Button button = cardObj.GetComponent<Button>();
-                if (button != null && !locked) // Only add listener if card is unlocked
+                else
                 {
-                    button.onClick.AddListener(() => _cardManager.OnCardClick(cardObj));
-                }
-                else if (button == null)
-                {
-                    Debug.LogError("Button component is not found on the card prefab.");
+                    Debug.LogError("Card object is null at index: " + i);
                 }
             }
-            else
-            {
-                Debug.LogError("Sprite not found in Resources: " + spriteResourcePath);
-            }
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_cardsContainer.GetComponent<RectTransform>());
         }
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(_cardsContainer.GetComponent<RectTransform>());
-    }
-
-    // Display the collection for the given player
-    public void DisplayCollection(string playerName)
-    {
-        Debug.Log("Displaying collection for player: " + playerName);
-
-        foreach (Transform child in _cardsContainer.transform)
+        public void DisplayCollection()
         {
-            Destroy(child.gameObject);
-        }
+            Debug.Log("Displaying collection");
 
-        Load(playerName);
+            foreach (Transform child in _cardsContainer.transform)
+            {
+                Destroy(child.gameObject);
+            }
 
-        _currentUnlocked.Clear();
-        _currentLocked.Clear();
+            List<GameObject> collection = CardCollection.GetCollection();
+            AddCardsToContainer(collection);
+        }*/
+
+
+
+    // Method to toggle the collection menu
+    public void ToggleCollectionMenu(string name)
+    {
+        Idealist.CollectionDeck(name);
     }
 }

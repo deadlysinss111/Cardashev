@@ -63,10 +63,25 @@ public class CardManager : MonoBehaviour
         cardRect.anchorMax = new Vector2(0.5f, 0.5f);
         cardRect.pivot = new Vector2(0.5f, 0.5f);
         cardRect.anchoredPosition = Vector2.zero;
-        cardRect.sizeDelta = new Vector2(Mathf.Abs(panelRect.sizeDelta.x), Mathf.Abs(panelRect.sizeDelta.y) + 416.5f);//To keep the aspect ratio of the card with the panel values in the 0.00001f
+        //cardRect.sizeDelta = new Vector2(Mathf.Abs(panelRect.sizeDelta.x), Mathf.Abs(panelRect.sizeDelta.y) + 416); // Adjust to keep the aspect ratio
+
+        // Scale the card clone and its children
+        _cardClone.transform.localScale = new Vector3(2, 2, 2);
+
+        // Recursively scale all children
+        ScaleChildren(_cardClone.transform, new Vector3(2, 2, 2));
 
         // Bring the panel to the front
         _panel.transform.SetAsLastSibling();
+    }
+
+    private void ScaleChildren(Transform parent, Vector3 scale)
+    {
+        foreach (Transform child in parent)
+        {
+            child.localScale = scale;
+            ScaleChildren(child, scale); // Recursively scale all children
+        }
     }
 
     public void CloseZoom()

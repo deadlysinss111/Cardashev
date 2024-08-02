@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using UnityEngine.TextCore.Text;
 
 public class CharacterManager : MonoBehaviour
@@ -83,4 +83,4 @@ public class CharacterManager : MonoBehaviour
             Debug.LogError("Next character not found.");
         }
     }
-}
+}*/
