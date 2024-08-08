@@ -397,7 +397,8 @@ public class Mastodon : Enemy
         Vector3 dest = _target.transform.position;
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path);
-        _agent.SetDestination(dest);
+        if(_agent.isActiveAndEnabled)
+            _agent.SetDestination(dest);
         FaceTarget(dest);
     }
 

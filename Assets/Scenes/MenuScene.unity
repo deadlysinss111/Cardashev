@@ -2502,13 +2502,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 753705611}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.14548692, y: -0.85091156, z: 0.3967863, w: 0.31199956}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: -0.43593973, y: 0.4378217, z: 0.061055485, w: 0.78392667}
+  m_LocalPosition: {x: 84.8, y: 275, z: 227.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -139.727, z: 0}
+  m_LocalEulerAnglesHint: {x: -47.472, y: 69.517, z: -25.031}
 --- !u!114 &753705614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2596,6 +2596,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 0f89eec173e958d4ea01b1b9cc3d4b32, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 95a2111c70bf59c4c98b97dd5e42daab, type: 2}
     - target: {fileID: 919132149155446097, guid: 0f89eec173e958d4ea01b1b9cc3d4b32, type: 3}
       propertyPath: m_Name
       value: "ville pour \xE9cran titre"

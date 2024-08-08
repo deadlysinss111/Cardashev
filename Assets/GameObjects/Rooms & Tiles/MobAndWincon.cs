@@ -11,7 +11,7 @@ public class MobAndWincon : MonoBehaviour
 
     void Start()
     {
-        _exitTile = GameObject.Find("ExitTile(Clone)");
+        _exitTile = GameObject.Find("ExitePlate");
 
         foreach(string name in _winConditions)
         {

@@ -32,6 +32,8 @@ public class CanvasScript : MonoBehaviour
     // Updates the HUD to match what's happening in-game
     private void Update()
     {
+        if (GameObject.Find("Player") == null) return;
+
         // Updates the mirror, visual statusEffect array
         for (int i = 0;  i < _statusIconArr.Length; ++i)
         {

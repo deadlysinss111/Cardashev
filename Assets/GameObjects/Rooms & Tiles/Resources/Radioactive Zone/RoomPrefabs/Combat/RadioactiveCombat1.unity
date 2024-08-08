@@ -9210,13 +9210,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 309914243978374487, guid: df4601275c7c94f4c952f62b4e15753c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 386715985}
   m_SourcePrefab: {fileID: 100100000, guid: df4601275c7c94f4c952f62b4e15753c, type: 3}
 --- !u!4 &386715983 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 533305519842452505, guid: df4601275c7c94f4c952f62b4e15753c, type: 3}
   m_PrefabInstance: {fileID: 386715982}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &386715984 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 309914243978374487, guid: df4601275c7c94f4c952f62b4e15753c, type: 3}
+  m_PrefabInstance: {fileID: 386715982}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &386715985
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386715984}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &387705684
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32921,6 +32945,14 @@ PrefabInstance:
       propertyPath: _condUIText
       value: 
       objectReference: {fileID: 1287579797}
+    - target: {fileID: 960657959315804730, guid: 19e9c88118eea4d49b789f962ecde3e0, type: 3}
+      propertyPath: _UeOnRaycastHit.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 960657959315804730, guid: 19e9c88118eea4d49b789f962ecde3e0, type: 3}
+      propertyPath: _UeOnRaycastHit.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6865436900811316657, guid: 19e9c88118eea4d49b789f962ecde3e0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 35.067074
@@ -36532,7 +36564,7 @@ PrefabInstance:
     - target: {fileID: 323525526620373287, guid: 475d99e80f530f94ebfe578cb7e520aa, type: 3}
       propertyPath: m_NavMeshData
       value: 
-      objectReference: {fileID: 23800000, guid: 41f0d5c596533694caf76c6e58ac9edc, type: 2}
+      objectReference: {fileID: 23800000, guid: 1b659d88d06864f41bfe1bb6df6a8d4c, type: 2}
     - target: {fileID: 323525526620373287, guid: 475d99e80f530f94ebfe578cb7e520aa, type: 3}
       propertyPath: m_UseGeometry
       value: 1
@@ -36540,6 +36572,18 @@ PrefabInstance:
     - target: {fileID: 1374791434764442654, guid: 475d99e80f530f94ebfe578cb7e520aa, type: 3}
       propertyPath: m_Name
       value: RoomAnchor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411625307266044115, guid: 475d99e80f530f94ebfe578cb7e520aa, type: 3}
+      propertyPath: _winConditions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411625307266044115, guid: 475d99e80f530f94ebfe578cb7e520aa, type: 3}
+      propertyPath: '_winConditions.Array.data[0]'
+      value: Mastodon
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411625307266044115, guid: 475d99e80f530f94ebfe578cb7e520aa, type: 3}
+      propertyPath: '_winConditions.Array.data[1]'
+      value: Ebouillantueur
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -45016,13 +45060,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3881920249896919729, guid: a236538286237cd44815fb45b42a7ace, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1899482468}
   m_SourcePrefab: {fileID: 100100000, guid: a236538286237cd44815fb45b42a7ace, type: 3}
 --- !u!4 &1899482466 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2221045624434633443, guid: a236538286237cd44815fb45b42a7ace, type: 3}
   m_PrefabInstance: {fileID: 1899482465}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1899482467 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3881920249896919729, guid: a236538286237cd44815fb45b42a7ace, type: 3}
+  m_PrefabInstance: {fileID: 1899482465}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &1899482468
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899482467}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &1900702874
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45096,6 +45164,10 @@ PrefabInstance:
     - target: {fileID: 4735903091125180739, guid: 3f0e2195880072948bf0d8d5a716a5db, type: 3}
       propertyPath: m_Name
       value: Ebouillantueur
+      objectReference: {fileID: 0}
+    - target: {fileID: 4735903091125180739, guid: 3f0e2195880072948bf0d8d5a716a5db, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5131324686341252012, guid: 3f0e2195880072948bf0d8d5a716a5db, type: 3}
       propertyPath: m_LocalPosition.x
