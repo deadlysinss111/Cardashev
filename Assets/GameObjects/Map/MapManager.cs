@@ -485,4 +485,17 @@ public class MapManager : MonoBehaviour
 
         return blocker;
     }*/
+
+    public void OnUncull()
+    {
+        GameObject parent = HierarchySearcher.FindChildRecursively(transform, "Map Nodes Parent");
+        foreach (Transform node in parent.GetComponentInChildren<Transform>()) 
+        {
+            if (node.GetComponent<MapNode>() == null) continue;
+            if (node.GetComponent<MapNode>()._isLocked)
+            {
+                node.GetComponent<MapNode>().LockNode();
+            }
+        }
+    }
 }

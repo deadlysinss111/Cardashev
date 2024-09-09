@@ -30,7 +30,7 @@ public class MapNode : MonoBehaviour
     public string _stringType;
     //string _linkedScene = "Shop";
     public bool _playerCameThrough;
-    bool _isLocked;
+    public bool _isLocked;
 
     Color _defaultColor;
     Color _defaultHoloColor;

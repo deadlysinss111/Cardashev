@@ -171,6 +171,7 @@ static public class GI
             case "Map":
                 // Instantiate, save and cull
                 UpdateMapState();
+                _map.GetComponent<MapManager>().OnUncull();
                 _canClickOnNode = true;
                 break;
 
